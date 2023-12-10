@@ -78,7 +78,7 @@ namespace Decoders
             {
                 foreach (string[] lineAsArr in lines)
                 {
-                    if (lineAsArr.Length < 15) continue;
+                    //if (lineAsArr.Length < 15) continue;
 
                     string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 

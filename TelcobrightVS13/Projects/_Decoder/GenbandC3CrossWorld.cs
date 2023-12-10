@@ -86,14 +86,14 @@ namespace Decoders
             {
                 foreach (string[] lineAsArr in lines)
                 {
-                    if(lineAsArr.Length<15 || lineAsArr.Length == 62)continue;
+                    //if(lineAsArr.Length<15 || lineAsArr.Length == 62)continue;    //commented according to vaia
                     
 
                     string[] textCdr= new  string[input.MefDecodersData.Totalfieldtelcobright];
 
                     string durationStr = lineAsArr[135];
                     double durationIn10sOfMillis=0;
-                    if (double.TryParse(durationStr, out durationIn10sOfMillis) && durationIn10sOfMillis <= 0) continue;
+                    if (double.TryParse(durationStr, out durationIn10sOfMillis) && durationIn10sOfMillis <= 0) continue;  //commented according to vaia
 
 
 
