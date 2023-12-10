@@ -41,6 +41,8 @@ namespace TelcobrightMediation
         public List<DateTime> HoursInvolved { get; }
         public List<string[]> RowsCouldNotBeAggreagated { get; set; } = new List<string[]>();
         public List<string[]> RowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
+        public List<string[]> DebugCdrsForDump { get; set; }
+
         public ConcurrentDictionary<string, CdrExt> ConcurrentCdrExts
         {
             get

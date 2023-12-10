@@ -12,7 +12,6 @@ using MediationModel;
 using System.Threading.Tasks;
 using FlexValidation;
 using LibraryExtensions;
-using Mediation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
@@ -22,7 +21,6 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Cdr.Collection.PreProcessors;
 using TelcobrightMediation.Config;
-using DebugCdrHelper = TelcobrightInfra.DebugCdrHelper;
 
 namespace Jobs
 {
@@ -169,6 +167,7 @@ namespace Jobs
             //aggregation related
             newCollectionResult.RowsCouldNotBeAggreagated = preProcessor.RowsCouldNotBeAggregated;
             newCollectionResult.RowsToBeDiscardedAfterAggregation = preProcessor.RowsToBeDiscardedAfterAggregation;
+            newCollectionResult.DebugCdrsForDump = preProcessor.DebugCdrsForDump;
             foreach (string[] row in preProcessor.DuplicateEvents)
             {
                 row[Fn.Switchid] = this.Input.Ne.idSwitch.ToString();
@@ -473,14 +472,19 @@ namespace Jobs
             NewCdrPreProcessor preProcessor = (NewCdrPreProcessor)cdrCollector.Collect();
             if (preProcessor.TxtCdrRows.Any() && this.Input.NeAdditionalSetting.DumpAllInstancesToDebugCdrTable)
             {
-                DumpAllRowsForDebugToTable(preProcessor);
+                foreach (var row in preProcessor.TxtCdrRows)
+                {
+                    preProcessor.DebugCdrsForDump.Add(row);
+                }
+                CreateTableForDebugCdr();
             }
             preProcessor.OriginalCdrFileSize = fileInfo.Length;
             return preProcessor;
         }
 
-        private void DumpAllRowsForDebugToTable(NewCdrPreProcessor preProcessor)
+        private void CreateTableForDebugCdr()
         {
+            
             Console.WriteLine(
                 "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
             Console.WriteLine(
@@ -494,14 +498,9 @@ namespace Jobs
                 con.Open();
                 using (MySqlCommand cmd = new MySqlCommand("", con))
                 {
-                    var tableName = "debugcdr";
+                    var tableName = "cdrdebug";
                     cmd.CommandText = DebugCdrHelper.getCreateTableSqlIfNotExists(tableName);
                     cmd.ExecuteNonQuery();
-                    int insertCount = DebugCdrHelper.insert(preProcessor.TxtCdrRows, 20000, tableName, cmd);
-                    if (insertCount != preProcessor.TxtCdrRows.Count)
-                    {
-                        throw new Exception("Inserted number of debugcdr did not match textcdr count.");
-                    }
                 }
                 con.Close();
                 Console.WriteLine(

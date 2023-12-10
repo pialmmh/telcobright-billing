@@ -123,43 +123,6 @@ namespace Jobs
                   KEY ind_Unique_Bill (UniqueBillId)
                   ) ENGINE=InnoDB ";
         }
-        public static int insert(List<string[]> rows, int segmentSizeForBatchInsert, string targetTableName, DbCommand cmd)
-        {
-            int insertCount = 0;
-            int startAt = 0;
-            CollectionSegmenter<string[]> collectionSegmenter =
-                new CollectionSegmenter<string[]>(rows, startAt);
-            collectionSegmenter.ExecuteMethodInSegments(segmentSizeForBatchInsert,
-                segment =>
-                {
-                    var segmentAsList = segment.ToList();
-                    int segmentCount = segmentAsList.Count;
-
-                    ParallelIterator<string[], StringBuilder> iterator =
-                        new ParallelIterator<string[], StringBuilder>(segmentAsList);
-                    List<StringBuilder> sbs =
-                        iterator.getOutput(row =>
-                        {
-                            //cdrerror, cdrinconsitent and partialEvents all have same structure
-                            cdrinconsistent cdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(row);
-                            return cdr.GetExtInsertValues();
-                        });
-
-                    string sql =
-                        $"{StaticExtInsertColumnHeaders.cdrerror.Replace("insert into cdrerror", "insert into " + targetTableName)}" +
-                        $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "sp_extInsert";
-
-                    int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
-                        dbCmd: cmd,
-                        command: sql,
-                        expectedRecCount: segmentCount);
-                    if (affectedRecordCount != segmentCount)
-                        throw new Exception("Affected record count does not match segment count while writing cdrs.");
-                    insertCount += affectedRecordCount;
-                });
-            return insertCount;
-        }
+        
     }
 }

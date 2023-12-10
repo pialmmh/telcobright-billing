@@ -503,7 +503,6 @@ namespace TelcobrightMediation
                     newRowsRemainedUnaggreagatedCount =
                         WriteNewRowsRemainedUnaggreagated(this.CollectionResult.RowsCouldNotBeAggreagated);
                     deletedRowsFromPartialEvent = DeleteAggregatedPartialInstances(this.CollectionResult.RowsToBeDiscardedAfterAggregation);
-
                 }
             }
             if (this.CollectionResult.RowsCouldNotBeAggreagated.Any() &&
@@ -564,7 +563,8 @@ namespace TelcobrightMediation
                     : this.CdrJobContext.CdrjobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
                 if (rawCount !=
                     writtenNonPartialCdrCount + writtenNewRawInstances + writtenInconsistentCount
-                    + nonPartialCdrErrors.Count)
+                    + nonPartialCdrErrors.Count
+                    + newRowsRemainedUnaggreagatedCount+this.CollectionResult.RowsToBeDiscardedAfterAggregation.Count)
                     throw new Exception(
                         "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");
 
@@ -579,6 +579,15 @@ namespace TelcobrightMediation
                     throw new Exception(
                         "RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
             }
+            if (neAdditionalSetting!=null && neAdditionalSetting.DumpAllInstancesToDebugCdrTable)
+            {
+                int insertCount = WriteCdrsForDebug();
+                if (insertCount != this.CollectionResult.DebugCdrsForDump.Count)
+                {
+                    throw new Exception("Inserted number of debugcdr did not match textcdr count.");
+                }
+            }
+            
             return new CdrWritingResult()
             {
                 CdrCount = writtenCdrCount,
@@ -862,7 +871,45 @@ namespace TelcobrightMediation
             }
             return deletedCount;
         }
+        int WriteCdrsForDebug()
+        {
+            List<string[]> rows = this.CollectionResult.DebugCdrsForDump;
+            int insertCount = 0;
+            int startAt = 0;
+            CollectionSegmenter<string[]> collectionSegmenter =
+                new CollectionSegmenter<string[]>(rows, startAt);
+            collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    var segmentAsList = segment.ToList();
+                    int segmentCount = segmentAsList.Count;
 
+                    ParallelIterator<string[], StringBuilder> iterator =
+                        new ParallelIterator<string[], StringBuilder>(segmentAsList);
+                    List<StringBuilder> sbs =
+                        iterator.getOutput(row =>
+                        {
+                            //cdrerror, cdrinconsitent and partialEvents all have same structure
+                            cdrinconsistent cdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(row);
+                            return cdr.GetExtInsertValues();
+                        });
+
+                    string sql =
+                        $"{StaticExtInsertColumnHeaders.cdrerror.Replace("insert into cdrerror", "insert into cdrdebug")}" +
+                        $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
+                    this.DbCmd.CommandType = CommandType.StoredProcedure;
+                    this.DbCmd.CommandText = "sp_extInsert";
+
+                    int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+                        dbCmd: this.DbCmd,
+                        command: sql,
+                        expectedRecCount: segmentCount);
+                    if (affectedRecordCount != segmentCount)
+                        throw new Exception("Affected record count does not match segment count while writing cdrs.");
+                    insertCount += affectedRecordCount;
+                });
+            return insertCount;
+        }
 
     }
 }

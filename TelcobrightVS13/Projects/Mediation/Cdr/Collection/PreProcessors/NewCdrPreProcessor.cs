@@ -29,6 +29,7 @@ namespace TelcobrightMediation
         public List<string[]> DuplicateEvents { get; set; }= new List<string[]>();
         public List<string[]> OriginalRowsBeforeMerge { get; }= new List<string[]>();
         public List<cdrinconsistent> OriginalCdrinconsistents { get; }= new List<cdrinconsistent>();
+        public List<string[]> DebugCdrsForDump { get; set; }
         public long OriginalCdrFileSize { get; set; }
         public NewCdrPreProcessor(List<string[]> txtCdrRows, List<cdrinconsistent> inconsistentCdrs,
             CdrCollectorInputData cdrCollectorInputData)
