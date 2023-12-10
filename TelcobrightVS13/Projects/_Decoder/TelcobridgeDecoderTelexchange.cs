@@ -33,7 +33,7 @@ namespace Decoders
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
             DateTime dateTime;
-            if (DateTime.TryParseExact("20230904123527", "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
+            if (DateTime.TryParseExact(timestamp, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
                 
             return dateTime;
         }
@@ -88,6 +88,10 @@ namespace Decoders
                     string inTrunkAdditionalInfo = lineAsArr[14].Trim().ToLower();
                     textCdr[Fn.InTrunkAdditionalInfo] = inTrunkAdditionalInfo;
 
+                    string outTrunkAdditionalInfo = lineAsArr[1].Trim().ToLower();
+                    textCdr[Fn.OutTrunkAdditionalInfo] = outTrunkAdditionalInfo;
+
+
                     string startTimeStr = lineAsArr[4].Trim();
                     DateTime startTime = new DateTime();
                     if (!string.IsNullOrEmpty(startTimeStr))
@@ -115,6 +119,8 @@ namespace Decoders
 
                     TimeSpan DurationSec = connectTime - startTime;
                     string DurationSecStr = DurationSec.TotalSeconds.ToString();
+
+                    textCdr[Fn.ChargingStatus] = DurationSec.TotalSeconds > 0 ? "1" : "0";
 
                     textCdr[Fn.Filename] = fileName;
                     textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
