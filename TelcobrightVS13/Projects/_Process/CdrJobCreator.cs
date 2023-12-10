@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using TelcobrightFileOperations;
 using LibraryExtensions;
+using LibraryExtensions.LibraryExtensions;
 using MediationModel;
 using Quartz;
 using QuartzTelcobright;
@@ -59,6 +60,9 @@ namespace Process
                         }
                         new CompressedFileHelperForVault(new List<string>()).MoveToOriginalPath(tempDir);
                         DirectoryLister dirlister = new DirectoryLister();
+
+                        VaultFileMover vaultFileMover= new VaultFileMover(new List<string>(), "",vaultPath);
+
                         if (cdrSetting.UnzipCompressedFiles == true)
                         {
                             List<string> extensions = new List<string> { ".zip", ".gz", ".tar.Z", ".rar","7z" };

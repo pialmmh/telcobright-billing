@@ -157,6 +157,7 @@
     <Compile Include="FileAndPath\FileAndPathHelperMutable.cs" />
     <Compile Include="FileAndPath\FileAndPathHelperReadOnly.cs" />
     <Compile Include="CommonDbClientExtensions.cs" />
+    <Compile Include="FileAndPath\VaultFileMover.cs" />
     <Compile Include="FileSplitter.cs" />
     <Compile Include="JsonCompressor.cs" />
     <Compile Include="JsonHelper.cs" />
