@@ -33,7 +33,7 @@ namespace Decoders
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
             DateTime dateTime;
-            if (DateTime.TryParseExact("20230904123527", "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
+            if (DateTime.TryParseExact(timestamp, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
                 
             return dateTime;
         }
