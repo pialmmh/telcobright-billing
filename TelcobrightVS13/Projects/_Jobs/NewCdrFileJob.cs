@@ -12,14 +12,17 @@ using MediationModel;
 using System.Threading.Tasks;
 using FlexValidation;
 using LibraryExtensions;
+using Mediation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using TelcobrightInfra;
 using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Cdr.Collection.PreProcessors;
 using TelcobrightMediation.Config;
+using DebugCdrHelper = TelcobrightInfra.DebugCdrHelper;
 
 namespace Jobs
 {
@@ -442,7 +445,7 @@ namespace Jobs
                 {
                     throw new Exception("Could not get exclusive lock on file before decoding, file transfer may be not finished yet through the network or FTP.");
                 }
-                List<string[]> decodedCdrRows= new List<string[]>();
+                List<string[]> decodedCdrRows = new List<string[]>();
                 try
                 {
                     decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
@@ -468,8 +471,46 @@ namespace Jobs
                 return newCdrPreProcessor;
             }
             NewCdrPreProcessor preProcessor = (NewCdrPreProcessor)cdrCollector.Collect();
+            if (preProcessor.TxtCdrRows.Any() && this.Input.NeAdditionalSetting.DumpAllInstancesToDebugCdrTable)
+            {
+                DumpAllRowsForDebugToTable(preProcessor);
+            }
             preProcessor.OriginalCdrFileSize = fileInfo.Length;
             return preProcessor;
+        }
+
+        private void DumpAllRowsForDebugToTable(NewCdrPreProcessor preProcessor)
+        {
+            Console.WriteLine(
+                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+            Console.WriteLine(
+                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+            Console.WriteLine(
+                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+            var constr = DbUtil.getDbConStrWithDatabase(this.Input.MediationContext.Tbc.DatabaseSetting);
+            using (MySqlConnection con = new MySqlConnection(constr)
+            ) //use separate connection as ddl may commit unwanted changes
+            {
+                con.Open();
+                using (MySqlCommand cmd = new MySqlCommand("", con))
+                {
+                    var tableName = "debugcdr";
+                    cmd.CommandText = DebugCdrHelper.getCreateTableSqlIfNotExists(tableName);
+                    cmd.ExecuteNonQuery();
+                    int insertCount = DebugCdrHelper.insert(preProcessor.TxtCdrRows, 20000, tableName, cmd);
+                    if (insertCount != preProcessor.TxtCdrRows.Count)
+                    {
+                        throw new Exception("Inserted number of debugcdr did not match textcdr count.");
+                    }
+                }
+                con.Close();
+                Console.WriteLine(
+                    "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+                Console.WriteLine(
+                    "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+                Console.WriteLine(
+                    "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+            }
         }
 
         private string getFullPathOfCdrFile()

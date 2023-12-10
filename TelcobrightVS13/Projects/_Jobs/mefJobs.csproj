@@ -114,6 +114,7 @@
   <ItemGroup>
     <Compile Include="Accounting\MefAccountBalanceAdjustment.cs" />
     <Compile Include="cdrBatchProcessor\CdrBatchCollector.cs" />
+    <Compile Include="cdrBatchProcessor\DebugCdrHelper.cs" />
     <Compile Include="CdrErase\CdrEraserJob.cs" />
     <Compile Include="Accounting\MefCdrInvoicingJob.cs" />
     <Compile Include="CdrError\ErrorCdrProcessingJob.cs" />

@@ -416,6 +416,7 @@ namespace TelcobrightMediation
             long writtenInconsistentCount = 0,
                 writtenErrorCount = 0,
                 writtenNonPartialCdrCount = 0,
+                writtenSuccessfulCount=0,
                 writtenNormalizedPartialCdrCount = 0,
                 writtenCdrCount = 0;
 
@@ -451,7 +452,17 @@ namespace TelcobrightMediation
             {
                 if (nonPartialCdrs.Any())
                 {
-                    writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
+                    if (this.MediationContext.CdrSetting.WriteFailedCallsToDb == false)//dont' write failed calls
+                    {
+                        nonPartialCdrs = nonPartialCdrs.Where(c => c.ChargingStatus == 1).ToList();
+                        writtenSuccessfulCount = WriteCdr(nonPartialCdrs);
+                        writtenNonPartialCdrCount = writtenSuccessfulCount +
+                                                    nonPartialCdrs.Count(c => c.ChargingStatus == 0);//although not written, but need to match validations
+                    }
+                    else//write failed calls
+                    {
+                        writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
+                    }
                 }
                 if (normalizedPartialCdrs.Any())
                 {

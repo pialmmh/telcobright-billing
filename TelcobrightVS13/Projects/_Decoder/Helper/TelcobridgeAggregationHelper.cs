@@ -24,13 +24,14 @@ namespace Decoders
                 .ToList();
             List<string[]> egressLegs = originalUnAggregatedInstances.Where(r => r[Fn.InTrunkAdditionalInfo] == "answer")
                 .ToList();
+            List<string[]> egressLegsWithEndFlag = egressLegs.Where(r => r[Fn.OutTrunkAdditionalInfo].ToLower() == "end").ToList();
 
-            if (ingressLegs.Any() == false || egressLegs.Any() == false)
+            if (ingressLegs.Any() == false || egressLegs.Any() == false || egressLegsWithEndFlag.Any()==false)
             {
                 return createResultForAggregationNotPossible(uniqueBillId,originalUnAggregatedInstances);
             }
-            Dictionary<decimal, List<string[]>> durationWiseEgressRows =
-                egressLegs.GroupBy(r => Convert.ToDecimal(r[Fn.DurationSec]))
+            Dictionary<decimal, List<string[]>> durationWiseEgressRows = egressLegsWithEndFlag
+                .GroupBy(r => Convert.ToDecimal(r[Fn.DurationSec]))
                     .ToDictionary(g => g.Key, g => g.ToList());
             bool aggregationComplete = false;
             decimal maxDuration = durationWiseEgressRows.Keys.Max();
