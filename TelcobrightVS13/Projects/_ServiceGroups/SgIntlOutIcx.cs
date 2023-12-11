@@ -59,8 +59,8 @@ namespace TelcobrightMediation
                     if (cdrProcessor.CdrJobContext.MediationContext.CdrSetting.useCasStyleProcessing)
                     {
                         decimal roundedDuration100Ms = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
-                        thisCdr.RoundedDuration = roundedDuration100Ms;
-                        thisCdr.Duration3 = CasDurationHelper.getIntlOutDur(roundedDuration100Ms);
+                        thisCdr.Duration3 = roundedDuration100Ms;
+                        thisCdr.RoundedDuration = CasDurationHelper.getIntlOutDur(roundedDuration100Ms);
                     }
                     break;
                 }
