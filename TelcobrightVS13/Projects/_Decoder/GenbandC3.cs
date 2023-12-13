@@ -27,6 +27,23 @@ namespace Decoders
         public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
 
+        private int TotalRecordCount { get; set; }
+        private List<string> MetaDataKeyWordsAtLineBeginning { get; } = new List<string>()
+        {
+            "FILENAME=",
+            "CREATION_TIME=",
+            "DCT_ID=",
+            "DCT_VERSION=",
+            "DCT_DEF=",
+            "CLOSE_TIME=",
+            "SEQNUM_FIRST=",
+            "SEQNUM_LAST=",
+            "RECORD_COUNT="
+        };
+        private bool IsMetaDataLine(string line)
+        {
+            return this.MetaDataKeyWordsAtLineBeginning.Any(md => line.StartsWith(md));
+        }
 
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
@@ -40,8 +57,24 @@ namespace Decoders
             string fileName = this.Input.FullPath;
             CompressedFileLinesReader linesReader= new CompressedFileLinesReader(fileName);
             List<string> tempLines = linesReader.readLinesFromCompressedFile().ToList();
+            int recordCount = tempLines.Last().StartsWith("RECORD_COUNT") ? Convert.ToInt32(tempLines.Last().Split('=')[1]) : -1;
+            tempLines = tempLines.Where(l => IsMetaDataLine(l) == false).ToList();
             List<string[]> lines = FileUtil.ParseLinesWithEnclosedAndUnenclosedFields(',', "\"", tempLines);
-            return decodeLine(decoderInputData, out inconsistentCdrs, fileName, lines);
+            int failedAndSuccessCount = 0;
+            List<string[]> decodedLines = decodeLine(decoderInputData, out inconsistentCdrs, fileName, lines, out failedAndSuccessCount);
+            if (recordCount == -1)
+            {
+                return decodedLines;
+            }
+            if (recordCount == failedAndSuccessCount)
+            {
+                return decodedLines;
+            }
+            var e= new Exception("Record count does not match RECORD_COUNT meta data.");
+            Console.WriteLine(e);
+            e.Data.Add("customError", "Possibly Corrupted");
+            e.Data.Add("jobId", this.Input.TelcobrightJob.id);
+            throw e;
         }
 
         public override string getTupleExpression(Object data)
@@ -75,21 +108,18 @@ namespace Decoders
         }
 
 
-        public List<string[]> decodeLine(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
+        public List<string[]> decodeLine(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines,
+            out int recordCount)
         {
-            
-           
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
-
-
-
+            recordCount = 0;
             try
             {
                 foreach (string[] lineAsArr in lines)
                 {
-                    if(lineAsArr.Length<15)continue;
                     
+                    recordCount++;
 
                     string[] textCdr= new  string[input.MefDecodersData.Totalfieldtelcobright];
 
