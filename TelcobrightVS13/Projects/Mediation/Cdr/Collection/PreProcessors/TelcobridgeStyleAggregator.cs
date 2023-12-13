@@ -34,24 +34,9 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
         }
         public Dictionary<string, EventAggregationResult> aggregateCdrs()
         {
-            Dictionary<string, object> tupGenInput = new Dictionary<string, object>()
-            {
-                { "collectorInput", this.CollectorInput},
-                { "row", null}
-            };
-            Dictionary<string, List<T>> allUnAggregatedEvents = this.OldUnAggregatedEventsFromDb.Concat(this.NewUnAggregatedEventsNotInDb)
-                .GroupBy(e =>
-                {
-                    tupGenInput["row"] = e;
-                    return Decoder.getTupleExpression(tupGenInput);
-                })
-                .Select(g => new
-                {
-                    Key = g.Key,
-                    Events = g.ToList()
-                }).ToDictionary(a => a.Key, a => a.Events);
-            Dictionary<string,EventAggregationResult> aggregationResults= new Dictionary<string, EventAggregationResult>();
-            foreach (var kv in allUnAggregatedEvents)
+            Dictionary<string, List<T>> tupWiseNewAndOldUnAggregatedEvents = mergeAndGroupNewAndOldEvents();
+            Dictionary<string, EventAggregationResult> aggregationResults = new Dictionary<string, EventAggregationResult>();
+            foreach (var kv in tupWiseNewAndOldUnAggregatedEvents)
             {
                 string billId = kv.Key;
                 List<T> unAggregatedInstances = kv.Value;
@@ -59,6 +44,20 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
                 aggregationResults.Add(billId, aggregationResult);
             }
             return aggregationResults;
+        }
+
+        private Dictionary<string, List<T>> mergeAndGroupNewAndOldEvents()
+        {
+            return this.OldUnAggregatedEventsFromDb.Concat(this.NewUnAggregatedEventsNotInDb)
+                .GroupBy(e =>
+                {
+                    return Decoder.getGeneratedUniqueEventId(e);
+                })
+                .Select(g => new
+                {
+                    Key = g.Key,
+                    Events = g.ToList()
+                }).ToDictionary(a => a.Key, a => a.Events);
         }
     }
 }

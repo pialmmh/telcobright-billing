@@ -10,15 +10,18 @@ namespace TelcobrightMediation
         public string UniqueEventId { get; }
         public List<string[]> OriginalUnaggregatedInstances { get; }
         public string[] AggregatedInstance { get; }
-        public List<string[]> InstancesCouldNotBeAggregated { get; }
+        public List<string[]> NewInstancesCouldNotBeAggregated { get; }
+        public List<string[]> OldInstancesCouldNotBeAggregated { get; }
         public List<string[]> InstancesToBeDiscardedAfterAggregation { get; }
         public EventAggregationResult(string uniqueEventId, List<string[]> originalUnaggregatedInstances,
-            string[] aggregatedInstance, List<string[]> instancesCouldNotBeAggregated, List<string[]> instancesToBeDiscardedAfterAggregation)
+            string[] aggregatedInstance, List<string[]> newInstancesCouldNotBeAggregated,
+            List<string[]> oldInstancesCouldNotBeAggregated, List<string[]> instancesToBeDiscardedAfterAggregation)
         {
             UniqueEventId = uniqueEventId;
             this.OriginalUnaggregatedInstances = originalUnaggregatedInstances;
             AggregatedInstance = aggregatedInstance;
-            InstancesCouldNotBeAggregated = instancesCouldNotBeAggregated;
+            this.NewInstancesCouldNotBeAggregated = newInstancesCouldNotBeAggregated;
+            this.OldInstancesCouldNotBeAggregated = oldInstancesCouldNotBeAggregated;
             InstancesToBeDiscardedAfterAggregation = instancesToBeDiscardedAfterAggregation;
             if (this.OriginalUnaggregatedInstances.Count > 0)
             {
@@ -33,7 +36,7 @@ namespace TelcobrightMediation
                     {
                         throw new Exception("InstancesToBeDiscarded+1 must be equal to originalinstances when aggregation is successful.");
                     }
-                    if (instancesCouldNotBeAggregated.Count == 0)
+                    if (NewInstancesCouldNotBeAggregated.Count > 0 || NewInstancesCouldNotBeAggregated.Count > 0)
                     {
                         throw new Exception("RowsCouldNotBeAggregated has to be empty when aggregation is successful.");
                     }
@@ -44,7 +47,8 @@ namespace TelcobrightMediation
                     {
                         throw new Exception("Instances cannot be discarded when aggregation is unsuccessful.");
                     }
-                    if (this.OriginalUnaggregatedInstances.Count != this.InstancesCouldNotBeAggregated.Count)
+                    if (this.OriginalUnaggregatedInstances.Count != this.NewInstancesCouldNotBeAggregated.Count+
+                                                                    this.NewInstancesCouldNotBeAggregated.Count)
                         throw new Exception("instancesCouldNotBeAggregated cannot be empty when aggregation is unsucessful.");
                 }
             }

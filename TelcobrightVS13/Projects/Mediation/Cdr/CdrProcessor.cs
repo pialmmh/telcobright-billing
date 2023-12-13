@@ -501,12 +501,12 @@ namespace TelcobrightMediation
                 if (neAdditionalSetting.AggregationStyle == "telcobridge")
                 {
                     newRowsRemainedUnaggreagatedCount =
-                        WriteNewRowsRemainedUnaggreagated(this.CollectionResult.RowsCouldNotBeAggreagated);
+                        WriteNewRowsRemainedUnaggreagated(this.CollectionResult.NewRowsCouldNotBeAggreagated);
                     deletedRowsFromPartialEvent = DeleteAggregatedPartialInstances(this.CollectionResult.RowsToBeDiscardedAfterAggregation);
                 }
             }
-            if (this.CollectionResult.RowsCouldNotBeAggreagated.Any() &&
-                newRowsRemainedUnaggreagatedCount != this.CollectionResult.RowsCouldNotBeAggreagated.Count)
+            if (this.CollectionResult.NewRowsCouldNotBeAggreagated.Any() &&
+                newRowsRemainedUnaggreagatedCount != this.CollectionResult.NewRowsCouldNotBeAggreagated.Count)
             {
                 throw new Exception("Written number of partial event count does not match collection result.");
             }

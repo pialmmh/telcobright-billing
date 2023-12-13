@@ -65,7 +65,6 @@ namespace Decoders
                     double durationSec = 0;
                     double.TryParse(durationStr, out durationSec);
 
-                    textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
                     textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial                              
                     textCdr[Fn.DurationSec] = durationSec.ToString();
                     textCdr[Fn.ChargingStatus] = durationSec > 0 ? "1" : "0";
@@ -126,6 +125,13 @@ namespace Decoders
                     seqNumber = Int64.Parse(seqNumber, NumberStyles.HexNumber).ToString();
                     textCdr[Fn.Sequencenumber] = seqNumber;
 
+                    textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
+                    string customUniqueBillId = this.getTupleExpression(new Dictionary<string, object>()
+                    {
+                        { "collectorInput", this.Input},
+                        {"row", textCdr }
+                    });
+                    textCdr[Fn.UniqueBillId] = customUniqueBillId;
                     decodedRows.Add(textCdr);
                 }
             }
@@ -166,6 +172,7 @@ namespace Decoders
                 .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
                 .Append(sessionId).ToString();
         }
+
         public override EventAggregationResult Aggregate(object data)
         {
             return TelcobridgeAggregationHelper.Aggregate(data);

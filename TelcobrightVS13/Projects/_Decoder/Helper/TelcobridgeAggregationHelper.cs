@@ -13,8 +13,11 @@ namespace Decoders
     {
         public static EventAggregationResult Aggregate(object data)
         {
-            //List<string[]> allRowsToAggregate = ((List<string[]>)data).OrderBy(row => row[Fn.StartTime]).ToList();
-            List<string[]> originalUnAggregatedInstances = ((List<string[]>)data).OrderBy(row => row[Fn.StartTime]).ToList();
+            Dictionary<string, List<string[]>> input = (Dictionary<string, List<string[]>>) data;
+            List<string[]> newUnAggInstances = input["new"];
+            List<string[]> oldUnAggInstances = input["old"];
+            List<string[]> originalUnAggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
+                .OrderBy(row => row[Fn.StartTime]).ToList();
             var groupedByBillId = originalUnAggregatedInstances.GroupBy(row => row[Fn.UniqueBillId]).ToDictionary(g => g.Key);
             if(groupedByBillId.Count>1)    
                 throw new Exception("Rows with multiple bill ids cannot be aggregated.");
@@ -28,7 +31,8 @@ namespace Decoders
 
             if (ingressLegs.Any() == false || egressLegs.Any() == false || egressLegsWithEndFlag.Any()==false)
             {
-                return createResultForAggregationNotPossible(uniqueBillId,originalUnAggregatedInstances);
+                return createResultForAggregationNotPossible(uniqueBillId, originalUnAggregatedInstances,
+                    newUnAggInstances, oldUnAggInstances);
             }
             Dictionary<decimal, List<string[]>> durationWiseEgressRows = egressLegsWithEndFlag
                 .GroupBy(r => Convert.ToDecimal(r[Fn.DurationSec]))
@@ -39,7 +43,8 @@ namespace Decoders
             durationWiseEgressRows.TryGetValue(maxDuration, out tempRows);
             if (tempRows == null || !tempRows.Any())
             {
-                return createResultForAggregationNotPossible(uniqueBillId,originalUnAggregatedInstances);
+                return createResultForAggregationNotPossible(uniqueBillId, originalUnAggregatedInstances,
+                    newUnAggInstances, oldUnAggInstances);
             }
             string[] aggregatedRow = tempRows.Last();
             aggregatedRow[Fn.IncomingRoute] = ingressLegs.Last()[Fn.IncomingRoute];//main aggregation
@@ -59,27 +64,32 @@ namespace Decoders
                 }
                 return new EventAggregationResult//aggregation successful
                 (
-                    uniqueBillId,
-                    originalUnAggregatedInstances,
-                    aggregatedRow,
-                    new List<string[]>(),
-                    rowsToBeDiscardedAfterAggregation
+                    uniqueEventId: uniqueBillId,
+                    originalUnaggregatedInstances: originalUnAggregatedInstances,
+                    aggregatedInstance: aggregatedRow,
+                    newInstancesCouldNotBeAggregated: new List<string[]>(),
+                    oldInstancesCouldNotBeAggregated: new List<string[]>(), 
+                    instancesToBeDiscardedAfterAggregation: rowsToBeDiscardedAfterAggregation
                 );
             }
             else
             {
-                return createResultForAggregationNotPossible(uniqueBillId,originalUnAggregatedInstances);
+                return createResultForAggregationNotPossible(uniqueBillId,originalUnAggregatedInstances,newUnAggInstances,oldUnAggInstances);
             }
         }
-        private static EventAggregationResult createResultForAggregationNotPossible(string uniqueEventId, List<string[]> originalUnAggregatedInstances)
+        private static EventAggregationResult createResultForAggregationNotPossible(string uniqueEventId,
+            List<string[]> originalUnAggregatedInstances, 
+            List<string[]> newUnAggInstances,
+            List<string[]> oldUnAggInstances)
         {
             return new EventAggregationResult
             (
-                uniqueEventId,
-                originalUnAggregatedInstances,
-                null,
-                originalUnAggregatedInstances,
-                new List<string[]>()
+                uniqueEventId: uniqueEventId,
+                originalUnaggregatedInstances: originalUnAggregatedInstances,
+                aggregatedInstance: null,
+                newInstancesCouldNotBeAggregated: newUnAggInstances,
+                oldInstancesCouldNotBeAggregated: oldUnAggInstances,
+                instancesToBeDiscardedAfterAggregation: new List<string[]>()
             );
         }
     }

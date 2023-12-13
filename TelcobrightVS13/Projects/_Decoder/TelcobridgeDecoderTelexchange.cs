@@ -80,7 +80,6 @@ namespace Decoders
                     string callStatus = lineAsArr[1].Trim().ToLower();
                     if (!string.Equals(callStatus, "End")) continue;
 
-                    textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
                     textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial
                     //textCdr[Fn.DurationSec] = lineAsArr[7].Trim();
 
@@ -133,7 +132,7 @@ namespace Decoders
                     {
                         textCdr[Fn.OutgoingRoute] = lineAsArr[12].Trim();
                     }
-
+                     
 
                     textCdr[Fn.StartTime] = startTimeStr;
                     textCdr[Fn.Endtime] = endTimeStr;
@@ -147,6 +146,14 @@ namespace Decoders
                     string seqNumber = lineAsArr[3].Remove(0, 2);
                     seqNumber = Int64.Parse(seqNumber, NumberStyles.HexNumber).ToString();
                     textCdr[Fn.Sequencenumber] = seqNumber;
+                    textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
+                    string customUniqueBillId = this.getTupleExpression(new Dictionary<string, object>()
+                    {
+                        { "collectorInput", this.Input},
+                        {"row", textCdr }
+                    });
+                    textCdr[Fn.UniqueBillId] = customUniqueBillId;
+
 
                     decodedRows.Add(textCdr);
                 }

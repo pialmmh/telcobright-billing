@@ -128,21 +128,9 @@ namespace Jobs
                         }
                         if (neAdditionalSetting.AggregationStyle == "telcobridge")
                         {
-                            Dictionary<string, string[]> dupFilteredBillIdsForThisJob =
-                                preProcessor.FinalNonDuplicateEvents;
-                            Dictionary<string, object> tupleGenInput = new Dictionary<string, object>()
-                            {
-                                {"collectorInput", this.CollectorInput},
-                                {"row", null}
-                            };
                             preProcessor.RowsToConsiderForAggregation = preProcessor
                                 .DecodedCdrRowsBeforeDuplicateFiltering
-                                .Where(r =>
-                                {
-                                    tupleGenInput["row"] = r;
-                                    return dupFilteredBillIdsForThisJob.ContainsKey(
-                                        preProcessor.Decoder.getTupleExpression(tupleGenInput));
-                                }).ToList();
+                                .Where(r => preProcessor.FinalNonDuplicateEvents.ContainsKey(r[Fn.UniqueBillId])).ToList();
                             preProcessor = aggregateCdrs(preProcessor);
                             preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
                             preProcessor.FinalNonDuplicateEvents =
@@ -165,7 +153,8 @@ namespace Jobs
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
             newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
             //aggregation related
-            newCollectionResult.RowsCouldNotBeAggreagated = preProcessor.RowsCouldNotBeAggregated;
+            newCollectionResult.NewRowsCouldNotBeAggreagated = preProcessor.NewRowsCouldNotBeAggregated;
+            newCollectionResult.OldRowsCouldNotBeAggreagated = preProcessor.OldRowsCouldNotBeAggregated;
             newCollectionResult.RowsToBeDiscardedAfterAggregation = preProcessor.RowsToBeDiscardedAfterAggregation;
             newCollectionResult.DebugCdrsForDump = preProcessor.DebugCdrsForDump;
             foreach (string[] row in preProcessor.DuplicateEvents)
@@ -180,7 +169,7 @@ namespace Jobs
                 newCollectionResult, oldCollectionResult, partialCdrTesterData);
 
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0 ||
-                cdrJob.CdrProcessor.CollectionResult.RowsCouldNotBeAggreagated.Count>0) //job not empty, or has records
+                cdrJob.CdrProcessor.CollectionResult.NewRowsCouldNotBeAggreagated.Count>0) //job not empty, or has records
             {
                 cdrJob.Execute(); //MAIN EXECUTION/MEDIATION METHOD
             }
@@ -843,6 +832,7 @@ namespace Jobs
                 DecodedCdrRowsBeforeDuplicateFiltering = decodedRowsBeforeDuplicateFiltering,
                 FinalNonDuplicateEvents = finalNonDuplicateEvents,
                 DuplicateEvents = excludedDuplicateCdrs,
+                DebugCdrsForDump = preProcessorWithCollectedRows.DebugCdrsForDump,
                 Decoder = decoder
             };
             return textCdrCollectionPreProcessor;
@@ -870,14 +860,16 @@ namespace Jobs
             var failedAggregationResults = aggregationResults.Values.Where(ar => ar.AggregatedInstance == null)
                 .ToList();
             preprocessor.FinalAggregatedInstances = successfulAggregationResults.Select(ar=>ar.AggregatedInstance).ToList();
-            preprocessor.RowsCouldNotBeAggregated = failedAggregationResults
-                .SelectMany(ar => ar.InstancesCouldNotBeAggregated).ToList();
+            preprocessor.NewRowsCouldNotBeAggregated = failedAggregationResults
+                .SelectMany(ar => ar.NewInstancesCouldNotBeAggregated).ToList();
+            preprocessor.OldRowsCouldNotBeAggregated = failedAggregationResults
+                .SelectMany(ar => ar.OldInstancesCouldNotBeAggregated).ToList();
             preprocessor.RowsToBeDiscardedAfterAggregation = successfulAggregationResults
                 .SelectMany(ar => ar.InstancesToBeDiscardedAfterAggregation).ToList();
 
             var inputRows = dayWiseEventCollector.InputEvents;
             if (inputRows.Count!=preprocessor.FinalAggregatedInstances.Count+preprocessor.RowsToBeDiscardedAfterAggregation.Count
-                +preprocessor.RowsCouldNotBeAggregated.Count)
+                +preprocessor.NewRowsCouldNotBeAggregated.Count)
             {
                 throw new Exception("Input and aggregated rows count did not match expected value");    
             }
