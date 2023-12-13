@@ -8,22 +8,22 @@ namespace TelcobrightMediation
     public class EventAggregationResult
     {
         public string UniqueEventId { get; }
-        public List<string[]> OriginalUnaggregatedInstances { get; }
+        public List<string[]> AllUnaggregatedInstances { get; }
         public string[] AggregatedInstance { get; }
         public List<string[]> NewInstancesCouldNotBeAggregated { get; }
         public List<string[]> OldInstancesCouldNotBeAggregated { get; }
         public List<string[]> InstancesToBeDiscardedAfterAggregation { get; }
-        public EventAggregationResult(string uniqueEventId, List<string[]> originalUnaggregatedInstances,
+        public EventAggregationResult(string uniqueEventId, List<string[]> allUnaggregatedInstances,
             string[] aggregatedInstance, List<string[]> newInstancesCouldNotBeAggregated,
             List<string[]> oldInstancesCouldNotBeAggregated, List<string[]> instancesToBeDiscardedAfterAggregation)
         {
             UniqueEventId = uniqueEventId;
-            this.OriginalUnaggregatedInstances = originalUnaggregatedInstances;
+            this.AllUnaggregatedInstances = allUnaggregatedInstances;
             AggregatedInstance = aggregatedInstance;
             this.NewInstancesCouldNotBeAggregated = newInstancesCouldNotBeAggregated;
             this.OldInstancesCouldNotBeAggregated = oldInstancesCouldNotBeAggregated;
             InstancesToBeDiscardedAfterAggregation = instancesToBeDiscardedAfterAggregation;
-            if (this.OriginalUnaggregatedInstances.Count > 0)
+            if (this.AllUnaggregatedInstances.Count > 0)
             {
                 if(this.UniqueEventId.IsNullOrEmptyOrWhiteSpace())
                     throw new Exception("Unique event id cannot be empty");
@@ -32,7 +32,7 @@ namespace TelcobrightMediation
                 {
                     if (aggregatedInstance[Fn.IdCall].IsNullOrEmptyOrWhiteSpace())
                         throw new Exception("Idcall not set for aggregated instance.");
-                    if (this.InstancesToBeDiscardedAfterAggregation.Count + 1 != this.OriginalUnaggregatedInstances.Count )
+                    if (this.InstancesToBeDiscardedAfterAggregation.Count + 1 != this.AllUnaggregatedInstances.Count )
                     {
                         throw new Exception("InstancesToBeDiscarded+1 must be equal to originalinstances when aggregation is successful.");
                     }
@@ -47,9 +47,9 @@ namespace TelcobrightMediation
                     {
                         throw new Exception("Instances cannot be discarded when aggregation is unsuccessful.");
                     }
-                    if (this.OriginalUnaggregatedInstances.Count != this.NewInstancesCouldNotBeAggregated.Count+
-                                                                    this.NewInstancesCouldNotBeAggregated.Count)
-                        throw new Exception("instancesCouldNotBeAggregated cannot be empty when aggregation is unsucessful.");
+                    if (this.AllUnaggregatedInstances.Count != this.NewInstancesCouldNotBeAggregated.Count+
+                                                                    this.OldInstancesCouldNotBeAggregated.Count)
+                        throw new Exception("AllUnAggregatedInstances count != newInstancesCouldNotBeAggregated+OldInstancesCouldNotBeAggregated.");
                 }
             }
             else

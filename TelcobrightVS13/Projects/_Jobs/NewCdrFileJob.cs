@@ -131,6 +131,9 @@ namespace Jobs
                             preProcessor.RowsToConsiderForAggregation = preProcessor
                                 .DecodedCdrRowsBeforeDuplicateFiltering
                                 .Where(r => preProcessor.FinalNonDuplicateEvents.ContainsKey(r[Fn.UniqueBillId])).ToList();
+                            preProcessor.FinalNonDuplicateEvents =
+                                preProcessor.FinalNonDuplicateEvents.Where(kv => kv.Value[Fn.Partialflag] == "0")
+                                .ToDictionary(kv=>kv.Key, kv=>kv.Value);
                             preProcessor = aggregateCdrs(preProcessor);
                             preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
                             preProcessor.FinalNonDuplicateEvents =
@@ -328,11 +331,11 @@ namespace Jobs
             if (collectionResult.OriginalRowsBeforeMerge.Count > 0) //job not empty, or has records
             {
                 decimal totalCdrDuration = cdrJob.CdrProcessor.CollectionResult
-                        .OriginalRowsBeforeMerge.Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace() 
+                        .OriginalRowsBeforeMerge.Where(r=>r[Fn.Partialflag]!="1").Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace() 
                         ? 0 
                         : Convert.ToDecimal(r[Fn.DurationSec]));
                 decimal totalActualDurationInconsistent = cdrJob.CdrProcessor.CollectionResult
-                        .CdrInconsistents.Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
+                        .CdrInconsistents.Where(c=>c.PartialFlag!="1").Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
                         ? 0
                         : Convert.ToDecimal(r.DurationSec));
                 decimal totalActualDuration = totalCdrDuration + totalActualDurationInconsistent;
@@ -382,10 +385,12 @@ namespace Jobs
                 WriteJobCompletionIfCollectionIsEmpty(0, telcobrightJob, context);
                 //throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
             }
-            decimal totalCdrDuration = mergedJob.OriginalRows.Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace()
+            decimal totalCdrDuration = mergedJob.OriginalRows
+                .Where(r=>r[Fn.Partialflag]!="1").Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace()
                         ? 0
                         : Convert.ToDecimal(r[Fn.DurationSec]));
-            decimal totalActualDurationInconsistent = mergedJob.OriginalCdrinconsistents.Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
+            decimal totalActualDurationInconsistent = mergedJob.OriginalCdrinconsistents
+                .Where(c=>c.PartialFlag!="1").Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
                     ? 0
                     : Convert.ToDecimal(r.DurationSec));
             decimal totalActualDuration = totalCdrDuration + totalActualDurationInconsistent;
@@ -835,6 +840,15 @@ namespace Jobs
                 DebugCdrsForDump = preProcessorWithCollectedRows.DebugCdrsForDump,
                 Decoder = decoder
             };
+            //adjust raw count due to filtering
+            int newRawCount = textCdrCollectionPreProcessor.TxtCdrRows.Count +
+                              textCdrCollectionPreProcessor.InconsistentCdrs.Count +
+                              textCdrCollectionPreProcessor.DuplicateEvents.Count;
+            if (newRawCount != textCdrCollectionPreProcessor.DecodedCdrRowsBeforeDuplicateFiltering.Count)
+            {
+                throw new Exception("Cdr count mismatch after duplicate filtering!");
+            }
+            textCdrCollectionPreProcessor.RawCount = newRawCount;
             return textCdrCollectionPreProcessor;
         }
 

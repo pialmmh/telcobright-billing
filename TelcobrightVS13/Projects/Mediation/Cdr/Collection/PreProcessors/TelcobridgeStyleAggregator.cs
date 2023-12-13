@@ -11,6 +11,7 @@ using MediationModel;
 using MySql.Data.MySqlClient;
 using TelcobrightInfra;
 using TelcobrightMediation.Config;
+// ReSharper disable All
 
 namespace TelcobrightMediation.Cdr.Collection.PreProcessors
 {
@@ -18,12 +19,10 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
     {
         private DayWiseEventCollector<T> EventCollector { get; }
         public CdrCollectorInputData CollectorInput { get; set; }
-        
         private Dictionary<string, T> AggregatedEvents { get; } = new Dictionary<string, T>();
         private List<T> OldUnAggregatedEventsFromDb { get; }
         private List<T> NewUnAggregatedEventsNotInDb { get; }
         private AbstractCdrDecoder Decoder { get; }
-
         public TelcobridgeStyleAggregator(DayWiseEventCollector<T> eventCollector)
         {
             this.EventCollector = eventCollector;
@@ -34,30 +33,46 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
         }
         public Dictionary<string, EventAggregationResult> aggregateCdrs()
         {
-            Dictionary<string, List<T>> tupWiseNewAndOldUnAggregatedEvents = mergeAndGroupNewAndOldEvents();
+            Dictionary<string, NewAndOldEventsWrapper<T>> billIdWiseNewAndOldWrappers = mergeAndGroupNewAndOldEvents();
             Dictionary<string, EventAggregationResult> aggregationResults = new Dictionary<string, EventAggregationResult>();
-            foreach (var kv in tupWiseNewAndOldUnAggregatedEvents)
+            foreach (var kv in billIdWiseNewAndOldWrappers)
             {
                 string billId = kv.Key;
-                List<T> unAggregatedInstances = kv.Value;
-                EventAggregationResult aggregationResult = this.Decoder.Aggregate(unAggregatedInstances);
+                NewAndOldEventsWrapper<T> newAndOldEventsWrapper = kv.Value;
+                EventAggregationResult aggregationResult = this.Decoder.Aggregate(newAndOldEventsWrapper);
                 aggregationResults.Add(billId, aggregationResult);
             }
             return aggregationResults;
         }
 
-        private Dictionary<string, List<T>> mergeAndGroupNewAndOldEvents()
+        private Dictionary<string, NewAndOldEventsWrapper<T>> mergeAndGroupNewAndOldEvents()
         {
-            return this.OldUnAggregatedEventsFromDb.Concat(this.NewUnAggregatedEventsNotInDb)
-                .GroupBy(e =>
+            Dictionary<string, NewAndOldEventsWrapper<T>> newAndOldInstanceWrappers = 
+                this.NewUnAggregatedEventsNotInDb
+                .GroupBy(r => Decoder.getGeneratedUniqueEventId(r))
+                .Select(g => new NewAndOldEventsWrapper<T>
                 {
-                    return Decoder.getGeneratedUniqueEventId(e);
-                })
-                .Select(g => new
+                    UniqueBillId = g.Key,
+                    NewUnAggInstances = g.ToList()
+                }).ToDictionary(wrapper => wrapper.UniqueBillId);
+
+            Dictionary<string, List<T>> billIdWiseOldInstances = this.OldUnAggregatedEventsFromDb
+                .GroupBy(r => Decoder.getGeneratedUniqueEventId(r))
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            foreach (var kv in billIdWiseOldInstances)
+            {
+                var billId = kv.Key;
+                List<T> oldUnAggInstances = kv.Value;
+                NewAndOldEventsWrapper<T> targetWrapper = null;
+                newAndOldInstanceWrappers.TryGetValue(billId, out targetWrapper);
+                if (targetWrapper == null)
                 {
-                    Key = g.Key,
-                    Events = g.ToList()
-                }).ToDictionary(a => a.Key, a => a.Events);
+                    throw new Exception($"Could not find new wrapper instance for billid: {billId}");
+                }
+                targetWrapper.OldUnAggInstances = oldUnAggInstances;
+            }
+            return newAndOldInstanceWrappers;
         }
     }
 }
