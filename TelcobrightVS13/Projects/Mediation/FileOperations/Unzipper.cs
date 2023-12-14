@@ -166,7 +166,7 @@ namespace TelcobrightFileOperations
                 }
             }
 
-               File.Delete(zippedFile.FullName);
+               //File.Delete(zippedFile.FullName);
         }
     }
 }
