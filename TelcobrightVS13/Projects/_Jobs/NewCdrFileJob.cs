@@ -132,8 +132,12 @@ namespace Jobs
                                 .DecodedCdrRowsBeforeDuplicateFiltering
                                 .Where(r => preProcessor.FinalNonDuplicateEvents.ContainsKey(r[Fn.UniqueBillId])).ToList();
                             preProcessor.FinalNonDuplicateEvents =
-                                preProcessor.FinalNonDuplicateEvents.Where(kv => kv.Value[Fn.Partialflag] == "0")
+                                preProcessor.FinalNonDuplicateEvents.Where(kv => kv.Value[Fn.Partialflag] != "1")
                                 .ToDictionary(kv=>kv.Key, kv=>kv.Value);
+                            preProcessor.RowsToBeDiscardedAfterAggregation =
+                                preProcessor.RowsToBeDiscardedAfterAggregation.Where(r => r[Fn.Partialflag] != "1").ToList();
+                            preProcessor.DuplicateEvents =
+                                preProcessor.DuplicateEvents.Where(r => r[Fn.Partialflag] != "1").ToList();
                             preProcessor = aggregateCdrs(preProcessor);
                             preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
                             preProcessor.FinalNonDuplicateEvents =
@@ -160,12 +164,8 @@ namespace Jobs
             newCollectionResult.OldRowsCouldNotBeAggreagated = preProcessor.OldRowsCouldNotBeAggregated;
             newCollectionResult.RowsToBeDiscardedAfterAggregation = preProcessor.RowsToBeDiscardedAfterAggregation;
             newCollectionResult.DebugCdrsForDump = preProcessor.DebugCdrsForDump;
-            foreach (string[] row in preProcessor.DuplicateEvents)
-            {
-                row[Fn.Switchid] = this.Input.Ne.idSwitch.ToString();
-                row[Fn.Filename] = this.CollectorInput.TelcobrightJob.JobName;
-                newCollectionResult.DuplicateEvents.Add(row);
-            }
+            preProcessor.DuplicateEvents=newCollectionResult.DuplicateEvents;
+
             PartialCdrTesterData partialCdrTesterData =
                 OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
             CdrJob cdrJob = (new CdrJobFactory(this.Input, this.RawCount)).CreateCdrJob(preProcessor,
