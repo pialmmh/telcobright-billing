@@ -141,8 +141,11 @@ namespace Process
                                     jobName = f.Name,
                                     fileName = f
                                 }).ToDictionary(a => a.jobName, a => a.fileName);
+                        //string path = @"C:\Users\Administrator\Desktop\check\test1.txt";
+                        //File.WriteAllLines(path, newJobNameVsFileInfos.Select(kv => $"{kv.Key}: {kv.Value.FullName}"));
                         Dictionary<string, string> existingJobNames
                             = getExistingJobNames(context, newJobNameVsFileInfos, thisSwitch.idSwitch);
+                        Dictionary<string, FileInfo> alreadyExistingJobs = new Dictionary<string, FileInfo>();
                         fileInfos = new List<FileInfo>();
                         foreach (KeyValuePair<string, FileInfo> kv in newJobNameVsFileInfos)
                         {
@@ -151,7 +154,21 @@ namespace Process
                             {
                                 fileInfos.Add(kv.Value);
                             }
+                            else
+                            {
+                                alreadyExistingJobs.Add(kv.Key, kv.Value);
+                            }
+                            
                         }
+
+                        List<FileInfo> fileInfosToDelete =
+                            getCompletedJobNames(context, alreadyExistingJobs, thisSwitch.idSwitch);
+                        fileInfosToDelete.ForEach(f =>
+                        {
+                            if (File.Exists(f.FullName))
+                                f.Delete();
+                        });
+
                         //*************
                         Console.WriteLine($"Checking exclusive lock...");
                         FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
@@ -222,8 +239,27 @@ namespace Process
             List<string> existingJobNames = segmenter
                 .ExecuteMethodInSegmentsWithRetval(200000, getExistingJobNamesInSegment)
                 .ToList();
+            //string path = @"C:\Users\Administrator\Desktop\check\test.txt";
+            //File.WriteAllLines(path,existingJobNames);
             return existingJobNames.ToDictionary(n => n);
         }
+
+        private static List<FileInfo> getCompletedJobNames(PartnerEntities context,
+            Dictionary<string,FileInfo> existingJobs, int idSwitch)
+        {
+            CollectionSegmenter<string> segmenter = new CollectionSegmenter<string>(existingJobs.Keys, 0);
+            Func<IEnumerable<string>, List<string>> getExistingJobNamesInSegment = jobNames =>
+                context.Database.SqlQuery<string>(
+                    $@"select jobname from job 
+                    where status=1 and idjobdefinition=1 and idNe={idSwitch}
+                    and jobname in ({string.Join(",", jobNames.Select(f => "'" + f + "'"))})").ToList();
+
+            HashSet<string> completedJobNames = new HashSet<string>(segmenter
+                .ExecuteMethodInSegmentsWithRetval(200000, getExistingJobNamesInSegment));
+
+            return existingJobs.Where(kv => completedJobNames.Contains(kv.Key)).Select(kv => kv.Value).ToList();
+        }
+
         private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB,
             int existingCount)
         {
