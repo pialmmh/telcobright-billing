@@ -77,7 +77,7 @@ namespace Jobs
                 jobParameter = jobParameter.Replace("unsplit\\", "unsplit`");
                 delParam = JsonConvert.DeserializeObject<JobParamFileDelete>(jobParameter);
                 delParam.FileLocation.PathSeparator = delParam.FileLocation.PathSeparator.Replace("`", "\\");
-                delParam.FileName= delParam.FileName.Replace("`", "\\");
+                delParam.FileName = delParam.FileName.Replace("`", "\\");
 
                 return delParam;
             }

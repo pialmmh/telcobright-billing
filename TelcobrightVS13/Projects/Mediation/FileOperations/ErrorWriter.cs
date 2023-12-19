@@ -55,8 +55,15 @@ namespace TelcobrightFileOperations
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception.Message);
-                    File.AppendAllText("telcobright.log", $"Error: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + JsonConvert.SerializeObject(thisError)} "
-                                                          + Environment.NewLine);
+                    try
+                    {
+                        File.AppendAllText("telcobright.log", $"Error: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + JsonConvert.SerializeObject(thisError)} "
+                                                              + Environment.NewLine);
+                    }
+                    catch (Exception e1)
+                    {
+                        Console.WriteLine("Exception: " + e1);
+                    }
                 }
             }
             catch (Exception e2) //database error
@@ -70,8 +77,15 @@ namespace TelcobrightFileOperations
                     ProcessName = processInformation,
                     ExceptionDetail = e2.InnerException?.ToString() ?? ""
                 };
-                File.AppendAllText("telcobright.log", $"Error: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + JsonConvert.SerializeObject(thisError)} "
-                                                      + Environment.NewLine);
+                try
+                {
+                    File.AppendAllText("telcobright.log", $"Error: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + JsonConvert.SerializeObject(thisError)} "
+                                                          + Environment.NewLine);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine("Exception:" + exception);
+                }
             }
         }
     }
