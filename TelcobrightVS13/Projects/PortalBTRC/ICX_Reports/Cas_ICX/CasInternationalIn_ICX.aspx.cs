@@ -56,7 +56,7 @@ public partial class CasDefaultRptIntlInIcx : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                                 //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty
                             },
                          new List<string>()
                             {
@@ -234,7 +234,7 @@ public partial class CasDefaultRptIntlInIcx : System.Web.UI.Page
                     tableNames: tableNames,
                     _baseSqlStartsWith: "(",
                     _baseSqlEndsWith: ") x");
-            string aggregatedSql = sqlAggregator.getFinalSql();
+            string aggregatedSql = sqlAggregator.getFinalSql().Replace("date_format(tup_starttime, '%m %d %y')", "date_format(tup_starttime, '%M %d %Y')");
             MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
 
 
