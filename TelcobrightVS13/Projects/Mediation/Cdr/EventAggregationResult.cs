@@ -11,18 +11,23 @@ namespace TelcobrightMediation
         public List<string[]> AllUnaggregatedInstances { get; }
         public string[] AggregatedInstance { get; }
         public List<string[]> NewInstancesCouldNotBeAggregated { get; }
+        public List<string[]> OldPartialInstancesFromDB { get; }
         public List<string[]> OldInstancesCouldNotBeAggregated { get; }
-        public List<string[]> InstancesToBeDiscardedAfterAggregation { get; }
+        public List<string[]> NewInstancesToBeDiscardedAfterAggregation { get; }
+        public List<string[]> OldInstancesToBeDiscardedAfterAggregation { get; }
         public EventAggregationResult(string uniqueEventId, List<string[]> allUnaggregatedInstances,
             string[] aggregatedInstance, List<string[]> newInstancesCouldNotBeAggregated,
-            List<string[]> oldInstancesCouldNotBeAggregated, List<string[]> instancesToBeDiscardedAfterAggregation)
+            List<string[]> oldInstancesCouldNotBeAggregated, List<string[]> newInstancesToBeDiscardedAfterAggregation,
+            List<string[]> oldInstancesToBeDiscardedAfterAggregation,List<string[]> oldPartialInstancesFromDB)
         {
             UniqueEventId = uniqueEventId;
             this.AllUnaggregatedInstances = allUnaggregatedInstances;
             AggregatedInstance = aggregatedInstance;
             this.NewInstancesCouldNotBeAggregated = newInstancesCouldNotBeAggregated;
             this.OldInstancesCouldNotBeAggregated = oldInstancesCouldNotBeAggregated;
-            InstancesToBeDiscardedAfterAggregation = instancesToBeDiscardedAfterAggregation;
+            this.NewInstancesToBeDiscardedAfterAggregation = newInstancesToBeDiscardedAfterAggregation;
+            this.OldInstancesToBeDiscardedAfterAggregation = oldInstancesToBeDiscardedAfterAggregation;
+            this.OldPartialInstancesFromDB = oldPartialInstancesFromDB;
             if (this.AllUnaggregatedInstances.Count > 0)
             {
                 if(this.UniqueEventId.IsNullOrEmptyOrWhiteSpace())
@@ -32,18 +37,19 @@ namespace TelcobrightMediation
                 {
                     if (aggregatedInstance[Fn.IdCall].IsNullOrEmptyOrWhiteSpace())
                         throw new Exception("Idcall not set for aggregated instance.");
-                    if (this.InstancesToBeDiscardedAfterAggregation.Count + 1 != this.AllUnaggregatedInstances.Count )
+                    if (this.NewInstancesToBeDiscardedAfterAggregation.Count+
+                        this.OldInstancesToBeDiscardedAfterAggregation.Count + 1 != this.AllUnaggregatedInstances.Count )
                     {
                         throw new Exception("InstancesToBeDiscarded+1 must be equal to originalinstances when aggregation is successful.");
                     }
-                    if (NewInstancesCouldNotBeAggregated.Count > 0 || NewInstancesCouldNotBeAggregated.Count > 0)
+                    if (NewInstancesCouldNotBeAggregated.Count > 0 || OldInstancesCouldNotBeAggregated.Count > 0)
                     {
                         throw new Exception("RowsCouldNotBeAggregated has to be empty when aggregation is successful.");
                     }
                 }
                 else//aggregation failed
                 {
-                    if (instancesToBeDiscardedAfterAggregation.Count > 0)
+                    if (newInstancesToBeDiscardedAfterAggregation.Count > 0 || oldInstancesToBeDiscardedAfterAggregation.Count > 0)
                     {
                         throw new Exception("Instances cannot be discarded when aggregation is unsuccessful.");
                     }

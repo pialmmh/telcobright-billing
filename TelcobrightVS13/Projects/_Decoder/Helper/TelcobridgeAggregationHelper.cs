@@ -22,7 +22,8 @@ namespace Decoders
             if(groupedByBillId.Count>1)    
                 throw new Exception("Rows with multiple bill ids cannot be aggregated.");
             string uniqueBillId = groupedByBillId.Keys.First();
-            List<string[]> rowsToBeDiscardedAfterAggregation = new List<string[]>();
+            List<string[]> newRowsToBeDiscardedAfterAggregation = new List<string[]>();
+            List<string[]> oldRowsToBeDiscardedAfterAggregation = new List<string[]>();
             List<string[]> ingressLegs = allUnaggregatedInstances.Where(r => r[Fn.InTrunkAdditionalInfo] == "originate")
                 .ToList();
             List<string[]> egressLegs = allUnaggregatedInstances.Where(r => r[Fn.InTrunkAdditionalInfo] == "answer")
@@ -55,11 +56,18 @@ namespace Decoders
             if (aggregationComplete)
             {
                 aggregatedRow[Fn.Partialflag] = "0";
-                foreach (string[] row in allUnaggregatedInstances)
+                foreach (string[] row in newUnAggInstances)
                 {
                     if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
                     {
-                        rowsToBeDiscardedAfterAggregation.Add(row);
+                        newRowsToBeDiscardedAfterAggregation.Add(row);
+                    }
+                }
+                foreach (string[] row in oldUnAggInstances)
+                {
+                    if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
+                    {
+                        oldRowsToBeDiscardedAfterAggregation.Add(row);
                     }
                 }
                 return new EventAggregationResult//aggregation successful
@@ -69,7 +77,9 @@ namespace Decoders
                     aggregatedInstance: aggregatedRow,
                     newInstancesCouldNotBeAggregated: new List<string[]>(),
                     oldInstancesCouldNotBeAggregated: new List<string[]>(), 
-                    instancesToBeDiscardedAfterAggregation: rowsToBeDiscardedAfterAggregation
+                    newInstancesToBeDiscardedAfterAggregation: newRowsToBeDiscardedAfterAggregation,
+                    oldInstancesToBeDiscardedAfterAggregation: oldRowsToBeDiscardedAfterAggregation,
+                    oldPartialInstancesFromDB: oldUnAggInstances
                 );
             }
             else
@@ -89,7 +99,9 @@ namespace Decoders
                 aggregatedInstance: null,
                 newInstancesCouldNotBeAggregated: newUnAggInstances,
                 oldInstancesCouldNotBeAggregated: oldUnAggInstances,
-                instancesToBeDiscardedAfterAggregation: new List<string[]>()
+                newInstancesToBeDiscardedAfterAggregation: new List<string[]>(),
+                oldInstancesToBeDiscardedAfterAggregation: new List<string[]>(),
+                oldPartialInstancesFromDB: oldUnAggInstances
             );
         }
     }

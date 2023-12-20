@@ -45,12 +45,12 @@ namespace Jobs
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
-            //newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
-            foreach (string[] row in preProcessor.DuplicateEvents)
+            //newCollectionResult.NewDuplicateEvents = preProcessor.NewDuplicateEvents;
+            foreach (string[] row in preProcessor.NewDuplicateEvents)
             {
                 row[Fn.Switchid] = this.Input.Ne.idSwitch.ToString();
                 row[Fn.Filename] = this.CollectorInput.TelcobrightJob.JobName;
-                newCollectionResult.DuplicateEvents.Add(row);
+                newCollectionResult.NewDuplicateEvents.Add(row);
             }
 
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
