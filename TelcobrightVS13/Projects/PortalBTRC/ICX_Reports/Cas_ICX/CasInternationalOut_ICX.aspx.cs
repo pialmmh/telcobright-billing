@@ -54,14 +54,14 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                             {
                                 groupInterval=="Hourly"?"Date":string.Empty,
                                 getInterval(groupInterval),
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
                                 CheckBoxShowByCountry.Checked==true?"tup_countryorareacode":string.Empty,
                                 CheckBoxShowByDestination.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
-                                "usdRate",
+                                //CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
+                                //"usdRate",
                                 //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
@@ -248,7 +248,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                     tableNames: tableNames,
                     _baseSqlStartsWith: "(",
                     _baseSqlEndsWith: ") x");
-            string aggregatedSql = sqlAggregator.getFinalSql();
+            string aggregatedSql = sqlAggregator.getFinalSql().Replace("date_format(tup_starttime, '%m %d %y')", "date_format(tup_starttime, '%M %d %Y')");
             MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
             cmd.Connection = connection;
 

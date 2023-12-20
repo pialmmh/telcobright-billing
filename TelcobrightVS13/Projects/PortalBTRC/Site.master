@@ -206,6 +206,8 @@
                                     <asp:TreeNode Value="DomesticWithLtfs" Text="Domestic With LTFS" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasDomesticWithLtfs.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalIn_ICX.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalOut_ICX.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="All Trafic" Text="All Trafic" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/AllTrafic.aspx"></asp:TreeNode>
+
                                     <%--  <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl="~/reports/transit/AlphatechPremium.aspx"> </asp:TreeNode>
 
@@ -243,6 +245,8 @@
 
                                 <asp:TreeNode Value="Tgs" Text="Tgs" NavigateUrl="~/Mediation/Tgs.aspx" />
                                 <asp:TreeNode Value="Jobs" Text="Jobs" NavigateUrl="~/Mediation/Mediation.aspx" />
+                                <asp:TreeNode Value="File Reconciliation" Text="File Reconciliation" NavigateUrl="~/Mediation/CDRFileReconciliation.aspx" />
+
                                 <%--<asp:TreeNode Value="Error Calls" Text="Error Calls" NavigateUrl="~/Mediation/CdrError.aspx" > </asp:TreeNode>
                                 <asp:TreeNode Value="Mediation Errors" Text="Mediation Errors" NavigateUrl="~/Mediation/MediationError.aspx" > </asp:TreeNode>--%>
                                 <asp:TreeNode Value="Create Batch Job" Text="Create Batch Job" NavigateUrl="~/config/Batchjob.aspx" />
