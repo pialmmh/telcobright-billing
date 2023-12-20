@@ -5,6 +5,8 @@ using System.Drawing.Drawing2D;
 using CasTelcobright.Forms;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading;
+
 namespace CasTelcobright
 {
     partial class Form1
@@ -20,7 +22,14 @@ namespace CasTelcobright
                 {
                     int processId = display.Value.processWrapper.processId;
                     System.Diagnostics.Process procs = System.Diagnostics.Process.GetProcessById(processId, ".");
+                    //try again if procs is null;
+                    if(procs==null)
+                    {
+                        System.Diagnostics.Process.GetProcessById(processId, ".");
+                    }
                     procs.Kill();
+
+                    Thread.Sleep(100);
                 }
             }
 
