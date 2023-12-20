@@ -48,7 +48,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                          new List<string>()
                             {
                                 getInterval(groupInterval),
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
                                 CheckBoxShowByCountry.Checked==true?"tup_countryorareacode":string.Empty,
                                 CheckBoxShowByDestination.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,

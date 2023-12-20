@@ -50,14 +50,14 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                          
                          new List<string>()
                             {
-                                // groupInterval=="Hourly"?"tup_starttime":string.Empty,
+                                groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 getInterval(groupInterval),
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty
                                 },
                          new List<string>()
                             {
@@ -191,7 +191,7 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                                    tableNames: new[] {"sum_voice_day_01", "sum_voice_day_04" }, 
                                    _baseSqlStartsWith: "(", 
                                    _baseSqlEndsWith: ") x");
-            string aggregatedSql = sqlAggregator.getFinalSql();
+            string aggregatedSql = sqlAggregator.getFinalSql().Replace("date_format(tup_starttime, '%m %d %y')", "date_format(tup_starttime, '%M %d %y')");
             MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
 
             cmd.Connection = connection; 
@@ -202,7 +202,6 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
             else
             {
                 GridView1.Columns[GetColumnIndexByName(GridView1, "Date")].Visible = true;
-
 
             }
 
