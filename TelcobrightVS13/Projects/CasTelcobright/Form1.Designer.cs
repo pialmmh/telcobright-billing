@@ -95,7 +95,9 @@ namespace CasTelcobright
                 DriveInfo driveInfo = new DriveInfo(driveLetter);
 
                 string driveletter = driveLetters[i];
-                getFilesInfoRecursively(driveLetter+"telcobright");
+                var tbdir = driveLetter+"telcobright";
+                if(!Directory.Exists(tbdir)) continue;
+                getFilesInfoRecursively(tbdir);
 
                 string labelText = $"{driveLetter}:\nT: {FormatSize(driveInfo.TotalSize)}, F: {FormatSize(driveInfo.AvailableFreeSpace)}, Files: {AllFileInfos.Count}";
                 AllFileInfos.Clear();

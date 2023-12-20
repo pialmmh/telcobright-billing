@@ -62,6 +62,7 @@ namespace CasTelcobright.Forms
             this.btnStartStop.TabIndex = 1;
             this.btnStartStop.Text = "Start";
             this.btnStartStop.UseVisualStyleBackColor = true;
+            this.btnStartStop.Click += new System.EventHandler(this.StartStopClick);
             // 
             // richTextBox1
             // 
