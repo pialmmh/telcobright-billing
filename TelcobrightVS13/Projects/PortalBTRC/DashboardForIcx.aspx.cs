@@ -69,7 +69,7 @@ public partial class DashboardAspxForIcx : Page
             DateTime lastDayDisplayed = sevenDaysAgo.AddDays(6);
             if (currentDate.Date == lastDayDisplayed.Date)
             {
-                NextButton3.Enabled = false;
+                //NextButton3.Enabled = false;
             }
         }
 
@@ -316,9 +316,7 @@ public partial class DashboardAspxForIcx : Page
         string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
         icxConnstr = connectionString;
         // Modify your SQL query to include the OFFSET and FETCH NEXT clauses
-        string sqlCommand = $@"SELECT 100 as id,1 as Status,'banglatelecom_with_data2023-08-05.zip' AS FileName,  NOW() AS ExtractTime
-                               union all
-                               SELECT 100 as id,7 as Status,'banglatelecom_with_data2023-08-05.zip' AS FileName,  NOW() AS ExtractTime;";
+        string sqlCommand = $@"select id,Status, compressedfileName, CompletionTime from compressedfile;";
 
         using (MySqlConnection connection = new MySqlConnection())
         {
@@ -651,11 +649,9 @@ public partial class DashboardAspxForIcx : Page
     {
         public int id { get; set; }
         public int Status { get; set; }
-        public string FileName { get; set; }
-        public DateTime ExtractTime { get; set; }
+        public string compressedfileName { get; set; }
+        public DateTime CompletionTime { get; set; }
     }
-
-
 
     protected class GridViewMissingTg
     {
@@ -768,8 +764,8 @@ public partial class DashboardAspxForIcx : Page
 
                     record.id = Convert.ToInt32(row["Id"]);
                     record.Status = Convert.ToInt32(row["Status"]);
-                    record.FileName = row["FileName"].ToString();
-                    record.ExtractTime = Convert.ToDateTime(row["ExtractTime"]);
+                    record.compressedfileName = row["compressedfileName"].ToString();
+                    record.CompletionTime = Convert.ToDateTime(row["CompletionTime"]);
 
                     records.Add(record);
                 }

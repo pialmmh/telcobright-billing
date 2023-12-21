@@ -245,23 +245,23 @@
                                                 <ItemTemplate>
                                                     <div style="text-align: center;">
                                                         <asp:Image ID="StatusImage" runat="server" Width="14" Height="14" 
-                                                                   ImageUrl='<%# Convert.ToInt32(Eval("Status")) == 7 ? "~/img/correct.png" : "~/img/error.png" %>' />
+                                                                   ImageUrl='<%# Convert.ToInt32(Eval("Status")) == 1 ? "~/img/correct.png" : "~/img/error.png" %>' />
                                                     </div>
                                                 </ItemTemplate>
                                             </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Extraction Status">
                                                 <ItemTemplate>
                                                     <div style="text-align: center;">
-                                                        <asp:Label ID="StatusLabel" runat="server" Text='<%# Convert.ToInt32(Eval("Status")) == 7 ? "Complete" : "Corrupted" %>'
-                                                                   style='<%# Convert.ToInt32(Eval("Status")) == 7 ? "color: green;" : "color: red;" %>' />
+                                                        <asp:Label ID="StatusLabel" runat="server" Text='<%# Convert.ToInt32(Eval("Status")) == 1 ? "Complete" : "Corrupted" %>'
+                                                                   style='<%# Convert.ToInt32(Eval("Status")) == 1 ? "color: green;" : "color: red;" %>' />
                                                     </div>
                                                 </ItemTemplate>
 
                                             </asp:TemplateField>
 
                                             <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
-                                            <asp:BoundField DataField="FileName" HeaderText="File Name" SortExpression="FileName" />
-                                            <asp:BoundField DataField="ExtractTime" HeaderText="Extraction Time" SortExpression="ExtractTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
+                                            <asp:BoundField DataField="compressedfileName" HeaderText="File Name" SortExpression="compressedfileName" />
+                                            <asp:BoundField DataField="CompletionTime" HeaderText="Extraction Time" SortExpression="CompletionTime" DataFormatString="{0:yyyy-MM-dd HH:mm:ss}" />
                                         </Columns>
                                         <EditRowStyle BackColor="#999999" />
                                         <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
