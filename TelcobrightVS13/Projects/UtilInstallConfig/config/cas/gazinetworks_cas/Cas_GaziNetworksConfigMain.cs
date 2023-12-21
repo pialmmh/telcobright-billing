@@ -52,7 +52,7 @@ namespace InstallConfig
             {
                 var ne = wrapped.ne;
                 var additionalSetting = wrapped.neAdditionalSetting;
-                additionalSetting.DumpAllInstancesToDebugCdrTable = true;
+                //additionalSetting.DumpAllInstancesToDebugCdrTable = true;
                 neWiseAdditionalSettings.Add(ne.idSwitch, additionalSetting);
             }
             this.Tbc.CdrSetting.NeWiseAdditionalSettings = neWiseAdditionalSettings;

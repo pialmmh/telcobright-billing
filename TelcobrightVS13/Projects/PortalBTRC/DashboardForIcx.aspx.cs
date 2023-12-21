@@ -20,7 +20,7 @@ using System.IO;
 public partial class DashboardAspxForIcx : Page
 {
     private static int currentPageForJobGrid = 0;
-    private static int currentIndexForJobGrid = 20;
+    private static int currentIndexForJobGrid = 15;
     private int offset = currentPageForJobGrid * currentIndexForJobGrid;
     private string icxConnstr;
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
@@ -48,6 +48,7 @@ public partial class DashboardAspxForIcx : Page
         //this.Timer2.Enabled = true;
         this.Timer3.Enabled = true;
 
+
         BindGridView();
         DomesticCallForPreviousSevenDays1();
         InternationalIncommimng1();
@@ -55,6 +56,7 @@ public partial class DashboardAspxForIcx : Page
         //InternationalOutgoing1();
         // Bind the GridView
         UpdateErrorCalls();
+        BindZiporCompressedFileStatus();
 
 
         if (!IsPostBack)//initial
@@ -67,7 +69,7 @@ public partial class DashboardAspxForIcx : Page
             DateTime lastDayDisplayed = sevenDaysAgo.AddDays(6);
             if (currentDate.Date == lastDayDisplayed.Date)
             {
-                NextButton3.Enabled = false;
+                //NextButton3.Enabled = false;
             }
         }
 
@@ -273,6 +275,73 @@ public partial class DashboardAspxForIcx : Page
     //    Color = ColorTranslator.FromHtml(colors[i])
     //};
     //points.Add(dataPoint);
+    private void BindZiporCompressedFileStatus()
+    {
+        telcobrightpartner thisPartner = null;
+        string binpath = System.Web.HttpRuntime.BinDirectory;
+        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        string userName = Page.User.Identity.Name;
+        string dbName;
+        if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
+        {
+            dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
+        }
+        else
+        {
+            dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
+        databaseSetting.DatabaseName = dbName;
+
+        using (PartnerEntities conTelco = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
+        {
+            thisPartner = conTelco.telcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
+
+        }
+        this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
+        // Calculate the offset based on the current page index and page size
+        //int pageIndex = GridViewCompleted.PageIndex;
+        //int pageSize = GridViewCompleted.PageSize;
+        if (currentPageForJobGrid < 1)
+        {
+            PreviousButton.Enabled = false;
+        }
+        else
+        {
+            PreviousButton.Enabled = true;
+        }
+
+        List<ZiporCompressedFile> ziporCompressedFileStatus = new List<ZiporCompressedFile>();
+
+        string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
+        icxConnstr = connectionString;
+        // Modify your SQL query to include the OFFSET and FETCH NEXT clauses
+        string sqlCommand = $@"select id,Status, compressedfileName, CompletionTime from compressedfile;";
+
+        using (MySqlConnection connection = new MySqlConnection())
+        {
+            connection.ConnectionString = connectionString;
+            connection.Open();
+            DataSet dataSet = ziporCompressedFileData(connection, sqlCommand);
+
+            bool hasData = dataSet.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
+
+            if (hasData)
+            {
+                ziporCompressedFileStatus = ConvertDataSetToListZip(dataSet);
+                ZiporCompressedFileStatus.DataSource = ziporCompressedFileStatus;
+                ZiporCompressedFileStatus.DataBind();
+                Label8.Visible = false; // Hide the "NO DATA" label
+            }
+            else
+            {
+                ZiporCompressedFileStatus.DataSource = null;
+                ZiporCompressedFileStatus.DataBind();
+                Label8.Visible = true; // Show the "NO DATA" label
+            }
+        }
+
+    }
     private void BindGridView()
     {
         telcobrightpartner thisPartner = null;
@@ -321,27 +390,27 @@ public partial class DashboardAspxForIcx : Page
                             $"LIMIT {offset}, {currentIndexForJobGrid};";
 
         using (MySqlConnection connection = new MySqlConnection())
-{
-    connection.ConnectionString = connectionString;
-    connection.Open();
-    DataSet dataSet = gridViewCompletedData(connection, sqlCommand);
+        {
+            connection.ConnectionString = connectionString;
+            connection.Open();
+            DataSet dataSet = gridViewCompletedData(connection, sqlCommand);
 
-    bool hasData = dataSet.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
+            bool hasData = dataSet.Tables.Cast<DataTable>().Any(table => table.Rows.Count != 0);
 
-    if (hasData)
-    {
-        gridViewCompletedJob = ConvertDataSetToList(dataSet);
-        GridViewCompleted.DataSource = gridViewCompletedJob;
-        GridViewCompleted.DataBind();
-        NoDataLabel.Visible = false; // Hide the "NO DATA" label
-    }
-    else
-    {
-        GridViewCompleted.DataSource = null;
-        GridViewCompleted.DataBind();
-        NoDataLabel.Visible = true; // Show the "NO DATA" label
-    }
-}
+            if (hasData)
+            {
+                gridViewCompletedJob = ConvertDataSetToList(dataSet);
+                GridViewCompleted.DataSource = gridViewCompletedJob;
+                GridViewCompleted.DataBind();
+                NoDataLabel.Visible = false; // Hide the "NO DATA" label
+            }
+            else
+            {
+                GridViewCompleted.DataSource = null;
+                GridViewCompleted.DataBind();
+                NoDataLabel.Visible = true; // Show the "NO DATA" label
+            }
+        }
 
     }
 
@@ -416,6 +485,13 @@ public partial class DashboardAspxForIcx : Page
     
 
     protected void GridViewCompleted_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        // Set the new page index
+        GridViewCompleted.PageIndex = e.NewPageIndex;
+        BindGridView();
+
+    }
+    protected void ZiporCompressedFileStatus_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         // Set the new page index
         GridViewCompleted.PageIndex = e.NewPageIndex;
@@ -569,7 +645,13 @@ public partial class DashboardAspxForIcx : Page
         public DateTime completionTime { get; set; }
     }
 
-
+    protected class ZiporCompressedFile
+    {
+        public int id { get; set; }
+        public int Status { get; set; }
+        public string compressedfileName { get; set; }
+        public DateTime CompletionTime { get; set; }
+    }
 
     protected class GridViewMissingTg
     {
@@ -623,6 +705,17 @@ public partial class DashboardAspxForIcx : Page
         return ds;
     }
 
+    DataSet ziporCompressedFileData(MySqlConnection connection, string sql)
+    {
+
+        MySqlCommand cmd = new MySqlCommand(sql, connection);
+        cmd.Connection = connection;
+        MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
+        DataSet ds = new DataSet();
+        domDataAdapter.Fill(ds);
+        return ds;
+    }
+
     List<GridViewCompletedJob> ConvertDataSetToList(DataSet ds)
     {
         bool hasRecords = ds.Tables.Cast<DataTable>()
@@ -644,6 +737,35 @@ public partial class DashboardAspxForIcx : Page
                     record.jobName = row["JobName"].ToString();
                     record.creationTime = Convert.ToDateTime(row["CreationTime"]);
                     record.completionTime = Convert.ToDateTime(row["CompletionTime"]);
+
+                    records.Add(record);
+                }
+            }
+        }
+        return records;
+    }
+
+    List<ZiporCompressedFile> ConvertDataSetToListZip(DataSet ds)
+    {
+        bool hasRecords = ds.Tables.Cast<DataTable>()
+            .Any(table => table.Rows.Count != 0);
+        List<ZiporCompressedFile> records = new List<ZiporCompressedFile>();
+        if (hasRecords == true)
+        {
+            foreach (DataTable table in ds.Tables)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    ZiporCompressedFile record = new ZiporCompressedFile();
+                    //record.id = int.Parse(row.ItemArray[0].ToString());
+                    //record.jobName = row.ItemArray[1].ToString();
+                    //record.creationTime = (DateTime) row.ItemArray[2];
+                    //record.completionTime = (DateTime)row.ItemArray[3];
+
+                    record.id = Convert.ToInt32(row["Id"]);
+                    record.Status = Convert.ToInt32(row["Status"]);
+                    record.compressedfileName = row["compressedfileName"].ToString();
+                    record.CompletionTime = Convert.ToDateTime(row["CompletionTime"]);
 
                     records.Add(record);
                 }

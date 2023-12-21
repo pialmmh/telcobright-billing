@@ -56,7 +56,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty
                                 },
                          new List<string>()
                             {

@@ -35,7 +35,8 @@ namespace Process
             CompressionType.Gzip,
             CompressionType.Zip,
             CompressionType.tarZip,
-            CompressionType.Sevenzip
+            CompressionType.Sevenzip,
+            CompressionType.tGzip
         };
 
         public CompressedFileHelperForVault(List<string> extensionsToAcceptAfterUnzip, string originalPathToExtract = "",string tempPathToExtract ="")
@@ -44,7 +45,7 @@ namespace Process
             this.OriginalPathToExtract = originalPathToExtract;
             TempPathToExtract = tempPathToExtract;
         }
-        public void ExtractToTempDir(string compressedFile)
+        public void ExtractToTempDir(string compressedFile,string con)
         {
             string fileExtension = Path.GetExtension(compressedFile);
             if (fileExtension.IsNullOrEmptyOrWhiteSpace())
@@ -63,53 +64,54 @@ namespace Process
                         $"supported extensions are: {string.Join(",", this.SupportedCompressionTypes.Select(ct => ct.ToString()))}");
             }
             DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(this.OriginalPathToExtract, "temp"));
-            UnZipper unzipper = new UnZipper(compressedFile, tempDir.FullName);
+            UnZipper unzipper = new UnZipper(compressedFile,con, tempDir.FullName);
             unzipper.UnZipAll();
         }
 
         public void MoveToOriginalPath(DirectoryInfo tempDir)
         {
+
             foreach (FileInfo extractedFileInfo in tempDir.GetFiles("*.*", SearchOption.AllDirectories))
             {
-                if (this.ExtensionsToAcceptAfterUnzip.Contains(extractedFileInfo.Extension) || extractedFileInfo.Extension == "")
+                if (this.ExtensionsToAcceptAfterUnzip == null || this.ExtensionsToAcceptAfterUnzip.Any())
                 {
-                    var destCdrFile = this.OriginalPathToExtract + Path.DirectorySeparatorChar + extractedFileInfo.Name;
-                    if (File.Exists(destCdrFile))
-                    {
-                        FileInfo existingFileINfo = new FileInfo(destCdrFile);
-                        if (extractedFileInfo.Name == existingFileINfo.Name &&
-                            (existingFileINfo.Length == extractedFileInfo.Length || existingFileINfo.Length > extractedFileInfo.Length))
-                        {
-                            extractedFileInfo.Delete();
-                        }
-                        else if (extractedFileInfo.Name == existingFileINfo.Name && existingFileINfo.Length < extractedFileInfo.Length)
-                        {
-                            existingFileINfo.Delete();
-
-
-                        }
-                    }
-
-                    string tempExtension = ".tmp";
-                    string destTempFileName = destCdrFile + tempExtension;
-                    File.Copy(extractedFileInfo.FullName, destTempFileName);
-
-                    FileInfo copiedTempFileInfo = new FileInfo(destTempFileName);
-                    if (copiedTempFileInfo.Length == extractedFileInfo.Length)
-                    {
-                        File.Move(destTempFileName, destTempFileName.Replace(tempExtension, ""));//rename to remove .tmp extension
-                        extractedFileInfo.Delete();
-                    }
-                    else
-                    {
-                        throw new Exception("temp file and dest file length did not match");
-                    }
-
+                    move(extractedFileInfo);
                 }
-                else//this extension is not a cdr file, delete
+                else if(this.ExtensionsToAcceptAfterUnzip.Contains(extractedFileInfo.Extension) || extractedFileInfo.Extension == "")
+                {
+                    move(extractedFileInfo);
+                }
+            }
+        }
+
+        private void move(FileInfo extractedFileInfo)
+        {
+            var destCdrFile = this.OriginalPathToExtract + Path.AltDirectorySeparatorChar + extractedFileInfo.Name;
+            if (File.Exists(destCdrFile))
+            {
+                FileInfo existingFileINfo = new FileInfo(destCdrFile);
+                if (extractedFileInfo.Name == existingFileINfo.Name &&
+                    (existingFileINfo.Length == extractedFileInfo.Length || existingFileINfo.Length > extractedFileInfo.Length))
                 {
                     extractedFileInfo.Delete();
                 }
+                else if (extractedFileInfo.Name == existingFileINfo.Name && existingFileINfo.Length < extractedFileInfo.Length)
+                {
+                    existingFileINfo.Delete();
+                }
+            }
+            string tempExtension = ".tmp";
+            string destTempFileName = destCdrFile + tempExtension;
+            File.Copy(extractedFileInfo.FullName, destTempFileName);
+            FileInfo copiedTempFileInfo = new FileInfo(destTempFileName);
+            if (copiedTempFileInfo.Length == extractedFileInfo.Length)
+            {
+                File.Move(destTempFileName, destTempFileName.Replace(tempExtension, ""));//rename to remove .tmp extension
+                extractedFileInfo.Delete();
+            }
+            else
+            {
+                throw new Exception("temp file and dest file length did not match");
             }
         }
     }

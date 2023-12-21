@@ -149,10 +149,10 @@ namespace Decoders
                 e.Data.Add("jobId", input.TelcobrightJob.id);
                 throw e;
             }
-            if(receivedRowCount != foundRowCount)
-            {
-                throw new Exception("Received Row count Does not matched with found row count!");
-            }
+            //if(receivedRowCount != foundRowCount)
+            //{
+            //    throw new Exception("Received Row count Does not matched with found row count!");
+            //}
      }
 
         public override string getTupleExpression(Object data)

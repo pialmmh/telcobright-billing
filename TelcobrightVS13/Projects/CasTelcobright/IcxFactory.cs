@@ -32,7 +32,7 @@ namespace CasTelcobright
                 "teleexchange",
                 "newgenerationtelecom",
                 "mothertelecom",
-                "teleplusnetwork",
+                "teleplusnewyork",
                 "summit",
                 "voicetel"
             };

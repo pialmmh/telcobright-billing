@@ -339,6 +339,8 @@ namespace LogPreProcessor
             string predecodedDirName, predecodedFileName;
             getPathNamesForPreDecoding(job, thisSwitch, tbc, out predecodedDirName,
                 out predecodedFileName);
+            if (!Directory.Exists(predecodedDirName))
+                Directory.CreateDirectory(predecodedDirName);
             ThreadSafePredecoder threadSafePredecoder = new ThreadSafePredecoder
             (
                 cdrJobInputData,
