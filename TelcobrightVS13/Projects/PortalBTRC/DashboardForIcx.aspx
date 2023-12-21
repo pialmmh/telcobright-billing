@@ -275,8 +275,8 @@
                                         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
 
                                     </asp:GridView>
-                                    <%--<asp:Button ID="Button2" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
-                                    <%--<asp:Button ID="Button3" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
+                                        <asp:Button ID="Button2" runat="server" Text="Newer" OnClick="PreviousButton_Click1" AutoPostBack="True" CssClass="btn btn-primary" />
+                                        <asp:Button ID="Button3" runat="server" Text="Older" OnClick="NextButton_Click1" AutoPostBack="True" CssClass="btn btn-primary" />
 
 
                                 </div>
