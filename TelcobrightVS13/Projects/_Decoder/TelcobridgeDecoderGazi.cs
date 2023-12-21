@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using LibraryExtensions;
+using TelcobrightMediation.Cdr.Collection.PreProcessors;
 
 namespace Decoders
 {
@@ -175,7 +176,7 @@ namespace Decoders
 
         public override EventAggregationResult Aggregate(object data)
         {
-            return TelcobridgeAggregationHelper.Aggregate(data);
+            return TelcobridgeAggregationHelper.Aggregate((NewAndOldEventsWrapper<string[]>)data);
         }
     }
 }

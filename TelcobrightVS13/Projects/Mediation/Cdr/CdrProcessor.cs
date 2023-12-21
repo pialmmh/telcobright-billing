@@ -493,36 +493,50 @@ namespace TelcobrightMediation
             }
 
             var neAdditionalSetting = this.CdrJobContext.CdrjobInputData.NeAdditionalSetting;
-            int newRowsRemainedUnaggreagatedCount = 0;
-            int deletedRowsFromPartialEvent = 0;
+            int newRowsCouldNotBeAggreagatedCount = 0;
+            //int deletedRowsFromPartialEvent = 0;
+            int cdrDiscardedCount = 0;
             if (neAdditionalSetting!=null && 
                 !neAdditionalSetting.AggregationStyle.IsNullOrEmptyOrWhiteSpace())
             {
                 if (neAdditionalSetting.AggregationStyle == "telcobridge")
                 {
-                    newRowsRemainedUnaggreagatedCount =
-                        WriteNewRowsRemainedUnaggreagated(this.CollectionResult.NewRowsCouldNotBeAggreagated);
-                    deletedRowsFromPartialEvent = DeleteAggregatedPartialInstances(this.CollectionResult.RowsToBeDiscardedAfterAggregation);
+                    if (this.CollectionResult.NewRowsCouldNotBeAggreagated.Any())
+                    {
+                        newRowsCouldNotBeAggreagatedCount =
+                            WriteNewRowsCouldNotBeaggreagated(this.CollectionResult.NewRowsCouldNotBeAggreagated);
+                        if (newRowsCouldNotBeAggreagatedCount != this.CollectionResult.NewRowsCouldNotBeAggreagated.Count)
+                            throw new Exception("Written number of partial event count does not match collection result.");
+                    }
+
+                    if (this.CollectionResult.NewRowsToBeDiscardedAfterAggregation.Any())
+                    {
+                        cdrDiscardedCount = WriteCdrDiscarded(this.CollectionResult.NewRowsToBeDiscardedAfterAggregation);
+                        if (cdrDiscardedCount != this.CollectionResult.NewRowsToBeDiscardedAfterAggregation.Count)
+                        {
+                            throw new Exception("Written number of partial event count does not match collection result.");
+                        }
+                    }
+                    
+                    //deletedRowsFromPartialEvent = DeleteAggregatedPartialInstances(this.CollectionResult.RowsToBeDiscardedAfterAggregation);
+                    //no need to delete parial unagg instances as they are in day wise table, later old tables should be dropped by optimizer
+                    //to clean up free space
                 }
             }
-            if (this.CollectionResult.NewRowsCouldNotBeAggreagated.Any() &&
-                newRowsRemainedUnaggreagatedCount != this.CollectionResult.NewRowsCouldNotBeAggreagated.Count)
-            {
-                throw new Exception("Written number of partial event count does not match collection result.");
-            }
-            if (this.CollectionResult.RowsToBeDiscardedAfterAggregation.Any() &&
-                deletedRowsFromPartialEvent != this.CollectionResult.RowsToBeDiscardedAfterAggregation.Count)
-            {
-                throw new Exception("Deleted number of partial cdr does not match RowsToBeDiscardedAfterAggregation.");
-            }
+            
+            
+            //if (this.CollectionResult.RowsToBeDiscardedAfterAggregation.Any() &&
+            //    deletedRowsFromPartialEvent != this.CollectionResult.RowsToBeDiscardedAfterAggregation.Count)
+            //{
+            //    throw new Exception("Deleted number of partial cdr does not match RowsToBeDiscardedAfterAggregation.");
+            //}
 
-            int cdrDiscardedCount = 0;
             if (this.CdrJobContext.CdrjobInputData.Ne.FilterDuplicateCdr == 1)
             {
-                cdrDiscardedCount= WriteDuplicateOrExcludedCdrs(this.CollectionResult.DuplicateEvents);
+                cdrDiscardedCount += WriteCdrDiscarded(this.CollectionResult.NewDuplicateEvents);
             }
-            if (this.CollectionResult.DuplicateEvents.Any() &&
-                cdrDiscardedCount != this.CollectionResult.DuplicateEvents.Count)
+            if (this.CollectionResult.NewDuplicateEvents.Any() &&
+                cdrDiscardedCount != this.CollectionResult.NewDuplicateEvents.Count+this.CollectionResult.NewRowsToBeDiscardedAfterAggregation.Count)
             {
                 throw new Exception("Written number of cdrdiscarded/duplicates count does not match non-duplicate event count.");
             }
@@ -561,10 +575,13 @@ namespace TelcobrightMediation
                 int rawCount = this.CdrJobContext.CdrjobInputData.MergedJobsDic.Any() == false
                     ? this.CollectionResult.RawCount 
                     : this.CdrJobContext.CdrjobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
-                if (rawCount !=
+                if (rawCount + this.CollectionResult.OldPartialInstancesFromDB.Count !=
                     writtenNonPartialCdrCount + writtenNewRawInstances + writtenInconsistentCount
-                    + nonPartialCdrErrors.Count
-                    + newRowsRemainedUnaggreagatedCount+this.CollectionResult.RowsToBeDiscardedAfterAggregation.Count)
+                    + nonPartialCdrErrors.Count 
+                    + newRowsCouldNotBeAggreagatedCount
+                    +this.CollectionResult.OldRowsToBeDiscardedAfterAggregation.Count
+                    +this.CollectionResult.OldRowsCouldNotBeAggreagated.Count
+                    +cdrDiscardedCount)
                     throw new Exception(
                         "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");
 
@@ -700,7 +717,7 @@ namespace TelcobrightMediation
             return insertCount;
         }
 
-        int WriteDuplicateOrExcludedCdrs(List<string[]> excludedEvents)
+        int WriteCdrDiscarded(List<string[]> excludedEvents)
         {
             List<cdrinconsistent> excludedEventsAsCdrInConsistents =
                 excludedEvents.Select(CdrConversionUtil.ConvertTxtRowToCdrinconsistent).ToList();
@@ -774,7 +791,7 @@ namespace TelcobrightMediation
             return insertCount;
         }
 
-        int WriteNewRowsRemainedUnaggreagated(List<string[]> newRowsRemainedUnaggreagated)//<tuple, cdr row as text[] as decoded initially>
+        int WriteNewRowsCouldNotBeaggreagated(List<string[]> newRowsRemainedUnaggreagated)//<tuple, cdr row as text[] as decoded initially>
         {
             int insertCount = 0;
             int startAt = 0;
@@ -857,13 +874,10 @@ namespace TelcobrightMediation
                         $" and idcall in (" +
                         $"{string.Join(",", segment.Select(r => r[Fn.IdCall]))})";
 
-                        this.DbCmd.CommandType = CommandType.StoredProcedure;
-                        this.DbCmd.CommandText = "sp_extInsert";
+                        this.DbCmd.CommandType = CommandType.Text;
+                        this.DbCmd.CommandText = sql;
 
-                        int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
-                            dbCmd: this.DbCmd,
-                            command: sql,
-                            expectedRecCount: segmentCount);
+                        int affectedRecordCount = this.DbCmd.ExecuteNonQuery();
                         if (affectedRecordCount != segmentCount)
                             throw new Exception("Affected record count does not match segment count while writing cdrs.");
                         deletedCount += affectedRecordCount;

@@ -61,6 +61,15 @@ namespace Process
                     {
                         throw new Exception("Idcall cannot be used as uniquebillid when duplicate filtering is on.");
                     }
+                    if (!neAdditionalSetting.AggregationStyle.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        if (ne.FilterDuplicateCdr == 0)
+                        {
+                            throw new Exception("Duplicate Filtering must be on when aggregation is required");
+                        }
+                        //if(neAdditionalSetting.ProcessMultipleCdrFilesInBatch==true)
+                        //    throw new Exception("Merge processing is not allowed when aggregation is required.");
+                    }
                     int minRowCountForBatchProcessing = neAdditionalSetting?.MinRowCountToStartBatchCdrProcessing ?? 1;
                     Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic =
                         new Dictionary<long, NewCdrWrappedJobForMerge>(); //key=idJob

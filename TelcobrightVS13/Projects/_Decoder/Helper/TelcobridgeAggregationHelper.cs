@@ -6,32 +6,33 @@ using System.Threading.Tasks;
 using LibraryExtensions;
 using MediationModel;
 using TelcobrightMediation;
+using TelcobrightMediation.Cdr.Collection.PreProcessors;
 
 namespace Decoders
 {
     public static class TelcobridgeAggregationHelper
     {
-        public static EventAggregationResult Aggregate(object data)
+        public static EventAggregationResult Aggregate(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper)
         {
-            Dictionary<string, List<string[]>> input = (Dictionary<string, List<string[]>>) data;
-            List<string[]> newUnAggInstances = input["new"];
-            List<string[]> oldUnAggInstances = input["old"];
-            List<string[]> originalUnAggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
+            List<string[]> newUnAggInstances = newAndOldEventsWrapper.NewUnAggInstances;
+            List<string[]> oldUnAggInstances = newAndOldEventsWrapper.OldUnAggInstances;
+            List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Fn.StartTime]).ToList();
-            var groupedByBillId = originalUnAggregatedInstances.GroupBy(row => row[Fn.UniqueBillId]).ToDictionary(g => g.Key);
+            var groupedByBillId = allUnaggregatedInstances.GroupBy(row => row[Fn.UniqueBillId]).ToDictionary(g => g.Key);
             if(groupedByBillId.Count>1)    
                 throw new Exception("Rows with multiple bill ids cannot be aggregated.");
             string uniqueBillId = groupedByBillId.Keys.First();
-            List<string[]> rowsToBeDiscardedAfterAggregation = new List<string[]>();
-            List<string[]> ingressLegs = originalUnAggregatedInstances.Where(r => r[Fn.InTrunkAdditionalInfo] == "originate")
+            List<string[]> newRowsToBeDiscardedAfterAggregation = new List<string[]>();
+            List<string[]> oldRowsToBeDiscardedAfterAggregation = new List<string[]>();
+            List<string[]> ingressLegs = allUnaggregatedInstances.Where(r => r[Fn.InTrunkAdditionalInfo] == "originate")
                 .ToList();
-            List<string[]> egressLegs = originalUnAggregatedInstances.Where(r => r[Fn.InTrunkAdditionalInfo] == "answer")
+            List<string[]> egressLegs = allUnaggregatedInstances.Where(r => r[Fn.InTrunkAdditionalInfo] == "answer")
                 .ToList();
             List<string[]> egressLegsWithEndFlag = egressLegs.Where(r => r[Fn.OutTrunkAdditionalInfo].ToLower() == "end").ToList();
 
             if (ingressLegs.Any() == false || egressLegs.Any() == false || egressLegsWithEndFlag.Any()==false)
             {
-                return createResultForAggregationNotPossible(uniqueBillId, originalUnAggregatedInstances,
+                return createResultForAggregationNotPossible(uniqueBillId, allUnaggregatedInstances,
                     newUnAggInstances, oldUnAggInstances);
             }
             Dictionary<decimal, List<string[]>> durationWiseEgressRows = egressLegsWithEndFlag
@@ -43,38 +44,47 @@ namespace Decoders
             durationWiseEgressRows.TryGetValue(maxDuration, out tempRows);
             if (tempRows == null || !tempRows.Any())
             {
-                return createResultForAggregationNotPossible(uniqueBillId, originalUnAggregatedInstances,
+                return createResultForAggregationNotPossible(uniqueBillId, allUnaggregatedInstances,
                     newUnAggInstances, oldUnAggInstances);
             }
             string[] aggregatedRow = tempRows.Last();
             aggregatedRow[Fn.IncomingRoute] = ingressLegs.Last()[Fn.IncomingRoute];//main aggregation
-
             aggregationComplete = !aggregatedRow[Fn.IncomingRoute].IsNullOrEmptyOrWhiteSpace() &&
                                   !aggregatedRow[Fn.OutgoingRoute].IsNullOrEmptyOrWhiteSpace() &&
                                   (aggregatedRow[Fn.IncomingRoute] != aggregatedRow[Fn.OutgoingRoute]);
 
             if (aggregationComplete)
             {
-                foreach (string[] row in originalUnAggregatedInstances)
+                aggregatedRow[Fn.Partialflag] = "0";
+                foreach (string[] row in newUnAggInstances)
                 {
                     if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
                     {
-                        rowsToBeDiscardedAfterAggregation.Add(row);
+                        newRowsToBeDiscardedAfterAggregation.Add(row);
+                    }
+                }
+                foreach (string[] row in oldUnAggInstances)
+                {
+                    if (row[Fn.IdCall] != aggregatedRow[Fn.IdCall])
+                    {
+                        oldRowsToBeDiscardedAfterAggregation.Add(row);
                     }
                 }
                 return new EventAggregationResult//aggregation successful
                 (
                     uniqueEventId: uniqueBillId,
-                    originalUnaggregatedInstances: originalUnAggregatedInstances,
+                    allUnaggregatedInstances: allUnaggregatedInstances,
                     aggregatedInstance: aggregatedRow,
                     newInstancesCouldNotBeAggregated: new List<string[]>(),
                     oldInstancesCouldNotBeAggregated: new List<string[]>(), 
-                    instancesToBeDiscardedAfterAggregation: rowsToBeDiscardedAfterAggregation
+                    newInstancesToBeDiscardedAfterAggregation: newRowsToBeDiscardedAfterAggregation,
+                    oldInstancesToBeDiscardedAfterAggregation: oldRowsToBeDiscardedAfterAggregation,
+                    oldPartialInstancesFromDB: oldUnAggInstances
                 );
             }
             else
             {
-                return createResultForAggregationNotPossible(uniqueBillId,originalUnAggregatedInstances,newUnAggInstances,oldUnAggInstances);
+                return createResultForAggregationNotPossible(uniqueBillId,allUnaggregatedInstances,newUnAggInstances,oldUnAggInstances);
             }
         }
         private static EventAggregationResult createResultForAggregationNotPossible(string uniqueEventId,
@@ -85,11 +95,13 @@ namespace Decoders
             return new EventAggregationResult
             (
                 uniqueEventId: uniqueEventId,
-                originalUnaggregatedInstances: originalUnAggregatedInstances,
+                allUnaggregatedInstances: originalUnAggregatedInstances,
                 aggregatedInstance: null,
                 newInstancesCouldNotBeAggregated: newUnAggInstances,
                 oldInstancesCouldNotBeAggregated: oldUnAggInstances,
-                instancesToBeDiscardedAfterAggregation: new List<string[]>()
+                newInstancesToBeDiscardedAfterAggregation: new List<string[]>(),
+                oldInstancesToBeDiscardedAfterAggregation: new List<string[]>(),
+                oldPartialInstancesFromDB: oldUnAggInstances
             );
         }
     }

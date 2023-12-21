@@ -127,7 +127,6 @@ namespace Process
                             }
                         }
 
-
                         //most of the files should be finished written by now, still...
                         Dictionary<string, FileInfo> newJobNameVsFileInfos = fileInfos
                             .Select(f => // kv<jobName,fileName>
