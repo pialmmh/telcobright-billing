@@ -62,7 +62,7 @@ namespace Process
                         new CompressedFileHelperForVault(new List<string>()).MoveToOriginalPath(tempDir);
                         DirectoryLister dirlister = new DirectoryLister();
 
-                        VaultFileMover vaultFileMover = new VaultFileMover(new List<string>(), "", vaultPath);
+//                        VaultFileMover vaultFileMover = new VaultFileMover(new List<string>(), "", vaultPath);
 
                         if (cdrSetting.UnzipCompressedFiles == true)
                         {
@@ -157,7 +157,7 @@ namespace Process
 
                         if (tbc.CdrSetting.useCasStyleProcessing)
                         {
-                            if (tbc.CdrSetting.BackupSyncPairNames.Any() == false)
+                            if ( tbc.CdrSetting.BackupSyncPairNames == null|| tbc.CdrSetting.BackupSyncPairNames.Any() == false)
                             {
                                 List<FileInfo> fileInfosToDelete =
                                     getCompletedJobNames(context, alreadyExistingJobs, thisSwitch.idSwitch);
