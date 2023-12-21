@@ -35,7 +35,8 @@ namespace Process
             CompressionType.Gzip,
             CompressionType.Zip,
             CompressionType.tarZip,
-            CompressionType.Sevenzip
+            CompressionType.Sevenzip,
+            CompressionType.tGzip
         };
 
         public CompressedFileHelperForVault(List<string> extensionsToAcceptAfterUnzip, string originalPathToExtract = "",string tempPathToExtract ="")
@@ -44,7 +45,7 @@ namespace Process
             this.OriginalPathToExtract = originalPathToExtract;
             TempPathToExtract = tempPathToExtract;
         }
-        public void ExtractToTempDir(string compressedFile)
+        public void ExtractToTempDir(string compressedFile,string con)
         {
             string fileExtension = Path.GetExtension(compressedFile);
             if (fileExtension.IsNullOrEmptyOrWhiteSpace())
@@ -63,12 +64,13 @@ namespace Process
                         $"supported extensions are: {string.Join(",", this.SupportedCompressionTypes.Select(ct => ct.ToString()))}");
             }
             DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(this.OriginalPathToExtract, "temp"));
-            UnZipper unzipper = new UnZipper(compressedFile, tempDir.FullName);
+            UnZipper unzipper = new UnZipper(compressedFile,con, tempDir.FullName);
             unzipper.UnZipAll();
         }
 
         public void MoveToOriginalPath(DirectoryInfo tempDir)
         {
+
             foreach (FileInfo extractedFileInfo in tempDir.GetFiles("*.*", SearchOption.AllDirectories))
             {
                 if (this.ExtensionsToAcceptAfterUnzip == null || this.ExtensionsToAcceptAfterUnzip.Any())

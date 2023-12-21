@@ -43,8 +43,12 @@ namespace Jobs
                 }
                 else if (delParam.FileLocation.LocationType == "vault")
                 {
-                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete"); 
-                    File.Delete(delParam.FileLocation.StartingPath.Replace("/", Path.DirectorySeparatorChar.ToString()) + Path.DirectorySeparatorChar + delParam.FileName);
+                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete");
+                    string fileToDelete = delParam.FileLocation.StartingPath.Replace("/", Path.DirectorySeparatorChar.ToString()) + Path.DirectorySeparatorChar + delParam.FileName;
+                    if (File.Exists(fileToDelete))
+                    {
+                        File.Delete(fileToDelete);
+                    }
                     return JobCompletionStatus.Complete;
                 }
             }

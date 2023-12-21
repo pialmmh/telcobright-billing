@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using TelcobrightFileOperations;
@@ -61,39 +62,33 @@ namespace Process
                         new CompressedFileHelperForVault(new List<string>()).MoveToOriginalPath(tempDir);
                         DirectoryLister dirlister = new DirectoryLister();
 
-                        VaultFileMover vaultFileMover= new VaultFileMover(new List<string>(), "",vaultPath);
+                        VaultFileMover vaultFileMover = new VaultFileMover(new List<string>(), "", vaultPath);
 
                         if (cdrSetting.UnzipCompressedFiles == true)
                         {
-                            List<string> extensions = new List<string> { ".zip", ".gz", ".tar.Z", ".rar","7z" };
+                            List<string> extensions = new List<string> { ".zip", ".gz", ".tar.Z", ".rar", "7z", ".tgz" };
                             List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath, extensions);
-                            
+
                             if (zipFiles.Count > 0)
                             {
                                 Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
                                 foreach (FileInfo compressedFile in zipFiles)
                                 {
-                                    if(new FileAndPathHelperMutable().IsFileLockedOrBeingWritten(compressedFile))
+                                    if (new FileAndPathHelperMutable().IsFileLockedOrBeingWritten(compressedFile))
                                         continue;
-                                    
+
                                     CompressedFileHelperForVault compressedFileHelper =
-                                        new CompressedFileHelperForVault(new List<string> {thisSwitch.FileExtension},vaultPath,tempDir.FullName);
-                                    compressedFileHelper.ExtractToTempDir(compressedFile.FullName);
+                                        new CompressedFileHelperForVault(new List<string> { thisSwitch.FileExtension }, vaultPath, tempDir.FullName);
+                                    compressedFileHelper.ExtractToTempDir(compressedFile.FullName, context.Database.Connection.ConnectionString);
+
+                                    //code reaching here means extraction successful, exceptions will not hit this and file will be kept
                                     compressedFile
                                         .Delete();
                                     compressedFileHelper.MoveToOriginalPath(tempDir);
-                                    //code reaching here means extraction successful, exceptions will not hit this and file will be kept
-                                    //UnZipper unzipper = new UnZipper(compressedFile.FullName);
-                                    //unzipper.UnZipAll();
                                 }
                             }
                         }
 
-                        //var fileNames = vault.GetFileListLocal()
-                        //var fileNames = Directory.GetFiles()
-                        //Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
-
-                        //List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
                         List<string> validFilePrefixes =
                             thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
 
@@ -141,8 +136,7 @@ namespace Process
                                     jobName = f.Name,
                                     fileName = f
                                 }).ToDictionary(a => a.jobName, a => a.fileName);
-                        //string path = @"C:\Users\Administrator\Desktop\check\test1.txt";
-                        //File.WriteAllLines(path, newJobNameVsFileInfos.Select(kv => $"{kv.Key}: {kv.Value.FullName}"));
+                      
                         Dictionary<string, string> existingJobNames
                             = getExistingJobNames(context, newJobNameVsFileInfos, thisSwitch.idSwitch);
                         Dictionary<string, FileInfo> alreadyExistingJobs = new Dictionary<string, FileInfo>();
@@ -158,16 +152,22 @@ namespace Process
                             {
                                 alreadyExistingJobs.Add(kv.Key, kv.Value);
                             }
-                            
+
                         }
 
-                        List<FileInfo> fileInfosToDelete =
-                            getCompletedJobNames(context, alreadyExistingJobs, thisSwitch.idSwitch);
-                        fileInfosToDelete.ForEach(f =>
+                        if (tbc.CdrSetting.useCasStyleProcessing)
                         {
-                            if (File.Exists(f.FullName))
-                                f.Delete();
-                        });
+                            if (tbc.CdrSetting.BackupSyncPairNames.Any() == false)
+                            {
+                                List<FileInfo> fileInfosToDelete =
+                                    getCompletedJobNames(context, alreadyExistingJobs, thisSwitch.idSwitch);
+                                fileInfosToDelete.ForEach(f =>
+                                {
+                                    if (File.Exists(f.FullName))
+                                        f.Delete();
+                                });
+                            }
+                        }
 
                         //*************
                         Console.WriteLine($"Checking exclusive lock...");
@@ -195,7 +195,7 @@ namespace Process
                                 if (tbc.CdrSetting.BatchSizeForCdrJobCreationCheckingExistence ==
                                     newJobCacheForWritingAtOnceToDB.Count)
                                 {
-                                    writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB,existingJobNames.Count);
+                                    writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB, existingJobNames.Count);
                                     newJobCacheForWritingAtOnceToDB = new List<job>();
                                 }
                             }
@@ -206,7 +206,7 @@ namespace Process
                             //}
                         }
                         if (newJobCacheForWritingAtOnceToDB.Count > 0)
-                            writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB,existingJobNames.Count);
+                            writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB, existingJobNames.Count);
                     } //try
                     catch (Exception e1)
                     {
@@ -219,7 +219,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter.WriteError(e1, "CdrJobCreator", null, "", operatorName,context);
+                ErrorWriter.WriteError(e1, "CdrJobCreator", null, "", operatorName, context);
             }
         }
 
@@ -239,13 +239,12 @@ namespace Process
             List<string> existingJobNames = segmenter
                 .ExecuteMethodInSegmentsWithRetval(200000, getExistingJobNamesInSegment)
                 .ToList();
-            //string path = @"C:\Users\Administrator\Desktop\check\test.txt";
-            //File.WriteAllLines(path,existingJobNames);
+
             return existingJobNames.ToDictionary(n => n);
         }
 
         private static List<FileInfo> getCompletedJobNames(PartnerEntities context,
-            Dictionary<string,FileInfo> existingJobs, int idSwitch)
+            Dictionary<string, FileInfo> existingJobs, int idSwitch)
         {
             CollectionSegmenter<string> segmenter = new CollectionSegmenter<string>(existingJobs.Keys, 0);
             Func<IEnumerable<string>, List<string>> getExistingJobNamesInSegment = jobNames =>
