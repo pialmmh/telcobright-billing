@@ -241,7 +241,7 @@ namespace PortalApp.Mediation
         }
         void generate_Template_file(string selectedSwitch)
         {
-            string fileName = "Template File.xlsx";
+            string fileName = "Template_File.xlsx";
             string folderPath = Server.MapPath("~/Downloads/");
             string filePath = Path.Combine(folderPath, fileName);
             //FileInfo excelFile = new FileInfo(filePath);
@@ -253,21 +253,14 @@ namespace PortalApp.Mediation
             {
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add(selectedSwitch);
 
-                string[] headerRow = { "SwitchName", "fileName", "recordCount", "DurationCount"};
+                string[] headerRow = { "fileName", "recordCount", "DurationCount"};
                 // Add header row
                 for (int i = 0; i < headerRow.Length; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = headerRow[i];
                 }
 
-                // Add 5 switch col rows
-                worksheet.Cells[2, 1].Value = selectedSwitch;
-                worksheet.Cells[3, 1].Value = selectedSwitch;
-                worksheet.Cells[4, 1].Value = selectedSwitch;
-                worksheet.Cells[5, 1].Value = selectedSwitch;
-                worksheet.Cells[6, 1].Value = selectedSwitch;
-
-
+                
                 // Save the file
                 //string fileName = "CDRData.xlsx";
                 //FileInfo excelFile = new FileInfo(Server.MapPath($"C:/Users/Mahathir/Downloads/{fileName}"));

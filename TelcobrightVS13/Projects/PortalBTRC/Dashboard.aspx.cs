@@ -200,11 +200,11 @@ public partial class DashboardAspx : Page
                             where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
                             group by idNE;";
 
-        //sqlCommand = @"SELECT 'Teleplus Newyork Limited' AS icx, 'ZTE' AS 'SwitchName', 23 AS No_Of_Cdrs_in_last_24_hours
-        //                      union all
-        //                      SELECT 'Summit Communication Limited(Vertex)' AS icx, 'HUAWEI' AS 'SwitchName', 20 AS No_Of_Cdrs_in_last_24_hours
-        //                      union all
-        //                      SELECT 'Softex Communication Ltd' AS icx, 'CATALIA' AS 'SwitchName', 10 AS No_Of_Cdrs_in_last_24_hours;";
+        sqlCommand = @"SELECT 'Teleplus Newyork Limited' AS icx, 'ZTE' AS 'SwitchName', 23 AS No_Of_Cdrs_in_last_24_hours
+                              union all
+                              SELECT 'Summit Communication Limited(Vertex)' AS icx, 'HUAWEI' AS 'SwitchName', 20 AS No_Of_Cdrs_in_last_24_hours
+                              union all
+                              SELECT 'Softex Communication Ltd' AS icx, 'CATALIA' AS 'SwitchName', 10 AS No_Of_Cdrs_in_last_24_hours;";
         List<GridViewJobStatusForICX> gridViewCompletedJobStatus = new List<GridViewJobStatusForICX>();
 
 

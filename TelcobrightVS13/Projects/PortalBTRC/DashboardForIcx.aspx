@@ -10,7 +10,7 @@
     </div>
                 <%-- Missing TG --%>
                 
-                <div style="float: right; padding-right: 200px; padding-top: 25px">
+                <div style="float: right; padding-right: 200px; padding-top: 25px; text-align: center;">
                     <div style="margin-right: auto; text-align: center;">
                         <asp:Label ID="Label11" runat="server" Text="Missing TGs (Please Assign Missing TGs to approprite ANS/IOS and Zone)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                     </div>
