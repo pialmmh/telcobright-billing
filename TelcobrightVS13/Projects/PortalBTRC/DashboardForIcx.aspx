@@ -23,7 +23,7 @@
 
                         <%--<ContentTemplate>--%>
                             
-                            <asp:GridView ID="GridView11" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnRowDataBound="GridView_RowDataBound">
+                            <asp:GridView ID="GridView11" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" Width="650px" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnRowDataBound="GridView_RowDataBound">
                                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                 <Columns>
                                     <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />

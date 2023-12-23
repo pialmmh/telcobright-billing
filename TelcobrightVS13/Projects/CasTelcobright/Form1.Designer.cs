@@ -107,7 +107,7 @@ namespace CasTelcobright
                 pLabel.AutoSize = false;
                 pLabel.Height = 40;
                 pLabel.Width = 183;
-                pLabel.Font = new Font("Calibri", 8);
+                pLabel.Font = new Font("Calibri", 7);
                 pLabel.BackColor = Color.DimGray;
                 pLabel.ForeColor = Color.White;
                 panel1.Controls.Add(pLabel);
