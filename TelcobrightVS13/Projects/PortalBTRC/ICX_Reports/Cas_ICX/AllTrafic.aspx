@@ -8,6 +8,7 @@
 
 
 <%----%>
+
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 
     <%--Page Load and Other Server Side Asp.net scripts--%>
@@ -278,7 +279,6 @@
 </asp:Content>
 
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
-
     <div id="report" style="clear: both; height: 25px; background-color: white; padding-left: 5px; width: 1009px; margin-bottom: 2px;">
 
         <script type="text/javascript">
@@ -470,7 +470,7 @@
                     </div>
                 </div>
 
-                <div id="PartnerFilter" style="margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
+                <div id="PartnerFilter" style="display:none;margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
                     <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
 
                     <div style="text-align: left;">
@@ -522,7 +522,7 @@
                     </div>
                 </div>
         
-                <div id="RouteFilter" style="margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
+                <div id="RouteFilter" style="display:none; margin-top: -4px; margin-left: 10px; float: left; padding-left: 5px; background-color: #f2f2f2;">
                     <%--<span style="font-size: smaller;position:relative;left:-53px;padding-left:0px;clear:right;">[Enter only Date in "dd/MM/yyyy (e.g. 21/11/2012) or Date+Time in "dd/MM/yyyy HH:mm:ss" (e.g. 21/11/2012 19:01:59) format]</span>   --%>
 
                     <div style="text-align: left;">
@@ -624,6 +624,12 @@
         </div>
         <asp:Timer ID="Timer1" Interval="300000" runat="server" OnTick="Timer1_Tick"></asp:Timer>
     </div>
+    
+     <div style="float: left; text-align: left; width: 900px; position: relative; top: 100px; padding-left: 5px;">
+        <asp:Label runat="server" ID="myLabel" Text="" 
+               style="position: absolute; bottom: 0; left: 0; font-family: Arial; font-size: 10pt; color: DarkBlue; font-weight: bold;"></asp:Label>
+    </div>
 
 </asp:Content>
+
 

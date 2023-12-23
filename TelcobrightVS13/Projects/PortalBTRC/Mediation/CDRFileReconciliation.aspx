@@ -3,7 +3,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
    <div style="background-color:#edf2ef;color: black;float:left;border: 1px solid #707070;padding:10px; padding-right: 645px;">
-        <div style=" font-weight: bold; ">
+        <div style=" font-weight: bold; padding-bottom:5px; ">
              <asp:Label ID="lblSelectOption" runat="server" Text="Select a switch for cdr file reconciliatiohn template:"></asp:Label>
         </div>
           
@@ -18,7 +18,7 @@
     <div style="height:20px;clear:both;"></div>
 
      <div style="background-color:#edf2ef; color: black;float:left;clear: right; border: 1px solid #707070;padding:10px; padding-right: 560px;">
-        <div style="color: black; font-weight: bold; ">
+        <div style="color: black; font-weight: bold; padding-bottom:5px;">
                  <asp:Label ID="Label1" runat="server" Text="Fillup template from own billing data and upload"></asp:Label>
            </div>
 
@@ -35,7 +35,7 @@
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None">
             <AlternatingRowStyle BackColor="White" />
            <Columns>
-                <asp:BoundField DataField="Value.switchName" HeaderText="switchName" SortExpression="switchName" />
+                
                 <asp:BoundField DataField="Value.FileName" HeaderText="FileName" SortExpression="FileName" />
 
                 <asp:BoundField DataField="Value.RecordCountFromICX" HeaderText="RecordCountFromICX" SortExpression="RecordCountFromICX" />
