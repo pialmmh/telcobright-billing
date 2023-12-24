@@ -416,10 +416,10 @@ namespace TelcobrightMediation
             long writtenInconsistentCount = 0,
                 writtenErrorCount = 0,
                 writtenNonPartialCdrCount = 0,
-                writtenSuccessfulCount=0,
+                writtenSuccessfulCount = 0,
                 writtenNormalizedPartialCdrCount = 0,
-                writtenCdrCount = 0;
-
+                writtenCdrCount = 0,
+                failedCallsCount = 0;
             if (this.CollectionResult.CdrInconsistents.Any())
                 writtenInconsistentCount = WriteCdrInconsistent();//code changed, from now on inconsistent will be written to cdrError too.
 
@@ -454,10 +454,11 @@ namespace TelcobrightMediation
                 {
                     if (this.MediationContext.CdrSetting.WriteFailedCallsToDb == false)//dont' write failed calls
                     {
+                        failedCallsCount = nonPartialCdrs.Count(c => c.ChargingStatus == 0);
                         nonPartialCdrs = nonPartialCdrs.Where(c => c.ChargingStatus == 1).ToList();
                         writtenSuccessfulCount = WriteCdr(nonPartialCdrs);
-                        writtenNonPartialCdrCount = writtenSuccessfulCount +
-                                                    nonPartialCdrs.Count(c => c.ChargingStatus == 0);//although not written, but need to match validations
+                        writtenNonPartialCdrCount = writtenSuccessfulCount + failedCallsCount;
+                                                    //although not written, but need to match validations
                     }
                     else//write failed calls
                     {
@@ -586,7 +587,7 @@ namespace TelcobrightMediation
                         "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");
 
                 if (nonPartialCdrs.Count + normalizedPartialCdrs.Count + normalizedPartialCdrErrors.Count
-                    + nonPartialCdrErrors.Count != writtenErrorCount + writtenCdrCount)
+                    + nonPartialCdrErrors.Count != writtenErrorCount + writtenCdrCount-failedCallsCount)
                     throw new Exception(
                         "RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
             }

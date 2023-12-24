@@ -82,6 +82,8 @@ namespace InstallConfig
             
             this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name,vaultCataleya);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name, vaultGenband);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridgeKHL.Name, vaultTelcobridgeKHL);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridgeCTG.Name, vaultTelcobridgeCTG);
           
             
         }
