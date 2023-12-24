@@ -720,6 +720,8 @@ namespace TelcobrightMediation
 
         int WriteCdrDiscarded(List<string[]> excludedEvents)
         {
+            if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.WriteCdrDiscarded == false)
+                return excludedEvents.Count;
             List<cdrinconsistent> excludedEventsAsCdrInConsistents =
                 excludedEvents.Select(CdrConversionUtil.ConvertTxtRowToCdrinconsistent).ToList();
             int errorInsertedCount = 0;
