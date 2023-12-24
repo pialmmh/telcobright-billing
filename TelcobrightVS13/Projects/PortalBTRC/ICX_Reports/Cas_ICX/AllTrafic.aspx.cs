@@ -16,6 +16,25 @@ using reports;
 using TelcobrightInfra;
 using TelcobrightMediation;
 
+//
+using System;
+using System.IO;
+using PortalApp;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using PortalApp._myCodes;
+using PortalApp._portalHelper;
+using LibraryExtensions.ConfigHelper;
+using MediationModel;
+using TelcobrightMediation;
+using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
+using OfficeOpenXml;
+//
+
 public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
 {
     private int _mShowByCountry = 0;
@@ -179,6 +198,58 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
         ////make profit invisible, it's useless
         //GridView1.Columns[17].Visible = false;
         ////GridView1.Columns[9].Visible = true;//carrier's duration
+
+
+
+        ///
+        TelcobrightConfig telcobrightConfig1 = PageUtil.GetTelcobrightConfig();
+        DatabaseSetting databaseSetting = telcobrightConfig1.DatabaseSetting;
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
+
+        telcobrightConfig1 = PageUtil.GetTelcobrightConfig();
+        databaseSetting = telcobrightConfig1.DatabaseSetting;
+
+        string userName = Page.User.Identity.Name;
+        string dbName;
+        if (telcobrightConfig1.DeploymentProfile.UserVsDbName.ContainsKey(userName))
+        {
+            dbName = telcobrightConfig1.DeploymentProfile.UserVsDbName[userName];
+        }
+        else
+        {
+            dbName = telcobrightConfig1.DatabaseSetting.DatabaseName;
+        }
+        databaseSetting.DatabaseName = dbName;
+
+
+        PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting);
+        List<telcobrightpartner> telcoTelcobrightpartners = context.telcobrightpartners.ToList();
+        telcobrightpartner thisPartner = telcoTelcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
+        /////
+        DateTime today = DateTime.Today;
+        DateTime nextDate = today.AddDays(1);
+        
+        string toDay = today.ToString("yyyy-MM-dd");
+        string nextDay = nextDate.ToString("yyyy-MM-dd");
+
+
+        string selectNeQuery1 = $@"select sum(duration) duration from(
+	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '{today}' and tup_starttime < '{nextDay}' union all
+	
+	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '{today}' and tup_starttime < '{nextDay}' )
+                                domestic;
+                                ";
+        string selectNeQuery = $@"select sum(duration) duration from(
+	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '2023-01-01' and tup_starttime < '2023-12-01' union all
+	
+	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '2023-01-01' and tup_starttime < '2023-12-01' )
+                                domestic;
+                                ";
+        List<Double> val = context.Database.SqlQuery<Double>(selectNeQuery).ToList();
+
+        String Result = val[0].ToString("0.00");
+        myLabel.Text = $"ToTal Minute Count From All ICX is: {Result}";
+        ////
 
         using (MySqlConnection connection = new MySqlConnection())
         {

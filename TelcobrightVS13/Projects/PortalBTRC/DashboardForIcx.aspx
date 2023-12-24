@@ -10,7 +10,7 @@
     </div>
                 <%-- Missing TG --%>
                 
-                <div style="float: right; padding-right: 200px; padding-top: 25px">
+                <div style="float: right; padding-right: 200px; padding-top: 25px; text-align: center;">
                     <div style="margin-right: auto; text-align: center;">
                         <asp:Label ID="Label11" runat="server" Text="Missing TGs (Please Assign Missing TGs to approprite ANS/IOS and Zone)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                     </div>
@@ -23,7 +23,7 @@
 
                         <%--<ContentTemplate>--%>
                             
-                            <asp:GridView ID="GridView11" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnRowDataBound="GridView_RowDataBound">
+                            <asp:GridView ID="GridView11" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" Width="650px" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1" OnRowDataBound="GridView_RowDataBound">
                                 <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
                                 <Columns>
                                     <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="false" />
@@ -275,8 +275,8 @@
                                         <SortedDescendingHeaderStyle BackColor="#6F8DAE" />
 
                                     </asp:GridView>
-                                    <%--<asp:Button ID="Button2" runat="server" Text="Newer" OnClick="PreviousButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
-                                    <%--<asp:Button ID="Button3" runat="server" Text="Older" OnClick="NextButton_Click" AutoPostBack="True" CssClass="btn btn-primary" />--%>
+                                        <asp:Button ID="Button2" runat="server" Text="Newer" OnClick="PreviousButton_Click1" AutoPostBack="True" CssClass="btn btn-primary" />
+                                        <asp:Button ID="Button3" runat="server" Text="Older" OnClick="NextButton_Click1" AutoPostBack="True" CssClass="btn btn-primary" />
 
 
                                 </div>

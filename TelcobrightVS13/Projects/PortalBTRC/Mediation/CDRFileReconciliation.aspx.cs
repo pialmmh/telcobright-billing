@@ -23,6 +23,7 @@ namespace PortalApp.Mediation
         DatabaseSetting databaseSetting { get; set; }
         telcobrightpartner thisPartner { get; set; }
         PartnerEntities context { get; set; }
+        string switchName = "";
         string dbName { get; set; }
         List<ne> nes { get; set; }
         Dictionary<string, CDRFileComparer> CDRFileComparers = new Dictionary<string, CDRFileComparer>();
@@ -97,7 +98,7 @@ namespace PortalApp.Mediation
                     foreach (var item in CDRFileComparers)
                     {
                         jobNames[i] = "\'" + item.Value.FileName + "\'";
-                        switchName = item.Value.switchName;
+                        switchName = this.switchName;
                         i++;
                     }
 
@@ -111,24 +112,37 @@ namespace PortalApp.Mediation
                     string jobNamesToMatch = string.Join(",", jobNames);
                     string query = $@"SELECT *
                                             FROM job
-                                            WHERE idne={switchNameVsId[switchName]}
+                                            WHERE idne={switchNameVsId[this.switchName]}
                                             and JobName IN ({jobNamesToMatch})";
                     List<job> jobs = context.Database.SqlQuery<job>(query).ToList();
+                    HashSet<string> fileNamesfromDB = new HashSet<string>();
                     foreach (job j in jobs)
                     {
                         string jobNameTB = j.JobName;
-                        Decimal durationTB = Decimal.Parse(j.JobSummary);
-                        int recordCountTB = Convert.ToInt32(j.NoOfSteps);
+                        fileNamesfromDB.Add(jobNameTB);
+                        string durationTB = j.JobSummary;
+                        string recordCountTB = j.NoOfSteps.ToString();
 
-                        CDRFileComparers[jobNameTB].ActualDuratinoTB = durationTB;
-                        CDRFileComparers[jobNameTB].RecordCountFromTB = recordCountTB;
+                        CDRFileComparers[jobNameTB].ActualDuratinoTB = durationTB.ToString();
+                        CDRFileComparers[jobNameTB].RecordCountFromTB = recordCountTB.ToString();
 
-                        Decimal diffDuration = CDRFileComparers[jobNameTB].ActualDurationFromICX - CDRFileComparers[jobNameTB].ActualDuratinoTB;
-                        int diffRecordCount = CDRFileComparers[jobNameTB].RecordCountFromICX - CDRFileComparers[jobNameTB].RecordCountFromTB;
+                        Decimal diffDuration = Decimal.Parse(CDRFileComparers[jobNameTB].ActualDurationFromICX) - Decimal.Parse(CDRFileComparers[jobNameTB].ActualDuratinoTB);
+                        int diffRecordCount = int.Parse(CDRFileComparers[jobNameTB].RecordCountFromICX) - int.Parse(CDRFileComparers[jobNameTB].RecordCountFromTB);
 
-                        CDRFileComparers[jobNameTB].DiffDuration = diffDuration;
-                        CDRFileComparers[jobNameTB].DiffRecordCount = diffRecordCount;
-
+                        CDRFileComparers[jobNameTB].DiffDuration = diffDuration.ToString();
+                        CDRFileComparers[jobNameTB].DiffRecordCount = diffRecordCount.ToString();
+                    }
+                    //for missing file
+                    
+                    foreach(string keyFileName in CDRFileComparers.Keys)
+                    {
+                        if (!fileNamesfromDB.Contains(keyFileName))
+                        {
+                            CDRFileComparers[keyFileName].RecordCountFromTB = "File Missing";
+                            CDRFileComparers[keyFileName].DiffRecordCount = "File Missing";
+                            CDRFileComparers[keyFileName].ActualDuratinoTB = "File Missing";
+                            CDRFileComparers[keyFileName].DiffDuration = "File Missing";
+                        }
                     }
                     GridView1.DataSource = CDRFileComparers;
                     GridView1.DataBind();
@@ -150,6 +164,20 @@ namespace PortalApp.Mediation
         private Dictionary<string, CDRFileComparer> getCDRFileInfoFromExcel(string fileName)
         {
             List<string[]> rows = ExcelHelper.parseExcellRows(fileName);
+            ////
+            using (var package = new ExcelPackage(new System.IO.FileInfo(fileName)))
+            {
+                if (package.Workbook.Worksheets.Count > 0)
+                {
+                    var firstSheet = package.Workbook.Worksheets[0];
+                    switchName = firstSheet.Name; // sheet name same as switch name
+                }
+                else
+                {
+                    Console.WriteLine("No sheets found in the Excel file.");
+                }
+            }
+            ////
             Dictionary<string, CDRFileComparer> CDRFileComparers = new Dictionary<string, CDRFileComparer>();
 
             for (int i = 0; i < rows.Count; i++)
@@ -213,7 +241,7 @@ namespace PortalApp.Mediation
         }
         void generate_Template_file(string selectedSwitch)
         {
-            string fileName = "Template File.xlsx";
+            string fileName = "Template_File.xlsx";
             string folderPath = Server.MapPath("~/Downloads/");
             string filePath = Path.Combine(folderPath, fileName);
             //FileInfo excelFile = new FileInfo(filePath);
@@ -225,21 +253,14 @@ namespace PortalApp.Mediation
             {
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add(selectedSwitch);
 
-                string[] headerRow = { "SwitchName", "fileName", "recordCount", "DurationCount"};
+                string[] headerRow = { "fileName", "recordCount", "DurationCount"};
                 // Add header row
                 for (int i = 0; i < headerRow.Length; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = headerRow[i];
                 }
 
-                // Add 5 switch col rows
-                worksheet.Cells[2, 1].Value = selectedSwitch;
-                worksheet.Cells[3, 1].Value = selectedSwitch;
-                worksheet.Cells[4, 1].Value = selectedSwitch;
-                worksheet.Cells[5, 1].Value = selectedSwitch;
-                worksheet.Cells[6, 1].Value = selectedSwitch;
-
-
+                
                 // Save the file
                 //string fileName = "CDRData.xlsx";
                 //FileInfo excelFile = new FileInfo(Server.MapPath($"C:/Users/Mahathir/Downloads/{fileName}"));

@@ -22,6 +22,9 @@ public partial class DashboardAspxForIcx : Page
     private static int currentPageForJobGrid = 0;
     private static int currentIndexForJobGrid = 15;
     private int offset = currentPageForJobGrid * currentIndexForJobGrid;
+    private static int currentPageForExtractFile = 0;
+    private static int currentIndexForExtractFile = 5;
+    private int offset1 = currentPageForExtractFile * currentIndexForExtractFile;
     private string icxConnstr;
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
 
@@ -62,6 +65,7 @@ public partial class DashboardAspxForIcx : Page
         if (!IsPostBack)//initial
         {
             BindGridViewForMissingTg();
+
             DateTime currentDate = DateTime.Now;
             DateTime sevenDaysAgo = currentDate.AddDays(-7);
             //InternationalOutgoing1(sevenDaysAgo, currentDate);
@@ -69,7 +73,7 @@ public partial class DashboardAspxForIcx : Page
             DateTime lastDayDisplayed = sevenDaysAgo.AddDays(6);
             if (currentDate.Date == lastDayDisplayed.Date)
             {
-                //NextButton3.Enabled = false;
+                Button2.Enabled = false;
             }
         }
 
@@ -302,13 +306,13 @@ public partial class DashboardAspxForIcx : Page
         // Calculate the offset based on the current page index and page size
         //int pageIndex = GridViewCompleted.PageIndex;
         //int pageSize = GridViewCompleted.PageSize;
-        if (currentPageForJobGrid < 1)
+        if (currentPageForExtractFile < 1)
         {
-            PreviousButton.Enabled = false;
+            Button2.Enabled = false;
         }
         else
         {
-            PreviousButton.Enabled = true;
+            Button2.Enabled = true;
         }
 
         List<ZiporCompressedFile> ziporCompressedFileStatus = new List<ZiporCompressedFile>();
@@ -316,7 +320,7 @@ public partial class DashboardAspxForIcx : Page
         string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
         icxConnstr = connectionString;
         // Modify your SQL query to include the OFFSET and FETCH NEXT clauses
-        string sqlCommand = $@"select id,Status, compressedfileName, CompletionTime from compressedfile;";
+        string sqlCommand = $@"SELECT id, Status, compressedfileName, CompletionTime FROM compressedfile ORDER BY id DESC LIMIT {offset1}, {currentIndexForExtractFile};";
 
         using (MySqlConnection connection = new MySqlConnection())
         {
@@ -494,8 +498,8 @@ public partial class DashboardAspxForIcx : Page
     protected void ZiporCompressedFileStatus_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         // Set the new page index
-        GridViewCompleted.PageIndex = e.NewPageIndex;
-        BindGridView();
+        ZiporCompressedFileStatus.PageIndex = e.NewPageIndex;
+        BindZiporCompressedFileStatus();
 
     }
 
@@ -508,6 +512,7 @@ public partial class DashboardAspxForIcx : Page
             BindGridView();
         }
 
+
         DateTime currentDate = DateTime.Now;
         DateTime sevenDaysAgo = currentDate.AddDays(-6);
 
@@ -519,25 +524,28 @@ public partial class DashboardAspxForIcx : Page
         //InternationalOutgoing1(newStartDate, newEndDate);
     }
 
+    protected void PreviousButton_Click1(object sender, EventArgs e)
+    {
+
+        if (currentPageForExtractFile > 0)
+        {
+            currentPageForExtractFile--;
+            BindZiporCompressedFileStatus();
+        }
+
+    }
+
     protected void NextButton_Click(object sender, EventArgs e)
     {
-        // Go to the next page
+        // Go to the next page 
         currentPageForJobGrid++;
         BindGridView();
-        //if (GridViewCompleted.PageIndex < GridViewCompleted.PageCount - 1)
-        //{
-        //    GridViewCompleted.PageIndex++;
-        //    BindGridView();
-        //}
-        DateTime currentDate = DateTime.Now;
-        DateTime sevenDaysAgo = currentDate.AddDays(-6);
+    }
 
-        // Update the date range for the query
-        DateTime newStartDate = sevenDaysAgo.AddDays(-7);
-        DateTime newEndDate = sevenDaysAgo;
-
-        // Update the method call with the new date range
-        //InternationalOutgoing1(newStartDate, newEndDate);
+    protected void NextButton_Click1(object sender, EventArgs e)
+    {
+        currentPageForExtractFile++;
+        BindZiporCompressedFileStatus();
 
     }
 
