@@ -8,7 +8,12 @@ namespace MediationModel
 {
 	public partial class cdrinconsistent:ICacheble<cdrinconsistent>
 	{
-		public StringBuilder GetExtInsertValues()
+	    public override string ToString()
+	    {
+	        return this.ErrorCode;
+	    }
+
+	    public StringBuilder GetExtInsertValues()
 		{
 			return new StringBuilder("(")
 				.Append(this.SwitchId.ToMySqlField()).Append(",")

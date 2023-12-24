@@ -54,18 +54,27 @@ namespace Decoders
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;                                                                                  
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
-
+            bool emptyLineFound=false;
             try
             {
                 foreach (string ln in linesAsString)
                 {
+                    if (ln.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        emptyLineFound = true;
+                        continue;
+                    }
+                    if (emptyLineFound)
+                    {
+                        throw new Exception("Empty line found between Telcobridge rows, file may be inconsistent.");
+                    }
                     lineAsArr = ln.Split(',');
                     string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
                     string durationStr = lineAsArr[7].Trim();
-                    double durationSec = 0;
-                    double.TryParse(durationStr, out durationSec);
-
+                    decimal durationSec = 0;
+                    decimal.TryParse(durationStr, out durationSec);
+                    durationSec = decimal.Divide(durationSec, 1000);
                     textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial                              
                     textCdr[Fn.DurationSec] = durationSec.ToString();
                     textCdr[Fn.ChargingStatus] = durationSec > 0 ? "1" : "0";
@@ -102,12 +111,12 @@ namespace Decoders
                     textCdr[Fn.TerminatingCalledNumber] = lineAsArr[9].Trim();
 
 
-                    textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
+                    textCdr[Fn.IncomingRoute] = lineAsArr[11].Trim();
                     textCdr[Fn.OutgoingRoute] = lineAsArr[11].Trim();
 
                     textCdr[Fn.AnswerTime] = connectTime.IsNullOrEmptyOrWhiteSpace() ? startTime : connectTime;
                     textCdr[Fn.StartTime] = startTime;
-                    textCdr[Fn.Endtime] = endTime.IsNullOrEmptyOrWhiteSpace() ? connectTime : endTime;
+                    textCdr[Fn.Endtime] = endTime.IsNullOrEmptyOrWhiteSpace() ? textCdr[Fn.AnswerTime] : endTime;
 
 
                     string status = lineAsArr[0].Trim().ToLower();
@@ -165,12 +174,13 @@ namespace Decoders
             }
             else
             {
-                startTime = startTime.Date.AddHours(startTime.Hour);
+                //startTime = startTime.Date.AddHours(startTime.Hour); prev logic
+                startTime = startTime.Date; //new logic
             }
             string sessionId = row[Fn.UniqueBillId];
             string separator = "/";
             return new StringBuilder(switchId.ToString()).Append(separator)
-                .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
+                .Append(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote()).Append(separator)
                 .Append(sessionId).ToString();
         }
 
