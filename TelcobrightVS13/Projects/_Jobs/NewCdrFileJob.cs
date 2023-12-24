@@ -491,13 +491,7 @@ namespace Jobs
 
         private void CreateTableForDebugCdr()
         {
-            
-            Console.WriteLine(
-                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
-            Console.WriteLine(
-                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
-            Console.WriteLine(
-                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+            DebugCdrHelper.showWarning();
             var constr = DbUtil.getDbConStrWithDatabase(this.Input.MediationContext.Tbc.DatabaseSetting);
             using (MySqlConnection con = new MySqlConnection(constr)
             ) //use separate connection as ddl may commit unwanted changes
@@ -510,12 +504,7 @@ namespace Jobs
                     cmd.ExecuteNonQuery();
                 }
                 con.Close();
-                Console.WriteLine(
-                    "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
-                Console.WriteLine(
-                    "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
-                Console.WriteLine(
-                    "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+                DebugCdrHelper.showWarning();
             }
         }
 
@@ -863,7 +852,8 @@ namespace Jobs
             int newRawCount = textCdrCollectionPreProcessor.TxtCdrRows.Count +
                               textCdrCollectionPreProcessor.InconsistentCdrs.Count +
                               textCdrCollectionPreProcessor.NewDuplicateEvents.Count;
-            if (newRawCount != textCdrCollectionPreProcessor.DecodedCdrRowsBeforeDuplicateFiltering.Count)
+            if (newRawCount != textCdrCollectionPreProcessor.DecodedCdrRowsBeforeDuplicateFiltering.Count
+                +textCdrCollectionPreProcessor.InconsistentCdrs.Count)
             {
                 throw new Exception("Cdr count mismatch after duplicate filtering!");
             }

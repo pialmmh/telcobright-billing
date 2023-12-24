@@ -13,6 +13,15 @@ namespace Jobs
 {
     public static class DebugCdrHelper
     {
+        public static void showWarning()
+        {
+            Console.WriteLine(
+                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+            Console.WriteLine(
+                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+            Console.WriteLine(
+                "WARNING!!! ALL CDRS ARE BEING DUMPED TO DEBUGCDR TABLE, AFFECTING PERFORMANCE AND CONSUMING DISK SPACE.");
+        }
         public static string getCreateTableSqlIfNotExists(string tableName)
         {
             return $@"CREATE TABLE if not exists {tableName} (
