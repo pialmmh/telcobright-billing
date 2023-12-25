@@ -142,6 +142,11 @@ namespace Decoders
                         {"row", textCdr }
                     });
                     textCdr[Fn.UniqueBillId] = customUniqueBillId;
+                    if (textCdr[Fn.ChargingStatus] == "0" || textCdr[Fn.OutTrunkAdditionalInfo] == "start"
+                        || textCdr[Fn.OutTrunkAdditionalInfo] == "update") //failed or not "end"]
+                    {
+                        continue;
+                    }
                     decodedRows.Add(textCdr);
                 }
             }
