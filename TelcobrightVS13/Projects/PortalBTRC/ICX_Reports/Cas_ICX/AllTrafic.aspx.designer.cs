@@ -408,11 +408,56 @@ public partial class CasDefaultRptAllTrafic {
     protected global::System.Web.UI.Timer Timer1;
     
     /// <summary>
-    /// myLabel control.
+    /// DomesticLabel control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.Label myLabel;
+    protected global::System.Web.UI.WebControls.Label DomesticLabel;
+    
+    /// <summary>
+    /// IntOutLabel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label IntOutLabel;
+    
+    /// <summary>
+    /// IntInLabel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label IntInLabel;
+    
+    /// <summary>
+    /// Label2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label2;
+    
+    /// <summary>
+    /// Label3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label3;
+    
+    /// <summary>
+    /// GridView2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.GridView GridView2;
 }

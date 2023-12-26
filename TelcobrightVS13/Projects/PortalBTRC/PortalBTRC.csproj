@@ -802,6 +802,7 @@
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
+    <Compile Include="_portalHelper\AllTrafficData.cs" />
     <Compile Include="_portalHelper\CDRFileComparer.cs" />
     <Compile Include="_portalHelper\CreateExcelFileAspNet.cs" />
     <Compile Include="_portalHelper\CreateExcelFile.cs" />

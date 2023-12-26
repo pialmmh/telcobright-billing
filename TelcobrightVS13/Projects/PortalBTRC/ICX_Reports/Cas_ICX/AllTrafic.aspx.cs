@@ -37,6 +37,8 @@ using OfficeOpenXml;
 
 public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
 {
+    string StartDate;
+    string EndtDate;
     private int _mShowByCountry = 0;
     private int _mShowByAns = 0;
     DataTable _dt;
@@ -45,8 +47,8 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
     private string GetQuery()
     {
 
-        string StartDate = txtDate.Text;
-        string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
+        StartDate = txtDate.Text;
+        EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
         string groupInterval = getSelectedRadioButtonText();
@@ -225,31 +227,7 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
         PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting);
         List<telcobrightpartner> telcoTelcobrightpartners = context.telcobrightpartners.ToList();
         telcobrightpartner thisPartner = telcoTelcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
-        /////
-        DateTime today = DateTime.Today;
-        DateTime nextDate = today.AddDays(1);
-        
-        string toDay = today.ToString("yyyy-MM-dd");
-        string nextDay = nextDate.ToString("yyyy-MM-dd");
-
-
-        string selectNeQuery1 = $@"select sum(duration) duration from(
-	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '{today}' and tup_starttime < '{nextDay}' union all
-	
-	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '{today}' and tup_starttime < '{nextDay}' )
-                                domestic;
-                                ";
-        string selectNeQuery = $@"select sum(duration) duration from(
-	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '2023-01-01' and tup_starttime < '2023-12-01' union all
-	
-	                                select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '2023-01-01' and tup_starttime < '2023-12-01' )
-                                domestic;
-                                ";
-        List<Double> val = context.Database.SqlQuery<Double>(selectNeQuery).ToList();
-
-        String Result = val[0].ToString("0.00");
-        myLabel.Text = $"ToTal Minute Count From All ICX is: {Result}";
-        ////
+       
 
         using (MySqlConnection connection = new MySqlConnection())
         {
@@ -293,6 +271,67 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
             connection.Open();
             string sql = GetQuery();
 
+            /////
+
+
+            string domesticSQL = $@"select sum(duration) duration from(
+	                                    select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '{StartDate}' and tup_starttime < '{EndtDate}' union all	
+	                                    select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '{StartDate}' and tup_starttime < '{EndtDate}' ) 
+                                    as domestic;";
+            string intOutSQL = $@"select sum(duration) duration from(
+	                                    select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_02 where tup_starttime >= '{StartDate}' and tup_starttime < '{EndtDate}' union all	
+	                                    select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_02 where tup_starttime >= '{StartDate}' and tup_starttime < '{EndtDate}' ) 
+                                    as domestic;";
+            string intInSQL = $@"select sum(duration) duration from(
+	                                    select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_03 where tup_starttime >= '{StartDate}' and tup_starttime < '{EndtDate}' union all	
+	                                    select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_03 where tup_starttime >= '{StartDate}' and tup_starttime < '{EndtDate}' ) 
+                                    as domestic;";
+
+            List<string> Domestic = context.Database.SqlQuery<string>(domesticSQL).ToList();
+            List<string> IntOut = context.Database.SqlQuery<string>(intOutSQL).ToList();
+            List<string> IntIn = context.Database.SqlQuery<string>(intInSQL).ToList();
+
+
+            string domesticResult = Domestic[0];
+            string intOutResult = IntOut[0];
+            string intInResult = IntIn[0];
+
+
+            Dictionary<string, AllTrafficData> allTrafficData = new Dictionary<string, AllTrafficData>();
+            string[] callType = { "Domestic", "Int. Outgoing", "Int. Incoming" };
+            foreach (string type in callType)
+            {
+                AllTrafficData allTraffic = new AllTrafficData();
+                allTraffic.CallType = type;                
+                allTrafficData[type] = allTraffic;
+            }
+            //for domestic data
+            if (domesticResult.IsNullOrEmptyOrWhiteSpace())
+                domesticResult = "0";
+            if (intOutResult.IsNullOrEmptyOrWhiteSpace())
+                intOutResult = "0";
+            if (intInResult.IsNullOrEmptyOrWhiteSpace())
+                intInResult = "0";
+            allTrafficData["Domestic"].WholeCountryMinute = domesticResult;
+            allTrafficData["Int. Outgoing"].WholeCountryMinute = intOutResult;
+            allTrafficData["Int. Incoming"].WholeCountryMinute = intInResult;
+
+
+
+            //DomesticLabel.Text = $"ToTal Domestic Minute Count From All ICX is: {domesticResult}";
+            //IntOutLabel.Text =   $"ToTal Int. Out Minute Count From All ICX is: {intOutResult}";
+            //IntInLabel.Text =    $"ToTal Int. In Minute Count From All ICX is:  {intInResult}";
+
+            ////
+
+
+
+            //string domesticSQL = $@"select sum(duration) duration from(
+            //                     select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '2023-01-01' and tup_starttime < '2023-12-01' union all
+
+            //                     select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '2023-01-01' and tup_starttime < '2023-12-01' )
+            //                    domestic;
+            //                    ";
 
 
 
@@ -379,6 +418,21 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
                 TrafficReportDatasetBased tr = new TrafficReportDatasetBased(dataset);
                 tr.Ds = dataset;
                 List<NoOfCallsVsPdd> callVsPdd = new List<NoOfCallsVsPdd>();
+
+                DataRow dataRow = tr.Ds.Tables[0].Rows[0];                
+
+
+                allTrafficData["Domestic"].OwnICXMinute = dataRow.ItemArray[1].ToString();
+                allTrafficData["Int. Outgoing"].OwnICXMinute = dataRow.ItemArray[3].ToString();
+                allTrafficData["Int. Incoming"].OwnICXMinute = dataRow.ItemArray[5].ToString();
+
+
+                allTrafficData["Domestic"].PercentShareOfWholeCountryMinute = (double.Parse(allTrafficData["Domestic"].OwnICXMinute)*100 / double.Parse(allTrafficData["Domestic"].WholeCountryMinute)).ToString("0.00");
+                allTrafficData["Int. Outgoing"].PercentShareOfWholeCountryMinute = (double.Parse(allTrafficData["Int. Outgoing"].OwnICXMinute)*100 / double.Parse(allTrafficData["Int. Outgoing"].WholeCountryMinute)).ToString("0.00");
+                allTrafficData["Int. Incoming"].PercentShareOfWholeCountryMinute = (double.Parse(allTrafficData["Int. Incoming"].OwnICXMinute)*100 / double.Parse(allTrafficData["Int. Incoming"].WholeCountryMinute)).ToString("0.00");
+
+                GridView2.DataSource = allTrafficData;
+                GridView2.DataBind();
                 foreach (DataRow dr in tr.Ds.Tables[0].Rows)
                 {
                     tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["noofcalls1"]);

@@ -378,7 +378,7 @@
     <asp:UpdatePanel runat="server">
         <ContentTemplate>
             <div id="ParamBorder" style="float: left; padding-top: 3px; padding-left: 10px; height: 155px; display: block; border: 2px ridge #E5E4E2; margin-bottom: 5px; width: 1300px;">
-                <div style="height: 20px; background-color: #f2f2f2; color: black;">
+                <div style=" display:none;height: 20px; background-color: #f2f2f2; color: black;">
                     <span style="float: left; font-weight: bold; padding-left: 20px; visibility:hidden;">Show Performance
                         <asp:CheckBox ID="CheckBoxShowPerformance" runat="server" Checked="true" /></span>
                     <%--<div style="clear:right;"></div>--%>
@@ -453,7 +453,7 @@
 
                 </div>
                 <%--END OF date time/months field DIV--%>
-                <div id="TimeSummary" style="float: left; margin-left: 15px; padding-left: 20px; height: 70px; width: 280px; background-color: #faebd7; margin-top: -10px;">
+                <div id="TimeSummary" style="display:none ;float: left; margin-left: 15px; padding-left: 20px; height: 70px; width: 280px; background-color: #faebd7; margin-top: -10px;">
                     <div style="font-weight: bold; float: left;">Period wise Summary<asp:CheckBox ID="CheckBoxDailySummary" runat="server" /></div>
                     <div style="clear: left; margin-top: 5px;"></div>
                     <div style="float: left; margin-right: 5px;">
@@ -586,7 +586,7 @@
 
     <div>
         <%--ListView Goes Here*******************--%>
-        <div style="float: left; text-align: left; width: 900px; position: relative; top: 0px; padding-left: 5px;">
+        <div style="display:none;float: left; text-align: left; width: 900px; position: relative; top: 0px; padding-left: 5px;">
 
 
             <div style="text-align: center;">
@@ -626,9 +626,63 @@
     </div>
     
      <div style="float: left; text-align: left; width: 900px; position: relative; top: 100px; padding-left: 5px;">
-        <asp:Label runat="server" ID="myLabel" Text="" 
+        <asp:Label runat="server" ID="DomesticLabel" Text="" 
                style="position: absolute; bottom: 0; left: 0; font-family: Arial; font-size: 10pt; color: DarkBlue; font-weight: bold;"></asp:Label>
     </div>
+
+    <div style="float: left; text-align: left; width: 900px; position: relative; top: 120px; padding-left: 5px;">
+        <asp:Label runat="server" ID="IntOutLabel" Text="" 
+               style="position: absolute; bottom: 0; left: 0; font-family: Arial; font-size: 10pt; color: DarkBlue; font-weight: bold;"></asp:Label>
+    </div>
+
+    <div style="float: left; text-align: left; width: 900px; position: relative; top: 140px; padding-left: 5px;">
+        <asp:Label runat="server" ID="IntInLabel" Text="" 
+               style="position: absolute; bottom: 0; left: 0; font-family: Arial; font-size: 10pt; color: DarkBlue; font-weight: bold;"></asp:Label>
+    </div>
+
+    
+
+
+
+
+
+
+    <div style="float: left; text-align: left; width: 900px; position: relative;  padding-left: 10px; top:50px">
+        <asp:Label runat="server" ID="Label2" Text="Percentage Distribution of Calls" 
+               style="position: absolute; bottom: 0; left: 0; font-family: Arial; font-size: 10pt; color: DarkBlue; font-weight: bold;"></asp:Label>
+    </div>
+    <div style="float: left; text-align: left; width: 900px; position: relative;  padding-left: 10px; top:70px">
+        <asp:Label runat="server" ID="Label3" Text="Total ICX 21" 
+               style="position: absolute; bottom: 0; left: 0; font-family: Arial; font-size: 10pt; color: DarkBlue; font-weight: bold;"></asp:Label>
+    </div>
+
+     <div style="float: left; text-align: left; position: relative;  padding-left: 5px; top:75px">
+        <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None">
+            <AlternatingRowStyle BackColor="White" />
+           <Columns>
+                
+                <asp:BoundField DataField="Value.CallType" HeaderText="CallType" SortExpression="CallType" />
+
+                <asp:BoundField DataField="Value.WholeCountryMinute" HeaderText="WholeCountryMinute" SortExpression="WholeCountryMinute" />
+                <asp:BoundField DataField="Value.OwnICXMinute" HeaderText="OwnICXMinute" SortExpression="OwnICXMinute" />
+
+                <asp:BoundField DataField="Value.PercentShareOfWholeCountryMinute" HeaderText="Percent" SortExpression="Percent" />
+                
+          </Columns>
+            <EditRowStyle BackColor="#7C6F57" />
+            <FooterStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+            <HeaderStyle BackColor="#1C5E55" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
+            <RowStyle BackColor="#E3EAEB" />
+            <SelectedRowStyle BackColor="#C5BBAF" Font-Bold="True" ForeColor="#333333" />
+            <SortedAscendingCellStyle BackColor="#F8FAFA" />
+            <SortedAscendingHeaderStyle BackColor="#246B61" />
+            <SortedDescendingCellStyle BackColor="#D4DFE1" />
+            <SortedDescendingHeaderStyle BackColor="#15524A" />
+        </asp:GridView>
+        
+    </div>
+
 
 </asp:Content>
 
