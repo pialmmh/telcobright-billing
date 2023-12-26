@@ -37,7 +37,7 @@ namespace InstallConfig
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
-            this.Tbc.CdrSetting.ProcessNewCdrJobsBeforeReProcess = false;
+            this.Tbc.CdrSetting.ProcessNewCdrJobsBeforeReProcess = true;
             this.Tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles = false;
             this.PrepareDirectorySettings(this.Tbc);
             string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();

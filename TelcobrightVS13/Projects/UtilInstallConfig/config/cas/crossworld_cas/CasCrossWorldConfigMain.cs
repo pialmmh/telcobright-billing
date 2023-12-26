@@ -27,7 +27,7 @@ namespace InstallConfig
         public override TelcobrightConfig Tbc { get; set; }
         public override int IdOperator { get; set; } = 18;
         public override string CustomerName { get; set; } = "CrossWorld Telecom Ltd.";
-        public override string DatabaseName { get; set; } = "crossworld_cas";
+        public override string DatabaseName { get; set; } = "crossworld_cas";//todo
 
         public CasCrossWorldAbstractConfigGenerator()
         {
@@ -39,6 +39,7 @@ namespace InstallConfig
         {
 
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
+            this.Tbc.CdrSetting.ProcessNewCdrJobsBeforeReProcess = true;
             this.Tbc.CdrSetting.DescendingOrderWhileListingFiles = true;
             this.PrepareDirectorySettings(this.Tbc);
             string csvPathForNe = CasNeInfoHelper.getCasOperatorInfoFile();

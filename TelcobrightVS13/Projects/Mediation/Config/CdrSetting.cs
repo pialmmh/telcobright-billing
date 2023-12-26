@@ -48,6 +48,7 @@ namespace TelcobrightMediation
         public bool EnableSameRatePeriodForICX { get; set; } = true;
         public bool ProcessNewCdrJobsBeforeReProcess { get; set; }
         public bool WriteFailedCallsToDb { get; set; }
+        public bool WriteCdrDiscarded { get; set; }
 
         public CdrSetting()
         {
