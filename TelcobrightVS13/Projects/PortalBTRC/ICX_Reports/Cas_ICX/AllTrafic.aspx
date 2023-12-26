@@ -661,10 +661,10 @@
             <AlternatingRowStyle BackColor="White" />
            <Columns>
                 
-                <asp:BoundField DataField="Value.CallType" HeaderText="CallType" SortExpression="CallType" />
+                <asp:BoundField DataField="Value.CallType" HeaderText="Call Type" SortExpression= "Call Type" />
 
-                <asp:BoundField DataField="Value.WholeCountryMinute" HeaderText="WholeCountryMinute" SortExpression="WholeCountryMinute" />
-                <asp:BoundField DataField="Value.OwnICXMinute" HeaderText="OwnICXMinute" SortExpression="OwnICXMinute" />
+                <asp:BoundField DataField="Value.WholeCountryMinute" HeaderText="Whole Country Minutes" SortExpression="Whole Country Minutes" />
+                <asp:BoundField DataField="Value.OwnICXMinute" HeaderText="Own ICX Minutes" SortExpression="Own ICX Minutes" />
 
                 <asp:BoundField DataField="Value.PercentShareOfWholeCountryMinute" HeaderText="Percent" SortExpression="Percent" />
                 
