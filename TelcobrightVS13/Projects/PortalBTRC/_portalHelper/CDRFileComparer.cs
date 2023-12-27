@@ -20,8 +20,14 @@ namespace PortalApp._portalHelper
         {
             //this.switchName = row[0].Trim();
             this.FileName = row[0].Trim();
-            this.RecordCountFromICX = row[1].Trim();
-            this.ActualDurationFromICX = row[2].Trim();
+            if (row[1] == "")
+                this.RecordCountFromICX = "Empty";
+            else
+                this.RecordCountFromICX = row[1].Trim();
+            if (row[1] == "")
+                this.ActualDurationFromICX = "Empty";
+            else
+                this.ActualDurationFromICX = row[2].Trim();
         }
 
     }

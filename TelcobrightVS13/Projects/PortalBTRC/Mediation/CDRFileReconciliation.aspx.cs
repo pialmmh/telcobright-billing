@@ -182,7 +182,9 @@ namespace PortalApp.Mediation
 
             for (int i = 0; i < rows.Count; i++)
             {
-                if (i == 0) continue; // skipping the first row
+                if (i == 0 ) continue; // skipping the first row
+                if (rows[i][0] == "" ) continue; // filename cant be empty
+
                 CDRFileComparer obj = new CDRFileComparer(rows[i]);
                 CDRFileComparers.Add(obj.FileName, obj);
             }
