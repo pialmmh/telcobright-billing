@@ -75,8 +75,7 @@ namespace TelcobrightMediation
                 dicRoutes.TryGetValue(key, out outGoingRoute);
 
                 if ((tbPartnerDb == "mnh_cas" && thisCdr.SwitchId == 1) &&
-                    (thisCdr.OutgoingRoute == "1151" || thisCdr.OutgoingRoute == "1974" ||
-                     thisCdr.IncomingRoute == "1151" || thisCdr.IncomingRoute == "1974")
+                    (thisCdr.OutgoingRoute == "1974" || thisCdr.IncomingRoute == "1974")
                     )
                 {
                     thisCdr.ServiceGroup = 1; //Domestic call
