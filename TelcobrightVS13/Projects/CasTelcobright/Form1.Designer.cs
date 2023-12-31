@@ -6,6 +6,7 @@ using CasTelcobright.Forms;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 
 namespace CasTelcobright
 {
@@ -83,8 +84,40 @@ namespace CasTelcobright
             //    panel1.Controls.Add(pLabel);
             //}
 
-            string[] driveLetters = Environment.GetLogicalDrives();
+            //string[] driveLetters = Environment.GetLogicalDrives();
 
+            //int labelIndex = 24;
+            //for (int i = 0; i < driveLetters.Length && labelIndex < 35; i++)
+            //{
+            //    Label pLabel = new Label();
+            //    this.labels.Add(pLabel);
+
+            //    string driveLetter = driveLetters[i];
+            //    DriveInfo driveInfo = new DriveInfo(driveLetter);
+
+            //    string driveletter = driveLetters[i];
+            //    var tbdir = driveLetter+ "telcobright/vault/resources/cdr";
+            //    if (!Directory.Exists(tbdir)) continue;
+            //    getFilesInfoRecursively(tbdir);
+
+            //    string labelText = $"{driveLetter}:\nT: {FormatSize(driveInfo.TotalSize)}, F: {FormatSize(driveInfo.AvailableFreeSpace)}, Files: {AllFileInfos.Count}";
+            //    AllFileInfos.Clear();
+            //    pLabel.Text = labelText;
+
+            //    pLabel.Location = new Point(0, labelIndex * 24);
+            //    pLabel.AutoSize = false;
+            //    pLabel.Height = 40;
+            //    pLabel.Width = 183;
+            //    pLabel.Font = new Font("Calibri", 7);
+            //    pLabel.BackColor = Color.DimGray;
+            //    pLabel.ForeColor = Color.White;
+            //    panel1.Controls.Add(pLabel);
+
+            //    labelIndex += 2;
+            //}
+
+            string[] driveLetters = Environment.GetLogicalDrives();
+            int bottomPadding = 1;
             int labelIndex = 24;
             for (int i = 0; i < driveLetters.Length && labelIndex < 35; i++)
             {
@@ -94,26 +127,28 @@ namespace CasTelcobright
                 string driveLetter = driveLetters[i];
                 DriveInfo driveInfo = new DriveInfo(driveLetter);
 
-                string driveletter = driveLetters[i];
-                var tbdir = driveLetter+"telcobright";
-                if(!Directory.Exists(tbdir)) continue;
-                getFilesInfoRecursively(tbdir);
+                string tbDir = Path.Combine(driveLetter, "telcobright", "vault", "resources", "cdr");
+                if (!Directory.Exists(tbDir)) continue;
 
-                string labelText = $"{driveLetter}:\nT: {FormatSize(driveInfo.TotalSize)}, F: {FormatSize(driveInfo.AvailableFreeSpace)}, Files: {AllFileInfos.Count}";
-                AllFileInfos.Clear();
+                Dictionary<string, int> subfolderFileCounts = GetTotalFileCountsInSubfolders(tbDir);
+
+                string labelText = $"{driveLetter} :\nTotal: {FormatSize(driveInfo.TotalSize)}, Free: {FormatSize(driveInfo.AvailableFreeSpace)}\n{string.Join("\n", subfolderFileCounts.Select(kv => $"{kv.Key}: {kv.Value}"))}";
                 pLabel.Text = labelText;
 
                 pLabel.Location = new Point(0, labelIndex * 24);
                 pLabel.AutoSize = false;
-                pLabel.Height = 40;
-                pLabel.Width = 183;
-                pLabel.Font = new Font("Calibri", 7);
+                pLabel.Height = 90; // Adjusted height to accommodate longer text
+                pLabel.Width = 283; // Adjusted width to accommodate longer text
+                pLabel.Font = new Font("Calibri", 8);
                 pLabel.BackColor = Color.DimGray;
                 pLabel.ForeColor = Color.White;
                 panel1.Controls.Add(pLabel);
 
                 labelIndex += 2;
+                labelIndex += 1 + bottomPadding;
             }
+
+
 
 
             panel2.Dock = DockStyle.Fill;
@@ -132,6 +167,51 @@ namespace CasTelcobright
             ResumeLayout(false);
 
             this.ResumeLayout(false);
+        }
+        // Get the total counts of files in each subfolder, including subfolders recursively
+        private Dictionary<string, int> GetTotalFileCountsInSubfolders(string directoryPath)
+        {
+            Dictionary<string, int> subfolderFileCounts = new Dictionary<string, int>();
+
+            try
+            {
+                string[] subfolders = Directory.GetDirectories(directoryPath);
+                foreach (string subfolder in subfolders)
+                {
+                    int fileCount = GetTotalFileCount(subfolder);
+                    subfolderFileCounts.Add(Path.GetFileName(subfolder), fileCount);
+                }
+            }
+            catch (Exception)
+            {
+                // Handle exceptions (e.g., unauthorized access to the directory)
+            }
+
+            return subfolderFileCounts;
+        }
+
+        // Get the total count of files in a directory, including subdirectories recursively
+        private int GetTotalFileCount(string directoryPath)
+        {
+            int totalFileCount = 0;
+
+            try
+            {
+                string[] files = Directory.GetFiles(directoryPath);
+                totalFileCount += files.Length;
+
+                string[] subfolders = Directory.GetDirectories(directoryPath);
+                foreach (string subfolder in subfolders)
+                {
+                    totalFileCount += GetTotalFileCount(subfolder);
+                }
+            }
+            catch (Exception)
+            {
+                // Handle exceptions (e.g., unauthorized access to the directory)
+            }
+
+            return totalFileCount;
         }
 
         private string FormatSize(long bytes)
@@ -162,6 +242,26 @@ namespace CasTelcobright
                
                 getFilesInfoRecursively(subDir);
             }
+        }
+
+        private List<string> GetImmediateSubfolderNames(string directoryPath)
+        {
+            List<string> folderNames = new List<string>();
+
+            try
+            {
+                string[] folders = Directory.GetDirectories(directoryPath);
+                foreach (string folder in folders)
+                {
+                    folderNames.Add(Path.GetFileName(folder));
+                }
+            }
+            catch (Exception)
+            {
+                // Handle exceptions (e.g., unauthorized access to the directory)
+            }
+
+            return folderNames;
         }
         private void addPictureBox(string operatorName, int tabIndex, int yCoordinate)
         {
