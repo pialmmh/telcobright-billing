@@ -33,8 +33,9 @@ namespace PartnerRules
             if (thisCdr.InPartnerId <= 0)
             {
                 if (cdrSetting.useCasStyleProcessing == true &&
-                    tbPartnerDb == "mnh_cas" && thisCdr.InPartnerId <= 0
-                    && thisCdr.IncomingRoute == "1974")
+                    tbPartnerDb == "mnh_cas" && thisCdr.InPartnerId <= 0 && 
+                    (thisCdr.IncomingRoute == "1974" || thisCdr.IncomingRoute == "1950" || thisCdr.IncomingRoute == "1960")
+                    )
                 {
                     ANSInByPrefix ansInByPrefix = new ANSInByPrefix();
                     int idPartner = ansInByPrefix.Execute(thisCdr, data);

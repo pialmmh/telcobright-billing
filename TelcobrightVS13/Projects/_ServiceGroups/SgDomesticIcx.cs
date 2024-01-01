@@ -66,7 +66,7 @@ namespace TelcobrightMediation
                         return;
                     }
                 }
-                
+
             }
             if (useCasStyleProcessing)//cas style
             {
@@ -74,8 +74,10 @@ namespace TelcobrightMediation
                 route outGoingRoute = null;
                 dicRoutes.TryGetValue(key, out outGoingRoute);
 
-                if ((tbPartnerDb == "mnh_cas" && thisCdr.SwitchId == 1) &&
-                    (thisCdr.OutgoingRoute == "1974" || thisCdr.IncomingRoute == "1974")
+                if (tbPartnerDb == "mnh_cas" && thisCdr.SwitchId == 1 &&
+                    thisCdr.OutgoingRoute == "1974" || thisCdr.IncomingRoute == "1974"
+                    || thisCdr.OutgoingRoute == "1950" || thisCdr.IncomingRoute == "1950" ||
+                    thisCdr.OutgoingRoute == "1960" || thisCdr.IncomingRoute == "1960"
                     )
                 {
                     thisCdr.ServiceGroup = 1; //Domestic call
@@ -92,7 +94,7 @@ namespace TelcobrightMediation
                     thisCdr.Duration1 = roundedDuration;
                     return;
                 }
-                
+
             }
         }
 

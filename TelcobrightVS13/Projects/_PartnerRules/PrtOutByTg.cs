@@ -31,8 +31,9 @@ namespace PartnerRules
                 return thisRoute.idPartner;
             }
             if (cdrSetting.useCasStyleProcessing == true &&
-                    tbPartnerDb == "mnh_cas" && thisCdr.OutPartnerId <= 0
-                    && thisCdr.OutgoingRoute == "1974")
+                    tbPartnerDb == "mnh_cas" && thisCdr.OutPartnerId <= 0 &&
+                    (thisCdr.OutgoingRoute == "1974" || thisCdr.OutgoingRoute == "1950" || thisCdr.OutgoingRoute == "1960")
+               )
             {
                 ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
                 int idPartner = ansOutByPrefix.Execute(thisCdr, data);
