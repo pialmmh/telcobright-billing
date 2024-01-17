@@ -255,7 +255,7 @@ namespace PortalApp.Mediation
             {
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add(selectedSwitch);
 
-                string[] headerRow = { "fileName", "recordCount", "DurationCount"};
+                string[] headerRow = { "fileName", "recordCount", "Actual Duration Sum from Switch (sec)" };
                 // Add header row
                 for (int i = 0; i < headerRow.Length; i++)
                 {
