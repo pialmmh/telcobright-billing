@@ -207,6 +207,8 @@
                                     <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalIn_ICX.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalOut_ICX.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="All Trafic" Text="All Trafic" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/AllTrafic.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="Daily Report Submission" Text="Daily Report Submission" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/DailyInput.aspx"></asp:TreeNode>
+
 
                                     <%--  <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl="~/reports/transit/AlphatechPremium.aspx"> </asp:TreeNode>

@@ -350,6 +350,11 @@ namespace InstallConfig
                         "~/ICX_Reports/Cas_ICX/AllTrafic.aspx",
                         settingIntlIn
                     }
+                    ,
+                    {
+                        "~/ICX_Reports/Cas_ICX/DailyInput.aspx",
+                        settingIntlIn
+                    }
                 },//dictionary of page settings
 
             };
