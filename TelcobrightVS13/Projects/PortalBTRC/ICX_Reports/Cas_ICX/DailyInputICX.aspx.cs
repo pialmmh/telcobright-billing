@@ -12,7 +12,7 @@ using TelcobrightMediation;
 
 namespace PortalApp.ICX_Reports.Cas_ICX
 {
-    public partial class WebForm1 : System.Web.UI.Page
+    public partial class DailyInputICX : System.Web.UI.Page
     {
         static List<icxdailyinput> icxDailyInputs = new List<icxdailyinput>();
         static List<icxdailyinput> icxDailyInputsCalc = new List<icxdailyinput>();
@@ -48,9 +48,42 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             
             if (!IsPostBack)
             {
-                for(int year = 2023; year <= 2031; year++)
+                string[] ICXName =
+                                        {
+                                            "Agni ICX",
+                                            "BTCL",
+                                            "Bangla ICX",
+                                            "Bangla Telecom Ltd",
+                                            "Bantel Limited",
+                                            "Cross World Telecom Limited",
+                                            "GETCO Telecommunications Ltd",
+                                            "Gazi Networks Limited",
+                                            "Imam Network Ltd",
+                                            "Integrated Services Limited (Sheba ICX)",
+                                            "JibonDhara Solutions Limited",
+                                            "M&H Telecom Limited",
+                                            "Mother Telecommunication",
+                                            "New Generation Telecom Limited",
+                                            "Paradise Telecom Limited",
+                                            "Purple Telecom Limited",
+                                            "RingTech(Bangladesh) Limited",
+                                            "SR Telecom Limited",
+                                            "Softex communication Ltd",
+                                            "Summit Communications Ltd (Vertex)",
+                                            "Tele Exchange Limited",
+                                            "Teleplus Newyork Limited",
+                                            "Voicetel Ltd"
+                                        };
+
+
+                for (int year = 2023; year <= 2031; year++)
                 {
                     DropDownYear.Items.Add(year.ToString());
+                }
+
+                foreach (string name in ICXName)
+                {
+                    DropDownICX.Items.Add(name);
                 }
 
                 string[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -78,80 +111,12 @@ namespace PortalApp.ICX_Reports.Cas_ICX
         }
         
 
+       
+
+
+       
         
-
-        protected void GridViewRowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-            try
-            {
-                GridViewRow row = this.GridView2.Rows[e.RowIndex];
-                decimal domDuration, intInDuration, intOutDuration;
-                string domDur = ((TextBox)row.FindControl("ICXDomInput")).Text;
-                string intInDur = ((TextBox)row.FindControl("ICXIntInInput")).Text;
-                string intOutDur = ((TextBox)row.FindControl("ICXIntOutInput")).Text;
-                string callDate = ((Label)row.FindControl("lblDate")).Text;
-                
-                
-                if (!string.IsNullOrWhiteSpace(domDur))
-                {
-                    if (decimal.TryParse(domDur, out domDuration))
-                    {
-                        string updateSql = $@"update icxdailyinput set DomesticICX = {domDuration} where callDate='{callDate}';";
-                        context.Database.ExecuteSqlCommand(updateSql);
-                    }
-                    else
-                    {
-                        throw new Exception("Domestic not in correct format");
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(intInDur))
-                {
-                    if (decimal.TryParse(intInDur, out intInDuration))
-                    {
-                        string updateSql = $@"update icxdailyinput set IntInICX = {intInDuration} where callDate='{callDate}';";
-                        context.Database.ExecuteSqlCommand(updateSql);
-                    }
-                    else
-                    {
-                        throw new Exception("In.tIn. not in correct format");
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(intOutDur))
-                {
-                    if (decimal.TryParse(intOutDur, out intOutDuration))
-                    {
-                        string updateSql = $@"update icxdailyinput set IntOutICX = {intOutDuration} where callDate='{callDate}';";
-                        context.Database.ExecuteSqlCommand(updateSql);
-                    }
-                    else
-                    {
-                        throw new Exception("Int.Out. not in correct format");
-                    }
-                }
-                
-            }
-            catch (Exception e1)
-            {
-                Console.WriteLine("Row Update error");
-            }
-            this.GridView2.EditIndex = -1;
-            LoadData();
-            GridViewDataBound();
-        }
-        protected void GridViewRowEditing(object sender, GridViewEditEventArgs e)
-        {
-            this.GridView2.EditIndex = e.NewEditIndex;
-            //LoadData();
-            GridViewDataBound();
-        }
-        protected void GridViewRowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        {
-            this.GridView2.EditIndex = -1;
-            //LoadData();
-            GridViewDataBound();
-        }
+        
         void GridViewDataBound()
         {
             GridView2.DataSource = icxDailyInputs;
@@ -162,16 +127,11 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
         protected void ddlMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             LoadData();
             GridViewDataBound();
         }
-        bool alreadyRowUpdated(string callDate)
-        {
-            icxDailyInputs = icxDailyInputs;  
-            //if(icxDailyInputs)
-
-            return false;
-        }
+        
         void LoadData()
         {
             string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -181,9 +141,38 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             //DateTime currentDate = DateTime.Now;
             int year1 = int.Parse(DropDownYear.SelectedValue);
             int month1 = monthDictionary[DropDownMonth.SelectedValue];
+            Dictionary<string, string> ICXDictionary = new Dictionary<string, string>
+                                                            {
+                                                                { "Agni ICX", "agni_cas" },
+                                                                { "BTCL", "btcl_cas" },
+                                                                { "Bangla ICX", "banglaicx_cas" },
+                                                                { "Bangla Telecom Ltd", "banglatelecom_cas" },
+                                                                { "Bantel Limited", "bantel_cas" },
+                                                                { "Cross World Telecom Limited", "crossworld_cas" },
+                                                                { "GETCO Telecommunications Ltd", "getco_cas" },
+                                                                { "Gazi Networks Limited", "gazinetworks_cas" },
+                                                                { "Imam Network Ltd", "imamnetwork_cas" },
+                                                                { "Integrated Services Limited (Sheba ICX)", "sheba_cas" },
+                                                                { "JibonDhara Solutions Limited", "jibondhara_cas" },
+                                                                { "M&H Telecom Limited", "mnh_cas" },
+                                                                { "Mother Telecommunication", "mothertelecom_cas" },
+                                                                { "New Generation Telecom Limited", "newgenerationtelecom_cas" },
+                                                                { "Paradise Telecom Limited", "paradise_cas" },
+                                                                { "Purple Telecom Limited", "purple_cas" },
+                                                                { "RingTech(Bangladesh) Limited", "ringtech_cas" },
+                                                                { "SR Telecom Limited", "srtelecom_cas" },
+                                                                { "Softex communication Ltd", "softex_cas" },
+                                                                { "Summit Communications Ltd (Vertex)", "summit_cas" },
+                                                                { "Tele Exchange Limited", "teleexchange_cas" },
+                                                                { "Teleplus Newyork Limited", "teleplusnetwork_cas" },
+                                                                { "Voicetel Ltd", "voicetel_cas" }
+                                                            };
 
+
+
+            string dbName = ICXDictionary[DropDownICX.SelectedItem.ToString()];
             string date = year1 + "-" + month1 + "-" + "01";
-            string sql = getSqlQuery(year1, month1);
+            string sql = getSqlQuery(year1, month1, dbName);
             icxDailyInputsCalc = context.Database.SqlQuery<icxdailyinput>(sql).ToList();
 
             string date1 = year1 + "-" + month1 + "-" + "01";
@@ -193,7 +182,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 year1 += 1;
             }
             string date2 = year1 + "-" + (month1+1) + "-" + "01";
-            string sqlDailyInput = $@"select date_format(callDate,'%Y-%m-%d') callDateICX, date_format(callDate,'%Y-%m-%d') callDateSub, DomesticICX, LtfsICX, IntInICX, IntOutICX, CasDomSub, CasLtfsSub, CasIntInSub, CasIntOutSub, submitted from icxdailyinput where callDate >= '{date1}' and calldate < '{date2}';";
+            string sqlDailyInput = $@"select date_format(callDate,'%Y-%m-%d') callDateICX, date_format(callDate,'%Y-%m-%d') callDateSub, DomesticICX, LtfsICX, IntInICX, IntOutICX, CasDomSub, CasLtfsSub, CasIntInSub, CasIntOutSub, submitted from {dbName}.icxdailyinput where callDate >= '{date1}' and calldate < '{date2}';";
             icxDailyInputs = context.Database.SqlQuery<icxdailyinput>(sqlDailyInput).ToList();
 
             //Merging both object
@@ -218,28 +207,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
         }
 
-        protected void GridViewRowSubmitting(object sender, GridViewDeleteEventArgs e)
-        {
-
-            GridViewRow row = this.GridView2.Rows[e.RowIndex];
-            string callDate = ((Label)row.FindControl("lblDate")).Text;
-
-            foreach(var icxDailyinput in icxDailyInputs)
-            {
-                if(icxDailyinput.callDateSub == callDate && icxDailyinput.submitted == "NO")
-                {
-                    decimal casDomSub = decimal.Parse(((Label)row.FindControl("lblCasDomestic")).Text);
-                    //decimal casLtfsSub = decimal.Parse(((Label)row.FindControl("lblCasLtfs")).Text);
-                    decimal casIntInSub = decimal.Parse(((Label)row.FindControl("lblCasIntIn")).Text);
-                    decimal casIntOutSub = decimal.Parse(((Label)row.FindControl("lblCasIntOut")).Text);
-
-                    string submitSql = $@"update icxdailyinput set CasDomSub = {casDomSub}, CasIntInSub = {casIntInSub}, CasIntOutSub = {casIntOutSub}, submitted = 'YES' where callDate= '{callDate}';";
-                    context.Database.ExecuteSqlCommand(submitSql);
-                }
-            }
-            LoadData();
-            GridViewDataBound();
-        }
+        
 
         protected void GridViewSupplierRates_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -342,24 +310,27 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
 
                 // Format the decimals with two decimal places
-                e.Row.Cells[1].Text = "Summation";
-                e.Row.Cells[2].Text = domTotalCas.ToString("F2");
-                e.Row.Cells[3].Text = domTotalICX.ToString("F2");
-                e.Row.Cells[4].Text = domDiff.ToString("F2");
+                e.Row.Cells[0].Text = "Summation";
+                e.Row.Cells[1].Text = domTotalCas.ToString("F2");
+                e.Row.Cells[2].Text = domTotalICX.ToString("F2");
+                e.Row.Cells[3].Text = domDiff.ToString("F2");
 
-                e.Row.Cells[5].Text = intInTotalCas.ToString("F2");
-                e.Row.Cells[6].Text = intInTotalICX.ToString("F2");
-                e.Row.Cells[7].Text = domIntIn.ToString("F2");
+                e.Row.Cells[4].Text = intInTotalCas.ToString("F2");
+                e.Row.Cells[5].Text = intInTotalICX.ToString("F2");
+                e.Row.Cells[6].Text = domIntIn.ToString("F2");
 
-                e.Row.Cells[8].Text = intOutTotalCas.ToString("F2");
-                e.Row.Cells[9].Text = intOutTotalICX.ToString("F2");
-                e.Row.Cells[10].Text = domIntOut.ToString("F2");
+                e.Row.Cells[7].Text = intOutTotalCas.ToString("F2");
+                e.Row.Cells[8].Text = intOutTotalICX.ToString("F2");
+                e.Row.Cells[9].Text = domIntOut.ToString("F2");
+
+
+                //e.Row.Cells[10].Text = domIntOut.ToString("F2");
 
 
             }
 
         }
-        string getSqlQuery(int year, int month)
+        string getSqlQuery(int year, int month, string dbName)
         {
             string date1 = year + "-" + month + "-" + "01";
             if (month == 12)
@@ -373,7 +344,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                         (
 	                        select tup_starttime, domestic, intOut from
 		                        (select tup_starttime, sum(duration1) domestic 
-			                        from sum_voice_day_01 
+			                        from {dbName}.sum_voice_day_01 
 			                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 			                        group by tup_starttime
 		                        ) dom
@@ -381,7 +352,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 		                        left join
 		
 		                        (select tup_starttime tup_starttime1, sum(duration1) intOut
-			                        from sum_voice_day_02 
+			                        from {dbName}.sum_voice_day_02 
 			                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 			                        group by tup_starttime1
 		                        ) intOut    
@@ -391,7 +362,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                         left join 
                         (
 	                        select tup_starttime tup_starttime3, sum(duration1) intIn
-		                        from sum_voice_day_03
+		                        from {dbName}.sum_voice_day_03
 		                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 		                        group by tup_starttime3
                         ) intIn

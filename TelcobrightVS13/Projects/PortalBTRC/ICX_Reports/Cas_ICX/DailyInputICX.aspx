@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeBehind="DailyInput.aspx.cs" Inherits="PortalApp.ICX_Reports.Cas_ICX.WebForm1" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" CodeBehind="DailyInputICX.aspx.cs" Inherits="PortalApp.ICX_Reports.Cas_ICX.DailyInputICX" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -10,6 +10,7 @@
           
        
         <div>
+            <asp:DropDownList ID="DropDownICX" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged"></asp:DropDownList>
             <asp:DropDownList ID="DropDownYear" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged"></asp:DropDownList>
             <asp:DropDownList ID="DropDownMonth" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged"></asp:DropDownList>
         </div>
@@ -18,10 +19,10 @@
 
     <div style="height:20px;clear:both;"></div>
 
-    <div style="display: flex; background-color: #5D7B9D; width:1165px">
-        <div style=" padding: 5px; margin-left: 120px;border: 1px solid #ccc; padding-left:135px; padding-right:137px; color: white;">Domestic</div>
-        <div style=" padding: 5px; border: 1px solid #ccc; padding-left:112px; padding-right:85px; color: white;">International Incoming</div>
-        <div style=" padding: 5px; border: 1px solid #ccc; padding-left:101px; padding-right:96px; color: white;">International Outgoing</div>
+    <div style="display: flex; background-color: #5D7B9D; width:1055px">
+        <div style=" padding: 5px; margin-left: 74px;border: 1px solid #ccc; padding-left:135px; padding-right:137px; color: white;">Domestic</div>
+        <div style=" padding: 5px; border: 1px solid #ccc; padding-left:112px; padding-right:84px; color: white;">International Incoming</div>
+        <div style=" padding: 5px; border: 1px solid #ccc; padding-left:101px; padding-right:95px; color: white;">International Outgoing</div>
     </div>
 
     <div style="margin-top = 20px">
@@ -30,10 +31,8 @@
         AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"  CellPadding="4" ForeColor="#333333" ShowFooter="true"
         GridLines="Vertical" 
         ShowHeader ="true"
-        onrowediting="GridViewRowEditing" style="margin-left: 0px"
-        onrowcancelingedit="GridViewRowCancelingEdit" 
-        onrowupdating="GridViewRowUpdating" 
-        onrowdeleting="GridViewRowSubmitting" 
+        
+        
          onrowdatabound="GridViewSupplierRates_RowDataBound" 
         font-size="9pt" 
          BorderColor="#CCCCCC" BorderStyle="Solid"
@@ -41,16 +40,7 @@
         <AlternatingRowStyle BackColor="#f2f2f2" ForeColor="#284775" />
         <Columns>
 
-             <asp:TemplateField HeaderText="Action">
-                 <ItemStyle HorizontalAlign="Center" />
-                <ItemTemplate>
-                    <asp:LinkButton ID="LinkButtonEdit" CommandName="Edit"  runat="server">Edit</asp:LinkButton>
-                </ItemTemplate>
-                <EditItemTemplate>
-                    <asp:LinkButton ID="LinkButtonEdit"  CommandName="Update"  runat="server" CausesValidation="false" ValidationGroup="allcontrols">Update</asp:LinkButton>
-                    <asp:LinkButton ID="LinkButtonCancel"  CommandName="Cancel"  runat="server">Cancel</asp:LinkButton>
-                </EditItemTemplate>
-            </asp:TemplateField>
+             
 
            
 
@@ -61,9 +51,6 @@
                 </ItemTemplate>
                 <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
-
-
-
 
 
 
@@ -89,8 +76,8 @@
 
             <asp:TemplateField HeaderText="Difference" ItemStyle-Width="100px">
                 <ItemTemplate>  <%# Eval("DomesticDurationCalc") != null && Eval("DomesticICX") != null ?
-                                    String.Format("{0:F2}", (decimal)Eval("DomesticDurationCalc") - (decimal)Eval("DomesticICX")) : "N/A"  %> </ItemTemplate>    
-                <ItemStyle HorizontalAlign="Center" />        
+                                    String.Format("{0:F2}", (decimal)Eval("DomesticDurationCalc") - (decimal)Eval("DomesticICX")) : "N/A"  %> </ItemTemplate>            
+                <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
             
            
@@ -139,36 +126,26 @@
 
 
             <asp:TemplateField HeaderText="ICX" ItemStyle-Width="100px">
-                <ItemStyle HorizontalAlign="Center" />
+                
                 <ItemTemplate>
                     <asp:Label ID="ICXIntOutInput" runat="server" Text='<%# Eval("IntOutICX", "{0:F2}") %>' ></asp:Label>
                 </ItemTemplate>
                 <EditItemTemplate>
                     <asp:TextBox ID="ICXIntOutInput" runat="server" style="width: 100px;" Text='<%# Eval("IntOutICX", "{0:F2}") %>'>  </asp:TextBox>
                 </EditItemTemplate>
+                <ItemStyle HorizontalAlign="Center" />
             </asp:TemplateField>
 
 
             <asp:TemplateField HeaderText="Difference" ItemStyle-Width="100px">
+                <ItemStyle HorizontalAlign="Center" />
                 <ItemTemplate>  <%#  Eval("IntlOutDurationCalc") != null && Eval("IntOutICX") != null ?
-                                          String.Format("{0:F2}", (decimal)Eval("IntlOutDurationCalc") - (decimal)Eval("IntOutICX")) : "N/A" %> </ItemTemplate>  
-                <ItemStyle HorizontalAlign="Center" />  
+                                          String.Format("{0:F2}", (decimal)Eval("IntlOutDurationCalc") - (decimal)Eval("IntOutICX")) : "N/A" %> </ItemTemplate>    
             </asp:TemplateField>
 
             
 
-               <asp:TemplateField ItemStyle-Width="55px">
-                   <ItemStyle HorizontalAlign="Center" />
-                <ItemTemplate>
-                    <asp:LinkButton ID="LinkButtonSubmit" 
-                    OnClientClick='return confirm("Are you sure to submit billed minutes for this day? Data cannot be changed after that. If you need to amend incorrect submission, please contact TB support.");'
-                    CommandName="Delete"  runat="server" >Submit</asp:LinkButton>
-                    
-                </ItemTemplate>
-                <EditItemTemplate>
-                    
-                </EditItemTemplate>
-            </asp:TemplateField>
+              
         </Columns>
         <FooterStyle HorizontalAlign="Center" />
 

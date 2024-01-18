@@ -337,7 +337,7 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
 	                            select sum(duration1) as duration from voicetel_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' 
                             ) 
                             as IntOut;";
-            string intInSQL3 = $@"select sum(duration) duration from(
+            string intInSQL1 = $@"select sum(duration) duration from(
 	                        select sum(duration1) as duration from agni_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                        select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                        select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
@@ -363,9 +363,9 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
                         ) 
                         as IntIn;";
 
-            List <string> Domestic = context.Database.SqlQuery<string>(domesticSQL).ToList();
-            List<string> IntOut = context.Database.SqlQuery<string>(intOutSQL).ToList();
-            List<string> IntIn = context.Database.SqlQuery<string>(intInSQL).ToList();
+            List <string> Domestic = context.Database.SqlQuery<string>(domesticSQL1).ToList();
+            List<string> IntOut = context.Database.SqlQuery<string>(intOutSQL1).ToList();
+            List<string> IntIn = context.Database.SqlQuery<string>(intInSQL1).ToList();
 
 
             string domesticResult = Domestic[0];
