@@ -237,91 +237,104 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 }
            
 
-                // Accumulate the values from each row
-                decimal DomesticCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "DomesticDurationCalc"));
-                decimal DomesticICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "DomesticICX"));
-                decimal DiffDomestic = DomesticCAS - DomesticICX;
+                //// Accumulate the values from each row
+                //decimal DomesticCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "DomesticDurationCalc"));
+                //decimal DomesticICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "DomesticICX"));
+                //decimal DiffDomestic = DomesticCAS - DomesticICX;
 
-                decimal IntlInDurationCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntlInDurationCalc"));
-                decimal IntInICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntInICX"));
-                decimal DiffIntIn = IntlInDurationCAS - IntInICX;
+                //decimal IntlInDurationCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntlInDurationCalc"));
+                //decimal IntInICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntInICX"));
+                //decimal DiffIntIn = IntlInDurationCAS - IntInICX;
 
-                decimal IntlOutDurationCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntlOutDurationCalc"));
-                decimal IntOutICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntOutICX"));
-                decimal DiffIntOut = IntlOutDurationCAS - IntOutICX;
+                //decimal IntlOutDurationCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntlOutDurationCalc"));
+                //decimal IntOutICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntOutICX"));
+                //decimal DiffIntOut = IntlOutDurationCAS - IntOutICX;
 
 
-                // ... Add more columns as needed
+                //// ... Add more columns as needed
 
-                // Store the accumulated values in ViewState                
-                ViewState["DomTotalCas"] = Convert.ToDecimal(ViewState["DomTotalCas"]) + DomesticCAS;
-                ViewState["DomTotalICX"] = Convert.ToDecimal(ViewState["DomTotalICX"]) + DomesticICX;
-                ViewState["DiffDomestic"] = Convert.ToDecimal(ViewState["DiffDomestic"]) + DiffDomestic;
+                //// Store the accumulated values in ViewState                
+                //ViewState["DomTotalCas"] = Convert.ToDecimal(ViewState["DomTotalCas"]) + DomesticCAS;
+                //ViewState["DomTotalICX"] = Convert.ToDecimal(ViewState["DomTotalICX"]) + DomesticICX;
+                //ViewState["DiffDomestic"] = Convert.ToDecimal(ViewState["DiffDomestic"]) + DiffDomestic;
 
-                ViewState["IntInTotalCas"] = Convert.ToDecimal(ViewState["IntInTotalCas"]) + IntlInDurationCAS;
-                ViewState["IntInTotalICX"] = Convert.ToDecimal(ViewState["IntInTotalICX"]) + IntInICX;
-                ViewState["DiffIntIn"] = Convert.ToDecimal(ViewState["DiffIntIn"]) + DiffIntIn;
+                //ViewState["IntInTotalCas"] = Convert.ToDecimal(ViewState["IntInTotalCas"]) + IntlInDurationCAS;
+                //ViewState["IntInTotalICX"] = Convert.ToDecimal(ViewState["IntInTotalICX"]) + IntInICX;
+                //ViewState["DiffIntIn"] = Convert.ToDecimal(ViewState["DiffIntIn"]) + DiffIntIn;
 
-                ViewState["IntOutTotalCas"] = Convert.ToDecimal(ViewState["IntOutTotalCas"]) + IntlOutDurationCAS;
-                ViewState["IntOutTotalICX"] = Convert.ToDecimal(ViewState["IntOutTotalICX"]) + IntOutICX;
-                ViewState["DiffIntOut"] = Convert.ToDecimal(ViewState["DiffIntOut"]) + DiffIntOut;
+                //ViewState["IntOutTotalCas"] = Convert.ToDecimal(ViewState["IntOutTotalCas"]) + IntlOutDurationCAS;
+                //ViewState["IntOutTotalICX"] = Convert.ToDecimal(ViewState["IntOutTotalICX"]) + IntOutICX;
+                //ViewState["DiffIntOut"] = Convert.ToDecimal(ViewState["DiffIntOut"]) + DiffIntOut;
 
                 // ... Add more columns as needed
             }
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
                 // Assuming you have stored values in these string variables
-                string domTotalCasString = ViewState["DomTotalCas"].ToString();
-                string domTotalICXString = ViewState["DomTotalICX"].ToString();
-                string DiffDomtring = ViewState["DiffIntIn"].ToString();
+                //string domTotalCasString = ViewState["DomTotalCas"].ToString();
+                //string domTotalICXString = ViewState["DomTotalICX"].ToString();
+                //string DiffDomtring = ViewState["DiffIntIn"].ToString();
 
-                string intInTotalCasString = ViewState["IntInTotalCas"].ToString();
-                string intInTotalICXString = ViewState["IntInTotalICX"].ToString();
-                string DiffIntIntring = ViewState["DiffIntIn"].ToString();
+                //string intInTotalCasString = ViewState["IntInTotalCas"].ToString();
+                //string intInTotalICXString = ViewState["IntInTotalICX"].ToString();
+                //string DiffIntIntring = ViewState["DiffIntIn"].ToString();
 
-                string intOutTotalCasString = ViewState["IntOutTotalCas"].ToString();
-                string intOutTotalICXString = ViewState["IntOutTotalICX"].ToString();
-                string DiffIntOurtring = ViewState["DiffIntOut"].ToString();
+                //string intOutTotalCasString = ViewState["IntOutTotalCas"].ToString();
+                //string intOutTotalICXString = ViewState["IntOutTotalICX"].ToString();
+                //string DiffIntOurtring = ViewState["DiffIntOut"].ToString();
 
-                // Convert strings to decimals and format with two decimal places
-                decimal domTotalCas;
-                decimal domTotalICX;
-                decimal domDiff;
+                //// Convert strings to decimals and format with two decimal places
+                //decimal domTotalCas;
+                //decimal domTotalICX;
+                //decimal domDiff;
 
-                decimal intInTotalCas;
-                decimal intInTotalICX;
-                decimal domIntIn;
+                //decimal intInTotalCas;
+                //decimal intInTotalICX;
+                //decimal domIntIn;
 
-                decimal intOutTotalCas;
-                decimal intOutTotalICX;
-                decimal domIntOut;
+                //decimal intOutTotalCas;
+                //decimal intOutTotalICX;
+                //decimal domIntOut;
 
-                decimal.TryParse(domTotalCasString, out domTotalCas);
-                decimal.TryParse(domTotalICXString, out domTotalICX);
-                decimal.TryParse(DiffDomtring, out domDiff);
+                //decimal.TryParse(domTotalCasString, out domTotalCas);
+                //decimal.TryParse(domTotalICXString, out domTotalICX);
+                //decimal.TryParse(DiffDomtring, out domDiff);
 
-                decimal.TryParse(intInTotalCasString, out intInTotalCas);
-                decimal.TryParse(intInTotalICXString, out intInTotalICX);
-                decimal.TryParse(DiffIntIntring, out domIntIn);
+                //decimal.TryParse(intInTotalCasString, out intInTotalCas);
+                //decimal.TryParse(intInTotalICXString, out intInTotalICX);
+                //decimal.TryParse(DiffIntIntring, out domIntIn);
 
-                decimal.TryParse(intOutTotalCasString, out intOutTotalCas);
-                decimal.TryParse(intOutTotalICXString, out intOutTotalICX);
-                decimal.TryParse(DiffIntOurtring, out domIntOut);
+                //decimal.TryParse(intOutTotalCasString, out intOutTotalCas);
+                //decimal.TryParse(intOutTotalICXString, out intOutTotalICX);
+                //decimal.TryParse(DiffIntOurtring, out domIntOut);
 
 
                 // Format the decimals with two decimal places
-                e.Row.Cells[0].Text = "Summation";
-                e.Row.Cells[1].Text = domTotalCas.ToString("F2");
-                e.Row.Cells[2].Text = domTotalICX.ToString("F2");
-                e.Row.Cells[3].Text = domDiff.ToString("F2");
+                decimal? sumDom = icxDailyInputs.Where(obj => obj.DomesticDurationCalc != null).Sum(obj => obj.DomesticDurationCalc);
+                decimal? sumIntIn = icxDailyInputs.Where(obj => obj.IntlInDurationCalc != null).Sum(obj => obj.IntlInDurationCalc);
+                decimal? sumIntOut = icxDailyInputs.Where(obj => obj.IntlOutDurationCalc != null).Sum(obj => obj.IntlOutDurationCalc);
 
-                e.Row.Cells[4].Text = intInTotalCas.ToString("F2");
-                e.Row.Cells[5].Text = intInTotalICX.ToString("F2");
-                e.Row.Cells[6].Text = domIntIn.ToString("F2");
+                decimal sumDomICX = icxDailyInputs.Sum(obj => obj.DomesticICX);
+                decimal sumIntInICX = icxDailyInputs.Sum(obj => obj.IntInICX);
+                decimal sumIntOutICX = icxDailyInputs.Sum(obj => obj.IntOutICX);
 
-                e.Row.Cells[7].Text = intOutTotalCas.ToString("F2");
-                e.Row.Cells[8].Text = intOutTotalICX.ToString("F2");
-                e.Row.Cells[9].Text = domIntOut.ToString("F2");
+
+
+
+                // Format the decimals with two decimal places
+                e.Row.Cells[1].Text = "Summation";
+                e.Row.Cells[2].Text = sumDom.HasValue ? sumDom.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[3].Text = sumDomICX.ToString("F2");
+                e.Row.Cells[4].Text = sumDom.HasValue ? (sumDom - sumDomICX).Value.ToString("F2") : (0 - sumDomICX).ToString("F2");
+
+                e.Row.Cells[5].Text = sumIntIn.HasValue ? sumIntIn.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[6].Text = sumIntInICX.ToString("F2");
+                e.Row.Cells[7].Text = sumIntIn.HasValue ? (sumIntIn - sumIntInICX).Value.ToString("F2") : (0 - sumIntInICX).ToString("F2");
+
+                e.Row.Cells[8].Text = sumIntOut.HasValue ? sumIntOut.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[9].Text = sumIntOutICX.ToString("F2");
+                e.Row.Cells[10].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
+
 
 
                 //e.Row.Cells[10].Text = domIntOut.ToString("F2");

@@ -3,14 +3,17 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     
-    <div style="background-color:#edf2ef;color: black;float:left;border: 1px solid #707070; padding:10px; padding-right: 613px;">
-        <div style=" font-weight: bold; padding-bottom:5px; ">
-                <asp:Label ID="lblSelectOption" runat="server" Text="Select Year and Month:"></asp:Label>
+    <div style="background-color:#edf2ef; color: black; display: flex; align-items: flex-start; border: 1px solid #707070; padding:10px;">
+        
+        <div style=" font-weight: bold; padding-bottom:5px; margin-right:20px ">
+            <asp:Label ID="lblSelectOption" runat="server" Text="Select ICX:" style="margin-bottom: 10px;"></asp:Label><br>
+            <asp:DropDownList ID="DropDownICX" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged"></asp:DropDownList>
+
         </div>
           
        
-        <div>
-            <asp:DropDownList ID="DropDownICX" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged"></asp:DropDownList>
+        <div style="font-weight: bold; padding-bottom:5px;">
+            <asp:Label ID="Label1" runat="server"  Text="Select Year & Month:"></asp:Label> <br>
             <asp:DropDownList ID="DropDownYear" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged"></asp:DropDownList>
             <asp:DropDownList ID="DropDownMonth" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlMonth_SelectedIndexChanged"></asp:DropDownList>
         </div>
@@ -19,7 +22,7 @@
 
     <div style="height:20px;clear:both;"></div>
 
-    <div style="display: flex; background-color: #5D7B9D; width:1055px">
+    <div style="display: flex; background-color: #086052; width:1055px">
         <div style=" padding: 5px; margin-left: 74px;border: 1px solid #ccc; padding-left:135px; padding-right:137px; color: white;">Domestic</div>
         <div style=" padding: 5px; border: 1px solid #ccc; padding-left:112px; padding-right:84px; color: white;">International Incoming</div>
         <div style=" padding: 5px; border: 1px solid #ccc; padding-left:101px; padding-right:95px; color: white;">International Outgoing</div>
@@ -28,7 +31,7 @@
     <div style="margin-top = 20px">
         
     <asp:GridView ID="GridView2" runat="server" AllowPaging="false" 
-        AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"  CellPadding="4" ForeColor="#333333" ShowFooter="true"
+        AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"  CellPadding="4" ForeColor="#086052" ShowFooter="true"
         GridLines="Vertical" 
         ShowHeader ="true"
         
@@ -150,8 +153,8 @@
         <FooterStyle HorizontalAlign="Center" />
 
         <EditRowStyle BackColor="#999999" />
-        <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+        <FooterStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#086052" Font-Bold="True" ForeColor="White" />
         <PagerStyle BackColor="#284775" ForeColor="White" 
             HorizontalAlign="Left" />
         <RowStyle BackColor="white" Width="5px" ForeColor="#333333" />
