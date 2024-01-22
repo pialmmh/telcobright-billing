@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using LibraryExtensions;
 using TelcobrightMediation.Config;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
+using Newtonsoft.Json;
 using TelcobrightMediation;
+using InstallConfig;
 
 namespace PortalApp.ICX_Reports.Cas_ICX
 {
@@ -16,6 +20,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
     {
         static List<icxdailyinput> icxDailyInputs = new List<icxdailyinput>();
         static List<icxdailyinput> icxDailyInputsCalc = new List<icxdailyinput>();
+        private static Dictionary<string, string> dbVSHostname = new Dictionary<string, string>();
 
         PartnerEntities context;
         telcobrightpartner thisPartner;
@@ -23,14 +28,13 @@ namespace PortalApp.ICX_Reports.Cas_ICX
         TelcobrightConfig telcobrightConfig;
         DatabaseSetting databaseSetting;
         protected void Page_Load(object sender, EventArgs e)
-        {
-            telcobrightConfig = PageUtil.GetTelcobrightConfig();
-            databaseSetting = telcobrightConfig.DatabaseSetting;
-            telcobrightConfig = PageUtil.GetTelcobrightConfig();
-            databaseSetting = telcobrightConfig.DatabaseSetting;
+        {            
 
-            string userName = Page.User.Identity.Name;
+            //Docker connection
+            telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            databaseSetting = telcobrightConfig.DatabaseSetting;
             string dbName;
+            string userName = Page.User.Identity.Name;
             if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
             {
                 dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
@@ -39,13 +43,30 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             {
                 dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
             }
+
+            //ConfigPathHelper configPathHelper = new ConfigPathHelper(
+            //    "WS_Topshelf_Quartz",
+            //    "portalBTRC",
+            //    "UtilInstallConfig",
+            //    "generators", "");
+            //string jsonPath = configPathHelper.GetPortalBtrcBinPath() + @"\text.json";
+
+            //string jsonString = File.ReadAllText(jsonPath);
+
+            // Deserialize the JSON string into a Dictionary<string, string>
+            //dbVSHostname = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
+
+            dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
+            
+            
             databaseSetting.DatabaseName = dbName;
+            databaseSetting.ServerName = dbVSHostname[dbName];
 
             context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting);
             telcoTelcobrightpartners = context.telcobrightpartners.ToList();
             this.thisPartner = telcoTelcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
-            
-            
+
+
             if (!IsPostBack)
             {
                 for(int year = 2023; year <= 2031; year++)

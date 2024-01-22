@@ -333,7 +333,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
                 e.Row.Cells[8].Text = sumIntOut.HasValue ? sumIntOut.Value.ToString("F2") : string.Empty;
                 e.Row.Cells[9].Text = sumIntOutICX.ToString("F2");
-                e.Row.Cells[10].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
+                //e.Row.Cells[10].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
 
 
 
