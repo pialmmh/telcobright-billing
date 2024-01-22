@@ -9,6 +9,7 @@ using TelcobrightMediation.Config;
 using LibraryExtensions.ConfigHelper;
 using MediationModel;
 using TelcobrightMediation;
+using InstallConfig;
 
 namespace PortalApp.ICX_Reports.Cas_ICX
 {
@@ -16,6 +17,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
     {
         static List<icxdailyinput> icxDailyInputs = new List<icxdailyinput>();
         static List<icxdailyinput> icxDailyInputsCalc = new List<icxdailyinput>();
+        private static Dictionary<string, string> dbVSHostname = new Dictionary<string, string>();
 
         PartnerEntities context;
         telcobrightpartner thisPartner;
@@ -26,11 +28,8 @@ namespace PortalApp.ICX_Reports.Cas_ICX
         {
             telcobrightConfig = PageUtil.GetTelcobrightConfig();
             databaseSetting = telcobrightConfig.DatabaseSetting;
-            telcobrightConfig = PageUtil.GetTelcobrightConfig();
-            databaseSetting = telcobrightConfig.DatabaseSetting;
-
-            string userName = Page.User.Identity.Name;
             string dbName;
+            string userName = Page.User.Identity.Name;
             if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
             {
                 dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
@@ -39,13 +38,18 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             {
                 dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
             }
+
+            dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
+
             databaseSetting.DatabaseName = dbName;
+            //databaseSetting.ServerName = dbVSHostname[dbName];
+            databaseSetting.ServerName = "localhost";
 
             context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting);
             telcoTelcobrightpartners = context.telcobrightpartners.ToList();
             this.thisPartner = telcoTelcobrightpartners.Where(c => c.databasename == dbName).ToList().First();
-            
-            
+
+
             if (!IsPostBack)
             {
                 string[] ICXName =
@@ -96,24 +100,13 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 DropDownYear.SelectedValue = DateTime.Now.Year.ToString(); ;
                 DropDownMonth.SelectedValue = months[DateTime.Now.Month - 1];
 
-                //Dictionary<string, int> monthDictionary = months.ToDictionary(month => month, month => Array.IndexOf(months, month) + 1);
-
-                //int year1 = int.Parse(DropDownYear.SelectedValue);
-                //int month1 = monthDictionary[DropDownMonth.SelectedValue];
-
-                //string date = year1+"-"+month1+"-"+"01";
-                //string sql = getSqlQuery(year1, month1);
-                ////sthis.icxDailyInputs = context.Database.SqlQuery<icxdailyinput>(sql).ToList();
                 LoadData();
                 GridViewDataBound();
 
             }
         }
         
-
-       
-
-
+        
        
         
         
@@ -236,79 +229,13 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                     }
                 }
            
-
-                //// Accumulate the values from each row
-                //decimal DomesticCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "DomesticDurationCalc"));
-                //decimal DomesticICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "DomesticICX"));
-                //decimal DiffDomestic = DomesticCAS - DomesticICX;
-
-                //decimal IntlInDurationCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntlInDurationCalc"));
-                //decimal IntInICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntInICX"));
-                //decimal DiffIntIn = IntlInDurationCAS - IntInICX;
-
-                //decimal IntlOutDurationCAS = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntlOutDurationCalc"));
-                //decimal IntOutICX = Convert.ToDecimal(DataBinder.Eval(e.Row.DataItem, "IntOutICX"));
-                //decimal DiffIntOut = IntlOutDurationCAS - IntOutICX;
-
-
-                //// ... Add more columns as needed
-
-                //// Store the accumulated values in ViewState                
-                //ViewState["DomTotalCas"] = Convert.ToDecimal(ViewState["DomTotalCas"]) + DomesticCAS;
-                //ViewState["DomTotalICX"] = Convert.ToDecimal(ViewState["DomTotalICX"]) + DomesticICX;
-                //ViewState["DiffDomestic"] = Convert.ToDecimal(ViewState["DiffDomestic"]) + DiffDomestic;
-
-                //ViewState["IntInTotalCas"] = Convert.ToDecimal(ViewState["IntInTotalCas"]) + IntlInDurationCAS;
-                //ViewState["IntInTotalICX"] = Convert.ToDecimal(ViewState["IntInTotalICX"]) + IntInICX;
-                //ViewState["DiffIntIn"] = Convert.ToDecimal(ViewState["DiffIntIn"]) + DiffIntIn;
-
-                //ViewState["IntOutTotalCas"] = Convert.ToDecimal(ViewState["IntOutTotalCas"]) + IntlOutDurationCAS;
-                //ViewState["IntOutTotalICX"] = Convert.ToDecimal(ViewState["IntOutTotalICX"]) + IntOutICX;
-                //ViewState["DiffIntOut"] = Convert.ToDecimal(ViewState["DiffIntOut"]) + DiffIntOut;
-
-                // ... Add more columns as needed
+                
             }
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
-                // Assuming you have stored values in these string variables
-                //string domTotalCasString = ViewState["DomTotalCas"].ToString();
-                //string domTotalICXString = ViewState["DomTotalICX"].ToString();
-                //string DiffDomtring = ViewState["DiffIntIn"].ToString();
+                
 
-                //string intInTotalCasString = ViewState["IntInTotalCas"].ToString();
-                //string intInTotalICXString = ViewState["IntInTotalICX"].ToString();
-                //string DiffIntIntring = ViewState["DiffIntIn"].ToString();
-
-                //string intOutTotalCasString = ViewState["IntOutTotalCas"].ToString();
-                //string intOutTotalICXString = ViewState["IntOutTotalICX"].ToString();
-                //string DiffIntOurtring = ViewState["DiffIntOut"].ToString();
-
-                //// Convert strings to decimals and format with two decimal places
-                //decimal domTotalCas;
-                //decimal domTotalICX;
-                //decimal domDiff;
-
-                //decimal intInTotalCas;
-                //decimal intInTotalICX;
-                //decimal domIntIn;
-
-                //decimal intOutTotalCas;
-                //decimal intOutTotalICX;
-                //decimal domIntOut;
-
-                //decimal.TryParse(domTotalCasString, out domTotalCas);
-                //decimal.TryParse(domTotalICXString, out domTotalICX);
-                //decimal.TryParse(DiffDomtring, out domDiff);
-
-                //decimal.TryParse(intInTotalCasString, out intInTotalCas);
-                //decimal.TryParse(intInTotalICXString, out intInTotalICX);
-                //decimal.TryParse(DiffIntIntring, out domIntIn);
-
-                //decimal.TryParse(intOutTotalCasString, out intOutTotalCas);
-                //decimal.TryParse(intOutTotalICXString, out intOutTotalICX);
-                //decimal.TryParse(DiffIntOurtring, out domIntOut);
-
-
+               
                 // Format the decimals with two decimal places
                 decimal? sumDom = icxDailyInputs.Where(obj => obj.DomesticDurationCalc != null).Sum(obj => obj.DomesticDurationCalc);
                 decimal? sumIntIn = icxDailyInputs.Where(obj => obj.IntlInDurationCalc != null).Sum(obj => obj.IntlInDurationCalc);
@@ -335,11 +262,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 e.Row.Cells[9].Text = sumIntOutICX.ToString("F2");
                 //e.Row.Cells[10].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
 
-
-
-                //e.Row.Cells[10].Text = domIntOut.ToString("F2");
-
-
+            
             }
 
         }
