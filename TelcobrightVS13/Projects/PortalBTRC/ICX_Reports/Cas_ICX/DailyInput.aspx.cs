@@ -44,20 +44,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
             }
 
-            //ConfigPathHelper configPathHelper = new ConfigPathHelper(
-            //    "WS_Topshelf_Quartz",
-            //    "portalBTRC",
-            //    "UtilInstallConfig",
-            //    "generators", "");
-            //string jsonPath = configPathHelper.GetPortalBtrcBinPath() + @"\text.json";
-
-            //string jsonString = File.ReadAllText(jsonPath);
-
-            // Deserialize the JSON string into a Dictionary<string, string>
-            //dbVSHostname = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonString);
-
             dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
-            
             
             databaseSetting.DatabaseName = dbName;
             databaseSetting.ServerName = dbVSHostname[dbName];
