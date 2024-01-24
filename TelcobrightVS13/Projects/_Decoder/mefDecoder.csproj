@@ -101,6 +101,8 @@
     <Compile Include="CataleyaCsvDecoderSoftexNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderJslNoFailedGzip.cs" />
+    <Compile Include="DialogicBorderNetMirIgwNoFailed.cs" />
+    <Compile Include="DialogicBorderNetMirIgwNoFailedGzip.cs" />
     <Compile Include="GenbandC3.cs" />
     <Compile Include="Helper\NokiaDecodeHelper.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderNGT.cs" />
