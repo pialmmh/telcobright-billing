@@ -28,7 +28,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
         TelcobrightConfig telcobrightConfig;
         DatabaseSetting databaseSetting;
         protected void Page_Load(object sender, EventArgs e)
-        {            
+        {
             //Docker connection
             telcobrightConfig = PageUtil.GetTelcobrightConfig();
             databaseSetting = telcobrightConfig.DatabaseSetting;
@@ -42,9 +42,9 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             {
                 dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
             }
-         
+
             dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
-                        
+
             databaseSetting.DatabaseName = dbName;
             //databaseSetting.ServerName = dbVSHostname[dbName];
             databaseSetting.ServerName = "localhost";
@@ -57,13 +57,13 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
             if (!IsPostBack)
             {
-                for(int year = 2023; year <= 2031; year++)
+                for (int year = 2023; year <= 2031; year++)
                 {
                     DropDownYear.Items.Add(year.ToString());
                 }
 
-                string[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-                foreach(string month in months)
+                string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+                foreach (string month in months)
                 {
                     DropDownMonth.Items.Add(month);
                 }
@@ -76,9 +76,9 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
             }
         }
-        
 
-        
+
+
 
         protected void GridViewRowUpdating(object sender, GridViewUpdateEventArgs e)
         {
@@ -90,8 +90,8 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 string intInDur = ((TextBox)row.FindControl("ICXIntInInput")).Text;
                 string intOutDur = ((TextBox)row.FindControl("ICXIntOutInput")).Text;
                 string callDate = ((Label)row.FindControl("lblDate")).Text;
-                
-                
+
+
                 if (!string.IsNullOrWhiteSpace(domDur))
                 {
                     if (decimal.TryParse(domDur, out domDuration))
@@ -130,7 +130,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                         throw new Exception("Int.Out. not in correct format");
                     }
                 }
-                
+
             }
             catch (Exception e1)
             {
@@ -158,14 +158,14 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             //LoadData();
             GridView2.DataBind();
         }
-        
+
 
         protected void ddlMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData();
             GridViewDataBound();
         }
-        
+
         void LoadData()
         {
             string[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -186,7 +186,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 month1 = 0;
                 year1 += 1;
             }
-            string date2 = year1 + "-" + (month1+1) + "-" + "01";
+            string date2 = year1 + "-" + (month1 + 1) + "-" + "01";
             string sqlDailyInput = $@"select date_format(callDate,'%Y-%m-%d') callDateICX, date_format(callDate,'%Y-%m-%d') callDateSub, DomesticICX, LtfsICX, IntInICX, IntOutICX, CasDomSub, CasLtfsSub, CasIntInSub, CasIntOutSub, submitted from icxdailyinput where callDate >= '{date1}' and calldate < '{date2}';";
             icxDailyInputs = context.Database.SqlQuery<icxdailyinput>(sqlDailyInput).ToList();
 
@@ -199,7 +199,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                     var calcInput = icxDailyInputsCalc[j];
                     if (icxInput.callDateICX == calcInput.callDateCalc)
                     {
-                        if(icxInput.callDateICX == calcInput.callDateCalc)
+                        if (icxInput.callDateICX == calcInput.callDateCalc)
                         {
                             icxDailyInputs[i].DomesticDurationCalc = icxDailyInputsCalc[j].DomesticDurationCalc;
                             icxDailyInputs[i].LtfsDurationCalc = icxDailyInputsCalc[j].LtfsDurationCalc;
@@ -217,9 +217,9 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             GridViewRow row = this.GridView2.Rows[e.RowIndex];
             string callDate = ((Label)row.FindControl("lblDate")).Text;
 
-            foreach(var icxDailyinput in icxDailyInputs)
+            foreach (var icxDailyinput in icxDailyInputs)
             {
-                if(icxDailyinput.callDateSub == callDate && icxDailyinput.submitted == "NO")
+                if (icxDailyinput.callDateSub == callDate && icxDailyinput.submitted == "NO")
                 {
                     decimal casDomSub = decimal.Parse(((Label)row.FindControl("lblCasDomestic")).Text);
                     //decimal casLtfsSub = decimal.Parse(((Label)row.FindControl("lblCasLtfs")).Text);
@@ -236,8 +236,9 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
         protected void GridViewSupplierRates_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.Header) {
-                int i = (int)GridView2.Columns[2].ItemStyle.Width.Value; 
+            if (e.Row.RowType == DataControlRowType.Header)
+            {
+                int i = (int)GridView2.Columns[2].ItemStyle.Width.Value;
             }
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
@@ -245,8 +246,8 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 Label callDate = (Label)e.Row.FindControl("lblDate");
                 var icxData = icxDailyInputs.FirstOrDefault(item => item.submitted == "YES" && item.callDateSub == callDate.Text);
 
-                if (icxData != null && LinkButtonSubmit!= null && icxData.callDateSub == callDate.Text)
-                { 
+                if (icxData != null && LinkButtonSubmit != null && icxData.callDateSub == callDate.Text)
+                {
                     if (LinkButtonSubmit.Enabled != false)
                     {
                         LinkButtonSubmit.Enabled = false;
@@ -262,7 +263,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             }
             else if (e.Row.RowType == DataControlRowType.Footer)
             {
-                
+
                 decimal? sumDom = icxDailyInputs.Where(obj => obj.DomesticDurationCalc != null).Sum(obj => obj.DomesticDurationCalc);
                 decimal? sumIntIn = icxDailyInputs.Where(obj => obj.IntlInDurationCalc != null).Sum(obj => obj.IntlInDurationCalc);
                 decimal? sumIntOut = icxDailyInputs.Where(obj => obj.IntlOutDurationCalc != null).Sum(obj => obj.IntlOutDurationCalc);
@@ -271,11 +272,11 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 decimal sumIntInICX = icxDailyInputs.Sum(obj => obj.IntInICX);
                 decimal sumIntOutICX = icxDailyInputs.Sum(obj => obj.IntOutICX);
 
-                
+
 
 
                 // Format the decimals with two decimal places
-                e.Row.Cells[1].Text = "Summation";
+                e.Row.Cells[1].Text = "Total";
                 e.Row.Cells[2].Text = sumDom.HasValue ? sumDom.Value.ToString("F2") : string.Empty;
                 e.Row.Cells[3].Text = sumDomICX.ToString("F2");
                 e.Row.Cells[4].Text = sumDom.HasValue ? (sumDom - sumDomICX).Value.ToString("F2") : (0 - sumDomICX).ToString("F2");
@@ -300,7 +301,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                 month = 0;
                 year += 1;
             }
-            string date2 = year + "-" + (month+1) + "-" + "01";
+            string date2 = year + "-" + (month + 1) + "-" + "01";
 
             return $@"select date_format(tup_starttime,'%Y-%m-%d') callDateCalc, domestic DomesticDurationCalc, intOut IntlOutDurationCalc, intIn IntlInDurationCalc  from
                         (
