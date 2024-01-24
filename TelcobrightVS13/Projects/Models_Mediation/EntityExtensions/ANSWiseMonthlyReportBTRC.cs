@@ -12,7 +12,7 @@ namespace MediationModel
         public decimal? DomIn { get; set; }
         public decimal? DomOut { get; set; }
         public decimal? IntIn { get; set; }
-        public decimal? IntOut { get; set; }
+        public decimal? IntOut { get; set; } 
     }
  }
 
