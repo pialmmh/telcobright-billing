@@ -270,7 +270,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                         group by PartnerName
                         order by PartnerName;
                             ";
-            return localdb;
+            return livedb;
         }
     }
 
