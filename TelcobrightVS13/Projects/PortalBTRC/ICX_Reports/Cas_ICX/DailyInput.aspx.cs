@@ -276,7 +276,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
 
                 // Format the decimals with two decimal places
-                e.Row.Cells[1].Text = "Summation";
+                e.Row.Cells[1].Text = "Total";
                 e.Row.Cells[2].Text = sumDom.HasValue ? sumDom.Value.ToString("F2") : string.Empty;
                 e.Row.Cells[3].Text = sumDomICX.ToString("F2");
                 e.Row.Cells[4].Text = sumDom.HasValue ? (sumDom - sumDomICX).Value.ToString("F2") : (0 - sumDomICX).ToString("F2");

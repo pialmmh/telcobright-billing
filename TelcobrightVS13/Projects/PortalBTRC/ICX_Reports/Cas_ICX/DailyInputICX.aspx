@@ -22,13 +22,13 @@
 
     <div style="height:20px;clear:both;"></div>
 
-    <div style="display: flex; background-color: #086052; width:1055px">
-        <div style=" padding: 5px; margin-left: 74px;border: 1px solid #ccc; padding-left:135px; padding-right:137px; color: white;">Domestic</div>
-        <div style=" padding: 5px; border: 1px solid #ccc; padding-left:112px; padding-right:84px; color: white;">International Incoming</div>
-        <div style=" padding: 5px; border: 1px solid #ccc; padding-left:101px; padding-right:95px; color: white;">International Outgoing</div>
+    <div style="display: flex; background-color: #086052; width:1050px">
+        <div style=" padding: 5px; margin-left: 71px;border: 1px solid #ccc; width: 318px; text-align: center; color: white;">Domestic</div>
+        <div style=" padding: 5px; border: 1px solid #ccc; width: 318px; text-align: center; color: white;">International Incoming</div>
+        <div style=" padding: 5px; border: 1px solid #ccc; width: 317px; text-align: center; color: white;">International Outgoing</div>
     </div>
 
-    <div style="margin-top = 20px">
+    <div >
         
     <asp:GridView ID="GridView2" runat="server" AllowPaging="false" 
         AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"  CellPadding="4" ForeColor="#086052" ShowFooter="true"
@@ -48,7 +48,7 @@
            
 
                 
-            <asp:TemplateField HeaderText="Date">
+            <asp:TemplateField HeaderText="Date" ItemStyle-Width="62px">
                 <ItemTemplate>
                     <asp:Label ID="lblDate" runat="server" Text='<%# Eval("callDateICX") %>' />
                 </ItemTemplate>

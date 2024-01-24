@@ -85,10 +85,10 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                     DropDownYear.Items.Add(year.ToString());
                 }
 
-                foreach (string name in ICXName)
-                {
-                    DropDownICX.Items.Add(name);
-                }
+                //foreach (string name in ICXName)
+                //{
+                //    DropDownICX.Items.Add(name);
+                //}
 
                 string[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
                 foreach(string month in months)
@@ -162,17 +162,17 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
 
 
-            string dbName = ICXDictionary[DropDownICX.SelectedItem.ToString()];
-            string date = year1 + "-" + month1 + "-" + "01";
-            string sql = getSqlQuery(year1, month1, dbName);
+            //string dbName = ICXDictionary[DropDownICX.SelectedItem.ToString()];
+            //string date = year1 + "-" + month1 + "-" + "01";
+            string sql = getSqlQuery(year1, month1);
             icxDailyInputs = context.Database.SqlQuery<icxdailyinput>(sql).ToList();
 
-            string date1 = year1 + "-" + month1 + "-" + "01";
-            if (month1 == 12)
-            {
-                month1 = 0;
-                year1 += 1;
-            }
+            //string date1 = year1 + "-" + month1 + "-" + "01";
+            //if (month1 == 12)
+            //{
+            //    month1 = 0;
+            //    year1 += 1;
+            //}
         }
 
         
@@ -219,18 +219,18 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
                 // Format the decimals with two decimal places
 
-                e.Row.Cells[1].Text = "Summation";
-                e.Row.Cells[2].Text = sumDom.HasValue ? sumDom.Value.ToString("F2") : string.Empty;
-                e.Row.Cells[3].Text = sumDomICX.ToString("F2");
-                e.Row.Cells[4].Text = sumDom.HasValue ? (sumDom - sumDomICX).Value.ToString("F2") : (0 - sumDomICX).ToString("F2");
+                e.Row.Cells[0].Text = "Total";
+                e.Row.Cells[1].Text = sumDom.HasValue ? sumDom.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[2].Text = sumDomICX.ToString("F2");
+                e.Row.Cells[3].Text = sumDom.HasValue ? (sumDom - sumDomICX).Value.ToString("F2") : (0 - sumDomICX).ToString("F2");
 
-                e.Row.Cells[5].Text = sumIntIn.HasValue ? sumIntIn.Value.ToString("F2") : string.Empty;
-                e.Row.Cells[6].Text = sumIntInICX.ToString("F2");
-                e.Row.Cells[7].Text = sumIntIn.HasValue ? (sumIntIn - sumIntInICX).Value.ToString("F2") : (0 - sumIntInICX).ToString("F2");
+                e.Row.Cells[4].Text = sumIntIn.HasValue ? sumIntIn.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[5].Text = sumIntInICX.ToString("F2");
+                e.Row.Cells[6].Text = sumIntIn.HasValue ? (sumIntIn - sumIntInICX).Value.ToString("F2") : (0 - sumIntInICX).ToString("F2");
 
-                e.Row.Cells[8].Text = sumIntOut.HasValue ? sumIntOut.Value.ToString("F2") : string.Empty;
-                e.Row.Cells[9].Text = sumIntOutICX.ToString("F2");
-                //e.Row.Cells[10].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
+                e.Row.Cells[7].Text = sumIntOut.HasValue ? sumIntOut.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[8].Text = sumIntOutICX.ToString("F2");
+                e.Row.Cells[9].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
 
 
 
@@ -240,7 +240,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             }
 
         }
-        string getSqlQuery(int year, int month, string dbName)
+        string getSqlQuery(int year, int month)
         {
             string date1 = year + "-" + month + "-" + "01";
             if (month == 12)
@@ -275,7 +275,7 @@ select 'Tele Exchange Limited' as callDateCalc, domestic DomesticDurationCalc, i
 select 'Teleplus Newyork Limited' as callDateCalc, domestic DomesticDurationCalc, intIn IntlOutDurationCalc, intOut IntlInDurationCalc  from(select yearMonth, domestic, intIn from(select concat(year(tup_starttime),'-' ,month(tup_starttime)) as yearMonth, sum(duration1) domestic from teleplusnewyork_cas.sum_voice_day_01 where tup_starttime >= '{date1}' and tup_starttime < '{date2}'  group by concat(year(tup_starttime),'-' ,month(tup_starttime))) dom left join (select concat(year(tup_starttime),'-' ,month(tup_starttime)) as yearMonth1, sum(duration1) IntIn from  teleplusnewyork_cas.sum_voice_day_03 where tup_starttime >= '{date1}' and tup_starttime < '{date2}' group by concat(year(tup_starttime),'-' ,month(tup_starttime))) intIn  on dom.yearMonth = intIn.yearMonth1 )domIntOut left join (select concat(year(tup_starttime),'-' ,month(tup_starttime)) as yearMonth2, sum(duration1) IntOut from  teleplusnewyork_cas.sum_voice_day_02 where tup_starttime >= '{date1}' and tup_starttime < '{date2}' group by concat(year(tup_starttime),'-' ,month(tup_starttime))) intOut on domIntOut.yearMonth = intOut.yearMonth2 union all
 select 'Voicetel Ltd' as callDateCalc, domestic DomesticDurationCalc, intIn IntlOutDurationCalc, intOut IntlInDurationCalc  from(select yearMonth, domestic, intIn from(select concat(year(tup_starttime),'-' ,month(tup_starttime)) as yearMonth, sum(duration1) domestic from  voicetel_cas.sum_voice_day_01 where tup_starttime >= '{date1}' and tup_starttime < '{date2}'  group by concat(year(tup_starttime),'-' ,month(tup_starttime))) dom left join (select concat(year(tup_starttime),'-' ,month(tup_starttime)) as yearMonth1, sum(duration1) IntIn from   voicetel_cas.sum_voice_day_03 where tup_starttime >= '{date1}' and tup_starttime < '{date2}' group by concat(year(tup_starttime),'-' ,month(tup_starttime))) intIn  on dom.yearMonth = intIn.yearMonth1 )domIntOut left join (select concat(year(tup_starttime),'-' ,month(tup_starttime)) as yearMonth2, sum(duration1) IntOut from   voicetel_cas.sum_voice_day_02 where tup_starttime >= '' and tup_starttime < '{date2}' group by concat(year(tup_starttime),'-' ,month(tup_starttime))) intOut on domIntOut.yearMonth = intOut.yearMonth2 
 ";
-            return localdb;
+            return livedb;
         }
     }
 
