@@ -541,7 +541,7 @@
     <Folder Include="config\jsl\_dbscripts\ddl\" />
     <Folder Include="config\jsl\_dbscripts\seedData\sql\" />
     <Folder Include="config\mirtelecom\_dbscripts\ddl\" />
-    <Folder Include="config\mirtelecom\_dbscripts\seedData\" />
+    <Folder Include="config\mirtelecom\_dbscripts\seedData\sql\" />
     <Folder Include="config\paradise\_dbscripts\seedData\json\" />
     <Folder Include="config\paradise\_dbscripts\seedData\sql\" />
     <Folder Include="config\purple\_dbscripts\ddl\" />

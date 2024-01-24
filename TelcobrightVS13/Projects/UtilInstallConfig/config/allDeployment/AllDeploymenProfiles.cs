@@ -119,7 +119,20 @@ namespace InstallConfig
                                 SchedulerPortNo = 562
                             },
                         }
-                    }
+                    },
+                    new Deploymentprofile
+                    {
+                        profileName = "mirtelecom",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                Name = "mirtelecom",
+                                SchedulerPortNo = 563
+                            },
+                        }
+                    },
                 };
 
             var casProfile = new Deploymentprofile

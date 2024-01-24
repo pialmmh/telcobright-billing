@@ -16,6 +16,7 @@ using MediationModel;
 using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Automation;
+using LogPreProcessor;
 
 namespace InstallConfig
 {
@@ -29,13 +30,13 @@ namespace InstallConfig
 
         public MirAbstractConfigGenerator()
         {
-            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw, 
+            this.Tbc = new TelcobrightConfig(TelecomOperatortype.Igw,
                 new telcobrightpartner
                 {
-                    idCustomer = 3,
+                    idCustomer = 10,
                     CustomerName = "Mirtelecom Limited",
                     idOperatorType = 4,
-                    databasename = "Mir",
+                    databasename = "mirtelecom",
                     NativeTimeZone = 3251,
                     IgwPrefix = "320",
                     RateDictionaryMaxRecords = 3000000,
@@ -50,7 +51,7 @@ namespace InstallConfig
 
         public override TelcobrightConfig GenerateFullConfig(InstanceConfig instanceConfig, int microserviceInstanceId)
         {
-            
+
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
                 new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
@@ -71,6 +72,29 @@ namespace InstallConfig
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                EmptyFileAllowed = true,
+                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
+                {
+                {
+                    11,
+                    new NeAdditionalSetting
+                    {//dialogic
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }
+                }
+            }
             };
 
             this.PrepareDirectorySetting(this.Tbc);
@@ -78,24 +102,24 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 3,
-                    idCustomer= 3,
-                    idcdrformat= 16,
-                    idMediationRule= 1,
-                    SwitchName= "BtelhuaweiDhk",
-                    CDRPrefix= "IGW",
-                    FileExtension= ".DAT",
+                    idSwitch= 11,
+                    idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
+                    idcdrformat= 35,
+                    idMediationRule= 2,
+                    SwitchName= "Dialogic",
+                    CDRPrefix= "sdr",
+                    FileExtension= ".gz",
                     Description= null,
-                    SourceFileLocations= "ftp://127.0.0.1/banglatel/",
+                    SourceFileLocations= this.vaultDialogic.Name,
                     BackupFileLocations= null,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 1,
-                    SkipCdrReceived= 1,
-                    SkipCdrDecoded= 1,
+                    SkipCdrListed= 0,
+                    SkipCdrReceived= 0,
+                    SkipCdrDecoded= 0,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 0,
                     KeepReceivedCdrServer= 1,
@@ -107,11 +131,13 @@ namespace InstallConfig
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
                     PrependLocationNumberToFileName= 0,
-                    UseIdCallAsBillId = 1
-                },
+                    FilterDuplicateCdr = 1,
+                    UseIdCallAsBillId = 0,
+                    AllowEmptyFile = 1
+                }
             };
 
-        
+
             this.PrepareProductAndServiceSettings();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
