@@ -60,7 +60,7 @@ namespace Jobs
             {
                 preProcessor = DecodeNewCdrFile(preDecodingStage: true);
                 initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
-                return preProcessor; 
+                return preProcessor;
             }
             preProcessor = DecodeNewCdrFile(preDecodingStage: false);
             initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
@@ -71,11 +71,11 @@ namespace Jobs
         public virtual Object Execute(ITelcobrightJobInput jobInputData)
         {
             NewCdrPreProcessor preProcessor = null; //preprecessor.txtrows contains decoded raw cdrs in string[] format
-            this.Input = (CdrJobInputData) jobInputData;
+            this.Input = (CdrJobInputData)jobInputData;
             CdrSetting cdrSetting = this.Input.CdrSetting;
             if (this.Input.IsBatchJob == false) //not batch job
             {
-                this.HandledJobs = new List<job> {this.Input.Job};
+                this.HandledJobs = new List<job> { this.Input.Job };
                 preProcessor = DecodeNewCdrFile(preDecodingStage: false);
                 initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
             }
@@ -128,7 +128,7 @@ namespace Jobs
                         }
                         if (neAdditionalSetting.AggregationStyle == "telcobridge")
                         {
-                            
+
                             foreach (var row in preProcessor.DecodedCdrRowsBeforeDuplicateFiltering)
                             {
                                 if (preProcessor.FinalNonDuplicateEvents.ContainsKey(row[Fn.UniqueBillId]))
@@ -141,7 +141,7 @@ namespace Jobs
                                .ToDictionary(kv => kv.Key, kv => kv.Value);
 
                             preProcessor.NewDuplicateEvents =
-                                preProcessor.NewDuplicateEvents.Where(r => 
+                                preProcessor.NewDuplicateEvents.Where(r =>
                                 preProcessor.ExistingUniqueEventInstancesFromDB.Contains(r[Fn.UniqueBillId])).ToList();
                             preProcessor = aggregateCdrs(preProcessor);
                             preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
@@ -171,13 +171,13 @@ namespace Jobs
             //aggregation related
             newCollectionResult.NewRowsCouldNotBeAggreagated = preProcessor.NewRowsCouldNotBeAggregated;
             newCollectionResult.OldRowsCouldNotBeAggreagated = preProcessor.OldRowsCouldNotBeAggregated;
-            newCollectionResult.NewRowsToBeDiscardedAfterAggregation = 
+            newCollectionResult.NewRowsToBeDiscardedAfterAggregation =
                                     preProcessor.NewRowsToBeDiscardedAfterAggregation;//partial new unagg instances
             newCollectionResult.OldRowsToBeDiscardedAfterAggregation =
                 preProcessor.OldRowsToBeDiscardedAfterAggregation;//partial old unagg instances
             newCollectionResult.DebugCdrsForDump = preProcessor.DebugCdrsForDump;
             newCollectionResult.OldPartialInstancesFromDB = preProcessor.OldPartialInstancesFromDB;
-            preProcessor.NewDuplicateEvents=newCollectionResult.NewDuplicateEvents;
+            preProcessor.NewDuplicateEvents = newCollectionResult.NewDuplicateEvents;
 
             PartialCdrTesterData partialCdrTesterData =
                 OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
@@ -185,7 +185,7 @@ namespace Jobs
                 newCollectionResult, oldCollectionResult, partialCdrTesterData);
 
             if (cdrJob.CdrProcessor.CollectionResult.ConcurrentCdrExts.Count > 0 ||
-                cdrJob.CdrProcessor.CollectionResult.NewRowsCouldNotBeAggreagated.Count>0) //job not empty, or has records
+                cdrJob.CdrProcessor.CollectionResult.NewRowsCouldNotBeAggreagated.Count > 0) //job not empty, or has records
             {
                 cdrJob.Execute(); //MAIN EXECUTION/MEDIATION METHOD
             }
@@ -344,13 +344,13 @@ namespace Jobs
             if (collectionResult.OriginalRowsBeforeMerge.Count > 0) //job not empty, or has records
             {
                 decimal totalCdrDuration = cdrJob.CdrProcessor.CollectionResult
-                        .OriginalRowsBeforeMerge.Where(r=>r[Fn.Partialflag]!="1").Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace() 
-                        ? 0 
-                        : Convert.ToDecimal(r[Fn.DurationSec]));
+                        .OriginalRowsBeforeMerge.Where(r => r[Fn.Partialflag] != "1").Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace()
+                            ? 0
+                            : Convert.ToDecimal(r[Fn.DurationSec]));
                 decimal totalActualDurationInconsistent = cdrJob.CdrProcessor.CollectionResult
-                        .CdrInconsistents.Where(c=>c.PartialFlag!="1").Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
-                        ? 0
-                        : Convert.ToDecimal(r.DurationSec));
+                        .CdrInconsistents.Where(c => c.PartialFlag != "1").Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
+                            ? 0
+                            : Convert.ToDecimal(r.DurationSec));
                 decimal totalActualDuration = totalCdrDuration + totalActualDurationInconsistent;
                 WriteJobCompletionIfCollectionNotEmpty(cdrJob.CdrProcessor.CollectionResult.RawCount,
                     this.Input.Job, cdrJob.CdrProcessor.CdrJobContext.Context, totalActualDuration);
@@ -399,15 +399,15 @@ namespace Jobs
                 //throw new Exception($"Instance in a merged new cdr job cannot contain 0 record. Job id:{telcobrightJob.id}, Jobname:{telcobrightJob.JobName}");
             }
             decimal totalCdrDuration = mergedJob.OriginalRows
-                .Where(r=>r[Fn.Partialflag]!="1").Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace()
-                        ? 0
-                        : Convert.ToDecimal(r[Fn.DurationSec]));
+                .Where(r => r[Fn.Partialflag] != "1").Sum(r => r[Fn.DurationSec].IsNullOrEmptyOrWhiteSpace()
+                            ? 0
+                            : Convert.ToDecimal(r[Fn.DurationSec]));
             decimal totalActualDurationInconsistent = mergedJob.OriginalCdrinconsistents
-                .Where(c=>c.PartialFlag!="1").Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
-                    ? 0
-                    : Convert.ToDecimal(r.DurationSec));
+                .Where(c => c.PartialFlag != "1").Sum(r => r.DurationSec.IsNullOrEmptyOrWhiteSpace()
+                        ? 0
+                        : Convert.ToDecimal(r.DurationSec));
             decimal totalActualDuration = totalCdrDuration + totalActualDurationInconsistent;
-            WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, telcobrightJob, context,totalActualDuration);
+            WriteJobCompletionIfCollectionNotEmpty(preProcessor.OriginalRowsBeforeMerge.Count, telcobrightJob, context, totalActualDuration);
             if (this.Input.CdrSetting.DisableCdrPostProcessingJobCreationForAutomation == false)
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, telcobrightJob);
@@ -455,6 +455,11 @@ namespace Jobs
                 try
                 {
                     decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+                    decodedCdrRows = decodedCdrRows
+                        .Where(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore
+                         ||   (r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                        .ToList();
+
                 }
                 catch (Exception e)
                 {
@@ -463,6 +468,10 @@ namespace Jobs
                         Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
                         GarbageCollectionHelper.CompactGCNowForOnce();
                         decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
+                        decodedCdrRows = decodedCdrRows
+                            .Where(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore
+                                    || (r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                            .ToList();
                     }
                     else
                     {
@@ -572,7 +581,7 @@ namespace Jobs
                         collectorinput.Tbc.CdrSetting.SummaryTimeField, txtRow);
                 if (cdrSetting.AutoCorrectDuplicateBillId == true)
                 {
-                    if (this.Input.NeAdditionalSetting!=null &&
+                    if (this.Input.NeAdditionalSetting != null &&
                      !this.Input.NeAdditionalSetting.AggregationStyle.IsNullOrEmptyOrWhiteSpace())
                     {
                         throw new Exception("Autocorrect Duplicate BillId not supported when cdr aggregation is enabled.");
@@ -636,7 +645,7 @@ namespace Jobs
         protected void WriteJobCompletionIfCollectionNotEmpty(int rawCount, job telcobrightJob, PartnerEntities context,
             decimal totalActualDuration)
         {
-            
+
             using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
             {
                 string sql =
@@ -814,7 +823,7 @@ namespace Jobs
             AbstractCdrDecoder decoder = preProcessorWithCollectedRows.Decoder;
             List<string[]> decodedCdrRows = preProcessorWithCollectedRows.TxtCdrRows;
             List<string[]> decodedRowsBeforeDuplicateFiltering = new List<string[]>();
-            decodedCdrRows.ForEach(r=>decodedRowsBeforeDuplicateFiltering.Add(r));
+            decodedCdrRows.ForEach(r => decodedRowsBeforeDuplicateFiltering.Add(r));
             List<cdrinconsistent> cdrinconsistents = preProcessorWithCollectedRows.InconsistentCdrs.ToList();
             DbCommand cmd = this.CollectorInput.CdrJobInputData.Context.Database.Connection.CreateCommand();
             DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
@@ -828,13 +837,13 @@ namespace Jobs
             DuplicaterEventFilter<string[]> duplicaterEventFilter = new DuplicaterEventFilter<string[]>(dayWiseEventCollector);
             List<string[]> excludedDuplicateCdrs = null;
             HashSet<string> existingUniqueEventInstancesFromDB = null;
-            Dictionary<string, string[]> finalNonDuplicateEvents = 
+            Dictionary<string, string[]> finalNonDuplicateEvents =
                 duplicaterEventFilter.filterDuplicateCdrs(out excludedDuplicateCdrs, out existingUniqueEventInstancesFromDB);
 
             preProcessorWithCollectedRows.FinalNonDuplicateEvents = finalNonDuplicateEvents;
-            
+
             var textCdrCollectionPreProcessor = new NewCdrPreProcessor(
-                txtCdrRows: finalNonDuplicateEvents.Values.ToList(), 
+                txtCdrRows: finalNonDuplicateEvents.Values.ToList(),
                 inconsistentCdrs: cdrinconsistents,
                 cdrCollectorInputData: this.CollectorInput)
             {
@@ -853,7 +862,7 @@ namespace Jobs
                               textCdrCollectionPreProcessor.InconsistentCdrs.Count +
                               textCdrCollectionPreProcessor.NewDuplicateEvents.Count;
             if (newRawCount != textCdrCollectionPreProcessor.DecodedCdrRowsBeforeDuplicateFiltering.Count
-                +textCdrCollectionPreProcessor.InconsistentCdrs.Count)
+                + textCdrCollectionPreProcessor.InconsistentCdrs.Count)
             {
                 throw new Exception("Cdr count mismatch after duplicate filtering!");
             }
@@ -876,13 +885,13 @@ namespace Jobs
             dayWiseEventCollector.createNonExistingTables();
             dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
             TelcobridgeStyleAggregator<string[]> aggregator = new TelcobridgeStyleAggregator<string[]>(dayWiseEventCollector);
-            
-            Dictionary<string,EventAggregationResult> aggregationResults = aggregator.aggregateCdrs();
+
+            Dictionary<string, EventAggregationResult> aggregationResults = aggregator.aggregateCdrs();
             var successfulAggregationResults = aggregationResults.Values.Where(ar => ar.AggregatedInstance != null)
                 .ToList();
             var failedAggregationResults = aggregationResults.Values.Where(ar => ar.AggregatedInstance == null)
                 .ToList();
-            preprocessor.FinalAggregatedInstances = successfulAggregationResults.Select(ar=>ar.AggregatedInstance).ToList();
+            preprocessor.FinalAggregatedInstances = successfulAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
             preprocessor.NewRowsCouldNotBeAggregated = failedAggregationResults
                 .SelectMany(ar => ar.NewInstancesCouldNotBeAggregated).ToList();
             preprocessor.OldRowsCouldNotBeAggregated = failedAggregationResults
@@ -897,17 +906,17 @@ namespace Jobs
             {
                 preprocessor.OldRowsToBeDiscardedAfterAggregation.Add(row);
             }
-            preprocessor.OldPartialInstancesFromDB= successfulAggregationResults
+            preprocessor.OldPartialInstancesFromDB = successfulAggregationResults
                 .SelectMany(ar => ar.OldPartialInstancesFromDB)
                 .Concat(failedAggregationResults.SelectMany(ar => ar.OldPartialInstancesFromDB)).ToList();
 
             var inputRows = dayWiseEventCollector.InputEvents;
             var existingRows = dayWiseEventCollector.ExistingEventsInDb;
-            if (inputRows.Count+existingRows.Count!=preprocessor.FinalAggregatedInstances.Count+preprocessor.NewRowsToBeDiscardedAfterAggregation.Count
-                +preprocessor.OldRowsToBeDiscardedAfterAggregation.Count+
-                +preprocessor.NewRowsCouldNotBeAggregated.Count+preprocessor.OldRowsCouldNotBeAggregated.Count)
+            if (inputRows.Count + existingRows.Count != preprocessor.FinalAggregatedInstances.Count + preprocessor.NewRowsToBeDiscardedAfterAggregation.Count
+                + preprocessor.OldRowsToBeDiscardedAfterAggregation.Count +
+                +preprocessor.NewRowsCouldNotBeAggregated.Count + preprocessor.OldRowsCouldNotBeAggregated.Count)
             {
-                throw new Exception("Input and aggregated rows count did not match expected value");    
+                throw new Exception("Input and aggregated rows count did not match expected value");
             }
             return preprocessor;
         }
