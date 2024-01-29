@@ -123,6 +123,21 @@
               <asp:TreeNode Value="Route Wise Traffic" Text="Route Wise" SelectAction="Select" NavigateUrl="None"> </asp:TreeNode>
               
             </asp:TreeNode>--%>
+
+
+                                
+                                <asp:TreeNode Value="New_Reports" Expanded="True" Text="New Reports" SelectAction="None">
+                                    <asp:TreeNode Value="ANS Wise Report" Text="ANS Wise Report" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/ANSWiseMonthlyReport.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="DailyInput" Text="Daily Inputt" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/DailyInputICX.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="MonthlyInput" Text="Monthly Inputt" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/MonthlyInputICX.aspx"></asp:TreeNode>
+                                    
+
+                                  
+                                </asp:TreeNode>
+                               
+
+
+
                                 <asp:TreeNode Value="Transit" Expanded="True" Text="Transit" SelectAction="None">
                                     <asp:TreeNode Value="Local" Text="Local" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTransit.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalInTransit.aspx"></asp:TreeNode>
