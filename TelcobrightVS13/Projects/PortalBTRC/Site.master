@@ -128,8 +128,8 @@
                                 
                                 <asp:TreeNode Value="New_Reports" Expanded="True" Text="New Reports" SelectAction="None">
                                     <asp:TreeNode Value="ANS Wise Report" Text="ANS Wise Report" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/ANSWiseMonthlyReport.aspx"></asp:TreeNode>
-                                    <asp:TreeNode Value="DailyInput" Text="Daily Inputt" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/DailyInputICX.aspx"></asp:TreeNode>
-                                    <asp:TreeNode Value="MonthlyInput" Text="Monthly Inputt" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/MonthlyInputICX.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="DailyInput" Text="Daily Report" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/DailyInputICX.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="MonthlyInput" Text="ICX Wise Monthly Report" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/MonthlyInputICX.aspx"></asp:TreeNode>
                                     
 
                                   
