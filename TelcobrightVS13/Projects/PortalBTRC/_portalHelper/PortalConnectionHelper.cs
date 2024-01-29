@@ -34,6 +34,10 @@ namespace PortalApp
             var constr = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
             return constr;
         }
-
+        public static string getDbConStrWithDatabase(DatabaseSetting databaseSetting)
+        {
+            var constr = DbUtil.getDbConStrWithDatabase(databaseSetting);
+            return constr;
+        }
     }
 }

@@ -150,8 +150,8 @@ namespace InstallConfig
                             "CheckBoxShowCost.Enabled=true",
                             "CheckBoxShowCost.Checked=true",
                             "GridView1.Columns[5].Visible=false",//fake ans
-                            "GridView1.Columns[8].Visible=false",//connected calls
-                            "GridView1.Columns[9].Visible=false",//actual duration
+                            //"GridView1.Columns[8].Visible=false",//connected calls
+                            //"GridView1.Columns[9].Visible=false",//actual duration
                             //"GridView1.Columns[11].Visible=false",//carrier duration
                             //"GridView1.Columns[12].Visible=false",//ANS $
                             //"GridView1.Columns[13].Visible=false",//ICX/IOS
@@ -181,8 +181,8 @@ namespace InstallConfig
                     SpringExpressionIfRole = new List<string>()
                     {
                         "CheckBoxShowCost.Enabled=true",
-                        "GridView1.Columns[6].Visible=true",//connect count
-                        "GridView1.Columns[8].Visible=true",//duration1
+                        //"GridView1.Columns[6].Visible=true",//connect count
+                        //"GridView1.Columns[8].Visible=true",//duration1
                         //"GridView1.Columns[19].Visible=true",//CCR
                         //"GridView1.Columns[20].Visible=false",//connect by cc
                         //"GridView1.Columns[21].Visible=false",//CCR by cc
@@ -190,9 +190,9 @@ namespace InstallConfig
                     SpringExpressionIfNotRole = new List<string>()
                     {
                         "CheckBoxShowCost.Enabled=false",
-                        "GridView1.Columns[6].Visible=true",
-                        "GridView1.Columns[8].Visible=false",
-                        "GridView1.Columns[7].HeaderText=Duration",
+                        //"GridView1.Columns[6].Visible=true",
+                        //"GridView1.Columns[8].Visible=false",
+                        //"GridView1.Columns[7].HeaderText=Duration",
                         //"GridView1.Columns[19].Visible=true",//CCR
                         //"GridView1.Columns[20].Visible=false",//connect by cc
                         //"GridView1.Columns[21].Visible=false",//CCR by cc
@@ -340,11 +340,20 @@ namespace InstallConfig
                     },
                     {
                         "~/ICX_Reports/Cas_ICX/CasInternationalIn_ICX.aspx",
-                        settingIntlIn
+                        settingIntlIn//AllTrafic.aspx
                     },
                     {
                         "~/ICX_Reports/Cas_ICX/CasInternationalOut_ICX.aspx",
                         settingIntlOut
+                    },
+                    {
+                        "~/ICX_Reports/Cas_ICX/AllTrafic.aspx",
+                        settingIntlIn
+                    }
+                    ,
+                    {
+                        "~/ICX_Reports/Cas_ICX/DailyInput.aspx",
+                        settingIntlIn
                     }
                 },//dictionary of page settings
 

@@ -101,6 +101,8 @@
     <Compile Include="CataleyaCsvDecoderSoftexNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderJslNoFailedGzip.cs" />
+    <Compile Include="DialogicBorderNetMirIgwNoFailed.cs" />
+    <Compile Include="DialogicBorderNetMirIgwNoFailedGzip.cs" />
     <Compile Include="GenbandC3.cs" />
     <Compile Include="GenbandC3WithGz.cs" />
     <Compile Include="Helper\NokiaDecodeHelper.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="GenbandC3CrossWorld.cs" />
     <Compile Include="GenbandC3DecoderBangla.cs" />
     <Compile Include="Helper\TelcobridgeAggregationHelper.cs" />
+    <Compile Include="HuaweiSoftx3000DecoderBntel.cs" />
     <Compile Include="HuaweiSoftx3000DecoderBtcl.cs" />
     <Compile Include="TelcobridgeDecoderTelexchange.cs" />
     <Compile Include="TelcobridgeDecoderGazi.cs" />

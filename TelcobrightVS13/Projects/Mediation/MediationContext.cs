@@ -37,7 +37,7 @@ namespace TelcobrightMediation
         public Dictionary<ValueTuple<int, string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra { get; private set; } //required for failed intl in calls where term number might be missing
-        public Dictionary<string, partnerprefix> AnsPrefixes0880 { get; } = new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix> AnsPrefixes00880 { get; } = new Dictionary<string, partnerprefix>();
         public Dictionary<string, partnerprefix> AnsPrefixes880 { get; } = new Dictionary<string, partnerprefix>();
         public Dictionary<string, partnerprefix> AnsPrefixes0 { get; } = new Dictionary<string, partnerprefix>();
         public Dictionary<string, partnerprefix> AnsPrefixes { get; } = new Dictionary<string, partnerprefix>();  //ANSTermprefix partner dictionary with AnsPrefix as Key
@@ -101,7 +101,7 @@ namespace TelcobrightMediation
             {
                 string prefix = kv.Key;
                 var partnerPrefix = kv.Value;
-                this.AnsPrefixes0880.Add("0880" + prefix, partnerPrefix);
+                this.AnsPrefixes00880.Add("00880" + prefix, partnerPrefix);
                 this.AnsPrefixes880.Add("880" + prefix, partnerPrefix);
                 this.AnsPrefixes0.Add("0" + prefix, partnerPrefix);
             }

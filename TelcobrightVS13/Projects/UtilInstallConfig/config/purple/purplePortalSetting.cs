@@ -285,7 +285,7 @@ namespace InstallConfig
 
                         }//list of settings by Roles
                     },
-                    { "~/reports/InternationalIn.aspx",//settings for report pages
+                     { "~/reports/InternationalIn.aspx",//settings for report pages
                         settingIntlIn
                     },
                     { "~/reports/InternationalOut.aspx",
@@ -297,10 +297,13 @@ namespace InstallConfig
                     { "~/reports/icx/InternationalIn_ICX.aspx",//settings for report pages
                         settingIntlIn
                     },
-                    { "~/reports/icx/InternationalOut _ICX.aspx",
+                    { "~/reports/icx/InternationalOut_ICX.aspx",
                         settingIntlOut
                     },
                     { "~/reports/icx/Domestic.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/DomesticWithLtfs.aspx",
                         settingIntlIn
                     },
                     { "~/reports/icx/LocalTollFree.aspx",
@@ -313,6 +316,21 @@ namespace InstallConfig
                         settingIntlIn
                     },
                     { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyOutgoingDetail.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/AcdReport.aspx",
+                        settingIntlIn
+                    },
+                    { "~/reports/icx/btrc/MonthlyRoamingReport.aspx",
                         settingIntlIn
                     }
                 },//dictionary of page settings

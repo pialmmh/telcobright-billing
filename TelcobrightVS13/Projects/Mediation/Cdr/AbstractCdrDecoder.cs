@@ -38,12 +38,13 @@ namespace TelcobrightMediation
 
             string tuples = string.Join(",", hourwiseData.Events.Select(r =>
             {
-                Dictionary<string, object> tupGenInput = new Dictionary<string, object>()
-                {
-                    {"collectorInput", collectorInput},
-                    {"row", r}
-                };
-                string tupleExpression = getTupleExpression(tupGenInput);
+                //Dictionary<string, object> tupGenInput = new Dictionary<string, object>()
+                //{
+                //    {"collectorInput", collectorInput},
+                //    {"row", r}
+                //};
+                //string tupleExpression = getTupleExpression(tupGenInput);
+                string tupleExpression = r[Fn.UniqueBillId];
                 return new StringBuilder("'")
                     .Append(tupleExpression)
                     .Append("'");
@@ -69,6 +70,13 @@ namespace TelcobrightMediation
                 .Append(startTime.ToMySqlFormatWithoutQuote()).Append(separator)
                 .Append(sessionId).ToString();
         }
+
+        public string getGeneratedUniqueEventId(Object data)
+        {
+            string[] row = (string[])data;
+            return row[Fn.UniqueBillId];
+        }
+
         public virtual string getSelectExpressionForUniqueEvent(Object data)
         {
             return @"select tuple ";

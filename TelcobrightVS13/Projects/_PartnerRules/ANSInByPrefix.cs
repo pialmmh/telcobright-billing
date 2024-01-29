@@ -20,7 +20,7 @@ namespace PartnerRules
         public int Id => 3;
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
-            Dictionary<string, partnerprefix> ansPrefixes0880 = data.MediationContext.AnsPrefixes0880;
+            Dictionary<string, partnerprefix> ansPrefixes0880 = data.MediationContext.AnsPrefixes00880;
             Dictionary<string, partnerprefix> ansPrefixes880 = data.MediationContext.AnsPrefixes880;
             Dictionary<string, partnerprefix> ansPrefixes0 = data.MediationContext.AnsPrefixes0;
             Dictionary<string, partnerprefix> ansPrefixes = data.MediationContext.AnsPrefixes;

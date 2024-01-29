@@ -57,7 +57,8 @@ namespace InstallConfig.config._helper
                     SkipHourlySummary = true,
                 }, 
                 useCasStyleProcessing = true,
-                ProcessNewCdrJobsBeforeReProcess = true
+                ProcessNewCdrJobsBeforeReProcess = true,
+                ExcludeBefore = new DateTime(2024,01,01)
             };
         }
     }

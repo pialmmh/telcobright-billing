@@ -12,6 +12,7 @@ using System.IO;
 using System.Text;
 using Decoders;
 using LibraryExtensions;
+using TelcobrightMediation.Cdr.Collection.PreProcessors;
 
 namespace Decoders
 {
@@ -24,18 +25,18 @@ namespace Decoders
         public override int Id => 570;
         public override string HelpText => "Teleexchange Telcobridge";
         public override CompressionType CompressionType { get; set; }
-        public override string UniqueEventTablePrefix { get; }
-        public override string PartialTableStorageEngine { get; }
-        public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
 
 
-        private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
+        private static DateTime? parseStringToDate(string timestamp)
         {
             DateTime dateTime;
-            if (DateTime.TryParseExact(timestamp, "yyyyMMddHHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime));
-                
-            return dateTime;
+            if (DateTime.TryParseExact(timestamp, "yyyy-MM-dd HH.mm.ss.fff", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out dateTime))
+            {
+                return dateTime;
+            }
+            return null;
         }
 
         public override List<string[]> DecodeFile(CdrCollectorInputData input,
@@ -57,138 +58,190 @@ namespace Decoders
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
-
+            bool emptyLineFound = false;
             try
             {
                 foreach (string ln in linesAsString)
                 {
+                    if (ln.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        emptyLineFound = true;
+                        continue;
+                    }
+                    if (emptyLineFound)
+                    {
+                        throw new Exception("Empty line found between Telcobridge rows, file may be inconsistent.");
+                    }
                     lineAsArr = ln.Split(',');
                     string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
-                    if (lineAsArr.Length < 5)
-                        continue;
-                    if (!string.IsNullOrEmpty(lineAsArr[5]))
-                    {
-                        continue;
-                    }
-                    if (lineAsArr.Length < 5)
-                        continue;
-                    //string durationStr = lineAsArr[7].Trim();
-                    //double durationSec = 0;
-                    //double.TryParse(durationStr, out durationSec);
-                    //if (durationSec <= 0) continue;
-                    string callStatus = lineAsArr[1].Trim().ToLower();
-                    if (!string.Equals(callStatus, "End")) continue;
-
-                    textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
+                    
                     textCdr[Fn.Partialflag] = "1";// all telcobridge cdrs are partial
-                    //textCdr[Fn.DurationSec] = lineAsArr[7].Trim();
+                    textCdr[Fn.DurationSec] = "0";
+
 
                     //originate or answer, intrunk taken from "originate" let, outtrunk from "answer" leg
-                    string inTrunkAdditionalInfo = lineAsArr[14].Trim().ToLower();
-                    textCdr[Fn.InTrunkAdditionalInfo] = inTrunkAdditionalInfo;
+                    string inTrunkAdditionalInfo = "";
+                    if (lineAsArr.Length < 14)
+                    {
+                        textCdr[Fn.IncomingRoute] = lineAsArr[8].Trim();
+                        textCdr[Fn.OutgoingRoute] = lineAsArr[8].Trim();
 
+                        inTrunkAdditionalInfo = lineAsArr[9].Trim();
+
+                        textCdr[Fn.OriginatingCallingNumber] = lineAsArr[6].Trim();
+                        textCdr[Fn.OriginatingCalledNumber] = lineAsArr[7].Trim();
+
+                        textCdr[Fn.TerminatingCallingNumber] = lineAsArr[6].Trim();
+                        textCdr[Fn.TerminatingCalledNumber] = lineAsArr[7].Trim();
+
+                        if (inTrunkAdditionalInfo == "originate")
+                        {
+                            textCdr[Fn.IncomingRoute] = lineAsArr[8].Trim();
+                        }
+                        else if (inTrunkAdditionalInfo == "answer")
+                        {
+                            textCdr[Fn.OutgoingRoute] = lineAsArr[8].Trim();
+                        }
+                        else
+                        {
+                            Console.WriteLine("except");
+                        }
+                    }
+                    else
+                    {
+                        textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
+                        textCdr[Fn.OutgoingRoute] = lineAsArr[12].Trim();
+
+                        inTrunkAdditionalInfo = lineAsArr[14];
+
+                        textCdr[Fn.OriginatingCallingNumber] = lineAsArr[10].Trim();
+                        textCdr[Fn.OriginatingCalledNumber] = lineAsArr[11].Trim();
+
+                        textCdr[Fn.TerminatingCallingNumber] = lineAsArr[10].Trim();
+                        textCdr[Fn.TerminatingCalledNumber] = lineAsArr[11].Trim();
+
+                        if (inTrunkAdditionalInfo == "originate")
+                        {
+                            textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
+                        }
+                        else if (inTrunkAdditionalInfo == "answer")
+                        {
+                            textCdr[Fn.OutgoingRoute] = lineAsArr[12].Trim();
+                        }
+                    }
+
+                    textCdr[Fn.InTrunkAdditionalInfo] = inTrunkAdditionalInfo;
+                    string outTrunkAdditionalInfo = lineAsArr[1].Trim().ToLower();
+                    textCdr[Fn.OutTrunkAdditionalInfo] = outTrunkAdditionalInfo;//start,update,end          
                     string startTimeStr = lineAsArr[4].Trim();
-                    DateTime startTime = new DateTime();
+                    DateTime? startTime = null;
                     if (!string.IsNullOrEmpty(startTimeStr))
                     {
-                        startTime = DateTime.ParseExact(startTimeStr, "yyyy-MM-dd HH.mm.ss.fff", CultureInfo.InvariantCulture);
-                        startTimeStr = startTime.ToString("yyyy-MM-dd HH:mm:ss");
+                        startTime = parseStringToDate(startTimeStr);
+                        startTimeStr = startTime == null
+                            ? ""
+                            : Convert.ToDateTime(startTime).ToMySqlFormatWithoutQuote();
                     }
 
                     string connectTimeStr = lineAsArr[5].Trim();
-                    DateTime connectTime = new DateTime();
+                    DateTime? connectTime = null;
                     if (!string.IsNullOrEmpty(connectTimeStr))
                     {
-                        connectTime = DateTime.ParseExact(connectTimeStr, "yyyy-MM-dd HH.mm.ss.fff", CultureInfo.InvariantCulture);
-                        connectTimeStr = connectTime.ToString("yyyy-MM-dd HH:mm:ss");
+                        connectTime= parseStringToDate(connectTimeStr);
+                        connectTimeStr = connectTime == null
+                            ? ""
+                            : Convert.ToDateTime(connectTime).ToMySqlFormatWithoutQuote();
                     }
 
                     string endTimeStr = lineAsArr[6].Trim();
-                    DateTime endTime = new DateTime();
+                    DateTime? endTime = null;
                     if (!string.IsNullOrEmpty(endTimeStr))
                     {
-                        endTime = DateTime.ParseExact(endTimeStr, "yyyy-MM-dd HH.mm.ss.fff", CultureInfo.InvariantCulture);
-                        endTimeStr = endTime.ToString("yyyy-MM-dd HH:mm:ss");
+                        endTime = parseStringToDate(endTimeStr);
+                        endTimeStr = endTime == null
+                            ? ""
+                            : Convert.ToDateTime(endTime).ToMySqlFormatWithoutQuote();
                     }
 
-
-                    TimeSpan DurationSec = connectTime - startTime;
-                    string DurationSecStr = DurationSec.TotalSeconds.ToString();
+                    string durationSecStr="0";
+                    double durationSec = 0;
+                    if (connectTime != null && endTime != null)
+                    {
+                        TimeSpan timeDiff = Convert.ToDateTime(endTime)- Convert.ToDateTime(connectTime);
+                        durationSec = timeDiff.TotalSeconds;
+                        durationSecStr = durationSec.ToString();
+                    }
+                    textCdr[Fn.ChargingStatus] = durationSec > 0 ? "1" : "0";
 
                     textCdr[Fn.Filename] = fileName;
                     textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
-                    textCdr[Fn.OriginatingCallingNumber] = lineAsArr[9].Trim();
-                    textCdr[Fn.OriginatingCalledNumber] = lineAsArr[10].Trim();
-
-                    textCdr[Fn.TerminatingCallingNumber] = lineAsArr[9].Trim();
-                    textCdr[Fn.TerminatingCalledNumber] = lineAsArr[10].Trim();
-
-                    if(inTrunkAdditionalInfo == "originate")
-                    {
-                        textCdr[Fn.IncomingRoute] = lineAsArr[12].Trim();
-                    }
-                    else
-                    {
-                        textCdr[Fn.OutgoingRoute] = lineAsArr[12].Trim();
-                    }
-
+                    
 
                     textCdr[Fn.StartTime] = startTimeStr;
-                    textCdr[Fn.Endtime] = endTimeStr;
-                    textCdr[Fn.AnswerTime] = connectTimeStr;
-                    textCdr[Fn.DurationSec] = DurationSecStr;
-                
+                    textCdr[Fn.AnswerTime] = connectTimeStr.IsNullOrEmptyOrWhiteSpace() ? startTimeStr : connectTimeStr;
+                    textCdr[Fn.Endtime] = endTimeStr.IsNullOrEmptyOrWhiteSpace() ? textCdr[Fn.AnswerTime] : endTimeStr;
+                    textCdr[Fn.DurationSec] = durationSecStr;
 
-
+                  
                     textCdr[Fn.Validflag] = "1";
-
                     string seqNumber = lineAsArr[3].Remove(0, 2);
                     seqNumber = Int64.Parse(seqNumber, NumberStyles.HexNumber).ToString();
                     textCdr[Fn.Sequencenumber] = seqNumber;
 
+                    textCdr[Fn.UniqueBillId] = lineAsArr[2].Trim();
+                    string customUniqueBillId = this.getTupleExpression(new Dictionary<string, object>()
+                    {
+                        { "collectorInput", this.Input},
+                        {"row", textCdr }
+                    });
+                    textCdr[Fn.UniqueBillId] = customUniqueBillId;
                     decodedRows.Add(textCdr);
                 }
-                return decodedRows;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 e.Data.Add("customError", "Possibly Corrupted");
-                e.Data.Add("jobId", input.TelcobrightJob.id);
                 throw e;
             }
+            return decodedRows;
+        }
+
+        public override string getTupleExpression(Object data)
+        {
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
+            CdrCollectorInputData collectorInput = (CdrCollectorInputData)dataAsDic["collectorInput"];
+            CdrSetting cdrSetting = collectorInput.CdrSetting;
+            string[] row = (string[])dataAsDic["row"];
+            int switchId = collectorInput.Ne.idSwitch;
+            DateTime startTime = getEventDatetime(new Dictionary<string, object>
+            {
+                {"cdrSetting", cdrSetting},
+                {"row", row}
+            });
+            //23:00 hours eventid to be rounded up as 00:00 next hour in uniqueEventTupleId                        
+            //aggregation logic checks cdr for +-1 hour, so collection and aggregation will be possible            
+            if (startTime.Hour == 23)
+            {
+                startTime = startTime.Date.AddDays(1);
+            }
+            else
+            {
+                //startTime = startTime.Date.AddHours(startTime.Hour); prev logic
+                startTime = startTime.Date; //new logic
+            }
+            string sessionId = row[Fn.UniqueBillId];
+            string separator = "/";
+            return new StringBuilder(switchId.ToString()).Append(separator)
+                .Append(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote()).Append(separator)
+                .Append(sessionId).ToString();
         }
 
         public override EventAggregationResult Aggregate(object data)
         {
-            return TelcobridgeAggregationHelper.Aggregate(data);
-        }
-
-        public override string getCreateTableSqlForUniqueEvent(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getSelectExpressionForUniqueEvent(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getWhereForHourWiseCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string getSelectExpressionForPartialCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DateTime getEventDatetime(Object data)
-        {
-            throw new NotImplementedException();
+            return TelcobridgeAggregationHelper.Aggregate((NewAndOldEventsWrapper<string[]>)data);
         }
     }
 }

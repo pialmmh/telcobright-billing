@@ -21,7 +21,7 @@ namespace PartnerRules
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
 
-            Dictionary<string, partnerprefix> ansPrefixes0880 = data.MediationContext.AnsPrefixes0880;
+            Dictionary<string, partnerprefix> ansPrefixes00880 = data.MediationContext.AnsPrefixes00880;
             Dictionary<string, partnerprefix> ansPrefixes880 = data.MediationContext.AnsPrefixes880;
             Dictionary<string, partnerprefix> ansPrefixes0 = data.MediationContext.AnsPrefixes0;
             Dictionary<string, partnerprefix> ansPrefixes = data.MediationContext.AnsPrefixes;
@@ -42,20 +42,20 @@ namespace PartnerRules
                 }
             }
 
-            //if (thisCdr.OutPartnerId == 0)
-            //{
-            //    foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes0880)
-            //    {
-            //        string prefix = kv.Key;
-            //        partnerprefix ansPrefix = kv.Value;
+            if (thisCdr.OutPartnerId == 0)
+            {
+                foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes00880)
+                {
+                    string prefix = kv.Key;
+                    partnerprefix ansPrefix = kv.Value;
 
-            //        if (terminatingCalledNumber.StartsWith(prefix))
-            //        {
-            //            thisCdr.OutPartnerId = ansPrefix.idPartner;
-            //            return ansPrefix.idPartner;
-            //        }
-            //    }
-            //}
+                    if (terminatingCalledNumber.StartsWith(prefix))
+                    {
+                        thisCdr.OutPartnerId = ansPrefix.idPartner;
+                        return ansPrefix.idPartner;
+                    }
+                }
+            }
 
 
             if (thisCdr.OutPartnerId == 0)

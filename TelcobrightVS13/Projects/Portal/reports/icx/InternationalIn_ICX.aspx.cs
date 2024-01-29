@@ -46,14 +46,14 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
                          
                          new List<string>()
                             {
-                                //groupInterval=="Hourly"?"tup_starttime":string.Empty,
+                                groupInterval=="Hourly"?"tup_starttime":string.Empty,
                                 getInterval(groupInterval),
                                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty
                             },
                          new List<string>()
                             {

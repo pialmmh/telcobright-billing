@@ -86,8 +86,9 @@ namespace TelcobrightMediation
                 {
                     int noOfSteps = getNoOfSteps(cmd);
 
-                    jobsegment jobSegment = this.Context.jobsegments.Where(js => js.id == idJobSegment).ToList()
-                        .First();
+                    //jobsegment jobSegment = this.Context.jobsegments.Where(js => js.id == idJobSegment).ToList()
+                    //  .First();
+                    jobsegment jobSegment = getJobSegment(cmd, idJobSegment);
                     int progressSoFar = getJobProgressSoFar(cmd);
                     if (progressSoFar > noOfSteps)
                         throw new Exception("Progress cannot be > total no of steps for a job.");
@@ -115,6 +116,9 @@ namespace TelcobrightMediation
                             $" progress=ifnull(progress,0)+{segmentedJob.ActualStepsCount} " +
                             $" where id={TelcobrightJob.id}");
                         //cmd.ExecuteCommandText(" commit; ");
+                        progressSoFar = getJobProgressSoFar(cmd);
+                        if (progressSoFar > noOfSteps)
+                            throw new Exception("Progress cannot be > total no of steps for a job.");
                         CdrJobCommiter.Commit(cmd, this.CdrSetting);
                     }
                     catch (Exception e)
@@ -169,6 +173,38 @@ namespace TelcobrightMediation
             object retVal = cmd.ExecuteScalar();
             int progressSoFar = Convert.ToInt32(retVal);
             return progressSoFar;
+        }
+
+        private jobsegment getJobSegment(DbCommand cmd,int idJobSegment)
+        {
+            string sqlProgress = " select id,idjob,segmentnumber,stepscount,status,segmentdetail from jobsegment " +
+                                 " where id=" + idJobSegment.ToString();
+            cmd.CommandText = sqlProgress;
+            DbDataReader reader=null;
+            try
+            {
+                reader = cmd.ExecuteReader();
+                List<jobsegment> jobsegments= new List<jobsegment>();
+                while (reader.Read())
+                {
+                    jobsegment segment= new jobsegment();
+                    segment.id = Convert.ToInt64(reader["id"].ToString());
+                    segment.idJob = Convert.ToInt64(reader["idjob"].ToString());
+                    segment.segmentNumber= Convert.ToInt32(reader["segmentnumber"].ToString());
+                    segment.stepsCount= Convert.ToInt32(reader["stepscount"].ToString());
+                    segment.status= Convert.ToInt32(reader["status"].ToString());
+                    segment.SegmentDetail= reader["segmentdetail"].ToString();
+                    reader.Close();
+                    return segment;
+                }
+                throw new Exception("Job segment not found while processing error cdrs.");
+            }
+            catch (Exception e)
+            {
+                reader.Close();
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public virtual void FinishJob(List<jobsegment> jobsegments, Action<object> additionalJobFinalizingTask)

@@ -41,7 +41,7 @@ namespace Decoders
 
         }
 
-        protected static List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
+        protected  List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -73,7 +73,6 @@ namespace Decoders
                     textCdr[Fn.CallingPartyNOA] = accountEventReason;
 
                     textCdr[Fn.Sequencenumber] = lineAsArr[1];
-                    textCdr[Fn.UniqueBillId] = lineAsArr[10];
                     textCdr[Fn.DurationSec] = durationSec.IsNullOrEmptyOrWhiteSpace() == false
                         ? durationSec : string.Empty;
 
@@ -174,6 +173,14 @@ namespace Decoders
                     textCdr[Fn.ReleaseCauseEgress] = lineAsArr[134];
                     textCdr[Fn.Validflag] = "1";
                     textCdr[Fn.Partialflag] = "0";
+                    textCdr[Fn.UniqueBillId] = lineAsArr[10];
+
+                    string customUniqueBillId = this.getTupleExpression(new Dictionary<string, object>()
+                    {
+                        { "collectorInput", this.Input},
+                        {"row", textCdr }
+                    });
+                    textCdr[Fn.UniqueBillId] = customUniqueBillId;
                     decodedRows.Add(textCdr.ToArray());
                 }
                 return decodedRows;

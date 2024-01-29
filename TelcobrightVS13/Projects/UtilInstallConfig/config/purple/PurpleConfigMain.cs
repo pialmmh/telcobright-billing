@@ -70,7 +70,7 @@ namespace InstallConfig
                 DescendingOrderWhileProcessingListedFiles = false,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
-                ServiceGroupConfigurations = CasServiceGroupHelper.GetServiceGroupConfigurations(),
+                ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 BatchSizeForCdrJobCreationCheckingExistence = 10000,
                 DisableParallelMediation = false,
@@ -84,8 +84,8 @@ namespace InstallConfig
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
                 {
                     { 2, new NeAdditionalSetting {//for huawei
-                        ProcessMultipleCdrFilesInBatch = true,
-                        PreDecodeAsTextFile = true,
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
                         MaxConcurrentFilesForParallelPreDecoding = 30,
                         MinRowCountToStartBatchCdrProcessing = 70000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
@@ -99,8 +99,8 @@ namespace InstallConfig
                         }
                     }},
                     { 3, new NeAdditionalSetting {//dialogic
-                        ProcessMultipleCdrFilesInBatch = true,
-                        PreDecodeAsTextFile = true,
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 100000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
@@ -116,10 +116,10 @@ namespace InstallConfig
                 },
                 SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
                 {
-                    SkipCdr = true,
-                    SkipChargeable = true,
-                    SkipTransaction = true,
-                    SkipHourlySummary = true,
+                    SkipCdr = false,
+                    SkipChargeable = false,
+                    SkipTransaction = false,
+                    SkipHourlySummary = false,
                 },
             };
 
@@ -137,7 +137,7 @@ namespace InstallConfig
                     FileExtension = ".dat",
                     Description = null,
                     SourceFileLocations = "vault.huawei",
-                    BackupFileLocations = null,
+                    BackupFileLocations = "huawei:Vault",
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,
                     TransactionSizeForCDRLoading = 1500,
@@ -170,7 +170,7 @@ namespace InstallConfig
                     FileExtension = ".txt",
                     Description = null,
                     SourceFileLocations = "vault.Cataleya",
-                    BackupFileLocations = null,
+                    BackupFileLocations = "cataleya:Vault",
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,
                     TransactionSizeForCDRLoading = 1500,

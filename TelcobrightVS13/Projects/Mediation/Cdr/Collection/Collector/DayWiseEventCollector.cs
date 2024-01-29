@@ -44,18 +44,10 @@ namespace TelcobrightMediation
             CdrSetting cdrSetting = this.CollectorInput.CdrSetting;
             var pastHoursToSeekForCollection = cdrSetting.HoursToAddBeforeForSafePartialCollection;
             var nextHoursToSeekForCollection = cdrSetting.HoursToAddAfterForSafePartialCollection;
-            this.TupleWiseDecodedEvents = inputEvents.Select(row =>
+            this.TupleWiseDecodedEvents = inputEvents.Select(row => new
             {
-                var data = new Dictionary<string, object>
-                {
-                    {"collectorInput", this.CollectorInput},
-                    {"row", row}
-                };
-                return new
-                {
-                    Tuple = decoder.getTupleExpression(data),
-                    Event = row
-                };
+                Tuple = decoder.getGeneratedUniqueEventId(row),
+                Event = row
             }).GroupBy(a=>a.Tuple).ToDictionary(g => g.Key, g=>g.Select(groupEvents=>groupEvents.Event).ToList());
 
             this.DayAndHourWiseEvents = inputEvents.SelectMany(row =>
@@ -128,37 +120,37 @@ namespace TelcobrightMediation
                         List<T> existingEvents = new List<T>();
                         if (whereClausesByHour.Any())
                         {
-                            cmd.CommandText = sql;
-                            cmd.CommandType = CommandType.Text;
-                            DbDataReader reader = cmd.ExecuteReader();
-                            try
+                            if (UniqueEventsOnly) //collect unique events only
                             {
-                                while (reader.Read())
+                                cmd.CommandText = sql;
+                                cmd.CommandType = CommandType.Text;
+                                DbDataReader reader = cmd.ExecuteReader();
+                                try
                                 {
-                                    if (UniqueEventsOnly)
+                                    while (reader.Read())
                                     {
                                         existingEvents.Add(
-                                            (T)decoder
+                                            (T) decoder
                                                 .convertDbReaderRowToUniqueEventTuple(reader)); //collect uniqueevent
                                     }
-                                    else
-                                    {
-                                        existingEvents.Add(
-                                            (T)decoder
-                                                .convertDbReaderRowToUniqueEventTuple(reader)); //collect full event e.g. cdr as string[]
-                                    }
+                                    reader.Close();
                                 }
-                                reader.Close();
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine(e);
+                                    reader.Close();
+                                    throw;
+                                }
+                                finally
+                                {
+                                    reader.Close();
+                                }
                             }
-                            catch (Exception e)
+                            else //collect partial events
                             {
-                                Console.WriteLine(e);
-                                reader.Close();
-                                throw;
-                            }
-                            finally
-                            {
-                                reader.Close();
+                                CdrRowCollector<cdrerror> dbRowCollector =
+                                    new CdrRowCollector<cdrerror>(this.CollectorInput.CdrJobInputData, sql);
+                                existingEvents = (List<T>) dbRowCollector.CollectAsTxtRows(cmd);
                             }
                         }
                         this.ExistingEventsInDb = existingEvents;

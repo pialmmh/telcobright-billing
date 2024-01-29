@@ -21,6 +21,7 @@ namespace CasTelcobright
         Dictionary<string, Process> topSelfProcesses = new Dictionary<string, Process>();
 
         List<string> allIcx = IcxFactory.getAllIcx();
+        List<Label> labels = new List<Label>();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();
         public static Dictionary<string, PictureBox> pictureBoxes = new Dictionary<string, PictureBox>();
         NavigationControl navigationControl;
