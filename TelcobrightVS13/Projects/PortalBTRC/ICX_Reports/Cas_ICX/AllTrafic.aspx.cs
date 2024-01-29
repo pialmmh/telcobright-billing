@@ -288,7 +288,7 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
                                     as domestic;";
             string domesticSQL1 = $@"select sum(duration) duration from(
 	                            select sum(duration1) as duration from agni_cas.sum_voice_day_01 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_01 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+	                            select sum(duration1) as duration from banglaicx_cas.sum_voice_day_01 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                            select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_01 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                            select sum(duration1) as duration from bantel_cas.sum_voice_day_01 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                            select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_01 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
@@ -312,34 +312,34 @@ public partial class CasDefaultRptAllTrafic : System.Web.UI.Page
 
                                 ) 
                                 as domestic;";
-            string intOutSQL1 = $@"select sum(duration) duration from(
-	                            select sum(duration1) as duration from agni_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from bantel_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from imamnetwork_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from jibondhara_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from mnh_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from btcl_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from paradise_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from purple_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from ringtech_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from crossworld_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from srtelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from sheba_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from softex_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from teleexchange_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from newgenerationtelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from mothertelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from teleplusnewyork_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from summit_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                            select sum(duration1) as duration from voicetel_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' 
-                            ) 
+            string intOutSQL1 = $@"select sum(duration)/60 duration from(
+                                select sum(roundedduration) as duration from agni_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from banglaicx_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from banglatelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from bantel_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from gazinetworks_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from imamnetwork_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from jibondhara_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from mnh_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from btcl_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from paradise_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from purple_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from ringtech_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from crossworld_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from srtelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from sheba_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from softex_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from teleexchange_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from newgenerationtelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from mothertelecom_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from teleplusnewyork_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from summit_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+                                select sum(roundedduration) as duration from voicetel_cas.sum_voice_day_02 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' 
+                                )
                             as IntOut;";
             string intInSQL1 = $@"select sum(duration) duration from(
 	                        select sum(duration1) as duration from agni_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
-	                        select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
+	                        select sum(duration1) as duration from banglaicx_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                        select sum(duration1) as duration from banglatelecom_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                        select sum(duration1) as duration from bantel_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
 	                        select sum(duration1) as duration from gazinetworks_cas.sum_voice_day_03 where tup_starttime >= '2023-12-24 00:00:00' and tup_starttime < '2023-12-25 00:00:00' union all
