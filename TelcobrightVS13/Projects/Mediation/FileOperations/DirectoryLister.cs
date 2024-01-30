@@ -74,7 +74,8 @@ namespace TelcobrightFileOperations
         public List<RemoteFileInfo> ListRemoteDirectoryNonRecursive(Session session, string relativePath)
         {
             List<RemoteFileInfo> remoteFiles = new List<RemoteFileInfo>();
-            RemoteDirectoryInfo directoryInfo = session.ListDirectory(relativePath);
+            string path = relativePath.IsNullOrEmptyOrWhiteSpace() ? "/" : relativePath;
+            RemoteDirectoryInfo directoryInfo = session.ListDirectory(path);
             foreach (RemoteFileInfo fileInfo in directoryInfo.Files)
             {
                 string remoteFilePath = relativePath + "/" + fileInfo.Name;
