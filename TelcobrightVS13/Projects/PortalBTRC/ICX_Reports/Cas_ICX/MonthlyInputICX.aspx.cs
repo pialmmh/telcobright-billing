@@ -16,7 +16,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
     public partial class MonthlyInputICX : System.Web.UI.Page
     {
         static List<icxdailyinput> icxDailyInputs = new List<icxdailyinput>();
-        static List<icxdailyinput> icxDailyInputsCalc = new List<icxdailyinput>();
+        //static List<icxdailyinput> icxDailyInputsCalc = new List<icxdailyinput>();
         private static Dictionary<string, string> dbVSHostname = new Dictionary<string, string>();
 
         PartnerEntities context;
@@ -173,6 +173,8 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             //    month1 = 0;
             //    year1 += 1;
             //}
+
+            Dictionary<string, icxdailyinput> reportAsDic = icxDailyInputs.ToDictionary (r => r.callDateCalc);
         }
 
         

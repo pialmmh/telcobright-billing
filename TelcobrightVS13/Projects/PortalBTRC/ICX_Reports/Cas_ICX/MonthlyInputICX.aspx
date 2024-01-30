@@ -44,7 +44,7 @@
            
 
                 
-            <asp:TemplateField HeaderText="Date" ItemStyle-Width="197px">
+            <asp:TemplateField HeaderText="ICX" ItemStyle-Width="197px">
                 <ItemTemplate>
                     <asp:Label ID="lblDate" runat="server" Text='<%# Eval("callDateCalc") %>' />
                 </ItemTemplate>
