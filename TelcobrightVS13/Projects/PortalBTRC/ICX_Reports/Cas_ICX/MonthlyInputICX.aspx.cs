@@ -42,8 +42,8 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
 
             databaseSetting.DatabaseName = dbName;
-            //databaseSetting.ServerName = dbVSHostname[dbName];
-            databaseSetting.ServerName = "localhost";
+            databaseSetting.ServerName = dbVSHostname[dbName];
+            //databaseSetting.ServerName = "localhost";
 
             context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting);
             telcoTelcobrightpartners = context.telcobrightpartners.ToList();

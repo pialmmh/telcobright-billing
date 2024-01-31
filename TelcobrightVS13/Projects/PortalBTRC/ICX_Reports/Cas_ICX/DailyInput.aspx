@@ -19,7 +19,7 @@
     <div style="height:20px;clear:both;"></div>
 
     <div style="display: flex; background-color: #5D7B9D; width:1165px">
-        <div style=" padding: 5px; margin-left: 120px;border: 1px solid #ccc; padding-left:135px; padding-right:137px; color: white;">Domestic</div>
+        <div style=" padding: 5px; margin-left: 116px;border: 1px solid #ccc; padding-left:135px; padding-right:137px; color: white;">Domestic</div>
         <div style=" padding: 5px; border: 1px solid #ccc; padding-left:112px; padding-right:85px; color: white;">International Incoming</div>
         <div style=" padding: 5px; border: 1px solid #ccc; padding-left:101px; padding-right:96px; color: white;">International Outgoing</div>
     </div>
