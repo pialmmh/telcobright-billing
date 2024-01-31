@@ -133,32 +133,32 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             //DateTime currentDate = DateTime.Now;
             int year1 = int.Parse(DropDownYear.SelectedValue);
             int month1 = monthDictionary[DropDownMonth.SelectedValue];
-            Dictionary<string, string> ICXDictionary = new Dictionary<string, string>
-                                                            {
-                                                                { "Agni ICX", "agni_cas" },
-                                                                { "BTCL", "btcl_cas" },
-                                                                { "Bangla ICX", "banglaicx_cas" },
-                                                                { "Bangla Telecom Ltd", "banglatelecom_cas" },
-                                                                { "Bantel Limited", "bantel_cas" },
-                                                                { "Cross World Telecom Limited", "crossworld_cas" },
-                                                                { "GETCO Telecommunications Ltd", "getco_cas" },
-                                                                { "Gazi Networks Limited", "gazinetworks_cas" },
-                                                                { "Imam Network Ltd", "imamnetwork_cas" },
-                                                                { "Integrated Services Limited (Sheba ICX)", "sheba_cas" },
-                                                                { "JibonDhara Solutions Limited", "jibondhara_cas" },
-                                                                { "M&H Telecom Limited", "mnh_cas" },
-                                                                { "Mother Telecommunication", "mothertelecom_cas" },
-                                                                { "New Generation Telecom Limited", "newgenerationtelecom_cas" },
-                                                                { "Paradise Telecom Limited", "paradise_cas" },
-                                                                { "Purple Telecom Limited", "purple_cas" },
-                                                                { "RingTech(Bangladesh) Limited", "ringtech_cas" },
-                                                                { "SR Telecom Limited", "srtelecom_cas" },
-                                                                { "Softex communication Ltd", "softex_cas" },
-                                                                { "Summit Communications Ltd (Vertex)", "summit_cas" },
-                                                                { "Tele Exchange Limited", "teleexchange_cas" },
-                                                                { "Teleplus Newyork Limited", "teleplusnetwork_cas" },
-                                                                { "Voicetel Ltd", "voicetel_cas" }
-                                                            };
+            //Dictionary<string, string> ICXDictionary = new Dictionary<string, string>
+            //                                                {
+            //                                                    { "Agni ICX", "agni_cas" },
+            //                                                    { "BTCL", "btcl_cas" },
+            //                                                    { "Bangla ICX", "banglaicx_cas" },
+            //                                                    { "Bangla Telecom Ltd", "banglatelecom_cas" },
+            //                                                    { "Bantel Limited", "bantel_cas" },
+            //                                                    { "Cross World Telecom Limited", "crossworld_cas" },
+            //                                                    { "GETCO Telecommunications Ltd", "getco_cas" },
+            //                                                    { "Gazi Networks Limited", "gazinetworks_cas" },
+            //                                                    { "Imam Network Ltd", "imamnetwork_cas" },
+            //                                                    { "Integrated Services Limited (Sheba ICX)", "sheba_cas" },
+            //                                                    { "JibonDhara Solutions Limited", "jibondhara_cas" },
+            //                                                    { "M&H Telecom Limited", "mnh_cas" },
+            //                                                    { "Mother Telecommunication", "mothertelecom_cas" },
+            //                                                    { "New Generation Telecom Limited", "newgenerationtelecom_cas" },
+            //                                                    { "Paradise Telecom Limited", "paradise_cas" },
+            //                                                    { "Purple Telecom Limited", "purple_cas" },
+            //                                                    { "RingTech(Bangladesh) Limited", "ringtech_cas" },
+            //                                                    { "SR Telecom Limited", "srtelecom_cas" },
+            //                                                    { "Softex communication Ltd", "softex_cas" },
+            //                                                    { "Summit Communications Ltd (Vertex)", "summit_cas" },
+            //                                                    { "Tele Exchange Limited", "teleexchange_cas" },
+            //                                                    { "Teleplus Newyork Limited", "teleplusnetwork_cas" },
+            //                                                    { "Voicetel Ltd", "voicetel_cas" }
+            //                                                };
 
 
 
@@ -173,8 +173,45 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             //    month1 = 0;
             //    year1 += 1;
             //}
-
+            string[] ICXName =
+            {
+                "Agni ICX",
+                "BTCL",
+                "Bangla ICX",
+                "Bangla Telecom Ltd",
+                "Bantel Limited",
+                "Cross World Telecom Limited",
+                "GETCO Telecommunications Ltd",
+                "Gazi Networks Limited",
+                "Imam Network Ltd",
+                "Integrated Services Limited (Sheba ICX)",
+                "JibonDhara Solutions Limited",
+                "M&H Telecom Limited",
+                "Mother Telecommunication",
+                "New Generation Telecom Limited",
+                "Paradise Telecom Limited",
+                "Purple Telecom Limited",
+                "RingTech(Bangladesh) Limited",
+                "SR Telecom Limited",
+                "Softex communication Ltd",
+                "Summit Communications Ltd (Vertex)",
+                "Tele Exchange Limited",
+                "Teleplus Newyork Limited",
+                "Voicetel Ltd"
+            };
             Dictionary<string, icxdailyinput> reportAsDic = icxDailyInputs.ToDictionary (r => r.callDateCalc);
+            List<icxdailyinput> orderedIcxdailyinputs = new List<icxdailyinput>();
+            foreach (string name in ICXName)
+            {
+                if (!reportAsDic.ContainsKey(name))
+                {
+                    continue;
+                }
+                icxdailyinput record = reportAsDic[name];
+                orderedIcxdailyinputs.Add(record);
+            }
+            icxDailyInputs = orderedIcxdailyinputs;
+            ;
         }
 
         
