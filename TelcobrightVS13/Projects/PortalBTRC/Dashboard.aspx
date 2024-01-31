@@ -10,9 +10,9 @@
 <div style="float: left; visibility: hidden">
             
     <asp:UpdatePanel ID="UpdatePanel3" runat="server">
-        <Triggers>
+        <%--<Triggers>
             <asp:AsyncPostBackTrigger ControlID="Timer3" EventName="Tick"/>
-        </Triggers>
+        </Triggers>--%>
         <ContentTemplate>
             <div style="visibility: hidden">
                 <h2 >International Incoming</h2>
@@ -46,14 +46,14 @@
         </ContentTemplate>
     </asp:UpdatePanel>
             
-    <asp:Timer ID="Timer3" runat="server" Interval="30000" OnTick="Timer3_Tick" Enabled="false">
+    <%--<asp:Timer ID="Timer3" runat="server" Interval="30000" OnTick="Timer3_Tick" Enabled="false">--%>
     </asp:Timer>
            
     <div style="visibility: hidden">
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-            <Triggers>
+            <%--<Triggers>
                 <asp:AsyncPostBackTrigger ControlID="Timer1" EventName="Tick" />
-            </Triggers>
+            </Triggers>--%>
 
             <ContentTemplate>
                 <h2>
@@ -81,7 +81,7 @@
 
 
         </asp:UpdatePanel>
-        <asp:Timer ID="Timer1" runat="server" Interval="30000" OnTick="Timer1_Tick" Enabled="false">
+        <%--<asp:Timer ID="Timer1" runat="server" Interval="30000" OnTick="Timer1_Tick" Enabled="false">--%>
         </asp:Timer>
     </div>
             
@@ -92,19 +92,29 @@
 <div style="height:40px;"></div>
 
             
-<asp:UpdatePanel ID="UpdatePanel2" runat="server" style ="min-width: 1800px;">
+<%--<asp:UpdatePanel ID="UpdatePanel2" runat="server" style ="min-width: 750px;">
 <Triggers>
     <asp:AsyncPostBackTrigger ControlID="Timer2" EventName="Tick" />
-</Triggers>
+</Triggers>--%>
 <ContentTemplate>
-                    
+    
+    
+<div style="background-color:#edf2ef; color: black; display: flex; align-items: flex-start; border: 1px solid #707070; padding:10px; width:1530px;">
+        
+    <div style="font-weight: bold; padding-bottom:5px;">
+        <asp:Label ID="Label12" runat="server"  Text="Select Year & Month:"></asp:Label> <br>
+        <asp:DropDownList ID="DropDownYear1" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_SelectedIndexChanged" ></asp:DropDownList>
+        <asp:DropDownList ID="DropDownMonth1" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_SelectedIndexChanged"></asp:DropDownList>
+    </div>
+        
+</div> 
  
-<div style="text-align: center; float: left;">
+<div style="text-align: center; float: left;">                   
     <div style="float: left;">
         <%--main div 1--%>
         <div>
             <%--div 1--%>
-            <div style="float: left;">
+            <div style="float: left; width:475px;">
                 <div style="margin-left: auto; margin-right: auto; text-align: center;">
                     <asp:Label ID="Label2" runat="server" Text="CDR File Receiving Status By ICX (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                 </div>
@@ -150,7 +160,7 @@
                         </p>
                         <p>
                                     
-                            <asp:Chart ID="PieChartIpTdm" runat="server" Width="550px" Height="300px">
+                            <asp:Chart ID="PieChartIpTdm" runat="server" Width="505px" Height="300px">
                                 <Series>
                                     <asp:Series Name="Series1" ChartType="Pie">
                                         <Points>
@@ -552,8 +562,8 @@
 
 </asp:UpdatePanel>
 
-<asp:Timer ID="Timer2" runat="server" Interval="30000" OnTick="Timer2_Tick" Enabled="True">
-</asp:Timer>
+<%--<asp:Timer ID="Timer2" runat="server" Interval="30000" OnTick="Timer2_Tick" Enabled="True">
+</asp:Timer>--%>
             
 
 </div>

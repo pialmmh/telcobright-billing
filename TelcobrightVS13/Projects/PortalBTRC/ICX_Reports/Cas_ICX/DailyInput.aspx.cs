@@ -46,8 +46,8 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
 
             databaseSetting.DatabaseName = dbName;
-            //databaseSetting.ServerName = dbVSHostname[dbName];
-            databaseSetting.ServerName = "localhost";
+            databaseSetting.ServerName = dbVSHostname[dbName];
+            //databaseSetting.ServerName = "localhost";
 
 
             context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting);
@@ -101,6 +101,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                     }
                     else
                     {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Input value not in correct format');", true);
                         throw new Exception("Domestic not in correct format");
                     }
                 }
@@ -114,6 +115,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                     }
                     else
                     {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Input value not in correct format');", true);
                         throw new Exception("In.tIn. not in correct format");
                     }
                 }
@@ -127,6 +129,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
                     }
                     else
                     {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Input value not in correct format');", true);
                         throw new Exception("Int.Out. not in correct format");
                     }
                 }
