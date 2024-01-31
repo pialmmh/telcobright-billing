@@ -14,6 +14,7 @@ namespace Decoders
 {
 
     [Export("Decoder", typeof(AbstractCdrDecoder))]
+
     public class ZteIpTdmDecoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
@@ -21,7 +22,7 @@ namespace Decoders
         public override int Id => 18;
         public override string HelpText => "Decodes ZTE IP TDM CDR.";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
 

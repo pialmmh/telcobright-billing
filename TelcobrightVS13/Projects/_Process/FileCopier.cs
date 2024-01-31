@@ -21,6 +21,7 @@ using LibraryExtensions;
 namespace Process
 {
 
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class FileCopier : AbstractTelcobrightProcess
     {

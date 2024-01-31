@@ -19,6 +19,9 @@ namespace InstallConfig
 
     public sealed partial class CasShebaAbstractConfigGenerator //quartz config part
     {
+
+        private FileLocation vaultHuawei;
+        private FileLocation vaultCataleya;
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
             DirectorySettings directorySetting = new DirectorySettings("I:/telcobright", @"cas");
@@ -27,9 +30,9 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultHuawei = new FileLocation()
+            this.vaultHuawei = new FileLocation()
             {
-                Name = "Vault.Huawei",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Huwaei",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -39,9 +42,9 @@ namespace InstallConfig
                 Pass = "",
             };
 
-            FileLocation vaultJslcataliyaDhk = new FileLocation()
+           this.vaultCataleya= new FileLocation()
             {
-                Name = "Vault.JslcataleyaDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Cataleya",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -52,7 +55,7 @@ namespace InstallConfig
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuawei.Name, vaultHuawei);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
            
         }
     }

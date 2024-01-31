@@ -150,18 +150,18 @@ namespace InstallConfig
                             "CheckBoxShowCost.Enabled=true",
                             "CheckBoxShowCost.Checked=true",
                             "GridView1.Columns[5].Visible=false",//fake ans
-                            "GridView1.Columns[8].Visible=false",//connected calls
-                            "GridView1.Columns[9].Visible=false",//actual duration
-                            "GridView1.Columns[11].Visible=false",//carrier duration
-                            "GridView1.Columns[12].Visible=false",//ANS $
-                            "GridView1.Columns[13].Visible=false",//ICX/IOS
-                            "GridView1.Columns[16].Visible=false",//IGW$
-                            "GridView1.Columns[17].Visible=false",//Profit
-                            "GridView1.Columns[18].Visible=false",//ASR
-                            "GridView1.Columns[20].Visible=false",//PDD
-                            "GridView1.Columns[21].Visible=false",//CCR
-                            "GridView1.Columns[22].Visible=false",//Connect count by cc
-                            "GridView1.Columns[23].Visible=false",//CCR by cc
+                            //"GridView1.Columns[8].Visible=false",//connected calls
+                            //"GridView1.Columns[9].Visible=false",//actual duration
+                            //"GridView1.Columns[11].Visible=false",//carrier duration
+                            //"GridView1.Columns[12].Visible=false",//ANS $
+                            //"GridView1.Columns[13].Visible=false",//ICX/IOS
+                            //"GridView1.Columns[16].Visible=false",//IGW$
+                            //"GridView1.Columns[17].Visible=false",//Profit
+                            //"GridView1.Columns[18].Visible=false",//ASR
+                            //"GridView1.Columns[20].Visible=false",//PDD
+                            //"GridView1.Columns[21].Visible=false",//CCR
+                            //"GridView1.Columns[22].Visible=false",//Connect count by cc
+                            //"GridView1.Columns[23].Visible=false",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
@@ -181,21 +181,21 @@ namespace InstallConfig
                     SpringExpressionIfRole = new List<string>()
                     {
                         "CheckBoxShowCost.Enabled=true",
-                        "GridView1.Columns[6].Visible=true",//connect count
-                        "GridView1.Columns[8].Visible=true",//duration1
-                        "GridView1.Columns[19].Visible=true",//CCR
-                        "GridView1.Columns[20].Visible=false",//connect by cc
-                        "GridView1.Columns[21].Visible=false",//CCR by cc
+                        //"GridView1.Columns[6].Visible=true",//connect count
+                        //"GridView1.Columns[8].Visible=true",//duration1
+                        //"GridView1.Columns[19].Visible=true",//CCR
+                        //"GridView1.Columns[20].Visible=false",//connect by cc
+                        //"GridView1.Columns[21].Visible=false",//CCR by cc
                     },
                     SpringExpressionIfNotRole = new List<string>()
                     {
                         "CheckBoxShowCost.Enabled=false",
-                        "GridView1.Columns[6].Visible=true",
-                        "GridView1.Columns[8].Visible=false",
-                        "GridView1.Columns[7].HeaderText=Duration",
-                        "GridView1.Columns[19].Visible=true",//CCR
-                        "GridView1.Columns[20].Visible=false",//connect by cc
-                        "GridView1.Columns[21].Visible=false",//CCR by cc
+                        //"GridView1.Columns[6].Visible=true",
+                        //"GridView1.Columns[8].Visible=false",
+                        //"GridView1.Columns[7].HeaderText=Duration",
+                        //"GridView1.Columns[19].Visible=true",//CCR
+                        //"GridView1.Columns[20].Visible=false",//connect by cc
+                        //"GridView1.Columns[21].Visible=false",//CCR by cc
                     }
                 }
             };//settings for one role within a page
@@ -212,14 +212,14 @@ namespace InstallConfig
                         {
                             "CheckBoxShowCost.Enabled=true",
                             "GridView1.Columns[3].Visible=false",//fake ans
-                            "GridView1.Columns[10].Visible=false",//connected calls
-                            "GridView1.Columns[11].Visible=false",//actual duration
-                            "GridView1.Columns[14].Visible=false",//supplier duration
-                            "GridView1.Columns[15].Visible=false",//ASR
-                            "GridView1.Columns[17].Visible=false",//PDD
-                            "GridView1.Columns[18].Visible=false",//CCR
-                            "GridView1.Columns[19].Visible=false",//connect by cc
-                            "GridView1.Columns[20].Visible=false",//CCR by cc
+                            //"GridView1.Columns[10].Visible=false",//connected calls
+                            //"GridView1.Columns[11].Visible=false",//actual duration
+                            //"GridView1.Columns[14].Visible=false",//supplier duration
+                            //"GridView1.Columns[15].Visible=false",//ASR
+                            //"GridView1.Columns[17].Visible=false",//PDD
+                            //"GridView1.Columns[18].Visible=false",//CCR
+                            //"GridView1.Columns[19].Visible=false",//connect by cc
+                            //"GridView1.Columns[20].Visible=false",//CCR by cc
                         },
                         SpringExpressionIfNotRole = new List<string>()
                         {
@@ -261,6 +261,8 @@ namespace InstallConfig
                                     "nodes['Billing'].Expanded=false",
                                     "nodes['Mediation'].Expanded=false",
                                     "nodes['Mediation/Create Batch Job'].Expanded=false",
+                                    "nodes['Mediation/Job Processing Status'].Expanded=false",
+                                    "nodes['Mediation/IP Job Table Status'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
@@ -283,6 +285,8 @@ namespace InstallConfig
                                     "nodes['Billing'].Expanded=false",
                                     "nodes['Mediation'].Expanded=true",
                                     "nodes['Mediation/Create Batch Job'].Expanded=false",
+                                    "nodes['Mediation/Job Processing Status'].Expanded=false",
+                                    "nodes['Mediation/IP Job Table Status'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Reports'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
@@ -326,21 +330,6 @@ namespace InstallConfig
                     { "~/reports/icx/LocalTollFree.aspx",
                         settingIntlIn
                     },
-                    { "~/reports/icx/btrc/DailyReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/WeeklyDomesticReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/MonthlyReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
-                        settingIntlIn
-                    },
                     {
                         "~/ICX_Reports/Cas_ICX/CasDomestic.aspx",
                         settingIntlIn
@@ -351,10 +340,19 @@ namespace InstallConfig
                     },
                     {
                         "~/ICX_Reports/Cas_ICX/CasInternationalIn_ICX.aspx",
-                        settingIntlIn
+                        settingIntlIn//AllTrafic.aspx
                     },
                     {
                         "~/ICX_Reports/Cas_ICX/CasInternationalOut_ICX.aspx",
+                        settingIntlOut
+                    },
+                    {
+                        "~/ICX_Reports/Cas_ICX/AllTrafic.aspx",
+                        settingIntlIn
+                    }
+                    ,
+                    {
+                        "~/ICX_Reports/Cas_ICX/DailyInput.aspx",
                         settingIntlIn
                     }
                 },//dictionary of page settings

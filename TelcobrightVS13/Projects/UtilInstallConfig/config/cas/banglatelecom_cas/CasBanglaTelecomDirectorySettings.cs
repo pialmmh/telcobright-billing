@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -42,18 +43,18 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/banglaTelecom/tdm",
+                StartingPath = "Y:/telcobright/vault/resources/cdr/banglaTelecom/tdm",
                 User = "",
                 Pass = "",
             };
             this.vaultDialogic= new FileLocation()
             {
-                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Dialogic",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/banglaTelecom/ip",
+                StartingPath = "Y:/telcobright/vault/resources/cdr/banglaTelecom/ip",
                 User = "",
                 Pass = "",
             };

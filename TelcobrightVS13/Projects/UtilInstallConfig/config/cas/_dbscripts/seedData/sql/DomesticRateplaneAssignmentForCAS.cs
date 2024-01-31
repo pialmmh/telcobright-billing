@@ -21,6 +21,7 @@ namespace InstallConfig
         public string SrcTextFileName { get; set; } = "icxSp.sql";
         public string GetScript(object data)
         {
+            return "";
             Dictionary<string, object> input = (Dictionary<string, object>) data;
             MySqlConnection con = (MySqlConnection) input["con"];
             MySqlSession session= new MySqlSession(con);

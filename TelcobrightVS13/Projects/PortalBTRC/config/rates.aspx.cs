@@ -7,7 +7,6 @@ using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -15,7 +14,6 @@ using System.Web.UI.WebControls;
 using LibraryExtensions;
 using MediationModel;
 using PortalApp;
-using TelcobrightMediation.Config;
 
 public partial class DefaultRates : Page
 {

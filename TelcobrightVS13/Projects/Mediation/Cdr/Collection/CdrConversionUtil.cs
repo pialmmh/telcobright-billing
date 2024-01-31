@@ -135,7 +135,9 @@ namespace TelcobrightMediation.Mediation.Cdr
                 convertedCdr.Category = txtRow[Fn.Category].GetValueOrNull<int>();
                 convertedCdr.SubCategory = txtRow[Fn.Subcategory].GetValueOrNull<int>();
                 convertedCdr.ChangedByJobId = txtRow[Fn.ChangedByJobId].GetValueOrNull<long>();
-                convertedCdr.SignalingStartTime = txtRow[Fn.SignalingStartTime].ConvertToDateTimeFromMySqlFormat();
+                convertedCdr.SignalingStartTime = 
+                    txtRow[Fn.SignalingStartTime].IsNullOrEmptyOrWhiteSpace()==true?convertedCdr.StartTime
+                    :txtRow[Fn.SignalingStartTime].ConvertToDateTimeFromMySqlFormat();
 
                 exceptionalCdrPreProcessors?.ForEach(processor => {
                     convertedCdr = processor.Process(convertedCdr);
@@ -262,10 +264,121 @@ namespace TelcobrightMediation.Mediation.Cdr
                 inconsistentCdr.SignalingStartTime = txtRow[Fn.SignalingStartTime];
             }
             catch (Exception e) {
+                Console.WriteLine(e);
                 //do nothing just resume with next field
             }
             return inconsistentCdr;
         }
+
+        public static string[] ConvertCdrinconsistentToTxtRow(cdrinconsistent inconsistentCdr, int colCount)
+        {
+            string[] txtRow= new string[colCount];
+            txtRow[Fn.Switchid] = inconsistentCdr.SwitchId;
+            txtRow[Fn.IdCall] = inconsistentCdr.IdCall;
+            txtRow[Fn.Sequencenumber] = inconsistentCdr.SequenceNumber.ToString();
+            txtRow[Fn.Filename] = inconsistentCdr.FileName;
+            txtRow[Fn.ServiceGroup] = inconsistentCdr.ServiceGroup;
+            txtRow[Fn.IncomingRoute] = inconsistentCdr.IncomingRoute;
+            txtRow[Fn.Originatingip] = inconsistentCdr.OriginatingIP;
+            txtRow[Fn.Opc] = inconsistentCdr.OPC;
+            txtRow[Fn.OriginatingCIC] = inconsistentCdr.OriginatingCIC;
+            txtRow[Fn.OriginatingCalledNumber] = inconsistentCdr.OriginatingCalledNumber;
+            txtRow[Fn.TerminatingCalledNumber] = inconsistentCdr.TerminatingCalledNumber;
+            txtRow[Fn.OriginatingCallingNumber] = inconsistentCdr.OriginatingCallingNumber;
+            txtRow[Fn.TerminatingCallingNumber] = inconsistentCdr.TerminatingCallingNumber;
+            txtRow[Fn.PrePaid] = inconsistentCdr.PrePaid;
+            txtRow[Fn.DurationSec] = inconsistentCdr.DurationSec;
+            txtRow[Fn.Endtime] = inconsistentCdr.EndTime;
+            txtRow[Fn.ConnectTime] = inconsistentCdr.ConnectTime;
+            txtRow[Fn.AnswerTime] = inconsistentCdr.AnswerTime;
+            txtRow[Fn.ChargingStatus] = inconsistentCdr.ChargingStatus;
+            txtRow[Fn.Pdd] = inconsistentCdr.PDD;
+            txtRow[Fn.CountryCode] = inconsistentCdr.CountryCode;
+            txtRow[Fn.AreaCodeOrLata] = inconsistentCdr.AreaCodeOrLata;
+            txtRow[Fn.ReleaseDirection] = inconsistentCdr.ReleaseDirection;
+            txtRow[Fn.ReleaseCauseSystem] = inconsistentCdr.ReleaseCauseSystem;
+            txtRow[Fn.ReleaseCauseEgress] = inconsistentCdr.ReleaseCauseEgress;
+            txtRow[Fn.OutgoingRoute] = inconsistentCdr.OutgoingRoute;
+            txtRow[Fn.TerminatingIp] = inconsistentCdr.TerminatingIP;
+            txtRow[Fn.Dpc] = inconsistentCdr.DPC;
+            txtRow[Fn.TerminatingCIC] = inconsistentCdr.TerminatingCIC;
+            txtRow[Fn.StartTime] = inconsistentCdr.StartTime;
+            txtRow[Fn.InPartnerId] = inconsistentCdr.InPartnerId;
+            txtRow[Fn.CustomerRate] = inconsistentCdr.CustomerRate;
+            txtRow[Fn.OutPartnerId] = inconsistentCdr.OutPartnerId;
+            txtRow[Fn.SupplierRate] = inconsistentCdr.SupplierRate;
+            txtRow[Fn.MatchedPrefixY] = inconsistentCdr.MatchedPrefixY;
+            txtRow[Fn.UsdRateY] = inconsistentCdr.UsdRateY;
+            txtRow[Fn.MatchedPrefixCustomer] = inconsistentCdr.MatchedPrefixCustomer;
+            txtRow[Fn.MatchedPrefixSupplier] = inconsistentCdr.MatchedPrefixSupplier;
+            txtRow[Fn.InPartnerCost] = inconsistentCdr.InPartnerCost;
+            txtRow[Fn.OutPartnerCost] = inconsistentCdr.OutPartnerCost;
+            txtRow[Fn.CostAnsIn] = inconsistentCdr.CostAnsIn;
+            txtRow[Fn.CostIcxIn] = inconsistentCdr.CostIcxIn;
+            txtRow[Fn.Tax1] = inconsistentCdr.Tax1;
+            txtRow[Fn.IgwRevenueIn] = inconsistentCdr.IgwRevenueIn;
+            txtRow[Fn.RevenueAnsOut] = inconsistentCdr.RevenueAnsOut;
+            txtRow[Fn.RevenueIgwOut] = inconsistentCdr.RevenueIgwOut;
+            txtRow[Fn.RevenueIcxOut] = inconsistentCdr.RevenueIcxOut;
+            txtRow[Fn.Tax2] = inconsistentCdr.Tax2;
+            txtRow[Fn.XAmount] = inconsistentCdr.XAmount;
+            txtRow[Fn.YAmount] = inconsistentCdr.YAmount;
+            txtRow[Fn.AnsPrefixOrig] = inconsistentCdr.AnsPrefixOrig;
+            txtRow[Fn.AnsIdOrig] = inconsistentCdr.AnsIdOrig;
+            txtRow[Fn.AnsPrefixTerm] = inconsistentCdr.AnsPrefixTerm;
+            txtRow[Fn.AnsIdTerm] = inconsistentCdr.AnsIdTerm;
+            txtRow[Fn.Validflag] = inconsistentCdr.ValidFlag;
+            txtRow[Fn.Partialflag] = inconsistentCdr.PartialFlag;
+            txtRow[Fn.ReleaseCauseIngress] = inconsistentCdr.ReleaseCauseIngress;
+            txtRow[Fn.InRoamingOpId] = inconsistentCdr.InRoamingOpId;
+            txtRow[Fn.OutRoamingOpId] = inconsistentCdr.OutRoamingOpId;
+            txtRow[Fn.CalledpartyNOA] = inconsistentCdr.CalledPartyNOA;
+            txtRow[Fn.CallingPartyNOA] = inconsistentCdr.CallingPartyNOA;
+            txtRow[Fn.AdditionalPartyNumber] = inconsistentCdr.AdditionalPartyNumber;
+            txtRow[Fn.ResellerIds] = inconsistentCdr.ResellerIds;
+            txtRow[Fn.ZAmount] = inconsistentCdr.ZAmount;
+            txtRow[Fn.PreviousRoutes] = inconsistentCdr.PreviousRoutes;
+            txtRow[Fn.E1Id] = inconsistentCdr.E1Id;
+            txtRow[Fn.Mediaip1] = inconsistentCdr.MediaIp1;
+            txtRow[Fn.Mediaip2] = inconsistentCdr.MediaIp2;
+            txtRow[Fn.Mediaip3] = inconsistentCdr.MediaIp3;
+            txtRow[Fn.Mediaip4] = inconsistentCdr.MediaIp4;
+            txtRow[Fn.CallReleaseduration] = inconsistentCdr.CallReleaseDuration;
+            txtRow[Fn.E1Idout] = inconsistentCdr.E1IdOut;
+            txtRow[Fn.InTrunkAdditionalInfo] = inconsistentCdr.InTrunkAdditionalInfo;
+            txtRow[Fn.OutTrunkAdditionalInfo] = inconsistentCdr.OutTrunkAdditionalInfo;
+            txtRow[Fn.InMgwId] = inconsistentCdr.InMgwId;
+            txtRow[Fn.OutMgwId] = inconsistentCdr.OutMgwId;
+            txtRow[Fn.MediationComplete] = inconsistentCdr.MediationComplete;
+            txtRow[Fn.Codec] = inconsistentCdr.Codec;
+            txtRow[Fn.Connectednumbertype] = inconsistentCdr.ConnectedNumberType;
+            txtRow[Fn.Redirectingnumber] = inconsistentCdr.RedirectingNumber;
+            txtRow[Fn.Callforwardorroamingtype] = inconsistentCdr.CallForwardOrRoamingType;
+            txtRow[Fn.OtherDate] = inconsistentCdr.OtherDate;
+            txtRow[Fn.SummaryMetaTotal] = inconsistentCdr.SummaryMetaTotal;
+            txtRow[Fn.TransactionMetaTotal] = inconsistentCdr.TransactionMetaTotal;
+            txtRow[Fn.ChargeableMetaTotal] = inconsistentCdr.ChargeableMetaTotal;
+            txtRow[Fn.ErrorCode] = inconsistentCdr.ErrorCode;
+            txtRow[Fn.NERSuccess] = inconsistentCdr.NERSuccess;
+            txtRow[Fn.RoundedDuration] = inconsistentCdr.RoundedDuration;
+            txtRow[Fn.PartialDuration] = inconsistentCdr.PartialDuration;
+            txtRow[Fn.PartialAnswertime] = inconsistentCdr.PartialAnswerTime;
+            txtRow[Fn.PartialEndtime] = inconsistentCdr.PartialEndTime;
+            txtRow[Fn.FinalRecord] = inconsistentCdr.FinalRecord;
+            txtRow[Fn.Duration1] = inconsistentCdr.Duration1;
+            txtRow[Fn.Duration2] = inconsistentCdr.Duration2;
+            txtRow[Fn.Duration3] = inconsistentCdr.Duration3;
+            txtRow[Fn.Duration4] = inconsistentCdr.Duration4;
+            txtRow[Fn.PreviousPeriodCdr] = inconsistentCdr.PreviousPeriodCdr;
+            txtRow[Fn.UniqueBillId] = inconsistentCdr.UniqueBillId;
+            txtRow[Fn.AdditionalMetaData] = inconsistentCdr.AdditionalMetaData;
+            txtRow[Fn.Category] = inconsistentCdr.Category;
+            txtRow[Fn.Subcategory] = inconsistentCdr.SubCategory;
+            txtRow[Fn.ChangedByJobId] = inconsistentCdr.ChangedByJobId;
+            txtRow[Fn.SignalingStartTime] = inconsistentCdr.SignalingStartTime;
+            return txtRow;
+        }
+
 
         public static ICdr Clone(ICdr sourceCdr)
         {

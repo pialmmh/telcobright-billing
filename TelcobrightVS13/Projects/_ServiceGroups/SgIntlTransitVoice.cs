@@ -49,7 +49,7 @@ namespace TelcobrightMediation
             cdr.ServiceGroup = 100; 
         }
 
-        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary,CdrSetting cdrSetting)
         {
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
             newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixCustomer;
@@ -57,20 +57,24 @@ namespace TelcobrightMediation
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
-            if (chargeableCust == null)
-            {
-                throw new Exception("Chargeable info not found for customer direction.");
-            }
-            SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
-
             acc_chargeable chargeableSupp = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 2), out chargeableSupp);
-            if (chargeableSupp == null)
+
+            if (!cdrSetting.useCasStyleProcessing)
             {
-                throw new Exception("Chargeable info not found for supplier direction.");
+                cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
+                if (chargeableCust == null)
+                {
+                    throw new Exception("Chargeable info not found for customer direction.");
+                }
+                SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+
+                cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 2), out chargeableSupp);
+                if (chargeableSupp == null)
+                {
+                    throw new Exception("Chargeable info not found for supplier direction.");
+                }
+                SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
             }
-            SetChargingSummaryInSupplierDirection(chargeableSupp, newSummary);
         }
 
         public void ValidateInvoiceGenerationParams(object validationInput)

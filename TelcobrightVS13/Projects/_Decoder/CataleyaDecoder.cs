@@ -21,7 +21,7 @@ namespace Decoders
         public override int Id => 21;
         public override string HelpText => "Decodes Cataleya CDR.";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
@@ -44,11 +44,11 @@ namespace Decoders
             SdrExtractor sdrExtractor = new SdrExtractor();
             List<PbSdrRecord> sdrs = sdrExtractor.GetSdrs(inputFilename);
             string[] replaceChars = new string[] { "'", "<", ">" };
-            foreach (var record in sdrs) //for each row
+            try
             {
-                string[] normalizedRow = new string[104];
-                try
+                foreach (var record in sdrs) //for each row
                 {
+                    string[] normalizedRow = new string[104];
                     normalizedRow[Fn.Sequencenumber] = record.SeqNum.ToString();
                     Func<PbTime, DateTime> unixTsToDateTimeWithMs = pbTime =>
                     {
@@ -64,10 +64,10 @@ namespace Decoders
                     Func<string, Dictionary<string, string>> getSplitPartyInfo = party =>
                     {
                         var partyInfo = new Dictionary<string, string>()
-                            {
-                                { "phoneNumber",""},
-                                { "ipAndPort", ""},
-                            };
+                        {
+                            { "phoneNumber",""},
+                            { "ipAndPort", ""},
+                        };
                         if (!String.IsNullOrEmpty(party))
                         {
                             var tempArr = party.Split('@');
@@ -115,7 +115,7 @@ namespace Decoders
 
                         Dictionary<string, string> egressCalledPartyInfo = getSplitPartyInfo(egressCallInfo.CalledParty);
                         normalizedRow[Fn.TerminatingCalledNumber] =
-                        egressCallInfo.TransCalledParty.Split(':')[1].Split('@')[0];
+                            egressCallInfo.TransCalledParty.Split(':')[1].Split('@')[0];
 
 
                         normalizedRow[Fn.TerminatingIp] = egressCalledPartyInfo["ipAndPort"].Split(';')[0];
@@ -143,18 +143,29 @@ namespace Decoders
                     normalizedRow[Fn.Partialflag] = "0";
                     normalizedRow[Fn.FinalRecord] = "1";
                     decodedRows.Add(normalizedRow);
+                    //try
+                    //{
+
+                    //}
+                    //catch (Exception e1)
+                    //{
+                    //    //if error found for one row, add this to inconsistent
+                    //    Console.WriteLine(e1);
+                    //    var inconsistentCdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(normalizedRow);
+                    //    inconsistentCdr.SwitchId = input.Ne.idSwitch.ToString();
+                    //    inconsistentCdr.FileName = input.TelcobrightJob.JobName;
+                    //    inconsistentCdrs.Add(inconsistentCdr);
+                    //}
                 }
-                catch (Exception e1)
-                {
-                    //if error found for one row, add this to inconsistent
-                    Console.WriteLine(e1);
-                    var inconsistentCdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(normalizedRow);
-                    inconsistentCdr.SwitchId = input.Ne.idSwitch.ToString();
-                    inconsistentCdr.FileName = input.TelcobrightJob.JobName;
-                    inconsistentCdrs.Add(inconsistentCdr);
-                }
-            }//for each row
-            return decodedRows;
+                return decodedRows;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
+                throw e;
+            }
         }
 
         public override string getTupleExpression(Object data)

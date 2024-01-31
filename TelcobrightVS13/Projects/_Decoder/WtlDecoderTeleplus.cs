@@ -17,7 +17,7 @@ namespace Decoders
         public override int Id => 54;
         public override string HelpText => "Decode TelepluseNewyork WTL";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }

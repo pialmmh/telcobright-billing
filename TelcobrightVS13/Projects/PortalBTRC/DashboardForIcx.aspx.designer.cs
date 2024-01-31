@@ -138,6 +138,15 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.Timer Timer1;
     
     /// <summary>
+    /// UpdatePanel2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.UpdatePanel UpdatePanel2;
+    
+    /// <summary>
     /// Label2 control.
     /// </summary>
     /// <remarks>
@@ -145,6 +154,15 @@ public partial class DashboardAspxForIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label2;
+    
+    /// <summary>
+    /// NoDataLabel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label NoDataLabel;
     
     /// <summary>
     /// GridViewCompleted control.
@@ -172,6 +190,51 @@ public partial class DashboardAspxForIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Button NextButton;
+    
+    /// <summary>
+    /// Label7 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label7;
+    
+    /// <summary>
+    /// Label8 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label8;
+    
+    /// <summary>
+    /// ZiporCompressedFileStatus control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.GridView ZiporCompressedFileStatus;
+    
+    /// <summary>
+    /// Button2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button Button2;
+    
+    /// <summary>
+    /// Button3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button Button3;
     
     /// <summary>
     /// Label5 control.
@@ -226,4 +289,13 @@ public partial class DashboardAspxForIcx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalOutgoing;
+    
+    /// <summary>
+    /// Timer2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.Timer Timer2;
 }

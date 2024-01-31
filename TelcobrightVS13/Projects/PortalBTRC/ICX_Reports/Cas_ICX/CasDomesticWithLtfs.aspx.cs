@@ -1,25 +1,20 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DevExpress.XtraPrinting.Native;
-using reports;
 using ExportToExcel;
-using InstallConfig;
+//using InstallConfig;
 using MediationModel;
 using LibraryExtensions;
-using Microsoft.AspNet.Identity.Owin;
 using PortalApp;
 using PortalApp.ReportHelper;
+using reports;
 using TelcobrightInfra;
 using TelcobrightMediation;
-using WebApplication1;
 
 public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 {
@@ -57,14 +52,14 @@ public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
 
             new List<string>()
             {
-                // groupInterval=="Hourly"?"tup_starttime":string.Empty,
+                groupInterval=="Hourly"?"Date":string.Empty,
                 getInterval(groupInterval),
                 CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
                 CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
                 CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
                 //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
+                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty
             },
             new List<string>()
             {
@@ -163,10 +158,11 @@ public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
         GridView1.Columns[GetColumnIndexByName(GridView1, "icxName")].Visible = CheckBoxViewIncomingRoute.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "Paid Minutes (International Incoming)")].Visible = true;
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[14].Visible = true;
-            GridView1.Columns[15].Visible = true;
+            GridView1.Columns[14].Visible = false;
+            GridView1.Columns[15].Visible = false;
         }
         else
         {
@@ -239,7 +235,7 @@ public partial class CasDefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
                     tableNames: tableNames,
                     _baseSqlStartsWith: "(",
                     _baseSqlEndsWith: ") x");
-            string aggregatedSql = sqlAggregator.getFinalSql();
+            string aggregatedSql = sqlAggregator.getFinalSql().Replace("date_format(tup_starttime, '%m %d %y')", "date_format(tup_starttime, '%M %d %Y')");
             MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
 
             cmd.Connection = connection;

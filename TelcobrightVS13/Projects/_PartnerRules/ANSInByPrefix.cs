@@ -20,52 +20,32 @@ namespace PartnerRules
         public int Id => 3;
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
-            List<partnerprefix> ansPrefixes0880 = data.MediationContext.AnsPrefixes0880.Values.ToList();
-            List<partnerprefix> ansPrefixes880 = data.MediationContext.AnsPrefixes880.Values.ToList();
-            List<partnerprefix> ansPrefixes0 = data.MediationContext.AnsPrefixes0.Values.ToList();
-            List<partnerprefix> ansPrefixes = data.MediationContext.AnsPrefixes.Values.ToList();
+            Dictionary<string, partnerprefix> ansPrefixes0880 = data.MediationContext.AnsPrefixes00880;
+            Dictionary<string, partnerprefix> ansPrefixes880 = data.MediationContext.AnsPrefixes880;
+            Dictionary<string, partnerprefix> ansPrefixes0 = data.MediationContext.AnsPrefixes0;
+            Dictionary<string, partnerprefix> ansPrefixes = data.MediationContext.AnsPrefixes;
 
             thisCdr.InPartnerId = 0;
             string originatingCallingNumber = thisCdr.OriginatingCallingNumber;
-            
-            foreach (partnerprefix ansPrefix in ansPrefixes0880)
+
+            foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes880)
             {
-                string prefix = ansPrefix.Prefix;
+                string prefix = kv.Key;
+                partnerprefix ansPrefix = kv.Value;
+
                 if (originatingCallingNumber.StartsWith(prefix))
                 {
                     thisCdr.InPartnerId = ansPrefix.idPartner;
                     return ansPrefix.idPartner;
                 }
             }
-            if (thisCdr.InPartnerId == 0)
-            {
-                foreach (partnerprefix ansPrefix in ansPrefixes880)
-                {
-                    string prefix = ansPrefix.Prefix;
-                    if (originatingCallingNumber.StartsWith(prefix))
-                    {
-                        thisCdr.InPartnerId = ansPrefix.idPartner;
-                        return ansPrefix.idPartner;
-                    }
-                }
-            }
-            if (thisCdr.InPartnerId == 0)
-            {
-                foreach (partnerprefix ansPrefix in ansPrefixes0)
-                {
-                    string prefix = ansPrefix.Prefix;
-                    if (originatingCallingNumber.StartsWith(prefix))
-                    {
-                        thisCdr.InPartnerId = ansPrefix.idPartner;
-                        return ansPrefix.idPartner;
-                    }
-                }
-            }
             //if (thisCdr.InPartnerId == 0)
             //{
-            //    foreach (partnerprefix ansPrefix in ansPrefixes)
+            //    foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes0880)
             //    {
-            //        string prefix = ansPrefix.Prefix;
+            //        string prefix = kv.Key;
+            //        partnerprefix ansPrefix = kv.Value;
+
             //        if (originatingCallingNumber.StartsWith(prefix))
             //        {
             //            thisCdr.InPartnerId = ansPrefix.idPartner;
@@ -73,6 +53,35 @@ namespace PartnerRules
             //        }
             //    }
             //}
+            if (thisCdr.InPartnerId == 0)
+            {
+                foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes0)
+                {
+                    string prefix = kv.Key;
+                    partnerprefix ansPrefix = kv.Value;
+
+                    if (originatingCallingNumber.StartsWith(prefix))
+                    {
+                        thisCdr.InPartnerId = ansPrefix.idPartner;
+                        return ansPrefix.idPartner;
+                    }
+                }
+            }
+
+            if (thisCdr.InPartnerId == 0)
+            {
+                foreach (KeyValuePair<string, partnerprefix> kv in ansPrefixes)
+                {
+                    string prefix = kv.Key;
+                    partnerprefix ansPrefix = kv.Value;
+
+                    if (originatingCallingNumber.StartsWith(prefix))
+                    {
+                        thisCdr.InPartnerId = ansPrefix.idPartner;
+                        return ansPrefix.idPartner;
+                    }
+                }
+            }
             return 0;
         }
     }

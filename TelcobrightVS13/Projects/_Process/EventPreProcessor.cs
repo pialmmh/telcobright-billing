@@ -22,6 +22,7 @@ using TelcobrightMediation.Config;
 
 namespace Process
 {
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class EventPreProcessor : AbstractTelcobrightProcess
     {
@@ -43,7 +44,7 @@ namespace Process
             try
             {
                 context.Database.Connection.Open();
-                var mediationContext = new MediationContext(tbc, context);
+                var mediationContext = new MediationContext(tbc, context,true);
                 tbc.GetPathIndependentApplicationDirectory();
                 foreach (ne ne in mediationContext.Nes.Values)
                 {
@@ -62,8 +63,16 @@ namespace Process
                             continue;
                         int maxNumberOfFilesToPreDecode = neAdditionalSetting.MaxNumberOfFilesInPreDecodedDirectory;
 
-                        List<job> incompleteJobs = GetNewCdrJobs(tbc, context, ne, maxNumberOfFilesToPreDecode);
-                        if (incompleteJobs.Any() == false) continue;
+                        List<job> newCdrJobs = GetNewCdrJobs(tbc, context, ne, maxNumberOfFilesToPreDecode);
+                        var jobsWithError = newCdrJobs
+                            .Where(j => !j.Error.IsNullOrEmptyOrWhiteSpace() ||
+                                        !j.JobAdditionalInfo.IsNullOrEmptyOrWhiteSpace()).ToList();
+                        var jobsWithoutError =
+                            newCdrJobs.Where(ij => !jobsWithError.Select(ej => ej.id).Contains(ij.id)).ToList();
+                        newCdrJobs = jobsWithoutError.Concat(jobsWithError).ToList();
+
+
+                        if (newCdrJobs.Any() == false) continue;
 
                         foreach (var eventPreprocessingRule in eventPreprocessingRules)
                         {
@@ -73,7 +82,7 @@ namespace Process
                                 {
                                     {"mediationContext", mediationContext},
                                     {"ne", ne},
-                                    {"newCdrFileJobs", incompleteJobs},
+                                    {"newCdrFileJobs", newCdrJobs},
                                     {"partnerEntities", context},
                                     {"neAdditionalSetting", neAdditionalSetting}
                                 };

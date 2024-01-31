@@ -16,12 +16,11 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-
     public sealed partial class CasGaziNetworksAbstractConfigGenerator //quartz config part
     {
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("d:/telcobright", @"cas");
+            DirectorySettings directorySetting = new DirectorySettings("U:/telcobright", @"cas");
             tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************
@@ -35,7 +34,19 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdm",
+                StartingPath = "U:/telcobright/vault/resources/cdr/gaziNetworks/tdm",
+                User = "",
+                Pass = "",
+            };
+
+            FileLocation vaultKhlKhulna = new FileLocation()
+            {
+                Name = "Vault.TelcobridgeKhulna",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = @"U:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Khulna",
                 User = "",
                 Pass = "",
             };
@@ -47,12 +58,11 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/tdmKhlBogra",
+                StartingPath = @"D:\telcobright\vault\resources\cdr\gaziNetworks\tdmKhlBogra\Bogra\aggregation_testing_dont_delete",
                 User = "",
                 Pass = "",
             };
 
-           
 
             FileLocation vaultcataliya = new FileLocation()
             {
@@ -61,13 +71,14 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/gaziNetworks/ip",
+                StartingPath = "U:/telcobright/vault/resources/cdr/gaziNetworks/ip",
                 User = "",
                 Pass = "",
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGazi.Name, vaultGazi);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultKhlBogra.Name, vaultKhlBogra);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultKhlKhulna.Name, vaultKhlKhulna);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultcataliya.Name, vaultcataliya);
            
            

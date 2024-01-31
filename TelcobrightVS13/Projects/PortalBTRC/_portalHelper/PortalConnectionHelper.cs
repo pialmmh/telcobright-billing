@@ -1,17 +1,5 @@
 ﻿using TelcobrightMediation;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using Newtonsoft.Json;
-using System.IO;
-using System.Web;
-using Spring.Expressions;
-using Spring.Core.TypeResolution;
 using MediationModel;
-using TelcobrightMediation.Config;
 using LibraryExtensions.ConfigHelper;
 using TelcobrightInfra;
 /// <summary>
@@ -46,6 +34,10 @@ namespace PortalApp
             var constr = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
             return constr;
         }
-
+        public static string getDbConStrWithDatabase(DatabaseSetting databaseSetting)
+        {
+            var constr = DbUtil.getDbConStrWithDatabase(databaseSetting);
+            return constr;
+        }
     }
 }

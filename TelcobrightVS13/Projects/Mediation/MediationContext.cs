@@ -37,7 +37,7 @@ namespace TelcobrightMediation
         public Dictionary<ValueTuple<int, string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra { get; private set; } //required for failed intl in calls where term number might be missing
-        public Dictionary<string, partnerprefix> AnsPrefixes0880 { get; } = new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix> AnsPrefixes00880 { get; } = new Dictionary<string, partnerprefix>();
         public Dictionary<string, partnerprefix> AnsPrefixes880 { get; } = new Dictionary<string, partnerprefix>();
         public Dictionary<string, partnerprefix> AnsPrefixes0 { get; } = new Dictionary<string, partnerprefix>();
         public Dictionary<string, partnerprefix> AnsPrefixes { get; } = new Dictionary<string, partnerprefix>();  //ANSTermprefix partner dictionary with AnsPrefix as Key
@@ -48,8 +48,10 @@ namespace TelcobrightMediation
         public Dictionary<int, partner> Partners { get; }
         public Dictionary<string, ipaddressorpointcode> IpAddressorPointCodes { get; }
         public Trie IpAddressOrPointCodeTrie { get; }
+        public bool DisableTemporaryTablesCreation { get; }
+        public int TotalFieldTelcobright { get;  }
 
-        public MediationContext(TelcobrightConfig tbc, PartnerEntities context)
+        public MediationContext(TelcobrightConfig tbc, PartnerEntities context, bool disableTemporaryTablesCreation=false)
         {
             StaticExtInsertColumnParsedDic.Parse();
             this.Tbc = tbc;
@@ -99,7 +101,7 @@ namespace TelcobrightMediation
             {
                 string prefix = kv.Key;
                 var partnerPrefix = kv.Value;
-                this.AnsPrefixes0880.Add("0880" + prefix, partnerPrefix);
+                this.AnsPrefixes00880.Add("00880" + prefix, partnerPrefix);
                 this.AnsPrefixes880.Add("880" + prefix, partnerPrefix);
                 this.AnsPrefixes0.Add("0" + prefix, partnerPrefix);
             }
@@ -151,8 +153,10 @@ namespace TelcobrightMediation
                 this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.Add(kv.Key, new TupleDefinitions(kv.Value));
             }
             CdrSummaryTypeDictionary.Initialize();
-            CreateTemporaryTables();
+            if(!disableTemporaryTablesCreation)
+                CreateTemporaryTables();
             this.MefPartnerRuleContainer.MediationContext = this;
+            this.TotalFieldTelcobright= context.cdrfieldlists.Count();
         }
 
         List<partnerprefix> PopulateANSPrefix()
@@ -288,8 +292,8 @@ namespace TelcobrightMediation
         {
             cmd.CommandText = "drop table if exists temp_rate;";
             cmd.ExecuteNonQuery();
-
-            cmd.CommandText = $@"create temporary table temp_rate  engine=memory
+            
+            cmd.CommandText = $@"create temporary  table temp_rate  engine=memory
                                      select * from rate where 1=2;";
             cmd.ExecuteNonQuery();
             cmd.CommandText =

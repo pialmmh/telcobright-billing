@@ -34,6 +34,8 @@ namespace WS_Telcobright_Topshelf
         public static MefProcessContainer mefProcessContainer { get; set; }
         static void Main(string[] args)
         {
+            //Thread.Sleep(20000);
+
             bool isConsoleApp = false;
             string instanceName = args.Any() ? args[0] : "";
             if (instanceName == "")

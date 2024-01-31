@@ -2,7 +2,6 @@
     CodeBehind="InternationalIn_ICX.aspx.cs" Inherits="DefaultRptIntlInIcx" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
-<%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
 
 
@@ -653,11 +652,11 @@
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
                             HeaderText="Revenue (USD)"
-                            SortExpression="customercost" />
+                            SortExpression="customercost" Visible="False" />
                         <asp:BoundField DataField="tax1"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
-                            SortExpression="tax1" />
+                            SortExpression="tax1" Visible="False"/>
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
                             HeaderText="IGW $"

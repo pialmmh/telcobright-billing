@@ -7,26 +7,27 @@ using System.Drawing;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using reports;
 using ExportToExcel;
 using MediationModel;
 using LibraryExtensions;
 using PortalApp;
 using PortalApp.ReportHelper;
+using reports;
 using TelcobrightInfra;
 using TelcobrightMediation;
 
 public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 {
-    private int _mShowByCountry=0;
+    private int _mShowByCountry = 0;
     private int _mShowByAns = 0;
     DataTable _dt;
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     public TelcobrightConfig tbc;
+
     private string GetQuery()
     {
 
-        string StartDate =txtDate.Text;
+        string StartDate = txtDate.Text;
         string EndtDate = (txtDate1.Text.ConvertToDateTimeFromMySqlFormat()).AddSeconds(1).ToMySqlFormatWithoutQuote();
         string tableName = DropDownListReportSource.SelectedValue + "01";
 
@@ -44,35 +45,60 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         }
 
         string constructedSQL = new SqlHelperIntlInIcx
-                        (StartDate,
-                         EndtDate,
-                         groupInterval,
-                         tableName,
-                         
-                         new List<string>()
-                            {
-                                // groupInterval=="Hourly"?"tup_starttime":string.Empty,
-                                getInterval(groupInterval),
-                                CheckBoxPartner.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxShowByAns.Checked==true?"tup_destinationId":string.Empty,
-                                CheckBoxShowByIgw.Checked==true?"tup_outpartnerid":string.Empty,
-                                //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
-                                CheckBoxViewIncomingRoute.Checked==true?"icxname":string.Empty,
-                                CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty
-                                },
-                         new List<string>()
-                            {
-                                ViewBySwitch.Checked==true? DropDownListShowBySwitch.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitch.SelectedItem.Value:string.Empty:string.Empty,
-                                CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
-                                CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty,
-                                //CheckBoxViewIncomingRoute.Checked==true?DropDownListViewIncomingRoute.SelectedIndex>0?" tup_incomingroute="+"'"+DropDownListViewIncomingRoute.SelectedItem.Value.Split('_')[0].Trim().ToString().Split('_')[0].Trim().ToString()+"'":string.Empty:string.Empty,
-                                CheckBoxViewOutgoingRoute.Checked==true?DropDownListViewOutgoingRoute.SelectedIndex>0?" tup_outgoingroute="+DropDownListViewOutgoingRoute.SelectedItem.Value:string.Empty:string.Empty,
-                                
-                            }).getSQLString();
+        (StartDate,
+            EndtDate,
+            groupInterval,
+            tableName,
 
-       
+            new List<string>()
+            {
+                // groupInterval=="Hourly"?"tup_starttime":string.Empty,
+                getInterval(groupInterval),
+                CheckBoxPartner.Checked == true ? "tup_inpartnerid" : string.Empty,
+                CheckBoxShowByAns.Checked == true ? "tup_destinationId" : string.Empty,
+                CheckBoxShowByIgw.Checked == true ? "tup_outpartnerid" : string.Empty,
+                CheckBoxShowIncomingRouteIcx.Checked == true ? "tup_incomingroute" : string.Empty,
+                CheckBoxViewIncomingRoute.Checked == true ? "icxname" : string.Empty,
+                CheckBoxViewOutgoingRoute.Checked == true ? "tup_outgoingroute" : string.Empty,
+                ViewBySwitch.Checked == true ? "tup_switchid" : string.Empty
+            },
+            new List<string>()
+            {
+                ViewBySwitch.Checked == true
+                    ? DropDownListShowBySwitch.SelectedIndex > 0
+                        ? "tup_switchid=" + DropDownListShowBySwitch.SelectedItem.Value
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxPartner.Checked == true
+                    ? DropDownListPartner.SelectedIndex > 0
+                        ? " tup_inpartnerid=" + DropDownListPartner.SelectedValue
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxShowByAns.Checked == true
+                    ? DropDownListAns.SelectedIndex > 0
+                        ? " tup_destinationId=" + DropDownListAns.SelectedValue
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxShowByIgw.Checked == true
+                    ? DropDownListIgw.SelectedIndex > 0
+                        ? " tup_outpartnerid=" + DropDownListIgw.SelectedValue
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxShowIncomingRouteIcx.Checked == true
+                    ? DropDownListIncomingRouteIcx.SelectedIndex > 0
+                        ? " tup_incomingroute=" + "'" + DropDownListIncomingRouteIcx.SelectedItem.Value.Split('_')[0]
+                              .Trim().ToString().Split('_')[0].Trim().ToString() + "'"
+                        : string.Empty
+                    : string.Empty,
+                CheckBoxViewOutgoingRoute.Checked == true
+                    ? DropDownListViewOutgoingRoute.SelectedIndex > 0
+                        ? " tup_outgoingroute=" + DropDownListViewOutgoingRoute.SelectedItem.Value
+                        : string.Empty
+                    : string.Empty,
+
+            }).getSQLString();
+
+
         return constructedSQL;
     }
 
@@ -155,6 +181,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxPartner.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "icxName")].Visible = CheckBoxViewIncomingRoute.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxShowIncomingRouteIcx.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "IGW")].Visible = CheckBoxShowByIgw.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         if (CheckBoxShowCost.Checked == true)
@@ -199,8 +226,12 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             string logIdentityName = this.User.Identity.Name;
 
 
-            String selectedIcxName = CheckBoxViewIncomingRoute.Checked == true ? DropDownListViewIncomingRoute.SelectedIndex > 0 ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}" : string.Empty : string.Empty;
-            
+            String selectedIcxName = CheckBoxViewIncomingRoute.Checked == true
+                ? DropDownListViewIncomingRoute.SelectedIndex > 0
+                    ? $@"{DropDownListViewIncomingRoute.SelectedItem.Value}"
+                    : string.Empty
+                : string.Empty;
+
             if (selectedIcxName == String.Empty)
             {
                 foreach (var db in userVsDbName)
@@ -223,7 +254,9 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
             //use sql aggregator
             SqlAggregator sqlAggregator =
-                new SqlAggregator(nonUnionSql: sql.Replace("sum_voice_day_01", "<basetable>").Replace("sum_voice_hr_01", "<basetable>"),
+                new SqlAggregator(
+                    nonUnionSql: sql.Replace("sum_voice_day_01", "<basetable>")
+                        .Replace("sum_voice_hr_01", "<basetable>"),
                     tableNames: tableNames,
                     _baseSqlStartsWith: "(",
                     _baseSqlEndsWith: ") x");
@@ -287,7 +320,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 .Any(table => table.Rows.Count != 0);
             if (hasRows == true)
             {
-                GridView1.ShowFooter = true;//set it here before setting footer text, setting this to true clears already set footer text
+                GridView1.ShowFooter =
+                    true; //set it here before setting footer text, setting this to true clears already set footer text
                 Label1.Text = "";
                 Button1.Visible = true; //show export
                 //Summary calculation for grid view*************************
@@ -299,13 +333,17 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     tr.CallStat.TotalCalls += tr.ForceConvertToLong(dr["CallsCount"]);
                     tr.CallStat.ConnectedCalls += tr.ForceConvertToLong(dr["ConnectedCount"]);
                     tr.CallStat.ConnectedCallsbyCauseCodes += tr.ForceConvertToLong(dr["ConectbyCC"]);
-                    tr.CallStat.SuccessfullCalls += tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]);
-                    tr.CallStat.TotalActualDuration += tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
+                    tr.CallStat.SuccessfullCalls +=
+                        tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]);
+                    tr.CallStat.TotalActualDuration +=
+                        tr.ForceConvertToDouble(dr["Paid Minutes (International Incoming)"]);
                     tr.CallStat.TotalRoundedDuration += tr.ForceConvertToDouble(dr["RoundedDuration"]);
                     tr.CallStat.TotalDuration1 += tr.ForceConvertToDouble(dr["Duration1"]);
                     tr.CallStat.TotalCustomerCost += tr.ForceConvertToDouble(dr["customercost"]);
                     tr.CallStat.BtrcRevShare += tr.ForceConvertToDouble(dr["tax1"]);
-                    NoOfCallsVsPdd cpdd = new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]), tr.ForceConvertToDouble(dr["PDD"]));
+                    NoOfCallsVsPdd cpdd =
+                        new NoOfCallsVsPdd(tr.ForceConvertToLong(dr["Number Of Calls (International Incoming)"]),
+                            tr.ForceConvertToDouble(dr["PDD"]));
                     callVsPdd.Add(cpdd);
                 }
                 tr.CallStat.TotalActualDuration = Math.Round(tr.CallStat.TotalActualDuration, 2);
@@ -324,7 +362,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
 
                 //display summary information in the footer
-                Dictionary<string, dynamic> fieldSummaries = new Dictionary<string, dynamic>();//key=colname,val=colindex in grid
+                Dictionary<string, dynamic>
+                    fieldSummaries = new Dictionary<string, dynamic>(); //key=colname,val=colindex in grid
                 //all keys have to be lowercase, because db fields are lower case at times
                 fieldSummaries.Add("callscount", tr.CallStat.TotalCalls);
                 fieldSummaries.Add("connectedcount", tr.CallStat.ConnectedCalls);
@@ -342,7 +381,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 fieldSummaries.Add("tax1", tr.CallStat.BtrcRevShare);
                 tr.FieldSummaries = fieldSummaries;
 
-                Session["IntlIn"] = tr;//save to session
+                Session["IntlIn"] = tr; //save to session
 
                 //populate footer
                 //clear first
@@ -355,23 +394,26 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 {
                     if (captionSetForTotal == false && GridView1.Columns[c].Visible == true)
                     {
-                        GridView1.Columns[c].FooterText = "Total: ";//first visible column
+                        GridView1.Columns[c].FooterText = "Total: "; //first visible column
                         captionSetForTotal = true;
                     }
                     string key = GridView1.Columns[c].SortExpression.ToLower();
                     if (key == "") continue;
                     if (tr.FieldSummaries.ContainsKey(key))
                     {
-                        GridView1.Columns[c].FooterText += (tr.GetDataColumnSummary(key)).ToString();//+ required to cocat "Total:"
+                        GridView1.Columns[c].FooterText +=
+                            (tr.GetDataColumnSummary(key)).ToString(); //+ required to cocat "Total:"
                     }
                 }
-                GridView1.DataBind();//call it here after setting footer, footer text doesn't show sometime otherwise, may be a bug
-                GridView1.ShowFooter = true;//don't set it now, set before footer text setting, weird! it clears the footer text
+                GridView1
+                    .DataBind(); //call it here after setting footer, footer text doesn't show sometime otherwise, may be a bug
+                GridView1.ShowFooter =
+                    true; //don't set it now, set before footer text setting, weird! it clears the footer text
                 //hide filters...
                 Page.ClientScript.RegisterStartupScript(GetType(), "MyKey", "HideParamBorderDivSubmit();", true);
                 hidValueSubmitClickFlag.Value = "false";
 
-            }//if has rows
+            } //if has rows
 
             else
             {
@@ -380,21 +422,23 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 Button1.Visible = false; //hide export
             }
 
-        }//using mysql connection
+        } //using mysql connection
 
 
 
     }
 
 
-    protected void Button1_Click(object sender, EventArgs e)//export to excel
+    protected void Button1_Click(object sender, EventArgs e) //export to excel
     {
         if (Session["IntlIn"] != null) //THIS MUST BE CHANGED IN EACH PAGE
         {
-            TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
-            DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
-            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    + ".xlsx", Response);
+            TrafficReportDatasetBased tr = (TrafficReportDatasetBased) Session["IntlIn"];
+            DataSetWithGridView
+                dsG = new DataSetWithGridView(tr, GridView1); //invisible baseColumns are removed in constructor
+            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds,
+                "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                + ".xlsx", Response);
         }
     }
 
@@ -418,7 +462,6 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         else DropDownListPartner.Enabled = false;
     }
 
-
     protected void CheckBoxShowByAns_CheckedChanged(object sender, EventArgs e)
     {
         if (CheckBoxShowByAns.Checked == true)
@@ -427,6 +470,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         }
         else DropDownListAns.Enabled = false;
     }
+
     protected void CheckBoxShowByIgw_CheckedChanged(object sender, EventArgs e)
     {
         if (CheckBoxShowByIgw.Checked == true)
@@ -434,10 +478,10 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             DropDownListIgw.Enabled = true;
         }
         else DropDownListIgw.Enabled = false;
-    
+
     }
-  
-    
+
+
 
     protected void CheckBoxRealTimeUpdate_CheckedChanged(object sender, EventArgs e)
     {
@@ -448,7 +492,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             CheckBoxDailySummary.Checked = false;
             CheckBoxDailySummary.Enabled = false;
 
-           // CheckBoxShowByDestination.Checked = false;
+            // CheckBoxShowByDestination.Checked = false;
             //CheckBoxShowByDestination.Enabled = false;
 
             TextBoxYear.Enabled = false;
@@ -458,7 +502,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             TextBoxYear1.Enabled = false;
             DropDownListMonth1.Enabled = false;
             txtDate1.Enabled = false;
-            
+
             //Enable Timers,Duration,country
             //CheckBoxShowByCountry.Checked = true;
             TextBoxDuration.Enabled = true;
@@ -476,8 +520,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             //CheckBoxDailySummary.Checked = true;
             CheckBoxDailySummary.Enabled = true;
 
-           // CheckBoxShowByDestination.Checked = true;
-           // CheckBoxShowByDestination.Enabled = true;
+            // CheckBoxShowByDestination.Checked = true;
+            // CheckBoxShowByDestination.Enabled = true;
 
             TextBoxYear.Enabled = true;
             DropDownListMonth.Enabled = true;
@@ -542,21 +586,22 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             submit_Click(sender, e);
         }
     }
+
     protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         if (e.Row.RowType == DataControlRowType.Footer)
         {
             return;
         }
-        
+
         if (CheckBoxShowByAns.Checked == true)
         {
-            Dictionary<string,partner> dicKpiAns = null;
+            Dictionary<string, partner> dicKpiAns = null;
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 if (ViewState["dicKpiAns"] != null)
                 {
-                    dicKpiAns = (Dictionary<string,partner>)ViewState["dicKpiAns"];
+                    dicKpiAns = (Dictionary<string, partner>) ViewState["dicKpiAns"];
                 }
                 else
                 {
@@ -569,7 +614,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 Single thisCcr = 0;
                 Single thisPdd = 0;
                 Single thisCcRbyCc = 0;
-                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(),out thisAsr);
+                Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ASR").ToString(), out thisAsr);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "ACD").ToString(), out thisAcd);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "CCR").ToString(), out thisCcr);
                 Single.TryParse(DataBinder.Eval(e.Row.DataItem, "PDD").ToString(), out thisPdd);
@@ -578,12 +623,12 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                 dicKpiAns.TryGetValue(thisAnsName, out thisPartner);
                 if (thisPartner != null)
                 {
-                    Color redColor=ColorTranslator.FromHtml("#FF0000");
+                    Color redColor = ColorTranslator.FromHtml("#FF0000");
                     //ASR
                     Single refAsr = 0;
                     if (Convert.ToSingle(thisPartner.refasr) > 0)
                     {
-                        refAsr=Convert.ToSingle(thisPartner.refasr);
+                        refAsr = Convert.ToSingle(thisPartner.refasr);
                     }
                     if ((thisAsr < refAsr) || (thisAsr == 0))
                     {
@@ -594,11 +639,11 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
 
                     //fas detection
                     double tempDbl = 0;
-                    double refAsrFas = refAsr + refAsr * .5;//fas threshold= 30% of ref asr by default
+                    double refAsrFas = refAsr + refAsr * .5; //fas threshold= 30% of ref asr by default
                     double.TryParse(thisPartner.refasrfas.ToString(), out tempDbl);
                     if (tempDbl > 0) refAsrFas = tempDbl;
 
-                    if (thisAsr > refAsrFas && refAsrFas>0)
+                    if (thisAsr > refAsrFas && refAsrFas > 0)
                     {
                         e.Row.Cells[16].ForeColor = Color.White;
                         e.Row.Cells[16].BackColor = Color.Blue;
@@ -662,8 +707,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     }
                 }
             }
-        }//if checkbox ans
-        
+        } //if checkbox ans
+
         //0 ASR highlighting
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
@@ -684,10 +729,12 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
     {
         DropDownListViewIncomingRoute.Enabled = CheckBoxViewIncomingRoute.Checked;
     }
+
     protected void DropDownListViewIncomingRoute_SelectedChanged(object sender, EventArgs e)
     {
         setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
     }
+
     protected void setSwitchListDropDown(object sender, EventArgs e)
     {
 
@@ -697,7 +744,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         if (tb.DatabaseSetting.DatabaseName != "-1")
         {
             this.ViewBySwitch.Enabled = true;
-            
+
             //this.ViewBySwitch.Checked = true;
             using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
             {
@@ -711,7 +758,7 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     {
                         this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
                     }
-                    
+
                 }
             }
         }
@@ -722,9 +769,15 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             this.DropDownListShowBySwitch.Enabled = false;
         }
     }
+
     protected void CheckBoxViewOutgoingRoute_CheckedChanged(object sender, EventArgs e)
     {
         DropDownListViewOutgoingRoute.Enabled = CheckBoxViewOutgoingRoute.Checked;
+    }
+
+    protected void CheckBoxShowIncomingRouteIcx_CheckedChanged(object sender, EventArgs e)
+    {
+        DropDownListIncomingRouteIcx.Enabled = CheckBoxShowIncomingRouteIcx.Checked;
     }
 
     protected void DropDownListPartner_OnSelectedIndexChanged(object sender, EventArgs e)
@@ -732,8 +785,8 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
         DropDownListViewIncomingRoute.Items.Clear();
         DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
 
-    
-    
+
+
         if (DropDownListPartner.SelectedValue != String.Empty)
         {
             if (DropDownListPartner.SelectedValue == "-1")
@@ -788,10 +841,12 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
             {
                 using (PartnerEntities contex = PortalConnectionHelper.GetPartnerEntitiesDynamic(tbc.DatabaseSetting))
                 {
-                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner).ToList();
+                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner)
+                        .ToList();
                     foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
                     {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})",
+                            route.RouteName));
                     }
                 }
             }
@@ -802,7 +857,42 @@ public partial class DefaultRptDomesticIcx : System.Web.UI.Page
                     int idPartner = Convert.ToInt32(DropDownListIgw.SelectedValue);
                     foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
                     {
-                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})", route.RouteName));
+                        DropDownListViewOutgoingRoute.Items.Add(new ListItem($"{route.Description} ({route.RouteName})",
+                            route.RouteName));
+                    }
+                }
+            }
+        }
+    }
+
+    protected void DropDownListIncoimgRouteIcx_OnSelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownListIncomingRouteIcx.Items.Clear();
+        DropDownListIncomingRouteIcx.Items.Add(new ListItem("[All]", "-1"));
+        if (DropDownListPartner.SelectedValue != String.Empty)
+        {
+            if (DropDownListPartner.SelectedValue == "-1")
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    List<int> ansList = contex.partners.Where(c => c.PartnerType == 2).Select(c => c.idPartner)
+                        .ToList();
+                    foreach (route route in contex.routes.Where(x => ansList.Contains(x.idPartner)))
+                    {
+                        DropDownListIncomingRouteIcx.Items.Add(new ListItem($"{route.Description} ({route.RouteName})",
+                            route.RouteName));
+                    }
+                }
+            }
+            else
+            {
+                using (PartnerEntities contex = new PartnerEntities())
+                {
+                    int idPartner = Convert.ToInt32(DropDownListPartner.SelectedValue);
+                    foreach (route route in contex.routes.Where(x => x.idPartner == idPartner))
+                    {
+                        DropDownListIncomingRouteIcx.Items.Add(new ListItem($"{route.Description} ({route.RouteName})",
+                            route.RouteName));
                     }
                 }
             }

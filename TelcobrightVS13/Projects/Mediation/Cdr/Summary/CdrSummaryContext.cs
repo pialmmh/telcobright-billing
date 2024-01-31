@@ -35,6 +35,8 @@ namespace TelcobrightMediation.Cdr
             this.HoursInvolved = hoursInvolved;
             this.DatesInvolved = hoursInvolved.Select(c => c.Date).Distinct().ToList();
             this.Context = context;
+            var serviceGroupContainer = this.MediationContext.MefServiceGroupContainer;
+            serviceGroupContainer.CdrSetting = this.MediationContext.CdrSetting;
             this.TargetTableWiseSummaryFactory = this.MediationContext.MefServiceGroupContainer
                 .IdServiceGroupWiseServiceGroups
                 .Values.SelectMany(sg => sg.GetSummaryTargetTables().Keys.ToList())
@@ -43,22 +45,40 @@ namespace TelcobrightMediation.Cdr
                 {
                     SummaryTableName = tableName,
                     CdrSummaryFactory =
-                    CdrSummaryFactoryFactory.Create(tableName, this.MediationContext.MefServiceGroupContainer)
+                    CdrSummaryFactoryFactory.Create(tableName, serviceGroupContainer)
                 }).ToDictionary(annonymous => annonymous.SummaryTableName, annonymous => annonymous.CdrSummaryFactory);
         }
         public void GenerateSummary(CdrExt cdrExt)
         {
+            ///////need to work by mikdad 
             List<CdrSummaryType> summaryTargetTables = this.MediationContext.MefServiceGroupContainer
                 .IdServiceGroupWiseServiceGroups[cdrExt.Cdr.ServiceGroup]
                 .GetSummaryTargetTables().Keys.ToList();
-            summaryTargetTables.ForEach(targetTableName =>
+
+
+            if (!this.MediationContext.Tbc.CdrSetting.useCasStyleProcessing)
             {
-                CdrSummaryFactory<CdrExt> cdrSummaryFactory;
-                if(!this.TargetTableWiseSummaryFactory.TryGetValue(targetTableName,out cdrSummaryFactory))
-                    throw new Exception("Cdrsummary factory not found for table name="+targetTableName);
-                AbstractCdrSummary cdrSummary = (AbstractCdrSummary)cdrSummaryFactory.CreateNewInstance(cdrExt);
-                cdrExt.TableWiseSummaries.Add(targetTableName, cdrSummary);
-            });
+                summaryTargetTables.ForEach(targetTableName =>
+                {
+                    CdrSummaryFactory<CdrExt> cdrSummaryFactory;
+                    if(!this.TargetTableWiseSummaryFactory.TryGetValue(targetTableName,out cdrSummaryFactory))
+                        throw new Exception("Cdrsummary factory not found for table name="+targetTableName);
+                    AbstractCdrSummary cdrSummary = (AbstractCdrSummary)cdrSummaryFactory.CreateNewInstance(cdrExt);
+                    cdrExt.TableWiseSummaries.Add(targetTableName, cdrSummary);
+                });
+            }
+            else
+            {
+                summaryTargetTables.ForEach(targetTableName =>
+                {
+                    if (targetTableName.ToString().Contains("sum_voice_hr")) return;
+                    CdrSummaryFactory<CdrExt> cdrSummaryFactory;
+                    if (!this.TargetTableWiseSummaryFactory.TryGetValue(targetTableName, out cdrSummaryFactory))
+                        throw new Exception("Cdrsummary factory not found for table name=" + targetTableName);
+                    AbstractCdrSummary cdrSummary = (AbstractCdrSummary)cdrSummaryFactory.CreateNewInstance(cdrExt);
+                    cdrExt.TableWiseSummaries.Add(targetTableName, cdrSummary);
+                });
+            }
         }
         public void PopulatePrevSummary()
         {

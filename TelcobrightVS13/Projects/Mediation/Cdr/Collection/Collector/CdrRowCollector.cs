@@ -35,5 +35,21 @@ namespace TelcobrightMediation
             }
             return txtRows;
         }
+        public object CollectAsTxtRows(DbCommand cmd)
+        {
+            List<string[]> txtRows = new List<string[]>();
+            cmd.CommandText = this.SelectSql;
+            var reader = cmd.ExecuteReader();
+            T dummyDataObjectToCallExtensionMethod = new T();
+            while (reader.Read())
+            {
+                Dictionary<int, cdrfieldlist> cdrfieldlists = this.CdrJobInputData.MediationContext.CdrFieldLists;
+                string[] convertedRow =
+                    dummyDataObjectToCallExtensionMethod.ConvertDataReaderToStrArr(cdrfieldlists, reader);
+                txtRows.Add(convertedRow);
+            }
+            reader.Close();
+            return txtRows;
+        }
     }
 }

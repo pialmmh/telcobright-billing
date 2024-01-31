@@ -22,5 +22,7 @@ namespace TelcobrightMediation
 
         public Dictionary<int, IServiceGroupPreProcessor> ServiceGroupPreProcessors { get; set; } =
             new Dictionary<int, IServiceGroupPreProcessor>();
+
+        public CdrSetting CdrSetting { get; set; }
     }
 }

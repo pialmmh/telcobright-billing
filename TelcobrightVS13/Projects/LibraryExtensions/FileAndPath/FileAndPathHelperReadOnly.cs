@@ -25,7 +25,7 @@ namespace LibraryExtensions
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
             curDir = curDir.Substring(6, curDir.Length - 6);
             if (curDir.EndsWith("bin")) return curDir;
-            DirectoryInfo di = new DirectoryInfo(curDir).Parent;
+            DirectoryInfo di = new DirectoryInfo(curDir).Parent.Parent;
             curDir = di.FullName;
             if (curDir.EndsWith("bin"))
             {

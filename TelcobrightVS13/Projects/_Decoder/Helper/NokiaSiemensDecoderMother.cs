@@ -10,6 +10,7 @@ using System.Linq;
 using System.Globalization;
 using System.IO;
 using LibraryExtensions;
+using TelcobrightInfra.PerformanceAndOptimization;
 
 namespace Decoders
 {
@@ -22,7 +23,7 @@ namespace Decoders
         public override int Id => 74;
         public override string HelpText => "Decodes Nokia Siemens.";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
         protected  CdrCollectorInputData Input { get; set; }
@@ -108,8 +109,25 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
 
-            List<byte> fileData = File.ReadAllBytes(filePath).ToList();
-
+            List<byte> fileData= new List<byte>();
+            try
+            {
+                fileData = File.ReadAllBytes(filePath).ToList();
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("OutOfMemoryException"))
+                {
+                    Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
+                    GarbageCollectionHelper.CompactGCNowForOnce();
+                    fileData = File.ReadAllBytes(filePath).ToList();
+                }
+                else
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
             int cdrRecordNumber = 0;
             int totalBytes = fileData.Count;
             //Dictionary<string, PocAndPtc> callRefWiseLegs = new Dictionary<string, PocAndPtc>();
@@ -138,7 +156,7 @@ namespace Decoders
 
                         if (cdrType == CdrType.Ptc)
                         {
-                            string[] record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType,trailerSequence);
+                            Dictionary<string,string> record = NokiaDecodeHelper.Decode(currentPosition, fileData, cdrType,trailerSequence);
                             NokiaCdr finalRecord = new NokiaCdr(record);
                             decodedRows.Add(finalRecord.Row);
                         }
@@ -203,41 +221,41 @@ namespace Decoders
         public string[] Row { get; } = new string[104];
 
 
-        public NokiaCdr(string[] record)
+        public NokiaCdr(Dictionary<string,string> record)
         {
 
 
 
-            this.Row[Fn.Sequencenumber] = record[2];
-            this.Row[Fn.OriginatingCallingNumber] = new string(record[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            this.Row[Fn.OriginatingCalledNumber] = new string(record[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            this.Row[Fn.TerminatingCallingNumber] = new string(record[11].ToCharArray().TakeWhile(c => c != 'F').ToArray());
-            this.Row[Fn.TerminatingCalledNumber] = new string(record[13].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            this.Row[Fn.Sequencenumber] = record["record_number"];
+            this.Row[Fn.OriginatingCallingNumber] = new string(record["calling_number"].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            this.Row[Fn.OriginatingCalledNumber] = new string(record["called_number"].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            this.Row[Fn.TerminatingCallingNumber] = new string(record["calling_number"].ToCharArray().TakeWhile(c => c != 'F').ToArray());
+            this.Row[Fn.TerminatingCalledNumber] = new string(record["called_number"].ToCharArray().TakeWhile(c => c != 'F').ToArray());
 
 
-            this.Row[Fn.IncomingRoute] = record[record.Length - 2].Trim().TrimStart('0');
+            this.Row[Fn.IncomingRoute] = record["in_circuit_group"].Trim().TrimStart('0');
 
-            this.Row[Fn.OutgoingRoute] = record[14].Trim().TrimStart('0');
+            this.Row[Fn.OutgoingRoute] = record["out_circuit_group"].Trim().TrimStart('0');
 
             string[] formats = new string[] { "MddyyyyHHmmss", "MMddyyyyHHmmss" };
 
-            string startTimestr = record[17].Trim();
+            string startTimestr = record["charging_start_time"].Trim();
             DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
             this.Row[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
 
-            string ansTime = record[17].Trim();
+            string ansTime = record["charging_start_time"].Trim();
             DateTime startTime1 = ansTime.ConvertToDateTimeFromCustomFormats(formats);
             this.Row[Fn.AnswerTime] = startTime1.ToMySqlFormatWithoutQuote();
 
 
-            string endTime = record[18].Trim();
+            string endTime = record["charging_end_time"].Trim();
             DateTime startTime2 = endTime.ConvertToDateTimeFromCustomFormats(formats);
             this.Row[Fn.Endtime] = startTime2.ToMySqlFormatWithoutQuote();
 
 
-            string durationStr = record[51].Trim();
+            string durationStr = record["oaz_duration_ten_ms"].Trim();
             double duration = Convert.ToDouble(durationStr) / 100;
-            var tmp = record[23].Trim().TrimStart('0') == "" ? "0" : record[23].Trim().TrimStart('0');
+            var tmp = record["oaz_duration"].Trim().TrimStart('0') == "" ? "0" : record["oaz_duration"].Trim().TrimStart('0');
             double duration2 = Convert.ToDouble(tmp);
 
             this.Row[Fn.Duration4] = duration2.ToString();
@@ -246,6 +264,7 @@ namespace Decoders
 
 
             this.Row[Fn.Validflag] = "1";
+            this.Row[Fn.Partialflag] = "0";
             this.Row[Fn.ChargingStatus] = "1";
         }
     }

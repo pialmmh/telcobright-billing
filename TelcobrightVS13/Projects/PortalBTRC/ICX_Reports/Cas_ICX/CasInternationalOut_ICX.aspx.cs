@@ -12,10 +12,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using ExportToExcel;
 using LibraryExtensions;
-using reports;
 using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
+using reports;
 using TelcobrightInfra;
 
 public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
@@ -52,15 +52,16 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                          tableName,
                          new List<string>()
                             {
+                                groupInterval=="Hourly"?"Date":string.Empty,
                                 getInterval(groupInterval),
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
                                 CheckBoxShowByCountry.Checked==true?"tup_countryorareacode":string.Empty,
                                 CheckBoxShowByDestination.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
-                                "usdRate",
+                                //CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
+                                //"usdRate",
                                 //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
@@ -159,6 +160,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "ANS")].Visible = CheckBoxShowByIgw.Checked;
         //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
         //GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
 
@@ -246,7 +248,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                     tableNames: tableNames,
                     _baseSqlStartsWith: "(",
                     _baseSqlEndsWith: ") x");
-            string aggregatedSql = sqlAggregator.getFinalSql();
+            string aggregatedSql = sqlAggregator.getFinalSql().Replace("date_format(tup_starttime, '%m %d %y')", "date_format(tup_starttime, '%M %d %Y')");
             MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
             cmd.Connection = connection;
 

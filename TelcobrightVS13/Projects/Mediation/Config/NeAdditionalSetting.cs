@@ -11,6 +11,9 @@ namespace TelcobrightMediation
         public bool ProcessMultipleCdrFilesInBatch { get; set; } = false;
         public int MinRowCountToStartBatchCdrProcessing { get; set; } = 90000;
         public int MaxNumberOfFilesInPreDecodedDirectory { get; set; } = 100;
+        public int ExpectedNoOfCdrIn24Hour { get; set; }
+        public string AggregationStyle { get; set; }
+        public bool DumpAllInstancesToDebugCdrTable { get; set; }
         public List<EventPreprocessingRule> EventPreprocessingRules { get; set; }= new List<EventPreprocessingRule>();
 
         public List<CompressionType> SupportedCompressedLogTypes { get; set; } = new List<CompressionType>()

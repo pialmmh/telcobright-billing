@@ -22,21 +22,32 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
         private Dictionary<string, T> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, T>();
         public DuplicaterEventFilter(DayWiseEventCollector<T> eventCollector)
         {
+            if(typeof(T)!=typeof(string[]))
+                throw new NotImplementedException("Duplicate filtering is so far only allowed for string[] type");
             this.EventCollector = eventCollector;
             this.CollectorInput = eventCollector.CollectorInput;
-            
         }
-        public Dictionary<string, T> filterDuplicateCdrs(out List<T> excludedDuplicateEvents)
+        public Dictionary<string, T> filterDuplicateCdrs(out List<T> excludedDuplicateEvents, 
+            out HashSet<string> existingUniqueEventInstancesFromDB)
         {
             excludedDuplicateEvents= new List<T>();
-            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEvents.Select(e=>e.ToString())
+            Dictionary<string, string> alreadyConsideredEvents = this.EventCollector.ExistingEventsInDb.Select(e=>
+                {
+                    var strings = e as string[];
+                    if (strings != null) return strings[0];
+                    throw new NotImplementedException("Duplicate filtering is so far only allowed for string[] type");
+                })
                 .GroupBy(e=>e)
                 .Select(g=> new
                 {
                     Key=g.Key,
                     Item= g.First()
-                })
-                .ToDictionary(a => a.Key, a=>a.Item);
+                }).ToDictionary(a => a.Key, a=>a.Item);
+            existingUniqueEventInstancesFromDB= new HashSet<string>();
+            foreach (var kv in alreadyConsideredEvents)
+            {
+                existingUniqueEventInstancesFromDB.Add(kv.Key);
+            }
             foreach (var kv in EventCollector.TupleWiseDecodedEvents)
             {
                 string tuple = kv.Key;

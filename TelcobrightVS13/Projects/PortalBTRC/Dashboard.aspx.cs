@@ -1,11 +1,8 @@
 ﻿using TelcobrightMediation;
-using Newtonsoft.Json;
 using System;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Web.UI;
-using reports;
 using System.Collections.Generic;
 using MediationModel;
 using PortalApp;
@@ -14,6 +11,8 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Drawing;
 using System.Web.UI.DataVisualization.Charting;
+using LibraryExtensions.ConfigHelper;
+using reports;
 
 public partial class DashboardAspx : Page
 {
@@ -21,6 +20,7 @@ public partial class DashboardAspx : Page
 
     TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     string targetIcxName = "btrc_cas";
+    private DatabaseSetting databaseSetting = null;
     protected void Page_Load(object sender, EventArgs e)
     {
        
@@ -38,7 +38,7 @@ public partial class DashboardAspx : Page
         telcobrightpartner thisPartner = null;
         string binpath = System.Web.HttpRuntime.BinDirectory;
         TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
-        var databaseSetting = telcobrightConfig.DatabaseSetting;
+        this.databaseSetting = telcobrightConfig.DatabaseSetting;
         string userName = Page.User.Identity.Name;
         string dbName;
         if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
@@ -66,14 +66,146 @@ public partial class DashboardAspx : Page
         //this.lblCustomerDisplayName.Text = thisPartner.CustomerName;
         //this.lblCustomerDisplayName.Text = "CDR Analyzer System (CAS)";
         //databaseSetting.DatabaseName = this.targetIcxName;
-        string connectionString = DbUtil.getDbConStrWithDatabase(databaseSetting);
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
 
-        string sqlCommand = "select id, JobName, CreationTime, CompletionTime " +
-                            "from job where idjobdefinition = 1 " +
-                            "and status = 1 " +
-                            "order by completiontime desc limit 0,23;";
+        string sqlCommand = @"select 'Agni ICX' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from agni_cas.job 
+                            left join agni_cas.ne
+                            on agni_cas.job.idne = agni_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'BTCL' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from btcl_cas.job 
+                            left join btcl_cas.ne
+                            on btcl_cas.job.idne = btcl_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Bangla ICX' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from banglaicx_cas.job 
+                            left join banglaicx_cas.ne
+                            on banglaicx_cas.job.idne = banglaicx_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Bangla Telecom Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from banglatelecom_cas.job 
+                            left join banglatelecom_cas.ne
+                            on banglatelecom_cas.job.idne = banglatelecom_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Bantel Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from bantel_cas.job 
+                            left join bantel_cas.ne
+                            on bantel_cas.job.idne = bantel_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Cross World Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from crossworld_cas.job 
+                            left join crossworld_cas.ne
+                            on crossworld_cas.job.idne = crossworld_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Gazi Networks Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from gazinetworks_cas.job 
+                            left join gazinetworks_cas.ne
+                            on gazinetworks_cas.job.idne = gazinetworks_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Imam Network Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from imamnetwork_cas.job 
+                            left join imamnetwork_cas.ne
+                            on imamnetwork_cas.job.idne = imamnetwork_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Sheba ICX' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from sheba_cas.job 
+                            left join sheba_cas.ne
+                            on sheba_cas.job.idne = sheba_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'JibonDhara Solutions Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from jibondhara_cas.job 
+                            left join jibondhara_cas.ne
+                            on jibondhara_cas.job.idne = jibondhara_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'M&H Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from mnh_cas.job 
+                            left join mnh_cas.ne
+                            on mnh_cas.job.idne = mnh_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Mother Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from mothertelecom_cas.job 
+                            left join mothertelecom_cas.ne
+                            on mothertelecom_cas.job.idne = mothertelecom_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'New Generation Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from newgenerationtelecom_cas.job 
+                            left join newgenerationtelecom_cas.ne
+                            on newgenerationtelecom_cas.job.idne = newgenerationtelecom_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Paradise Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from paradise_cas.job 
+                            left join paradise_cas.ne
+                            on paradise_cas.job.idne = paradise_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Purple Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from purple_cas.job 
+                            left join purple_cas.ne
+                            on purple_cas.job.idne = purple_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'RingTech(Bangladesh) Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from ringtech_cas.job 
+                            left join ringtech_cas.ne
+                            on ringtech_cas.job.idne = ringtech_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'SR Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from srtelecom_cas.job 
+                            left join srtelecom_cas.ne
+                            on srtelecom_cas.job.idne = srtelecom_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Softex Communication Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from softex_cas.job 
+                            left join softex_cas.ne
+                            on softex_cas.job.idne = softex_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Summit Communication Limited(Vertex)' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from summit_cas.job 
+                            left join summit_cas.ne
+                            on summit_cas.job.idne = summit_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Tele Exchange Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from teleexchange_cas.job 
+                            left join teleexchange_cas.ne
+                            on teleexchange_cas.job.idne = teleexchange_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Teleplus Newyork Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from teleplusnewyork_cas.job 
+                            left join teleplusnewyork_cas.ne
+                            on teleplusnewyork_cas.job.idne = teleplusnewyork_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE
+                            union all
+                            select 'Voicetel Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from voicetel_cas.job 
+                            left join voicetel_cas.ne
+                            on voicetel_cas.job.idne = voicetel_cas.ne.idSwitch
+                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
+                            group by idNE;";
 
-        List<GridViewCompletedJob> gridViewCompletedJob = new List<GridViewCompletedJob>();
+        sqlCommand = @"SELECT 'Teleplus Newyork Limited' AS icx, 'ZTE' AS 'SwitchName', 23 AS No_Of_Cdrs_in_last_24_hours
+                              union all
+                              SELECT 'Summit Communication Limited(Vertex)' AS icx, 'HUAWEI' AS 'SwitchName', 20 AS No_Of_Cdrs_in_last_24_hours
+                              union all
+                              SELECT 'Softex Communication Ltd' AS icx, 'CATALIA' AS 'SwitchName', 10 AS No_Of_Cdrs_in_last_24_hours;";
+        List<GridViewJobStatusForICX> gridViewCompletedJobStatus = new List<GridViewJobStatusForICX>();
 
 
         using (MySqlConnection connection = new MySqlConnection())
@@ -85,21 +217,20 @@ public partial class DashboardAspx : Page
                 .Any(table => table.Rows.Count != 0);
             if (hasData == true)
             {
-                gridViewCompletedJob = ConvertDataSetToList(dataSet);
-                this.GridViewCompleted.DataSource = gridViewCompletedJob;
+                gridViewCompletedJobStatus = ConvertDataSetToListStatus(dataSet);
+                this.GridViewCompleted.DataSource = gridViewCompletedJobStatus;
                 this.GridViewCompleted.DataBind();
 
             }
         }
 
         //dashboard items
-        UpdateErrorCalls();
-
-        UpdateInternationalIncoming();
         this.Timer1.Enabled = true;
         this.Timer2.Enabled = true;
         this.Timer3.Enabled = true;
 
+        UpdateErrorCalls();
+        UpdateInternationalIncoming();
         PopulateIpTdmPieChart();
         PopulateDomesticDistribution();
         PopulateIpTdmDistribution();
@@ -225,7 +356,9 @@ public partial class DashboardAspx : Page
 
         // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -295,7 +428,9 @@ public partial class DashboardAspx : Page
 
         // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getDbConStrWithDatabase(this.databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -366,7 +501,9 @@ public partial class DashboardAspx : Page
 
         // double[] values = { 90, 10, 19, 78,55,89,96,95,75,65,32,85,14,55,22,33,44,55,6,52,63,45 };
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -436,7 +573,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -505,7 +644,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -573,7 +714,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -642,7 +785,9 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -714,7 +859,10 @@ public partial class DashboardAspx : Page
 
 
 
-        string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        //string connectionString = "Server=127.0.0.1;Database=btrc_cas;User Id=root;Password='';";
+        string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
+        
+
         List<double> data = new List<double>();
         using (MySqlConnection con = new MySqlConnection(connectionString))
         {
@@ -813,6 +961,13 @@ public partial class DashboardAspx : Page
 
 
     }
+    protected class GridViewJobStatusForICX
+    {
+        public int id { get; set; }
+        public string icx { get; set; }
+        public string SwitchName { get; set; }
+        public int No_Of_Cdrs_in_last_24_hours { get; set; }
+    }
     private void UpdateInternationalIncoming()
     {
         return;
@@ -868,9 +1023,33 @@ public partial class DashboardAspx : Page
 
 
                     record.id = Convert.ToInt32(row["Id"]);
-                    record.jobName = row["JobName"].ToString();
+                    record.jobName = row["icx"].ToString();
                     record.creationTime = Convert.ToDateTime(row["CreationTime"]);
                     record.completionTime = Convert.ToDateTime(row["CompletionTime"]);
+
+                    records.Add(record);
+                }
+            }
+        }
+        return records;
+    }
+
+    List<GridViewJobStatusForICX> ConvertDataSetToListStatus(DataSet ds)
+    {
+        bool hasRecords = ds.Tables.Cast<DataTable>()
+            .Any(table => table.Rows.Count != 0);
+        List<GridViewJobStatusForICX> records = new List<GridViewJobStatusForICX>();
+        if (hasRecords == true)
+        {
+            foreach (DataTable table in ds.Tables)
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    GridViewJobStatusForICX record = new GridViewJobStatusForICX();
+                   // record.id = Convert.ToInt32(row["id"]);
+                    record.icx= row["icx"].ToString();
+                    record.SwitchName = row["SwitchName"].ToString();
+                    record.No_Of_Cdrs_in_last_24_hours = Convert.ToInt32(row["No_Of_Cdrs_in_last_24_hours"]);
 
                     records.Add(record);
                 }

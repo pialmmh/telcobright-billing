@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using FlexValidation;
 using LibraryExtensions;
 using MediationModel;
-using org.springframework.expression.spel.ast;
 using TelcobrightFileOperations;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
@@ -20,10 +19,21 @@ namespace TelcobrightMediation
         public AbstractCdrDecoder Decoder { get; set; }
         private bool PartialCdrEnabled { get; }
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
+        public List<string[]> DecodedCdrRowsBeforeDuplicateFiltering { get; set; } = new List<string[]>();
+        public List<string[]> RowsToConsiderForAggregation { get; } = new List<string[]>();
+        public List<string[]> NewRowsToBeDiscardedAfterAggregation { get; } = new List<string[]>();
+        public List<string[]> OldRowsToBeDiscardedAfterAggregation { get; } = new List<string[]>();
+        public List<string[]> FinalAggregatedInstances { get; set; } = new List<string[]>();
+        public List<string[]> NewRowsCouldNotBeAggregated { get; set; } = new List<string[]>();
+        public List<string[]> OldRowsCouldNotBeAggregated { get; set; } = new List<string[]>();
+        public List<string[]> OldPartialInstancesFromDB { get; set; } = new List<string[]>();
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; }= new Dictionary<string, string[]>();
-        public List<string[]> DuplicateEvents { get; set; }= new List<string[]>();
+        public HashSet<string> ExistingUniqueEventInstancesFromDB { get; }= new HashSet<string>();
+        public List<string[]> NewDuplicateEvents { get; set; }= new List<string[]>();
         public List<string[]> OriginalRowsBeforeMerge { get; }= new List<string[]>();
         public List<cdrinconsistent> OriginalCdrinconsistents { get; }= new List<cdrinconsistent>();
+        public List<string[]> DebugCdrsForDump { get; set; }= new List<string[]>();
+        public long OriginalCdrFileSize { get; set; }
         public NewCdrPreProcessor(List<string[]> txtCdrRows, List<cdrinconsistent> inconsistentCdrs,
             CdrCollectorInputData cdrCollectorInputData)
             : base(cdrCollectorInputData, txtCdrRows.Count + inconsistentCdrs.Count, inconsistentCdrs) //used after sql collection
@@ -40,8 +50,45 @@ namespace TelcobrightMediation
             this.PartialCdrEnabled = base.CdrCollectorInputData.CdrSetting.PartialCdrEnabledNeIds
                 .Contains(base.CdrCollectorInputData.CdrJobInputData.Ne.idSwitch);
         }
+        public int NewAndInconsistentCount => this.TxtCdrRows.Count + base.InconsistentCdrs.Count;
+        public void ValidateAggregation(job j)
+        {
+            Exception exception =
+                new Exception($"Found Cdr count mismatch after aggregation. Job: {j.JobName}");
+            if (this.DecodedCdrRowsBeforeDuplicateFiltering.Count +this.OldPartialInstancesFromDB.Count 
+                != FinalAggregatedInstances.Count + NewRowsCouldNotBeAggregated.Count
+                + OldRowsCouldNotBeAggregated.Count 
+                + NewRowsToBeDiscardedAfterAggregation.Count + OldRowsToBeDiscardedAfterAggregation.Count + NewDuplicateEvents.Count)
+            {
+                Console.WriteLine(exception);
+                throw exception;
+            }
+            if (this.FinalAggregatedInstances.Count != this.TxtCdrRows.Count)
+            {
+                Console.WriteLine(exception);
+                throw exception;
+            }
+            if (this.TxtCdrRows.Count == 0)//no successful aggregation
+            {
+                if (this.NewRowsToBeDiscardedAfterAggregation.Count > 0
+                    || this.OldRowsToBeDiscardedAfterAggregation.Count > 0 
+                    || this.NewRowsCouldNotBeAggregated.Count < 0)
+                {
+                    Console.WriteLine(exception);
+                    throw exception;
+                }
+            }
+            else//at least one successful aggregation
+            {
+                if (this.NewRowsToBeDiscardedAfterAggregation.Count <= 0 && this.OldRowsToBeDiscardedAfterAggregation.Count <= 0)
+                {
+                    Console.WriteLine(exception);
+                    throw exception;
+                }
+            }
+        }
 
-        public void CheckAndConvertIfInconsistent(CdrJobInputData input, MefValidator<string[]> mefValidator,
+        public cdrinconsistent CheckAndConvertIfInconsistent(CdrJobInputData input, MefValidator<string[]> mefValidator,
             string[] txtRow)
         {
             ValidationResult validationResult = mefValidator.Validate(txtRow);
@@ -50,10 +97,12 @@ namespace TelcobrightMediation
                 if (rule.Validate(txtRow) == false)
                 {
                     txtRow[Fn.ErrorCode] = rule.ValidationMessage;
-                    base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(txtRow));
-                    return;
+                   base.InconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(txtRow));
+                    var inconsistentCdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(txtRow);
+                    return inconsistentCdr;
                 }
             }
+            return null;
         }
 
         public CdrAndInconsistentWrapper ConvertToCdr(string[] row)
@@ -203,7 +252,13 @@ namespace TelcobrightMediation
                 throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
             }
             var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
-            if (this.RawCount != cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count +
+            var cdrJobInputData = this.CdrCollectorInputData.CdrJobInputData;
+            int originalRawCount = cdrJobInputData.MergedJobsDic.Any()==false?this.RawCount
+                :cdrJobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
+            if (originalRawCount+OldPartialInstancesFromDB.Count!= 
+                cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count 
+                +NewRowsCouldNotBeAggregated.Count+ OldRowsCouldNotBeAggregated.Count +
+                NewRowsToBeDiscardedAfterAggregation.Count + OldRowsToBeDiscardedAfterAggregation.Count + this.NewDuplicateEvents.Count +
                 rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count)
                 throw new Exception(
                     "Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");

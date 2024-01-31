@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI.WebControls;
+﻿using System.Collections.Generic;
 
 namespace PortalApp.ReportHelper
 {
@@ -96,7 +92,7 @@ namespace PortalApp.ReportHelper
             ON x.tup_outpartnerid = cr2.idpartner
             LEFT JOIN ne 
             ON x.tup_switchid=ne.idSwitch
-            ORDER BY " + (GetGroupBy().Contains("tup_starttime") ? "Date, " : string.Empty) + " Successfulcalls,costansin DESC ;";
+            ORDER BY " + (GetGroupBy().Contains("Date") ? "Date, " : string.Empty) + " Successfulcalls,costansin DESC ;";
         }
     }
 }

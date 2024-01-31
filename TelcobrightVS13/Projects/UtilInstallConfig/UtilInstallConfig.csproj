@@ -119,8 +119,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -134,15 +134,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="config\allDeployment\cas\mysqlClusters\08CasNewSoftShebaTeleex.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\07CasJibonParaPurple.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\06CasBTCLImam.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\05CasBanIcxCross.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\04CasMnhSrtel.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\03CasMotherTelePlusVoice.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\02CasGaziSummitRing.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\01CasAgniBanglatelBantel.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\AppServerHostnamesForCas.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\08CasNewSoftShebaTeleex.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\07CasJibonParaPurple.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\06CasBTCLImam.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\05CasBanIcxCross.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\04CasMnhSrtel.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\03CasMotherTelePlusVoice.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\02CasGaziSummitRing.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\01CasAgniBanglatelBantel.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\AppServerHostnamesForCas.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomConfigMain.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDatabaseSettings.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomDirectorySettings.cs" />
@@ -150,7 +150,6 @@
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomProductAndServiceConfig.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomQuartzConfig.cs" />
     <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomServerConfig.cs" />
-    <Compile Include="config\cas\banglatelecom_cas\CasBanglaTelecomServiceGroups.cs" />
     <Compile Include="config\cas\btrc_cas\BtrcDatabaseSettings.cs" />
     <Compile Include="config\cas\btrc_cas\BtrcDirectorySettings.cs" />
     <Compile Include="config\cas\btrc_cas\BtrcPortalSetting.cs" />
@@ -165,7 +164,6 @@
     <Compile Include="config\cas\agni_cas\CasAgniProductAndServiceConfig.cs" />
     <Compile Include="config\cas\agni_cas\CasAgniQuartzConfig.cs" />
     <Compile Include="config\cas\agni_cas\CasAgniServerConfig.cs" />
-    <Compile Include="config\cas\agni_cas\CasAgniServiceGroups.cs" />
     <Compile Include="config\cas\agni_cas\Cas_AgniConfigMain.cs" />
     <Compile Include="config\cas\srtelecom_cas\CasSrtDatabaseSettings.cs" />
     <Compile Include="config\cas\srtelecom_cas\CasSrtDirectorySettings.cs" />
@@ -173,7 +171,6 @@
     <Compile Include="config\cas\srtelecom_cas\CasSrtProductAndServiceConfig.cs" />
     <Compile Include="config\cas\srtelecom_cas\CasSrtQuartzConfig.cs" />
     <Compile Include="config\cas\srtelecom_cas\CasSrtServerConfig.cs" />
-    <Compile Include="config\cas\srtelecom_cas\CasSrtServiceGroups.cs" />
     <Compile Include="config\cas\srtelecom_cas\Cas_SrtConfigMain.cs" />
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksAppServerConfig.cs" />
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksDatabaseSettings.cs" />
@@ -181,7 +178,6 @@
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksPortalSetting.cs" />
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksProductAndServiceConfig.cs" />
     <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksQuartzConfig.cs" />
-    <Compile Include="config\cas\gazinetworks_cas\CasGaziNetworksServiceGroups.cs" />
     <Compile Include="config\cas\gazinetworks_cas\Cas_GaziNetworksConfigMain.cs" />
     <Compile Include="config\cas\bantel_cas\CasBantelAppServerConfig.cs" />
     <Compile Include="config\cas\bantel_cas\CasBantelDatabaseSettings.cs" />
@@ -189,7 +185,6 @@
     <Compile Include="config\cas\bantel_cas\CasBantelPortalSetting.cs" />
     <Compile Include="config\cas\bantel_cas\CasBantelProductAndServiceConfig.cs" />
     <Compile Include="config\cas\bantel_cas\CasBantelQuartzConfig.cs" />
-    <Compile Include="config\cas\bantel_cas\CasBantelServiceGroups.cs" />
     <Compile Include="config\cas\bantel_cas\Cas_BantelConfigMain.cs" />
     <Compile Include="config\cas\banglaicx_cas\CasBanglaAppServerConfig.cs" />
     <Compile Include="config\cas\banglaicx_cas\CasBanglaDatabaseSettings.cs" />
@@ -197,7 +192,6 @@
     <Compile Include="config\cas\banglaicx_cas\CasBanglaPortalSetting.cs" />
     <Compile Include="config\cas\banglaicx_cas\CasBanglaProductAndServiceConfig.cs" />
     <Compile Include="config\cas\banglaicx_cas\CasBanglaQuartzConfig.cs" />
-    <Compile Include="config\cas\banglaicx_cas\CasBanglaServiceGroups.cs" />
     <Compile Include="config\cas\banglaicx_cas\Cas_BanglaConfigMain.cs" />
     <Compile Include="config\cas\imamnetwork_cas\CasImamNetworkAppServerConfig.cs" />
     <Compile Include="config\cas\imamnetwork_cas\CasImamNetworkDatabaseSettings.cs" />
@@ -205,7 +199,6 @@
     <Compile Include="config\cas\imamnetwork_cas\CasImamNetworkPortalSetting.cs" />
     <Compile Include="config\cas\imamnetwork_cas\CasImamNetworkProductAndServiceConfig.cs" />
     <Compile Include="config\cas\imamnetwork_cas\CasImamNetworkQuartzConfig.cs" />
-    <Compile Include="config\cas\imamnetwork_cas\CasImamNetworkServiceGroups.cs" />
     <Compile Include="config\cas\imamnetwork_cas\Cas_ImamNetworkConfigMain.cs" />
     <Compile Include="config\cas\mmcommunications_cas\CasMmCommunicationsAppServerConfig.cs" />
     <Compile Include="config\cas\mmcommunications_cas\CasMmCommunicationsDatabaseSettings.cs" />
@@ -213,7 +206,6 @@
     <Compile Include="config\cas\mmcommunications_cas\CasMmCommunicationsPortalSetting.cs" />
     <Compile Include="config\cas\mmcommunications_cas\CasMmCommunicationsProductAndServiceConfig.cs" />
     <Compile Include="config\cas\mmcommunications_cas\CasMmCommunicationsQuartzConfig.cs" />
-    <Compile Include="config\cas\mmcommunications_cas\CasMmCommunicationsServiceGroups.cs" />
     <Compile Include="config\cas\mmcommunications_cas\Cas_MmCommunicationsConfigMain.cs" />
     <Compile Include="config\cas\getco_cas\CasGetcoAppServerConfig.cs" />
     <Compile Include="config\cas\getco_cas\CasGetcoDatabaseSettings.cs" />
@@ -229,7 +221,6 @@
     <Compile Include="config\cas\paradise_cas\CasParadisePortalSetting.cs" />
     <Compile Include="config\cas\paradise_cas\CasParadiseProductAndServiceConfig.cs" />
     <Compile Include="config\cas\paradise_cas\CasParadiseQuartzConfig.cs" />
-    <Compile Include="config\cas\paradise_cas\CasParadiseServiceGroups.cs" />
     <Compile Include="config\cas\paradise_cas\Cas_ParadiseConfigMain.cs" />
     <Compile Include="config\cas\mnh_cas\CasMnHAppServerConfig.cs" />
     <Compile Include="config\cas\mnh_cas\CasMnHDatabaseSettings.cs" />
@@ -237,7 +228,6 @@
     <Compile Include="config\cas\mnh_cas\CasMnHPortalSetting.cs" />
     <Compile Include="config\cas\mnh_cas\CasMnHProductAndServiceConfig.cs" />
     <Compile Include="config\cas\mnh_cas\CasMnHQuartzConfig.cs" />
-    <Compile Include="config\cas\mnh_cas\CasMnHServiceGroups.cs" />
     <Compile Include="config\cas\mnh_cas\Cas_MnHConfigMain.cs" />
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldConfigMain.cs" />
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldDatabaseSettings.cs" />
@@ -246,7 +236,6 @@
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldProductAndServiceConfig.cs" />
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldQuartzConfig.cs" />
     <Compile Include="config\cas\crossworld_cas\CasCrossWorldServerConfig.cs" />
-    <Compile Include="config\cas\crossworld_cas\CasCrossWorldServiceGroups.cs" />
     <Compile Include="config\cas\ringtech_cas\CasRingTechConfigMain.cs" />
     <Compile Include="config\cas\ringtech_cas\CasRingTechDatabaseSettings.cs" />
     <Compile Include="config\cas\ringtech_cas\CasRingTechDirectorySettings.cs" />
@@ -254,14 +243,12 @@
     <Compile Include="config\cas\ringtech_cas\CasRingTechProductAndServiceConfig.cs" />
     <Compile Include="config\cas\ringtech_cas\CasRingTechQuartzConfig.cs" />
     <Compile Include="config\cas\ringtech_cas\CasRingTechServerConfig.cs" />
-    <Compile Include="config\cas\ringtech_cas\CasRingTechServiceGroups.cs" />
     <Compile Include="config\cas\teleexchange_cas\CasTeleExchangeAppServerConfig.cs" />
     <Compile Include="config\cas\teleexchange_cas\CasTeleExchangeDatabaseSettings.cs" />
     <Compile Include="config\cas\teleexchange_cas\CasTeleExchangeDirectorySettings.cs" />
     <Compile Include="config\cas\teleexchange_cas\CasTeleExchangePortalSetting.cs" />
     <Compile Include="config\cas\teleexchange_cas\CasTeleExchangeProductAndServiceConfig.cs" />
     <Compile Include="config\cas\teleexchange_cas\CasTeleExchangeQuartzConfig.cs" />
-    <Compile Include="config\cas\teleexchange_cas\CasTeleExchangeServiceGroups.cs" />
     <Compile Include="config\cas\teleexchange_cas\Cas_TeleExchangeConfigMain.cs" />
     <Compile Include="config\cas\newgenerationtelecom_cas\CasNewGenerationTelecomAppServerConfig.cs" />
     <Compile Include="config\cas\newgenerationtelecom_cas\CasNewGenerationTelecomDatabaseSettings.cs" />
@@ -269,7 +256,6 @@
     <Compile Include="config\cas\newgenerationtelecom_cas\CasNewGenerationTelecomPortalSetting.cs" />
     <Compile Include="config\cas\newgenerationtelecom_cas\CasNewGenerationTelecomProductAndServiceConfig.cs" />
     <Compile Include="config\cas\newgenerationtelecom_cas\CasNewGenerationTelecomQuartzConfig.cs" />
-    <Compile Include="config\cas\newgenerationtelecom_cas\CasNewGenerationTelecomServiceGroups.cs" />
     <Compile Include="config\cas\newgenerationtelecom_cas\Cas_NewGenerationTelecomConfigMain.cs" />
     <Compile Include="config\cas\softex_cas\CasSoftexAppServerConfig.cs" />
     <Compile Include="config\cas\softex_cas\CasSoftexDatabaseSettings.cs" />
@@ -277,7 +263,6 @@
     <Compile Include="config\cas\softex_cas\CasSoftexPortalSetting.cs" />
     <Compile Include="config\cas\softex_cas\CasSoftexProductAndServiceConfig.cs" />
     <Compile Include="config\cas\softex_cas\CasSoftexQuartzConfig.cs" />
-    <Compile Include="config\cas\softex_cas\CasSoftexServiceGroups.cs" />
     <Compile Include="config\cas\softex_cas\Cas_SoftexConfigMain.cs" />
     <Compile Include="config\cas\sheba_cas\CasShebaAppServerConfig.cs" />
     <Compile Include="config\cas\sheba_cas\CasShebaDatabaseSettings.cs" />
@@ -285,7 +270,6 @@
     <Compile Include="config\cas\sheba_cas\CasShebaPortalSetting.cs" />
     <Compile Include="config\cas\sheba_cas\CasShebaProductAndServiceConfig.cs" />
     <Compile Include="config\cas\sheba_cas\CasShebaQuartzConfig.cs" />
-    <Compile Include="config\cas\sheba_cas\CasShebaServiceGroups.cs" />
     <Compile Include="config\cas\sheba_cas\Cas_ShebaConfigMain.cs" />
     <Compile Include="config\cas\btcl_cas\CasBtclAppServerConfig.cs" />
     <Compile Include="config\cas\btcl_cas\CasBtclDatabaseSettings.cs" />
@@ -293,7 +277,6 @@
     <Compile Include="config\cas\btcl_cas\CasBtclPortalSetting.cs" />
     <Compile Include="config\cas\btcl_cas\CasBtclProductAndServiceConfig.cs" />
     <Compile Include="config\cas\btcl_cas\CasBtclQuartzConfig.cs" />
-    <Compile Include="config\cas\btcl_cas\CasBtclServiceGroups.cs" />
     <Compile Include="config\cas\btcl_cas\Cas_BtclConfigMain.cs" />
     <Compile Include="config\cas\mothertelecom_cas\CasMotherTelecomDatabaseSettings.cs" />
     <Compile Include="config\cas\mothertelecom_cas\CasMotherTelecomDirectorySettings.cs" />
@@ -301,7 +284,6 @@
     <Compile Include="config\cas\mothertelecom_cas\CasMotherTelecomProductAndServiceConfig.cs" />
     <Compile Include="config\cas\mothertelecom_cas\CasMotherTelecomQuartzConfig.cs" />
     <Compile Include="config\cas\mothertelecom_cas\CasMotherTelecomServerConfig.cs" />
-    <Compile Include="config\cas\mothertelecom_cas\CasMotherTelecomServiceGroups.cs" />
     <Compile Include="config\cas\mothertelecom_cas\Cas_MotherTelecomConfigMain.cs" />
     <Compile Include="config\cas\telePlusNewyork_cas\CasTeleplusNewyorkConfigMain.cs" />
     <Compile Include="config\cas\telePlusNewyork_cas\CasTeleplusNewyorkDatabaseSettings.cs" />
@@ -310,14 +292,12 @@
     <Compile Include="config\cas\telePlusNewyork_cas\CasTeleplusNewyorkProductAndServiceConfig.cs" />
     <Compile Include="config\cas\telePlusNewyork_cas\CasTeleplusNewyorkQuartzConfig.cs" />
     <Compile Include="config\cas\telePlusNewyork_cas\CasTeleplusNewyorkServerConfig.cs" />
-    <Compile Include="config\cas\telePlusNewyork_cas\CasTeleplusNewyorkServiceGroups.cs" />
     <Compile Include="config\cas\voicetel_cas\CasVoicetelDatabaseSettings.cs" />
     <Compile Include="config\cas\voicetel_cas\CasVoicetelDirectorySettings.cs" />
     <Compile Include="config\cas\voicetel_cas\CasVoicetelPortalSetting.cs" />
     <Compile Include="config\cas\voicetel_cas\CasVoicetelProductAndServiceConfig.cs" />
     <Compile Include="config\cas\voicetel_cas\CasVoicetelQuartzConfig.cs" />
     <Compile Include="config\cas\voicetel_cas\CasVoicetelServerConfig.cs" />
-    <Compile Include="config\cas\voicetel_cas\CasVoicetelServiceGroups.cs" />
     <Compile Include="config\cas\voicetel_cas\Cas_VoicetelConfigMain.cs" />
     <Compile Include="config\cas\summit_cas\CasSummitDatabaseSettings.cs" />
     <Compile Include="config\cas\summit_cas\CasSummitDirectorySettings.cs" />
@@ -325,7 +305,6 @@
     <Compile Include="config\cas\summit_cas\CasSummitProductAndServiceConfig.cs" />
     <Compile Include="config\cas\summit_cas\CasSummitQuartzConfig.cs" />
     <Compile Include="config\cas\summit_cas\CasSummitServerConfig.cs" />
-    <Compile Include="config\cas\summit_cas\CasSummitServiceGroups.cs" />
     <Compile Include="config\cas\summit_cas\Cas_SummitConfigMain.cs" />
     <Compile Include="config\cas\jibondhara_cas\CasJslAppServerConfig.cs" />
     <Compile Include="config\cas\jibondhara_cas\CasJslDatabaseSettings.cs" />
@@ -333,7 +312,6 @@
     <Compile Include="config\cas\jibondhara_cas\CasJslPortalSetting.cs" />
     <Compile Include="config\cas\jibondhara_cas\CasJslProductAndServiceConfig.cs" />
     <Compile Include="config\cas\jibondhara_cas\CasJslQuartzConfig.cs" />
-    <Compile Include="config\cas\jibondhara_cas\CasJslServiceGroups.cs" />
     <Compile Include="config\cas\jibondhara_cas\Cas_JslConfigMain.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleConfigMain.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleDatabaseSettings.cs" />
@@ -342,7 +320,23 @@
     <Compile Include="config\cas\purple_cas\CasPurpleProductAndServiceConfig.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleQuartzConfig.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleServerConfig.cs" />
-    <Compile Include="config\cas\purple_cas\CasPurpleServiceGroups.cs" />
+    <Compile Include="config\mirtelecom\MirAPPServerConfig.cs" />
+    <Compile Include="config\mirtelecom\MirAutomationConfig.cs" />
+    <Compile Include="config\mirtelecom\MirDatabaseSettings.cs" />
+    <Compile Include="config\mirtelecom\MirDirectorySetting.cs" />
+    <Compile Include="config\mirtelecom\MirPortalSetting.cs" />
+    <Compile Include="config\mirtelecom\MirProductAndServiceSettings.cs" />
+    <Compile Include="config\mirtelecom\MirQuartzConfig.cs" />
+    <Compile Include="config\mirtelecom\MirServiceGroups.cs" />
+    <Compile Include="config\mirtelecom\MirConfigMain.cs" />
+    <Compile Include="config\paradise\ParadiseConfigMain.cs" />
+    <Compile Include="config\paradise\ParadiseDatabaseSettings.cs" />
+    <Compile Include="config\paradise\ParadiseDirectorySettings.cs" />
+    <Compile Include="config\paradise\ParadisePortalSetting.cs" />
+    <Compile Include="config\paradise\ParadiseProductAndServiceConfig.cs" />
+    <Compile Include="config\paradise\ParadiseQuartzConfig.cs" />
+    <Compile Include="config\paradise\ParadiseServerConfig.cs" />
+    <Compile Include="config\paradise\ParadiseServiceGroups.cs" />
     <Compile Include="config\purple\PurpleConfigMain.cs" />
     <Compile Include="config\purple\PurpleDatabaseSettings.cs" />
     <Compile Include="config\purple\PurpleDirectorySettings.cs" />
@@ -352,25 +346,26 @@
     <Compile Include="config\purple\PurpleServerConfig.cs" />
     <Compile Include="config\purple\PurpleServiceGroups.cs" />
     <Compile Include="config\allDeployment\AllDeploymenProfiles.cs" />
-    <Compile Include="config\_helper\CasCdrSettingHelper.cs" />
-    <Compile Include="config\allDeployment\cas\mysqlClusters\CommonSlaveWin01.cs" />
-    <Compile Include="config\_helper\CasDockerDbHelper.cs" />
-    <Compile Include="config\_helper\CasDbHelperOld.cs" />
-    <Compile Include="config\_helper\CasPortalSettingsHelper.cs" />
-    <Compile Include="config\_helper\CasQuartzHelper.cs" />
-    <Compile Include="config\_helper\CasNeInfoHelper.cs" />
-    <Compile Include="config\_helper\CasServiceGroupHelper.cs" />
-    <Compile Include="config\_helper\CasTbPartnerFactory.cs" />
-    <Compile Include="config\_helper\DeploymentEnvironment.cs" />
+    <Compile Include="config\cas\_helper\CasCdrSettingHelper.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\CommonSlaveWin01.cs" />
+    <Compile Include="config\cas\_helper\CasDockerDbHelper.cs" />
+    <Compile Include="config\cas\_helper\CasPortalDbHelper.cs" />
+    <Compile Include="config\cas\_helper\CasPortalSettingsHelper.cs" />
+    <Compile Include="config\cas\_helper\CasQuartzHelper.cs" />
+    <Compile Include="config\cas\_helper\CasNeInfoHelper.cs" />
+    <Compile Include="config\cas\_helper\CasServiceGroupHelper.cs" />
+    <Compile Include="config\cas\_helper\CasTbPartnerFactory.cs" />
+    <Compile Include="config\cas\_helper\DeploymentEnvironment.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IndexSwitchID.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IcxSp.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\ServiceGroupNotNullCdrError.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\Ne.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\IncreaseFldLength.cs" />
     <Compile Include="config\cas\_dbscripts\ddl\ViewToBTRC.cs" />
-    <Compile Include="config\_helper\TemplateNe.cs" />
+    <Compile Include="config\cas\_helper\TemplateNe.cs" />
     <Compile Include="generators\DeploymentHelper.cs" />
     <Compile Include="config\cas\_dbscripts\seedData\sql\DomesticRateplaneAssignmentForCAS.cs" />
+    <Compile Include="generators\telcoBilling\MySqlPermissionManager.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingConfigGenerator.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingQuartzWriter.cs" />
     <Compile Include="generators\BIllingRulesDefiner.cs" />
@@ -433,6 +428,7 @@
     <Compile Include="util\CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingMenu.cs" />
     <None Include="app.manifest" />
+    <None Include="config\cas\_helper\casOperatorInfo.xlsx" />
     <None Include="config\cas\btrc_cas\summit.conf" />
     <None Include="config\btel\btel.conf" />
     <None Include="config\btel\scripts\apppools.xml.bak" />
@@ -466,7 +462,19 @@
     <None Include="config\cas\voicetel_cas\summit_cas.conf" />
     <None Include="config\cas\summit_cas\summit_cas.conf" />
     <None Include="config\cas\jibondhara_cas\jslRoutes.json" />
-    <None Include="config\_helper\casOperatorInfo.xlsx" />
+    <None Include="config\mirtelecom\scripts\apppools.xml.bak" />
+    <None Include="config\mirtelecom\scripts\appPool_platinum.iisScript" />
+    <None Include="config\mirtelecom\scripts\ftp_platinum.iisScript" />
+    <None Include="config\mirtelecom\scripts\ftp_platinum.iisScript.bak" />
+    <None Include="config\mirtelecom\scripts\http_platinum.iisScript" />
+    <None Include="config\mirtelecom\scripts\http_platinum.iisScript.bak" />
+    <None Include="config\mirtelecom\scripts\import_commands.txt.bak" />
+    <None Include="config\mirtelecom\scripts\sites.txt.bak" />
+    <None Include="config\mirtelecom\tmplPortalAppPools.txt.bak" />
+    <None Include="config\mirtelecom\tmplPortalAppPools.xml.bak" />
+    <None Include="config\mirtelecom\tmplPortalFtpSite.txt.bak" />
+    <None Include="config\mirtelecom\tmplPortalWebSite.txt.bak" />
+    <None Include="config\paradise\paradise.conf" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -523,6 +531,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="config\allDeployment\cas\" />
     <Folder Include="config\banglatelecom\_dbscripts\ddl\" />
     <Folder Include="config\banglatelecom\_dbscripts\seedData\json\" />
     <Folder Include="config\banglatelecom\_dbscripts\seedData\sql\" />
@@ -531,6 +540,10 @@
     <Folder Include="config\cas\_dbscripts\seedData\json\" />
     <Folder Include="config\jsl\_dbscripts\ddl\" />
     <Folder Include="config\jsl\_dbscripts\seedData\sql\" />
+    <Folder Include="config\mirtelecom\_dbscripts\ddl\" />
+    <Folder Include="config\mirtelecom\_dbscripts\seedData\sql\" />
+    <Folder Include="config\paradise\_dbscripts\seedData\json\" />
+    <Folder Include="config\paradise\_dbscripts\seedData\sql\" />
     <Folder Include="config\purple\_dbscripts\ddl\" />
     <Folder Include="config\purple\_dbscripts\seedData\" />
     <Folder Include="config\srtelecom\_dbscripts\ddl\" />
@@ -615,6 +628,20 @@
     <Content Include="config\cas\purple_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\purple_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\purple_cas\tmplPortalWebSite.txt" />
+    <Content Include="config\mirtelecom\scripts\apppools.xml" />
+    <Content Include="config\mirtelecom\scripts\import_commands.txt" />
+    <Content Include="config\mirtelecom\scripts\sites.txt" />
+    <Content Include="config\mirtelecom\scripts\sites_lastworking.txt" />
+    <Content Include="config\mirtelecom\tmplPortalAppPools.txt" />
+    <Content Include="config\mirtelecom\tmplPortalFtpSite.txt" />
+    <Content Include="config\mirtelecom\tmplPortalWebSite.txt" />
+    <Content Include="config\mirtelecom\_dbscripts\quartzTables.sql" />
+    <Content Include="config\paradise\tmplPortalAppPools.txt" />
+    <Content Include="config\paradise\tmplPortalFtpSite.txt" />
+    <Content Include="config\paradise\tmplPortalWebSite.txt" />
+    <Content Include="config\paradise\_dbscripts\ddl\sql\icxSp.sql" />
+    <Content Include="config\paradise\_dbscripts\ddl\sql\indexSwitch.txt" />
+    <Content Include="config\paradise\_dbscripts\quartzTables.sql" />
     <Content Include="config\purple\tmplPortalAppPools.txt" />
     <Content Include="config\purple\tmplPortalFtpSite.txt" />
     <Content Include="config\purple\tmplPortalWebSite.txt" />

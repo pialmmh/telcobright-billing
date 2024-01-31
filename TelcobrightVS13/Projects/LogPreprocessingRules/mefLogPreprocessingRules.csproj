@@ -73,14 +73,6 @@
       <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Common.Logging, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.3.3.1\lib\net40\Common.Logging.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.3.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.Core.3.3.1\lib\net40\Common.Logging.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -113,7 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CdrPredecoder.cs" />
-    <Compile Include="Notsure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +138,11 @@
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)WS_Topshelf_Quartz\bin\Extensions\$(TargetFileName)
 if not exist $(SolutionDir)CasTelcobright\bin\Extensions mkdir $(SolutionDir)CasTelcobright\bin\Extensions
 copy $(TargetPath) $(SolutionDir)CasTelcobright\bin\Extensions\$(TargetFileName)
+if not exist $(SolutionDir)Portal\bin mkdir $(SolutionDir)PortalBTRC\bin
+copy $(TargetPath) $(SolutionDir)Portal\bin\$(TargetFileName)
+if not exist $(SolutionDir)PortalBTRC\bin mkdir $(SolutionDir)PortalBTRC\bin
+copy $(TargetPath) $(SolutionDir)PortalBTRC\bin\$(TargetFileName)
+
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

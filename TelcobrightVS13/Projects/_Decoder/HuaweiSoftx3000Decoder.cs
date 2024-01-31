@@ -21,7 +21,7 @@ namespace Decoders
         public override int Id => 3;
         public override string HelpText => "Decodes Huawei Softx3000 CDR.";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
 
@@ -314,6 +314,7 @@ namespace Decoders
                     }
                     thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
+                    thisRow[Fn.Partialflag] = "0";
                     decodedRows.Add(thisRow);
                 }
                 catch (Exception e1)

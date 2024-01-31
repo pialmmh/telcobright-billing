@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MediationModel;
 using Newtonsoft.Json;
-using org.springframework.beans.factory;
 
 namespace TelcobrightMediation.Accounting
 {

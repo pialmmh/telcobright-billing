@@ -222,8 +222,9 @@ namespace TelcobrightFileOperations
                 }
                 string tempExt = "";
                 string secondaryDirectory = syncSettingsSource.SecondaryDirectory;
-                string downloadedDirFullPath = Path.GetDirectoryName(srcInfoRemote.FullPath) + "/" + secondaryDirectory;
-                string alternateDownloadPathFromSecondaryDir = downloadedDirFullPath + "/" +
+                string downloadedDirFullPath = Path.GetDirectoryName(srcInfoRemote.FullPath).Replace(Path.DirectorySeparatorChar.ToString()
+                    ,Path.AltDirectorySeparatorChar.ToString()) + Path.AltDirectorySeparatorChar + secondaryDirectory;
+                string alternateDownloadPathFromSecondaryDir = downloadedDirFullPath + Path.AltDirectorySeparatorChar +
                     Path.GetFileName(srcInfoRemote.FullPath);
                 
                 bool alreadyDownloadingFromSecondaryDir = false;
@@ -235,7 +236,17 @@ namespace TelcobrightFileOperations
                     string tempFile = dstInfoLocal.FullPath + tempExt;
                     try
                     {
-                        remoteFileInfo= session.GetFileInfo(srcInfoRemote.FullPath);
+                        //remoteFileInfo= session.GetFileInfo(srcInfoRemote.FullPath);
+                        if (session.FileExists(srcInfoRemote.FullPath))
+                        {
+                             remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);   
+                        }
+                        else
+                        {
+                            srcInfoRemote.FullPath = alternateDownloadPathFromSecondaryDir;
+                            remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);
+                            alreadyDownloadingFromSecondaryDir = true;
+                        }
                     }
                     catch (Exception e)
                     {

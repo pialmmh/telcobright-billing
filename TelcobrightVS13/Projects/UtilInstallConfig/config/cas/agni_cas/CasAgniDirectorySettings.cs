@@ -41,7 +41,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/agni/tdm",
+                StartingPath = "Y:/telcobright/vault/resources/cdr/agni/tdm",
                 User = "",
                 Pass = "",
             };
@@ -52,7 +52,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/agni/ip",
+                StartingPath = "Y:/telcobright/vault/resources/cdr/agni/ip",//D:\telcobright\vault\resources\cdr\agni\ip\Aug
                 User = "",
                 Pass = "",
             };

@@ -35,10 +35,7 @@ namespace RateSheetFormat
             get { return this._helpText; }
         }
 
-        public int Id
-        {
-            get { return 2; }//change for each extension
-        }
+        public int Id => 2;
 
         public Dictionary<string, countrycode> DicCountryCode = new Dictionary<string, countrycode>();
         public Dictionary<string, countrycode> DicCountryName = new Dictionary<string, countrycode>();

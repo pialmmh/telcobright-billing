@@ -43,12 +43,16 @@ namespace Jobs
                 }
                 else if (delParam.FileLocation.LocationType == "vault")
                 {
-                    //Vault vault = input.Tbc.DirectorySettings.Vaults.First(c => c.Name == delParam.FileLocation.Name);
-                    //if (vault.DeleteSingleFile(delParam.FileName) == false) return JobCompletionStatus.Incomplete;
-                    File.Delete(delParam.FileName);
+                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete");
+                    string fileToDelete = delParam.FileLocation.StartingPath.Replace("/", Path.DirectorySeparatorChar.ToString()) + Path.DirectorySeparatorChar + delParam.FileName;
+                    if (File.Exists(fileToDelete))
+                    {
+                        File.Delete(fileToDelete);
+                    }
+                    return JobCompletionStatus.Complete;
                 }
             }
-            return JobCompletionStatus.Complete;
+            return JobCompletionStatus.Incomplete;
         }
 
         public object PreprocessJob(object data)
@@ -69,15 +73,16 @@ namespace Jobs
         private static JobParamFileDelete GetJobParamByHandlingDeserializeErrorFromBackslash
             (OptimizerJobInputData input)
         {
-            JobParamFileDelete delParam = null;
-            var jobParameter = input.Job.JobParameter;
+            JobParamFileDelete delParam = new JobParamFileDelete();
+            string jobParameter = input.Job.JobParameter;
             if (jobParameter.Contains("\"PathSeparator\":\"\\"))
             {
-                jobParameter = jobParameter.Replace("\"PathSeparator\":\"\\", "\"PathSeparator\":\"`");
-                jobParameter = jobParameter.Replace("unsplit\\", "unsplit`");
+                //jobParameter = jobParameter.Replace("\"PathSeparator\":\"\\", "\"PathSeparator\":\"`");
+                //jobParameter = jobParameter.Replace("unsplit\\", "unsplit`");
+                jobParameter = jobParameter.Replace("\\", "/");
                 delParam = JsonConvert.DeserializeObject<JobParamFileDelete>(jobParameter);
                 delParam.FileLocation.PathSeparator = delParam.FileLocation.PathSeparator.Replace("`", "\\");
-                delParam.FileName= delParam.FileName.Replace("`", "\\");
+                delParam.FileName = delParam.FileName.Replace("`", "\\");
 
                 return delParam;
             }

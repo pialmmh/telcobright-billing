@@ -96,16 +96,26 @@
   <ItemGroup>
     <Compile Include="CataleyaCsvDecoderBanIcxNoFailedTEST.cs" />
     <Compile Include="CataleyaCsvDecoderBantelTEST.cs" />
+    <Compile Include="CataleyaCsvDecoderGaziNoFailedV2.cs" />
     <Compile Include="CataleyaCsvDecoderMnhNoFailed.cs" />
+    <Compile Include="CataleyaCsvDecoderSoftexNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
+    <Compile Include="CataleyaCsvDecoderJslNoFailedGzip.cs" />
+    <Compile Include="DialogicBorderNetMirIgwNoFailed.cs" />
+    <Compile Include="DialogicBorderNetMirIgwNoFailedGzip.cs" />
+    <Compile Include="GenbandC3.cs" />
+    <Compile Include="GenbandC3WithGz.cs" />
     <Compile Include="Helper\NokiaDecodeHelper.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderNGT.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderMother.cs" />
     <Compile Include="GenbandC3Gazi.cs" />
     <Compile Include="GenbandC3CrossWorld.cs" />
     <Compile Include="GenbandC3DecoderBangla.cs" />
+    <Compile Include="Helper\TelcobridgeAggregationHelper.cs" />
+    <Compile Include="HuaweiSoftx3000DecoderBntel.cs" />
     <Compile Include="HuaweiSoftx3000DecoderBtcl.cs" />
-    <Compile Include="TelcobridgeDecodingGaziTEST.cs" />
+    <Compile Include="TelcobridgeDecoderTelexchange.cs" />
+    <Compile Include="TelcobridgeDecoderGazi.cs" />
     <Compile Include="GNEWDecoderRingTechTEST.cs" />
     <Compile Include="WTLDecoderTeleplusTEST.cs" />
     <Compile Include="CataleyaCsvDecoderCWLNoFailed.cs" />
@@ -120,7 +130,6 @@
     <Compile Include="DialogicBorderNetMirNoFailed.cs" />
     <Compile Include="DialogicControlSwitchDecoder.cs" />
     <Compile Include="DialogicBorderNetMirNoFailedGzipMirNoFailed.cs" />
-    <Compile Include="GenbandC3.cs" />
     <Compile Include="GenbandS3Decoder.cs" />
     <Compile Include="HuaweiSoftx3000DecoderMNH.cs" />
     <Compile Include="HuaweiSoftx3000Decoder.cs" />
@@ -156,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

@@ -21,7 +21,7 @@ namespace Decoders
         public override int Id => 4;
         public override string HelpText => "Decodes Sansay CDR.";
         public override CompressionType CompressionType { get; set; }
-        public override string PartialTablePrefix { get; }
+        public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }//required for testing with derived mock collector class
@@ -243,6 +243,7 @@ namespace Decoders
                             thisNormalizedRow[54] = "1";//add valid flag for this type of switch, valid flag comes from cdr for zte
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
                             thisNormalizedRow[Fn.FinalRecord] = "1";
+                            thisNormalizedRow[Fn.Partialflag] = "0";
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }

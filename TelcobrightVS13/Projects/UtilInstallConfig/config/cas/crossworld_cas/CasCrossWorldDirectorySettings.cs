@@ -38,7 +38,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/ip",
+                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/ip",
                 User = "",
                 Pass = "",
             };
@@ -49,18 +49,18 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/tdm",
+                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/tdm",
                 User = "",
                 Pass = "",
             };
             FileLocation vaultTelcobridgeCTG = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.TelcobridgeCTG",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/tdm1/CTG",
+                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/tdm1/CTG",
                 User = "",
                 Pass = "",
             };
@@ -68,12 +68,12 @@ namespace InstallConfig
 
             FileLocation vaultTelcobridgeKHL = new FileLocation()
             {
-                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.TelcobridgeKHL",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "f:/telcobright/vault/resources/cdr/crossworld/tdm1/KHL",
+                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/tdm1/KHL",
                 User = "",
                 Pass = "",
             };
@@ -82,6 +82,8 @@ namespace InstallConfig
             
             this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name,vaultCataleya);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultGenband.Name, vaultGenband);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridgeKHL.Name, vaultTelcobridgeKHL);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultTelcobridgeCTG.Name, vaultTelcobridgeCTG);
           
             
         }

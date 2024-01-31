@@ -22,7 +22,7 @@
 
         <div class="page">
 
-            <div class="header" id="mygradient2" style="min-height: 50px; min-width: 100%; background-position: top; background-image: url('/img/NAV_BG1.jpg'); background-size: 100% 100%; background-size: cover; background-position: center;">
+            <div class="header" id="mygradient2" style="height: 50px; width: 1799px; margin: 0 auto; background-position: top; background-image: url('/img/NAV_BG1.jpg'); background-size: 100% 100%; background-size: cover; background-position: center;">
                 <div class="logo" style="float: left;">
                     <div style="float: left;">
                         
@@ -53,7 +53,7 @@
                 <%--============================--%>
                 <div class="login" style="float: right; padding-top: 10px;">
                     <div class="loginDisplay">
-                        <span style="padding-left: 80px; width: 100px; margin-right: 200px; font-weight: bold;">
+                        <span style="padding-left: 60px; width: 100px; margin-right: 200px; font-weight: bold;">
                             <asp:Label ID="lblScreenTitle" runat="server" Text=""></asp:Label>
                         </span>
 
@@ -101,17 +101,17 @@
                                 <asp:TreeNode Value="Rate Plan" Text="Rate Plan" NavigateUrl="~/config/rateplan.aspx" />
                                 <asp:TreeNode Value="Rate Plan Assignment" Text="Rate Plan Assignment" NavigateUrl="~/config/rateassignment.aspx" />
                                 <asp:TreeNode Value="Rates" Text="Rates" NavigateUrl="~/config/rates.aspx" />
-                                <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR" NavigateUrl="~/config/lcr.aspx" />
+                                <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR" NavigateUrl="" />
                                 <asp:TreeNode Value="View Routes" Text="View Routes" NavigateUrl="~/config/ViewRoutes.aspx" />
 
 
                             </asp:TreeNode>
                             <asp:TreeNode Value="Billing" Expanded="True" Text="Billing" SelectAction="None">
-                                <asp:TreeNode Value="Conversion Rates" Text="Conversion Rates" NavigateUrl="~/config/ConversionRates.aspx" />
-                                <asp:TreeNode Value="Payment Management" Text="Payment Management" NavigateUrl="~/config/PaymentManagement.aspx" />
-                                <asp:TreeNode Value="Balance Adjustment" Text="Balance Adjustment" NavigateUrl="~/config/BalanceAdjustment.aspx" />
-                                <asp:TreeNode Value="Invoice Generation" Text="Invoice Generation" NavigateUrl="~/config/InvoiceGeneration.aspx" />
-                                <asp:TreeNode Value="Generated Invoices" Text="Generated Invoices" NavigateUrl="~/config/GeneratedInvoices.aspx" />
+                                <asp:TreeNode Value="Conversion Rates" Text="Conversion Rates" NavigateUrl="" />
+                                <asp:TreeNode Value="Payment Management" Text="Payment Management" NavigateUrl="" />
+                                <asp:TreeNode Value="Balance Adjustment" Text="Balance Adjustment" NavigateUrl="" />
+                                <asp:TreeNode Value="Invoice Generation" Text="Invoice Generation" NavigateUrl="" />
+                                <asp:TreeNode Value="Generated Invoices" Text="Generated Invoices" NavigateUrl="" />
                             </asp:TreeNode>
 
                             <asp:TreeNode Value="Reports" Expanded="True" Text="Reports" SelectAction="None">
@@ -123,30 +123,50 @@
               <asp:TreeNode Value="Route Wise Traffic" Text="Route Wise" SelectAction="Select" NavigateUrl="None"> </asp:TreeNode>
               
             </asp:TreeNode>--%>
-                                <asp:TreeNode Value="Transit" Expanded="True" Text="Transit" SelectAction="None">
+
+                                
+                                <asp:TreeNode Value="DomesticWithLtfs" Text="Domestic With LTFS" SelectAction="Select" NavigateUrl="~/reports/icx/DomesticWithLtfs.aspx"></asp:TreeNode>
+                                <asp:TreeNode Value="Int. Incoming" Text="Int. Incoming" SelectAction="Select" NavigateUrl="~/reports/icx/InternationalIn_ICX.aspx"></asp:TreeNode>
+                                <asp:TreeNode Value="Int. Outgoing" Text="Int. Outgoing" SelectAction="Select" NavigateUrl="~/reports/icx/InternationalOut_ICX.aspx"></asp:TreeNode>
+                                <asp:TreeNode Value="LTFS" Text="LTFS" SelectAction="Select" NavigateUrl="~/reports/icx/LocalTollFree.aspx"></asp:TreeNode>
+                                <asp:TreeNode Value="Domestic" Text="Domestic" SelectAction="Select" NavigateUrl="~/reports/icx/Domestic.aspx"></asp:TreeNode>
+
+
+                                <asp:TreeNode Value="ANS Wise Report" Text="ANS Wise Report" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/ANSWiseMonthlyReport.aspx"></asp:TreeNode>
+                                <asp:TreeNode Value="DailyInput" Text="Daily Report" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/DailyInputICX.aspx"></asp:TreeNode>
+                                <asp:TreeNode Value="MonthlyInput" Text="ICX Wise Monthly Report" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/MonthlyInputICX.aspx"></asp:TreeNode>
+                                    
+
+                                
+                               
+                               
+
+
+
+                                <asp:TreeNode Value="Transit" Expanded="True" Text="Transit" SelectAction="None" >
                                     <asp:TreeNode Value="Local" Text="Local" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTransit.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalInTransit.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/reports/transit/InternationalOutTransit.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"></asp:TreeNode>
-                                    <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl="~/reports/transit/AlphatechPremium.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl=""></asp:TreeNode>
 
                                     <%--            <asp:TreeNode Value="Local" Expanded="True" Text="Local" SelectAction="None">
                 
-            </asp:TreeNode>            
-            <asp:TreeNode Value="Intl. Incoming" Expanded="True" Text="Intl. Incoming" SelectAction="None">
+                                    </asp:TreeNode>            
+                                    <asp:TreeNode Value="Intl. Incoming" Expanded="True" Text="Intl. Incoming" SelectAction="None">
                 
-            </asp:TreeNode>
-            <asp:TreeNode Value="Intl. Outgoing" Expanded="True" Text="Intl. Outgoing" SelectAction="None">
+                                    </asp:TreeNode>
+                                    <asp:TreeNode Value="Intl. Outgoing" Expanded="True" Text="Intl. Outgoing" SelectAction="None">
                 
-            </asp:TreeNode>
-            <asp:TreeNode Value="Local Toll Free" Expanded="True" Text="Local Toll Free" SelectAction="None">
+                                    </asp:TreeNode>
+                                    <asp:TreeNode Value="Local Toll Free" Expanded="True" Text="Local Toll Free" SelectAction="None">
                 
-            </asp:TreeNode>
-            <asp:TreeNode Value="Local Toll Free Premium" Expanded="True" Text="Local Toll Free Premium" SelectAction="None">
+                                    </asp:TreeNode>
+                                    <asp:TreeNode Value="Local Toll Free Premium" Expanded="True" Text="Local Toll Free Premium" SelectAction="None">
                 
-            </asp:TreeNode>--%>
+                                    </asp:TreeNode>--%>
                                 </asp:TreeNode>
-                                <asp:TreeNode Value="IGW" Expanded="True" Text="IGW" SelectAction="None">
+                                <asp:TreeNode Value="IGW" Expanded="False" Text="IGW" SelectAction="None">
                                     <asp:TreeNode Value="Intl. Incoming" Expanded="True" Text="Intl. Incoming" SelectAction="None">
                                         <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/InternationalIn.aspx"></asp:TreeNode>
                                         <asp:TreeNode Value="Route Wise Traffic" Text="Route Wise" SelectAction="Select" NavigateUrl="~/reports/RouteInternationalIn.aspx"></asp:TreeNode>
@@ -154,41 +174,30 @@
                                         <asp:TreeNode Value="Cause Codes (by Route)" Text="Cause Codes (by Route)" NavigateUrl="~/reports/CauseRouteInternationalIn.aspx"></asp:TreeNode>
                                     </asp:TreeNode>
 
-                                    <asp:TreeNode Value="Intl. Outgoing" Expanded="True" Text="Intl. Outgoing" SelectAction="None">
+                                    <asp:TreeNode Value="Intl. Outgoing" Expanded="False" Text="Intl. Outgoing" SelectAction="None">
                                         <asp:TreeNode Value="Traffic" Text="Traffic" NavigateUrl="~/reports/InternationalOut.aspx"></asp:TreeNode>
                                         <asp:TreeNode Value="Call Analysis" Text="Call Analysis" NavigateUrl="~/reports/OutgoingCallAnalysis.aspx"></asp:TreeNode>
                                         <asp:TreeNode Value="Cause Codes" Text="Cause Codes" NavigateUrl="~/reports/CauseInternationalOut.aspx"></asp:TreeNode>
                                     </asp:TreeNode>
                                 </asp:TreeNode>
-                                <asp:TreeNode Value="ICX" Expanded="True" Text="ICX" SelectAction="None">
-                                    <asp:TreeNode Value="Domestic" Expanded="True" Text="Domestic" SelectAction="None">
-                                        <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/Domestic.aspx"></asp:TreeNode>
-                                        <asp:TreeNode Value="TrafficWithLtfs" Text="Traffic With LTFS" SelectAction="Select" NavigateUrl="~/reports/icx/DomesticWithLtfs.aspx"></asp:TreeNode>
-                                    </asp:TreeNode>
-                                    <asp:TreeNode Value="Int.Incom" Expanded="True" Text="Int.Incom" SelectAction="None">
-                                        <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/InternationalIn_ICX.aspx"></asp:TreeNode>
-                                    </asp:TreeNode>
-                                    <asp:TreeNode Value="Int.Out" Expanded="True" Text="Int.Out" SelectAction="None">
-                                        <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/InternationalOut_ICX.aspx"></asp:TreeNode>
-                                    </asp:TreeNode>
-                                    <asp:TreeNode Value="Local Toll Free" Expanded="True" Text="Local Toll Free" SelectAction="None">
-                                        <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/icx/LocalTollFree.aspx"></asp:TreeNode>
-                                    </asp:TreeNode>
-                                </asp:TreeNode>
 
-                                <asp:TreeNode Value="btrc" Expanded="True" Text="BTRC Reports " SelectAction="None">
+                               <%-- <asp:TreeNode Value="ICX" Expanded="True" Text="ICX" SelectAction="None">
+                                    
+                                </asp:TreeNode>--%>
+
+                               <%-- <asp:TreeNode Value="btrc" Expanded="True" Text="BTRC Reports " SelectAction="None">
                                     <asp:TreeNode Value="daily" Text="Daily Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/DailyReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="monthly" Text="Monthly Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="monthlyout" Text="Monthly Outgoing Summary" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/MonthlyOutgoingSummary.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="weeklyDom" Text="Weekly Domestic Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyDomesticReport.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="weeklyInt" Text="Weekly International Report" SelectAction="Select" NavigateUrl="~/reports/icx/btrc/WeeklyInternationalReport.aspx"></asp:TreeNode>
-                                </asp:TreeNode>
+                                </asp:TreeNode>--%>
 
 
-                                <asp:TreeNode Value="CDR" Expanded="True" Text="CDR" SelectAction="None">
+                                <%--<asp:TreeNode Value="CDR" Expanded="True" Text="CDR" SelectAction="None">
                                     <asp:TreeNode Value="View & Export" Text="View & Export" NavigateUrl="~/reports/cdr.aspx"></asp:TreeNode>
                                 </asp:TreeNode>
-                                <asp:TreeNode Value="Payment History" Expanded="True" Text="Payment History" NavigateUrl="~/reports/PaymentHistory.aspx"></asp:TreeNode>
+                                <asp:TreeNode Value="Payment History" Expanded="True" Text="Payment History" NavigateUrl="~/reports/PaymentHistory.aspx"></asp:TreeNode>--%>
 
                                 <%--<asp:TreeNode Value="Route Utilization" Expanded="True" Text="Route Utilization"  SelectAction="None">
                 <asp:TreeNode Value="Ingress-Egress" Text="Ingress-Egress" NavigateUrl="~/reports/RouteUtilization.aspx" > </asp:TreeNode>
@@ -206,6 +215,10 @@
                                     <asp:TreeNode Value="DomesticWithLtfs" Text="Domestic With LTFS" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasDomesticWithLtfs.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Incoming" Text="Intl. Incoming" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalIn_ICX.aspx"></asp:TreeNode>
                                     <asp:TreeNode Value="Intl. Outgoing" Text="Intl. Outgoing" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/CasInternationalOut_ICX.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="All Trafic" Text="All Trafic" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/AllTrafic.aspx"></asp:TreeNode>
+                                    <asp:TreeNode Value="Daily Report Submission" Text="Daily Report Submission" SelectAction="Select" NavigateUrl="~/ICX_Reports/Cas_ICX/DailyInput.aspx"></asp:TreeNode>
+
+
                                     <%--  <asp:TreeNode Value="Toll Free" Text="Toll Free" SelectAction="Select" NavigateUrl="~/reports/transit/LocalTollFree.aspx"> </asp:TreeNode>
             <asp:TreeNode Value="Alphatech Premium" Text="Alphatech Premium" SelectAction="Select" NavigateUrl="~/reports/transit/AlphatechPremium.aspx"> </asp:TreeNode>
 
@@ -243,9 +256,13 @@
 
                                 <asp:TreeNode Value="Tgs" Text="Tgs" NavigateUrl="~/Mediation/Tgs.aspx" />
                                 <asp:TreeNode Value="Jobs" Text="Jobs" NavigateUrl="~/Mediation/Mediation.aspx" />
+                                <asp:TreeNode Value="File Reconciliation" Text="File Reconciliation" NavigateUrl="~/Mediation/CDRFileReconciliation.aspx" />
+
                                 <%--<asp:TreeNode Value="Error Calls" Text="Error Calls" NavigateUrl="~/Mediation/CdrError.aspx" > </asp:TreeNode>
                                 <asp:TreeNode Value="Mediation Errors" Text="Mediation Errors" NavigateUrl="~/Mediation/MediationError.aspx" > </asp:TreeNode>--%>
                                 <asp:TreeNode Value="Create Batch Job" Text="Create Batch Job" NavigateUrl="~/config/Batchjob.aspx" />
+                                <asp:TreeNode Value="Job Processing Status" Text="Job Processing Status" NavigateUrl="~/Mediation/JobProcessingStatus.aspx" />
+                                <asp:TreeNode Value="IP Job Table Status" Text="IP Job Table Status" NavigateUrl="~/Mediation/IPJobTableStatus.aspx" />
                                 <%--<asp:TreeNode Value="View Batch Job" Text="View Batch Job" NavigateUrl="~/reports/MediationBatch.aspx" />--%>
 
                             </asp:TreeNode>

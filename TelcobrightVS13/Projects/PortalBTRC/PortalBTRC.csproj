@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,13 +52,10 @@
     </Reference>
     <Reference Include="AjaxMin">
       <HintPath>..\packages\AjaxMin.4.97.4951.28483\lib\net40\AjaxMin.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ClosedXML, Version=0.76.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
@@ -78,30 +74,6 @@
       <HintPath>..\packages\CronExpressionDescriptor.2.0.2\lib\netstandard1.1\CronExpressionDescriptor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Charts.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Data.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\DevExpress.Data.v15.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.DataAccess.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Office.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.PivotGrid.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Printing.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\DevExpress.Printing.v15.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.RichEdit.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Sparkline.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Web.ASPxThemes.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Web.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpo.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraCharts.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraGauges.v15.1.Core, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraReports.v15.1, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\DevExpress.XtraReports.v15.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraReports.v15.1.Web, Version=15.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
@@ -120,26 +92,26 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="EPPlus, Version=4.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.4.0.5\lib\net20\EPPlus.dll</HintPath>
+    <Reference Include="EPPlus, Version=7.0.0.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.7.0.0\lib\net35\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.6.1.1\lib\net35\EPPlus.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.System.Drawing.6.1.1\lib\net35\EPPlus.System.Drawing.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Itenso.TimePeriod, Version=2.1.1.0, Culture=neutral, PublicKeyToken=8cb6db75b4e81486, processorArchitecture=MSIL">
       <HintPath>..\packages\TimePeriodLibrary.NET.2.1.1\lib\net46\Itenso.TimePeriod.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Kentor.OwinCookieSaver, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kentor.OwinCookieSaver.1.1.0\lib\net45\Kentor.OwinCookieSaver.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Activities.Build" />
     <Reference Include="Microsoft.AspNet.EntityDataSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.EntityDataSource.6.0.0\lib\net40\Microsoft.AspNet.EntityDataSource.dll</HintPath>
       <Private>True</Private>
@@ -157,14 +129,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -202,19 +166,12 @@
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration">
-      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage">
-      <HintPath>..\packages\WindowsAzure.Storage.2.1.0.3\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.AspNet.Identity, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MySql.AspNet.Identity.2.1.1\lib\net45\MySql.AspNet.Identity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
-    <Reference Include="MySql.Web, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -224,7 +181,8 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Quartz, Version=2.5.0.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="Spring.Core, Version=2.0.1.45000, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
       <HintPath>..\packages\Spring.Core.2.0.1\lib\net45\Spring.Core.dll</HintPath>
       <Private>True</Private>
@@ -233,13 +191,11 @@
       <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
       <Private>True</Private>
@@ -250,11 +206,6 @@
     </Reference>
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -269,16 +220,19 @@
       <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -295,24 +249,27 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DataVisualization" />
-    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.0\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.1.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.2\lib\net40\System.Web.Optimization.dll</HintPath>
       <Private>True</Private>
@@ -321,32 +278,15 @@
       <HintPath>..\packages\System.Web.Optimization.Less.1.3.4\lib\net40\System.Web.Optimization.Less.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase">
       <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Net.Http.Formatting">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.2\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.WebHost">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.1.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -366,13 +306,7 @@
     <Content Include="AccountAdmin\ResetPasswordConfirmation.aspx" />
     <Content Include="AccountAdmin\TwoFactorAuthenticationSignIn.aspx" />
     <Content Include="AccountAdmin\VerifyPhoneNumber.aspx" />
-    <Content Include="Billing Reports\BDIncomingBusiness.aspx" />
-    <Content Include="Billing Reports\CarrierWiseInvoice.aspx" />
-    <Content Include="Billing Reports\CountryWiseOutgoing.aspx" />
-    <Content Include="Billing Reports\EgressInvoiceClearance.aspx" />
     <Content Include="Billing Reports\ErrorCall.aspx" />
-    <Content Include="Billing Reports\IOSWiseOutgoingBusiness.aspx" />
-    <Content Include="Billing Reports\IOSWiseOutgoingSummary.aspx" />
     <Content Include="bin\AjaxControlToolkit.dll" />
     <Content Include="bin\AjaxMin.dll" />
     <Content Include="bin\ar\AjaxControlToolkit.resources.dll" />
@@ -455,23 +389,11 @@
     <Content Include="bin\zh-Hant\Microsoft.Data.OData.resources.dll" />
     <Content Include="bin\zh-Hant\System.Spatial.resources.dll" />
     <Content Include="cal.png" />
-    <Content Include="config\BalanceAdjustment_old.aspx" />
     <Content Include="config\calendar.png" />
     <Content Include="config\BatchJob.aspx" />
-    <Content Include="config\BridgeRoutes.aspx" />
-    <Content Include="config\GeneratedInvoices.aspx" />
-    <Content Include="config\BalanceAdjustment.aspx" />
-    <Content Include="config\InvoiceGeneration.aspx" />
-    <Content Include="config\PackageAssignment.aspx" />
-    <Content Include="config\AccountDetails.aspx" />
-    <Content Include="config\PaymentHistory.aspx" />
-    <Content Include="config\AddPayment.aspx" />
-    <Content Include="config\PaymentManagement.aspx" />
     <Content Include="config\ConversionRates.aspx" />
     <Content Include="config\PrepareReportForMultipleSections.aspx" />
     <Content Include="config\PrepareReport.aspx" />
-    <Content Include="config\ViewPDF.aspx" />
-    <Content Include="config\ViewReport.aspx" />
     <Content Include="config\ViewRoutes.aspx" />
     <Content Include="config\Partner.aspx" />
     <Content Include="config\PartnerDetail.aspx" />
@@ -483,18 +405,16 @@
     <Content Include="config\media\logo.gif" />
     <Content Include="config\media\spacer.gif" />
     <Content Include="config\rateassignment.aspx" />
-    <Content Include="config\lcr.aspx" />
     <Content Include="config\rateplan.aspx" />
     <Content Include="config\rates.aspx" />
     <Content Include="config\ratetask.aspx" />
-    <Content Include="config\RouteImport.aspx" />
-    <Content Include="config\test.aspx" />
     <Content Include="Contact.aspx" />
     <Content Include="DashboardForIcx.aspx" />
     <Content Include="Dashboard.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="ICX_Reports\Cas_ICX\AllTrafic.aspx" />
     <Content Include="ICX_Reports\Cas_ICX\CasDomestic.aspx" />
     <Content Include="ICX_Reports\Cas_ICX\CasDomesticWithLtfs.aspx" />
     <Content Include="ICX_Reports\Cas_ICX\CasInternationalIn_ICX.aspx" />
@@ -512,45 +432,21 @@
     <Content Include="img\NAV_BG1.jpg" />
     <Content Include="img\Telcobright logo.png" />
     <Content Include="InternationalOut_ICX.aspx" />
-    <Content Include="Mediation\Tgs.aspx" />
-    <Content Include="reports\BTRCReport.aspx" />
-    <Content Include="reports\cal.png" />
-    <Content Include="reports\CauseInternationalIn.aspx" />
-    <Content Include="reports\CauseInternationalInCallView.aspx" />
-    <Content Include="reports\CauseInternationalOut.aspx" />
-    <Content Include="reports\CauseInternationalOutCallView.aspx" />
-    <Content Include="reports\CauseRouteInternationalIn.aspx" />
-    <Content Include="reports\CauseRouteInternationalInCallView.aspx" />
     <Content Include="Mediation\CdrError.aspx" />
-    <Content Include="reports\cdr.aspx" />
-    <Content Include="reports\icx\btrc\DailyReport.aspx" />
-    <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
-    <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
-    <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
-    <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
-    <Content Include="reports\icx\customReports\BanglalinkCallForwarding.aspx" />
-    <Content Include="reports\icx\customReports\BanglalinkRoaming.aspx" />
-    <Content Include="reports\icx\customReports\GrameenPhoneCallForwarding.aspx" />
-    <Content Include="reports\icx\customReports\GrameenphoneRoaming.aspx" />
-    <Content Include="reports\icx\customReports\RobiCallForwarding.aspx" />
-    <Content Include="reports\icx\customReports\RobiRoaming.aspx" />
+    <Content Include="Mediation\CDRFileReconciliation.aspx" />
+    <Content Include="Mediation\IPJobTableStatus.aspx" />
+    <Content Include="Mediation\JobProcessingStatus.aspx" />
+    <Content Include="Mediation\Tgs.aspx" />
+    <Content Include="reports\cal.png" />
     <Content Include="reports\icx\DomesticWithLtfs.aspx" />
     <Content Include="reports\icx\InternationalOut_ICX.aspx" />
     <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
-    <Content Include="reports\InternationalIn.aspx" />
-    <Content Include="reports\InternationalOut.aspx" />
     <Content Include="Mediation\Mediation.aspx" />
     <Content Include="Mediation\MediationBatch.aspx" />
     <Content Include="Mediation\MediationError.aspx" />
-    <Content Include="reports\IOFReport.aspx" />
-    <Content Include="reports\OutgoingCallAnalysis.aspx" />
     <Content Include="reports\PasswordRecovery.aspx" />
-    <Content Include="reports\PaymentHistory.aspx" />
-    <Content Include="reports\RouteInternationalIn.aspx" />
-    <Content Include="reports\RouteUtilization.aspx" />
-    <Content Include="reports\RouteUtilizationAgg.aspx" />
     <Content Include="AccountAdmin\Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -559,14 +455,7 @@
     </Content>
     <Content Include="Account\Web.config" />
     <None Include="Properties\PublishProfiles\PlatinumNewPortal.pubxml" />
-    <Content Include="reports\cdr.json" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
-    <Content Include="reports\transit\LocalTollFreePremium.aspx" />
-    <Content Include="reports\transit\LocalTollFree.aspx" />
-    <Content Include="reports\transit\AlphatechPremium.aspx" />
-    <Content Include="reports\transit\LocalTransit.aspx" />
-    <Content Include="reports\transit\InternationalOutTransit.aspx" />
-    <Content Include="reports\transit\InternationalInTransit.aspx" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
@@ -705,34 +594,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Billing Reports\BDIncomingBusiness.aspx.cs">
-      <DependentUpon>BDIncomingBusiness.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Billing Reports\BDIncomingBusiness.aspx.designer.cs">
-      <DependentUpon>BDIncomingBusiness.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Billing Reports\CarrierWiseInvoice.aspx.cs">
-      <DependentUpon>CarrierWiseInvoice.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Billing Reports\CarrierWiseInvoice.aspx.designer.cs">
-      <DependentUpon>CarrierWiseInvoice.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Billing Reports\CountryWiseOutgoing.aspx.cs">
-      <DependentUpon>CountryWiseOutgoing.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Billing Reports\CountryWiseOutgoing.aspx.designer.cs">
-      <DependentUpon>CountryWiseOutgoing.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Billing Reports\EgressInvoiceClearance.aspx.cs">
-      <DependentUpon>EgressInvoiceClearance.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Billing Reports\EgressInvoiceClearance.aspx.designer.cs">
-      <DependentUpon>EgressInvoiceClearance.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Billing Reports\ErrorCall.aspx.cs">
       <DependentUpon>ErrorCall.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -740,96 +601,12 @@
     <Compile Include="Billing Reports\ErrorCall.aspx.designer.cs">
       <DependentUpon>ErrorCall.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingBusiness.aspx.cs">
-      <DependentUpon>IOSWiseOutgoingBusiness.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingBusiness.aspx.designer.cs">
-      <DependentUpon>IOSWiseOutgoingBusiness.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingSummary.aspx.cs">
-      <DependentUpon>IOSWiseOutgoingSummary.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Billing Reports\IOSWiseOutgoingSummary.aspx.designer.cs">
-      <DependentUpon>IOSWiseOutgoingSummary.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\BalanceAdjustment_old.aspx.cs">
-      <DependentUpon>BalanceAdjustment_old.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\BalanceAdjustment_old.aspx.designer.cs">
-      <DependentUpon>BalanceAdjustment_old.aspx</DependentUpon>
-    </Compile>
     <Compile Include="config\BatchJob.aspx.cs">
       <DependentUpon>BatchJob.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="config\BatchJob.aspx.designer.cs">
       <DependentUpon>BatchJob.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\BridgeRoutes.aspx.cs">
-      <DependentUpon>BridgeRoutes.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\BridgeRoutes.aspx.designer.cs">
-      <DependentUpon>BridgeRoutes.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\GeneratedInvoices.aspx.cs">
-      <DependentUpon>GeneratedInvoices.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\GeneratedInvoices.aspx.designer.cs">
-      <DependentUpon>GeneratedInvoices.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\BalanceAdjustment.aspx.cs">
-      <DependentUpon>BalanceAdjustment.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\BalanceAdjustment.aspx.designer.cs">
-      <DependentUpon>BalanceAdjustment.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\InvoiceGeneration.aspx.cs">
-      <DependentUpon>InvoiceGeneration.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\InvoiceGeneration.aspx.designer.cs">
-      <DependentUpon>InvoiceGeneration.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\PackageAssignment.aspx.cs">
-      <DependentUpon>PackageAssignment.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\PackageAssignment.aspx.designer.cs">
-      <DependentUpon>PackageAssignment.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\AccountDetails.aspx.cs">
-      <DependentUpon>AccountDetails.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\AccountDetails.aspx.designer.cs">
-      <DependentUpon>AccountDetails.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\PaymentHistory.aspx.cs">
-      <DependentUpon>PaymentHistory.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\PaymentHistory.aspx.designer.cs">
-      <DependentUpon>PaymentHistory.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\AddPayment.aspx.cs">
-      <DependentUpon>AddPayment.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\AddPayment.aspx.designer.cs">
-      <DependentUpon>AddPayment.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\PaymentManagement.aspx.cs">
-      <DependentUpon>PaymentManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\PaymentManagement.aspx.designer.cs">
-      <DependentUpon>PaymentManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\ConversionRates.aspx.cs">
       <DependentUpon>ConversionRates.aspx</DependentUpon>
@@ -851,20 +628,6 @@
     </Compile>
     <Compile Include="config\PrepareReport.aspx.designer.cs">
       <DependentUpon>PrepareReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\ViewPDF.aspx.cs">
-      <DependentUpon>ViewPDF.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\ViewPDF.aspx.designer.cs">
-      <DependentUpon>ViewPDF.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\ViewReport.aspx.cs">
-      <DependentUpon>ViewReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\ViewReport.aspx.designer.cs">
-      <DependentUpon>ViewReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\ViewRoutes.aspx.cs">
       <DependentUpon>ViewRoutes.aspx</DependentUpon>
@@ -888,6 +651,13 @@
       <DependentUpon>Dashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Handler\PdfHandler.cs" />
+    <Compile Include="ICX_Reports\Cas_ICX\AllTrafic.aspx.cs">
+      <DependentUpon>AllTrafic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ICX_Reports\Cas_ICX\AllTrafic.aspx.designer.cs">
+      <DependentUpon>AllTrafic.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ICX_Reports\Cas_ICX\CasDomestic.aspx.cs">
       <DependentUpon>CasDomestic.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -930,6 +700,34 @@
     <Compile Include="InternationalOut_ICX.aspx.designer.cs">
       <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Mediation\CdrError.aspx.cs">
+      <DependentUpon>CdrError.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mediation\CdrError.aspx.designer.cs">
+      <DependentUpon>CdrError.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mediation\CDRFileReconciliation.aspx.cs">
+      <DependentUpon>CDRFileReconciliation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mediation\CDRFileReconciliation.aspx.designer.cs">
+      <DependentUpon>CDRFileReconciliation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mediation\IPJobTableStatus.aspx.cs">
+      <DependentUpon>IPJobTableStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mediation\IPJobTableStatus.aspx.designer.cs">
+      <DependentUpon>IPJobTableStatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mediation\JobProcessingStatus.aspx.cs">
+      <DependentUpon>JobProcessingStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mediation\JobProcessingStatus.aspx.designer.cs">
+      <DependentUpon>JobProcessingStatus.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Mediation\Tgs.aspx.cs">
       <DependentUpon>Tgs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -942,6 +740,7 @@
     <Compile Include="ReportHelper\AbstractSqlHelper.cs" />
     <Compile Include="ReportHelper\SqlHelperDomestic.cs" />
     <Compile Include="ReportHelper\SqlHelperInIGWRouteWise.cs" />
+    <Compile Include="ReportHelper\SqlHelperIntlInICXAllTrafic.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICXLtfs.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICXv2.cs" />
     <Compile Include="ReportHelper\SqlHelperIntlInICX.cs" />
@@ -950,99 +749,6 @@
     <Compile Include="ReportHelper\SqlHelperIntOutICX.cs" />
     <Compile Include="ReportHelper\SqlHelperIntOut.cs" />
     <Compile Include="ReportHelper\SqlHelperPaymentHistory.cs" />
-    <Compile Include="reports\BTRCReport.aspx.cs">
-      <DependentUpon>BTRCReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\BTRCReport.aspx.designer.cs">
-      <DependentUpon>BTRCReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\cdr.aspx.cs">
-      <DependentUpon>cdr.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\cdr.aspx.designer.cs">
-      <DependentUpon>cdr.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\DailyReport.aspx.cs">
-      <DependentUpon>DailyReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\DailyReport.aspx.designer.cs">
-      <DependentUpon>DailyReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
-    <Compile Include="reports\icx\btrc\ExcelExporterForBtrcReport.cs" />
-    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.cs">
-      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.designer.cs">
-      <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.cs">
-      <DependentUpon>MonthlyReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyReport.aspx.designer.cs">
-      <DependentUpon>MonthlyReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyDomesticReport.aspx.cs">
-      <DependentUpon>WeeklyDomesticReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyDomesticReport.aspx.designer.cs">
-      <DependentUpon>WeeklyDomesticReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyInternationalReport.aspx.cs">
-      <DependentUpon>WeeklyInternationalReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\WeeklyInternationalReport.aspx.designer.cs">
-      <DependentUpon>WeeklyInternationalReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\customReports\BanglalinkCallForwarding.aspx.cs">
-      <DependentUpon>BanglalinkCallForwarding.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\customReports\BanglalinkCallForwarding.aspx.designer.cs">
-      <DependentUpon>BanglalinkCallForwarding.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\customReports\BanglalinkRoaming.aspx.cs">
-      <DependentUpon>BanglalinkRoaming.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\customReports\BanglalinkRoaming.aspx.designer.cs">
-      <DependentUpon>BanglalinkRoaming.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\customReports\GrameenPhoneCallForwarding.aspx.cs">
-      <DependentUpon>GrameenPhoneCallForwarding.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\customReports\GrameenPhoneCallForwarding.aspx.designer.cs">
-      <DependentUpon>GrameenPhoneCallForwarding.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\customReports\GrameenphoneRoaming.aspx.cs">
-      <DependentUpon>GrameenphoneRoaming.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\customReports\GrameenphoneRoaming.aspx.designer.cs">
-      <DependentUpon>GrameenphoneRoaming.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\customReports\RobiCallForwarding.aspx.cs">
-      <DependentUpon>RobiCallForwarding.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\customReports\RobiCallForwarding.aspx.designer.cs">
-      <DependentUpon>RobiCallForwarding.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\customReports\RobiRoaming.aspx.cs">
-      <DependentUpon>RobiRoaming.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\customReports\RobiRoaming.aspx.designer.cs">
-      <DependentUpon>RobiRoaming.aspx</DependentUpon>
-    </Compile>
     <Compile Include="reports\icx\DomesticWithLtfs.aspx.cs">
       <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1078,69 +784,6 @@
     <Compile Include="reports\icx\InternationalIn_ICX.aspx.designer.cs">
       <DependentUpon>InternationalIn_ICX.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\IOFReport.aspx.cs">
-      <DependentUpon>IOFReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\IOFReport.aspx.designer.cs">
-      <DependentUpon>IOFReport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\OutgoingCallAnalysis.aspx.cs">
-      <DependentUpon>OutgoingCallAnalysis.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\OutgoingCallAnalysis.aspx.designer.cs">
-      <DependentUpon>OutgoingCallAnalysis.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\PaymentHistory.aspx.cs">
-      <DependentUpon>PaymentHistory.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\PaymentHistory.aspx.designer.cs">
-      <DependentUpon>PaymentHistory.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\transit\LocalTollFreePremium.aspx.cs">
-      <DependentUpon>LocalTollFreePremium.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\transit\LocalTollFreePremium.aspx.designer.cs">
-      <DependentUpon>LocalTollFreePremium.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\transit\LocalTollFree.aspx.cs">
-      <DependentUpon>LocalTollFree.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\transit\LocalTollFree.aspx.designer.cs">
-      <DependentUpon>LocalTollFree.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\transit\AlphatechPremium.aspx.cs">
-      <DependentUpon>AlphatechPremium.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\transit\AlphatechPremium.aspx.designer.cs">
-      <DependentUpon>AlphatechPremium.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\transit\LocalTransit.aspx.cs">
-      <DependentUpon>LocalTransit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\transit\LocalTransit.aspx.designer.cs">
-      <DependentUpon>LocalTransit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\transit\InternationalOutTransit.aspx.cs">
-      <DependentUpon>InternationalOutTransit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\transit\InternationalOutTransit.aspx.designer.cs">
-      <DependentUpon>InternationalOutTransit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\transit\InternationalInTransit.aspx.cs">
-      <DependentUpon>InternationalInTransit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\transit\InternationalInTransit.aspx.designer.cs">
-      <DependentUpon>InternationalInTransit.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Site.master.cs">
       <DependentUpon>Site.master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1159,8 +802,11 @@
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
     </Compile>
+    <Compile Include="_portalHelper\AllTrafficData.cs" />
+    <Compile Include="_portalHelper\CDRFileComparer.cs" />
     <Compile Include="_portalHelper\CreateExcelFileAspNet.cs" />
     <Compile Include="_portalHelper\CreateExcelFile.cs" />
+    <Compile Include="_portalHelper\ExcelHelper.cs" />
     <Compile Include="_portalHelper\MasterPageExtendedForPortal.cs" />
     <Compile Include="_portalHelper\PaymentHistoryInfo.cs" />
     <Compile Include="_portalHelper\PortalConnectionHelper.cs" />
@@ -1190,13 +836,6 @@
     <Compile Include="config\rateassignment.aspx.designer.cs">
       <DependentUpon>rateassignment.aspx</DependentUpon>
     </Compile>
-    <Compile Include="config\lcr.aspx.cs">
-      <DependentUpon>lcr.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\lcr.aspx.designer.cs">
-      <DependentUpon>lcr.aspx</DependentUpon>
-    </Compile>
     <Compile Include="config\rateplan.aspx.cs">
       <DependentUpon>rateplan.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1218,20 +857,6 @@
     <Compile Include="config\ratetask.aspx.designer.cs">
       <DependentUpon>ratetask.aspx</DependentUpon>
     </Compile>
-    <Compile Include="config\RouteImport.aspx.cs">
-      <DependentUpon>RouteImport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\RouteImport.aspx.designer.cs">
-      <DependentUpon>RouteImport.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\test.aspx.cs">
-      <DependentUpon>test.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\test.aspx.designer.cs">
-      <DependentUpon>test.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Contact.aspx.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1250,69 +875,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="reports\CauseInternationalIn.aspx.cs">
-      <DependentUpon>CauseInternationalIn.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\CauseInternationalIn.aspx.designer.cs">
-      <DependentUpon>CauseInternationalIn.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\CauseInternationalInCallView.aspx.cs">
-      <DependentUpon>CauseInternationalInCallView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\CauseInternationalInCallView.aspx.designer.cs">
-      <DependentUpon>CauseInternationalInCallView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\CauseInternationalOut.aspx.cs">
-      <DependentUpon>CauseInternationalOut.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\CauseInternationalOut.aspx.designer.cs">
-      <DependentUpon>CauseInternationalOut.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\CauseInternationalOutCallView.aspx.cs">
-      <DependentUpon>CauseInternationalOutCallView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\CauseInternationalOutCallView.aspx.designer.cs">
-      <DependentUpon>CauseInternationalOutCallView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\CauseRouteInternationalIn.aspx.cs">
-      <DependentUpon>CauseRouteInternationalIn.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\CauseRouteInternationalIn.aspx.designer.cs">
-      <DependentUpon>CauseRouteInternationalIn.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\CauseRouteInternationalInCallView.aspx.cs">
-      <DependentUpon>CauseRouteInternationalInCallView.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\CauseRouteInternationalInCallView.aspx.designer.cs">
-      <DependentUpon>CauseRouteInternationalInCallView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Mediation\CdrError.aspx.cs">
-      <DependentUpon>CdrError.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Mediation\CdrError.aspx.designer.cs">
-      <DependentUpon>CdrError.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\InternationalIn.aspx.cs">
-      <DependentUpon>InternationalIn.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\InternationalIn.aspx.designer.cs">
-      <DependentUpon>InternationalIn.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\InternationalOut.aspx.cs">
-      <DependentUpon>InternationalOut.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\InternationalOut.aspx.designer.cs">
-      <DependentUpon>InternationalOut.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Mediation\Mediation.aspx.cs">
       <DependentUpon>Mediation.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1340,27 +902,6 @@
     </Compile>
     <Compile Include="reports\PasswordRecovery.aspx.designer.cs">
       <DependentUpon>PasswordRecovery.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\RouteInternationalIn.aspx.cs">
-      <DependentUpon>RouteInternationalIn.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\RouteInternationalIn.aspx.designer.cs">
-      <DependentUpon>RouteInternationalIn.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\RouteUtilization.aspx.cs">
-      <DependentUpon>RouteUtilization.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\RouteUtilization.aspx.designer.cs">
-      <DependentUpon>RouteUtilization.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\RouteUtilizationAgg.aspx.cs">
-      <DependentUpon>RouteUtilizationAgg.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\RouteUtilizationAgg.aspx.designer.cs">
-      <DependentUpon>RouteUtilizationAgg.aspx</DependentUpon>
     </Compile>
     <Compile Include="Settings\CauseCode.aspx.cs">
       <DependentUpon>CauseCode.aspx</DependentUpon>
@@ -1442,6 +983,7 @@
     <Folder Include="App_Data\App_Code\" />
     <Folder Include="Controllers\" />
     <Folder Include="Extensions\" />
+    <Folder Include="reports\icx\btrc\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AspNet.Identity.MySQL\AspNet.Identity.MySQL.csproj">
@@ -1468,25 +1010,9 @@
       <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
       <Name>TelcobrightInfra</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UtilInstallConfig\UtilInstallConfig.csproj">
-      <Project>{4bad4f1b-28c9-4c71-8282-894d2c1cd7f1}</Project>
-      <Name>UtilInstallConfig</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\_jcLCR\mefJcLCR.csproj">
-      <Project>{a9564cf3-228c-4cc7-9a8b-4b518907305b}</Project>
-      <Name>mefJcLCR</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\_Jobs\mefJobs.csproj">
-      <Project>{1547F11A-F3C7-4F92-AE9E-D9783FCD8A5D}</Project>
-      <Name>mefJobs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\_reports\mefReports.csproj">
       <Project>{55efb5b8-da1f-4b4b-b92a-bbe905106580}</Project>
       <Name>mefReports</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\_ServiceGroups\mefServiceGroups.csproj">
-      <Project>{d9ffc405-8711-4288-adf7-7144475cd5ec}</Project>
-      <Name>mefServiceGroups</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -1556,12 +1082,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.2.0\build\Microsoft.Net.Compilers.props'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

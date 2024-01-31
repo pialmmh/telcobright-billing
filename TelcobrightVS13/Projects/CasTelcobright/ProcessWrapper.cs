@@ -51,14 +51,17 @@ namespace CasTelcobright
                     "portal",
                     "UtilInstallConfig",
                     "generators", "");
-                string deployedInstancesPath = configPathHelper.GetTopShelfConfigDirForCas();
-                DirectoryInfo deployDir = new DirectoryInfo(deployedInstancesPath);
-                //string fileName = @"D:\TelcobrightProject\TelcobrightVS13\Projects\WS_Topshelf_Quartz\bin\Debug\WS_Telcobright_Topshelf.exe";
-                string topshelfPath = deployDir.FullName + Path.DirectorySeparatorChar + "WS_Telcobright_Topshelf.exe";
-                processStartInfo = getProcessStartInfo(topshelfPath);
+                string topshelfExe = configPathHelper.GetTopShelfConfigDirForCas() + Path.DirectorySeparatorChar +
+                                     "WS_Telcobright_Topshelf.exe";
+                processStartInfo = getProcessStartInfo(topshelfExe);
+                process = new Process();
+                process.StartInfo = processStartInfo;
+                process.EnableRaisingEvents = true;
 
                 process.OutputDataReceived += ProcessOnOutputDataReceived();
                 process.Start();
+                //Process.Start(this.appName);
+                //Console.Write("Main window Title : " + process.MainWindowTitle);
                 process.BeginOutputReadLine();
                 this.processId = process.Id;
 
@@ -100,9 +103,6 @@ namespace CasTelcobright
             processStartInfo.RedirectStandardInput = true;
             processStartInfo.UseShellExecute = false;
             processStartInfo.Arguments = $@"{this.appName}";
-            process = new Process();
-            process.StartInfo = processStartInfo;
-            process.EnableRaisingEvents = true;
             return processStartInfo;
         }
 

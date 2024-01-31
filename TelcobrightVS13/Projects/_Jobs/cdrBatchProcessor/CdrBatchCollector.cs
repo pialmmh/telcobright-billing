@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
+using TelcobrightMediation.Mediation.Cdr;
 
 namespace Jobs
 {
@@ -44,12 +45,12 @@ namespace Jobs
             CdrCollectionResult newCollectionResult, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
-            //newCollectionResult.DuplicateEvents = preProcessor.DuplicateEvents;
-            foreach (string[] row in preProcessor.DuplicateEvents)
+            //newCollectionResult.NewDuplicateEvents = preProcessor.NewDuplicateEvents;
+            foreach (string[] row in preProcessor.NewDuplicateEvents)
             {
                 row[Fn.Switchid] = this.Input.Ne.idSwitch.ToString();
                 row[Fn.Filename] = this.CollectorInput.TelcobrightJob.JobName;
-                newCollectionResult.DuplicateEvents.Add(row);
+                newCollectionResult.NewDuplicateEvents.Add(row);
             }
 
             PartialCdrTesterData partialCdrTesterData = OrganizeTestDataForPartialCdrs(preProcessor, newCollectionResult);
@@ -170,11 +171,23 @@ namespace Jobs
             {
                 preProcessor.TxtCdrRows = CdrJob.ChangeBillIdsWithPrevChargeableIssue(preProcessor.TxtCdrRows);
             }
-            Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
+
+            ParallelIterator<string[], cdrinconsistent> parallelIterator =
+                new ParallelIterator<string[], cdrinconsistent>(preProcessor.TxtCdrRows);
+            CdrInconsistentValidator validator= new CdrInconsistentValidator(collectorinput.CdrJobInputData,
+                inconistentValidator);
+            List<cdrinconsistent> inconsistentCdrs = parallelIterator.getOutput(validator.CheckAndConvertIfInconsistent);
+            inconsistentCdrs = inconsistentCdrs.Where(c => c != null).ToList();
+            foreach (var inconsistentCdr in inconsistentCdrs)
             {
-                preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
-                inconistentValidator, txtRow);
-            });
+                preProcessor.InconsistentCdrs.Add(inconsistentCdr);
+            }
+
+            //Parallel.ForEach(preProcessor.TxtCdrRows, txtRow =>
+            //{
+            //    preProcessor.CheckAndConvertIfInconsistent(collectorinput.CdrJobInputData,
+            //    inconistentValidator, txtRow);
+            //});
             if (preProcessor.InconsistentCdrs.Any())
             {
                 List<long> inconsistentIdCalls = preProcessor.InconsistentCdrs.Select(c => Convert.ToInt64(c.IdCall)).ToList();

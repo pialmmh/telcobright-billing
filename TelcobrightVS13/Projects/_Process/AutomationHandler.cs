@@ -21,6 +21,7 @@ using TelcobrightMediation.Config;
 
 namespace Process
 {
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class AutomationHandler : AbstractTelcobrightProcess
     {

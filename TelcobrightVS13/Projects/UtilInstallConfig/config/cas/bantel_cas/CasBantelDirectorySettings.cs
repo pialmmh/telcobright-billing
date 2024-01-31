@@ -21,7 +21,7 @@ namespace InstallConfig
     {
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("d:/telcobright", @"cas");
+            DirectorySettings directorySetting = new DirectorySettings("T:/telcobright", @"cas");
             tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************
@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/banTel/tdm",
+                StartingPath = "T:/telcobright/vault/resources/cdr/banTel/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "d:/telcobright/vault/resources/cdr/banTel/ip",
+                StartingPath = "T:/telcobright/vault/resources/cdr/banTel/ip",
                 User = "",
                 Pass = "",
             };
