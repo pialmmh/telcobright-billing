@@ -24,26 +24,50 @@ namespace PortalApp.ICX_Reports.Cas_ICX
         List<telcobrightpartner> telcoTelcobrightpartners;
         TelcobrightConfig telcobrightConfig;
         DatabaseSetting databaseSetting;
+        string dbName { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
+            //telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            //databaseSetting = telcobrightConfig.DatabaseSetting;
+            //string dbName;
+            //string userName = Page.User.Identity.Name;
+            //if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
+            //{
+            //    dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
+            //}
+            //else
+            //{
+            //    dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+            //}
+
+            //dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
+
+            //databaseSetting.DatabaseName = dbName;
+            //databaseSetting.ServerName = dbVSHostname[dbName];
+            ////databaseSetting.ServerName = "localhost";
+            /// 
+            TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+            DatabaseSetting databaseSetting = telcobrightConfig.DatabaseSetting;
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // or LicenseContext.Commercial
+
+            /////
             telcobrightConfig = PageUtil.GetTelcobrightConfig();
             databaseSetting = telcobrightConfig.DatabaseSetting;
-            string dbName;
+
             string userName = Page.User.Identity.Name;
+
             if (telcobrightConfig.DeploymentProfile.UserVsDbName.ContainsKey(userName))
             {
-                dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
+                this.dbName = telcobrightConfig.DeploymentProfile.UserVsDbName[userName];
             }
             else
             {
-                dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+                this.dbName = telcobrightConfig.DatabaseSetting.DatabaseName;
             }
+            databaseSetting.DatabaseName = this.dbName;
 
-            dbVSHostname = CasDockerDbHelper.IcxVsdbHostNames;
 
-            databaseSetting.DatabaseName = dbName;
-            databaseSetting.ServerName = dbVSHostname[dbName];
-            //databaseSetting.ServerName = "localhost";
+            /// 
 
             context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting);
             telcoTelcobrightpartners = context.telcobrightpartners.ToList();
@@ -279,7 +303,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             return $@"select date_format(tup_starttime,'%Y-%m-%d') callDateCalc, domestic DomesticDurationCalc, intOut IntlOutDurationCalc, intIn IntlInDurationCalc  from
                         (
 	                        select tup_starttime, domestic, intOut from
-		                        (select tup_starttime, sum(duration1) domestic 
+		                        (select tup_starttime, sum(duration1)/60 domestic 
 			                        from {dbName}.sum_voice_day_01 
 			                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 			                        group by tup_starttime
@@ -287,7 +311,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 			
 		                        left join
 		
-		                        (select tup_starttime tup_starttime1, sum(duration1) intOut
+		                        (select tup_starttime tup_starttime1, sum(duration1)/60 intOut
 			                        from {dbName}.sum_voice_day_02 
 			                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 			                        group by tup_starttime1
@@ -297,7 +321,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
                         left join 
                         (
-	                        select tup_starttime tup_starttime3, sum(duration1) intIn
+	                        select tup_starttime tup_starttime3, sum(duration1)/60 intIn
 		                        from {dbName}.sum_voice_day_03
 		                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 		                        group by tup_starttime3
