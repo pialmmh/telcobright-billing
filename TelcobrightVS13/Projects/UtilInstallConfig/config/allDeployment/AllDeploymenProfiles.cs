@@ -283,8 +283,12 @@ namespace InstallConfig
                     {
                         Name = "newgenerationtelecom_cas",
                         SchedulerPortNo = 592
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "mmcommunications_cas",
+                        SchedulerPortNo = 594
                     }
-                    
                 },
             };
             Dictionary<string,MySqlCluster> mySqlClusters =new Dictionary<string, MySqlCluster>();
