@@ -273,18 +273,18 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
 
                 // Format the decimals with two decimal places
-                e.Row.Cells[1].Text = "Total";
-                e.Row.Cells[2].Text = sumDom.HasValue ? sumDom.Value.ToString("F2") : string.Empty;
-                e.Row.Cells[3].Text = sumDomICX.ToString("F2");
-                e.Row.Cells[4].Text = sumDom.HasValue ? (sumDom - sumDomICX).Value.ToString("F2") : (0 - sumDomICX).ToString("F2");
+                e.Row.Cells[0].Text = "Total";
+                e.Row.Cells[1].Text = sumDom.HasValue ? sumDom.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[2].Text = sumDomICX.ToString("F2");
+                e.Row.Cells[3].Text = sumDom.HasValue ? (sumDom - sumDomICX).Value.ToString("F2") : (0 - sumDomICX).ToString("F2");
 
-                e.Row.Cells[5].Text = sumIntIn.HasValue ? sumIntIn.Value.ToString("F2") : string.Empty;
-                e.Row.Cells[6].Text = sumIntInICX.ToString("F2");
-                e.Row.Cells[7].Text = sumIntIn.HasValue ? (sumIntIn - sumIntInICX).Value.ToString("F2") : (0 - sumIntInICX).ToString("F2");
+                e.Row.Cells[4].Text = sumIntIn.HasValue ? sumIntIn.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[5].Text = sumIntInICX.ToString("F2");
+                e.Row.Cells[6].Text = sumIntIn.HasValue ? (sumIntIn - sumIntInICX).Value.ToString("F2") : (0 - sumIntInICX).ToString("F2");
 
-                e.Row.Cells[8].Text = sumIntOut.HasValue ? sumIntOut.Value.ToString("F2") : string.Empty;
-                e.Row.Cells[9].Text = sumIntOutICX.ToString("F2");
-                //e.Row.Cells[10].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
+                e.Row.Cells[7].Text = sumIntOut.HasValue ? sumIntOut.Value.ToString("F2") : string.Empty;
+                e.Row.Cells[8].Text = sumIntOutICX.ToString("F2");
+                e.Row.Cells[9].Text = sumIntOut.HasValue ? (sumIntOut - sumIntOutICX).Value.ToString("F2") : (0 - sumIntOutICX).ToString("F2");
 
             
             }
