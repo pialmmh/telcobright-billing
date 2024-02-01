@@ -309,7 +309,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
             return $@"select date_format(tup_starttime,'%Y-%m-%d') callDateCalc, domestic DomesticDurationCalc, intOut IntlOutDurationCalc, intIn IntlInDurationCalc  from
                         (
 	                        select tup_starttime, domestic, intOut from
-		                        (select tup_starttime, sum(duration1) domestic 
+		                        (select tup_starttime, sum(duration1)/60 domestic 
 			                        from sum_voice_day_01 
 			                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 			                        group by tup_starttime
@@ -317,7 +317,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 			
 		                        left join
 		
-		                        (select tup_starttime tup_starttime1, sum(duration1) intOut
+		                        (select tup_starttime tup_starttime1, sum(duration1)/60 intOut
 			                        from sum_voice_day_02 
 			                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 			                        group by tup_starttime1
@@ -327,7 +327,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 
                         left join 
                         (
-	                        select tup_starttime tup_starttime3, sum(duration1) intIn
+	                        select tup_starttime tup_starttime3, sum(duration1)/60 intIn
 		                        from sum_voice_day_03
 		                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 		                        group by tup_starttime3
