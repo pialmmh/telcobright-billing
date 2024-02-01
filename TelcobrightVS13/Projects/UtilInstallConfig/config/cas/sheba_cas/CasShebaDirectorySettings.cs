@@ -21,7 +21,7 @@ namespace InstallConfig
     {
 
         private FileLocation vaultHuawei;
-        private FileLocation vaultCataleya;
+        private FileLocation vaultReve;
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
             DirectorySettings directorySetting = new DirectorySettings("I:/telcobright", @"cas");
@@ -42,9 +42,9 @@ namespace InstallConfig
                 Pass = "",
             };
 
-           this.vaultCataleya= new FileLocation()
+           this.vaultReve= new FileLocation()
             {
-                Name = "Vault.Cataleya",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Reve",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -55,7 +55,7 @@ namespace InstallConfig
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuawei.Name, vaultHuawei);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultReve.Name, vaultReve);
            
         }
     }
