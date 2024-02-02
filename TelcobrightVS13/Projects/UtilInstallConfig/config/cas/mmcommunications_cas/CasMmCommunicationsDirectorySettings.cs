@@ -29,7 +29,7 @@ namespace InstallConfig
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
             FileLocation vaultZte = new FileLocation()
             {
-                Name = "Vault.Zte",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.mmZte",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
@@ -41,12 +41,12 @@ namespace InstallConfig
 
             FileLocation vaultcataleya = new FileLocation()
             {
-                Name = "Vault.cataleya",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.mmcataleya",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/mmcommunications/ip",
+                StartingPath = "Z:/telcobright/vault/resources/cdr/MmCommunication/ip",
                 User = "",
                 Pass = "",
             };
