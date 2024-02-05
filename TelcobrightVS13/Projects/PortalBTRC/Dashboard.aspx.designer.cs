@@ -57,15 +57,6 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource3;
     
     /// <summary>
-    /// Timer3 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.Timer Timer3;
-    
-    /// <summary>
     /// UpdatePanel1 control.
     /// </summary>
     /// <remarks>
@@ -93,22 +84,31 @@ public partial class DashboardAspx {
     protected global::System.Web.UI.WebControls.GridView GridViewError;
     
     /// <summary>
-    /// Timer1 control.
+    /// Label12 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.Timer Timer1;
+    protected global::System.Web.UI.WebControls.Label Label12;
     
     /// <summary>
-    /// UpdatePanel2 control.
+    /// DropDownYear1 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.UpdatePanel UpdatePanel2;
+    protected global::System.Web.UI.WebControls.DropDownList DropDownYear1;
+    
+    /// <summary>
+    /// DropDownMonth1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownMonth1;
     
     /// <summary>
     /// Label2 control.
@@ -307,13 +307,4 @@ public partial class DashboardAspx {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.DataVisualization.Charting.Chart ICXDistributionMymenshing;
-    
-    /// <summary>
-    /// Timer2 control.
-    /// </summary>
-    /// <remarks>
-    /// Auto-generated field.
-    /// To modify move field declaration from designer file to code-behind file.
-    /// </remarks>
-    protected global::System.Web.UI.Timer Timer2;
 }

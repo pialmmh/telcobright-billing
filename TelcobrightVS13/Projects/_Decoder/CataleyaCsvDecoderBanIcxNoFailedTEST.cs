@@ -117,11 +117,24 @@ namespace Decoders
                         endTime= parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                     }
 
-                    textCdr[Fn.StartTime] = connectTime;
-                    textCdr[Fn.ConnectTime] = connectTime;
-                    textCdr[Fn.AnswerTime] = connectTime;
+                    if (!connectTime.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        textCdr[Fn.StartTime] = connectTime;
+                        textCdr[Fn.ConnectTime] = connectTime;
+                        textCdr[Fn.AnswerTime] = connectTime;
+                    }else if (!answerTime.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        textCdr[Fn.StartTime] = answerTime;
+                        textCdr[Fn.ConnectTime] = answerTime;
+                        textCdr[Fn.AnswerTime] = answerTime;
+                    }else
+                    {
+                        textCdr[Fn.StartTime] = startTime;
+                        textCdr[Fn.ConnectTime] = startTime;
+                        textCdr[Fn.AnswerTime] = startTime;
+                    }
+                    
                     textCdr[Fn.Endtime] = endTime;
-
                     textCdr[Fn.OriginatingCallingNumber] = lineAsArr[30].Trim();
                     textCdr[Fn.OriginatingCalledNumber] = lineAsArr[31].Trim();
                     textCdr[Fn.TerminatingCallingNumber] = lineAsArr[30].Trim();

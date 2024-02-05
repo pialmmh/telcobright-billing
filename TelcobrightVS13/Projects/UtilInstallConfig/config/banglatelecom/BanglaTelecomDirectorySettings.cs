@@ -81,7 +81,7 @@ namespace InstallConfig
                 OsType = "linux",
                 UseActiveModeForFTP = false,
                 PathSeparator = "/",
-                StartingPath = "/",
+                StartingPath = "",
                 ServerIp = "123.176.59.19",
                 User = "sdrbtdialogic",
                 Pass = "SdrBT@2@23#",
@@ -123,36 +123,36 @@ namespace InstallConfig
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
             tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
 
-            this.huawei_Vault = new SyncPair("huawei:Vault")
-            {
-                SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation()
-                {
-                    FileLocation = huawei,
-                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
-                },
-                DstSyncLocation = new SyncLocation()
-                {
-                    FileLocation = vaultPrimary
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "downloaded",
-                    MoveFilesToSecondaryAfterCopy = true,
-                    Recursive = false,
-                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('b')
-                                                                and
-                                                                (Name.EndsWith('.dat'))
-                                                                and Length>0")
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
-                    Overwrite = true,
-                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
-                }
-            };
+            //this.huawei_Vault = new SyncPair("huawei:Vault")
+            //{
+            //    SkipSourceFileListing = false,
+            //    SrcSyncLocation = new SyncLocation()
+            //    {
+            //        FileLocation = huawei,
+            //        DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
+            //    },
+            //    DstSyncLocation = new SyncLocation()
+            //    {
+            //        FileLocation = vaultPrimary
+            //    },
+            //    SrcSettings = new SyncSettingsSource()
+            //    {
+            //        SecondaryDirectory = "downloaded",
+            //        MoveFilesToSecondaryAfterCopy = true,
+            //        Recursive = false,
+            //        ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('b')
+            //                                                    and
+            //                                                    (Name.EndsWith('.dat'))
+            //                                                    and Length>0")
+            //    },
+            //    DstSettings = new SyncSettingsDest()
+            //    {
+            //        FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+            //        Overwrite = true,
+            //        ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+            //        CompressionType = CompressionType.None
+            //    }
+            //};
 
             this.spdlg_Vault = new SyncPair("dlg:Vault")
             {
@@ -213,7 +213,7 @@ namespace InstallConfig
             };
 
             //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
+            //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
             directorySetting.SyncPairs.Add(spdlg_Vault.Name, spdlg_Vault);

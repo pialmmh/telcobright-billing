@@ -47,7 +47,7 @@
                 <ItemTemplate>
                     <asp:Label ID="lblDate" runat="server" Text='<%# Eval("PartnerName") %>' />
                 </ItemTemplate>
-                <ItemStyle HorizontalAlign="Center" />
+                <ItemStyle HorizontalAlign="Left" />
             </asp:TemplateField>
 
 
@@ -55,7 +55,7 @@
                 <ItemTemplate>
                     <asp:Label ID="lblDomIn" runat="server" Text='<%# Eval("domIn" , "{0:F2}") %>' DataFormatString="{0:N2}" />
                 </ItemTemplate>
-                <ItemStyle HorizontalAlign="Center" />
+                <ItemStyle HorizontalAlign="Left" />
             </asp:TemplateField>
 
 
@@ -65,21 +65,21 @@
                 <ItemTemplate>
                     <asp:Label ID="lblDomOut" runat="server" Text='<%# Eval("domOut", "{0:F2}") %>'  DataFormatString="{0:N2}" ></asp:Label>
                 </ItemTemplate>           
-                <ItemStyle HorizontalAlign="Center" />
+                <ItemStyle HorizontalAlign="Left" />
             </asp:TemplateField>
 
              <asp:TemplateField HeaderText="Incoming Minute" ItemStyle-Width="100px">
                 <ItemTemplate>
                     <asp:Label ID="lblIntIN" runat="server" Text='<%# Eval("IntIN", "{0:F2}") %>'  DataFormatString="{0:N2}"  ></asp:Label>
                 </ItemTemplate>
-                <ItemStyle HorizontalAlign="Center" />               
+                <ItemStyle HorizontalAlign="Left" />               
             </asp:TemplateField>
 
             <asp:TemplateField HeaderText="Outgoing Minute" ItemStyle-Width="100px">
                 <ItemTemplate>
                     <asp:Label ID="lblIntOut" runat="server" Text='<%# Eval("IntOut", "{0:F2}") %>'  DataFormatString="{0:N2}" ></asp:Label>
                 </ItemTemplate>
-                <ItemStyle HorizontalAlign="Center" />               
+                <ItemStyle HorizontalAlign="Left" />               
             </asp:TemplateField>
 
 

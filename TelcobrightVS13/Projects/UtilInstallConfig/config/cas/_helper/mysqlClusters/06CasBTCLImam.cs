@@ -60,6 +60,12 @@ namespace InstallConfig
                                     {
                                         MySqlPermissionType.execute,
                                         MySqlPermissionType.@select
+                                    }, "mmcommunications_cas"),
+                                new MySqlPermission(
+                                    new List<MySqlPermissionType>
+                                    {
+                                        MySqlPermissionType.execute,
+                                        MySqlPermissionType.@select
                                     }, "btrc_cas")
                             })
                     }

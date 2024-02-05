@@ -27,7 +27,7 @@ namespace Decoders
         public override string PartialTableStorageEngine { get; } = "innodb";
         public override string partialTablePartitionColName { get; } = "starttime";
         protected virtual CdrCollectorInputData Input { get; set; }
-               
+
         private static string parseStringToDateWithoutMilliSec(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
         {
             string noMillis = timestamp.Split('.')[0];
@@ -60,13 +60,13 @@ namespace Decoders
                     //SDRSessionStatus = field 16
 
                     string accountStatusType = lineAsArr[6].Trim();// AccountStatusType = field 7, we keep it in calledPartyNoa 
-                    string accountEventReason =lineAsArr[7].Trim(); //AccountEventReason = field 8, we keep it in callingPartyNoa
+                    string accountEventReason = lineAsArr[7].Trim(); //AccountEventReason = field 8, we keep it in callingPartyNoa
 
                     string chargingStatus = lineAsArr[15];//SDRSessionStatus = field 16
                     string durationSec = lineAsArr[14]; // 
                     double duration = 0;
                     double.TryParse(durationSec, out duration);
-                    if (accountStatusType != "2" || duration<=0)
+                    if (accountStatusType != "2" || duration <= 0)
                     {
                         continue;
                     }
@@ -95,7 +95,7 @@ namespace Decoders
                         textCdr[Fn.IncomingRoute] = new StringBuilder(originatingIp).Append('-').Append(ingressSigLocalAddress)
                             .ToString();
 
-                        textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber.Replace("+","");
+                        textCdr[Fn.OriginatingCalledNumber] = originatingCalledNumber.Replace("+", "");
                     }
 
                     string ingressSipFromHeader = lineAsArr[72]; //"From: <sip:1111111@192.168.130.63>;tag=5228fc25a2c34aa7ba35e565aeda1457";
@@ -107,7 +107,7 @@ namespace Decoders
                         textCdr[Fn.OriginatingCallingNumber] = originatingCallingNumber.Trim();
                     }
 
-                    string outSigReqLine = lineAsArr[82].Replace(" ",""); //sip: 00918860086409@10.10.234.8:5060; transport = UDP
+                    string outSigReqLine = lineAsArr[82].Replace(" ", ""); //sip: 00918860086409@10.10.234.8:5060; transport = UDP
                     if (outSigReqLine.IsNullOrEmptyOrWhiteSpace() == false)
                     {
                         string[] tempArr = outSigReqLine.Split(':');
@@ -132,7 +132,7 @@ namespace Decoders
                         textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber.Trim();
                     }
 
-                
+
                     //textCdr[Fn.Mediaip1] = lineAsArr[71];
                     //textCdr[Fn.Mediaip2] = lineAsArr[82];
                     //cdr.MediaIp1 = lineAsArr[71];
@@ -162,6 +162,18 @@ namespace Decoders
 
                     dt = lineAsArr[106];//EndTime
                     if (!string.IsNullOrEmpty(dt)) textCdr[Fn.Endtime] = parseStringToDateWithoutMilliSec(dt);
+
+
+                    if (textCdr[Fn.Endtime].IsNullOrEmptyOrWhiteSpace() && lineAsArr[129].IsNullOrEmptyOrWhiteSpace())
+                    {
+                        textCdr[Fn.Endtime] = parseStringToDateWithoutMilliSec(lineAsArr[129]);
+                    }
+
+                    if (textCdr[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && lineAsArr[126].IsNullOrEmptyOrWhiteSpace())
+                    {
+                        textCdr[Fn.ConnectTime] = parseStringToDateWithoutMilliSec(lineAsArr[126]);
+                    }
+
 
                     textCdr[Fn.ReleaseCauseIngress] = lineAsArr[110];
                     textCdr[Fn.ReleaseCauseEgress] = lineAsArr[133];
