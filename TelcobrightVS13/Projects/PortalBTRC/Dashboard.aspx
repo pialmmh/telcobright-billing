@@ -124,14 +124,14 @@
                         <asp:TemplateField HeaderText="Status">
                             <ItemTemplate>
                                 <div style="text-align: center;">
-                                    <asp:Image ID="StatusImage" runat="server" Width="14" Height="14" 
-                                        ImageUrl='<%# Convert.ToInt32(Eval("No_Of_Cdrs_in_last_24_hours")) > 19 ? "~/img/correct.png" : "~/img/error.png" %>' />
+                                    <asp:Image ID="Image1" runat="server" Width="14" Height="14" 
+                                               ImageUrl='<%# GetImageUrl(Convert.ToInt32(Eval("Billed Duration")), Eval("icx").ToString() ) %>' />
                                 </div>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="icx" HeaderText="ICX" SortExpression="icx" />
-                        <asp:BoundField DataField="SwitchName" HeaderText="Switch Name" SortExpression="SwitchName" />
-                        <asp:BoundField DataField="No_Of_Cdrs_in_last_24_hours" HeaderText="No Of CDRs in last 24 hours" SortExpression="No_Of_Cdrs_in_last_24_hours" />
+                        <asp:BoundField DataField="Tentative Duration" HeaderText="Tentative Duration" SortExpression="Tentative Duration" />
+                        <asp:BoundField DataField="Billed Duration" HeaderText="Billed Duration" SortExpression="Billed Duration" />
                  
                     </Columns>
                     <EditRowStyle BackColor="#999999" />
