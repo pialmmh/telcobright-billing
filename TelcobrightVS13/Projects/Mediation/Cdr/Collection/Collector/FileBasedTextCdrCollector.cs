@@ -51,9 +51,9 @@ namespace TelcobrightMediation
             {
                 decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
                 decodedCdrRows = decodedCdrRows
-                    .Where(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore
-                                || (r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
-                    .ToList();
+                    .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
+                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                        .ToList();
             }
             else//collect from pre-decoded, but fallback to decode if predecoded file doesn't exist
             {
@@ -63,16 +63,16 @@ namespace TelcobrightMediation
                     decodedCdrRows =
                         FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(predecodedFileName, ',', 0, "`", ";"); //backtick separated
                     decodedCdrRows = decodedCdrRows
-                        .Where(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore
-                                    || (r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                        .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
+                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
                         .ToList();
                 }
                 else
                 {
                     decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
                     decodedCdrRows = decodedCdrRows
-                        .Where(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore
-                                    || (r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                        .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
+                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
                         .ToList();
                 }
             }

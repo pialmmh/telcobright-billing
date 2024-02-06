@@ -37,7 +37,7 @@ namespace InstallConfig
         {
 
             this.Tbc.CdrSetting = new CasCdrSettingHelper().getTemplateCdrSettings();
-            this.Tbc.CdrSetting.UnzipCompressedFiles = false;
+            this.Tbc.CdrSetting.UnzipCompressedFiles = true;
             this.Tbc.CdrSetting.ProcessNewCdrJobsBeforeReProcess = false;
             this.Tbc.CdrSetting.DescendingOrderWhileListingFiles = true;
             this.Tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles = true;
