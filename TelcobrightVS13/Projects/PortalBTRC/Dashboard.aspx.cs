@@ -23,6 +23,33 @@ public partial class DashboardAspx : Page
     private DatabaseSetting databaseSetting = null;
     private int dropdownYear;
     private int dropdownMonth;
+    private Dictionary<string, int> icxBillThreshold = new Dictionary<string, int>
+    {
+        {"Agni ICX", 12000000},
+        {"BTCL", 13000000},
+        {"Bangla ICX", 8000000},
+        {"Bangla Telecom Ltd", 8000000},
+        {"Bantel Limited", 4000000},
+        {"Cross World Telecom Limited", 9000000},
+        {"Gazi Networks Limited", 10000000},
+        {"Imam Network Ltd", 7000000},
+        {"Sheba ICX", 3000000},
+        {"JibonDhara Solutions Limited", 11000000},
+        {"M&H Telecom Limited", 17000000},
+        {"Mother Telecom Limited", 12000000},
+        {"New Generation Telecom Limited", 12000000},
+        {"Paradise Telecom Limited", 12000000},
+        {"Purple Telecom Limited", 4000000},
+        {"RingTech(Bangladesh) Limited", 8000000},
+        {"SR Telecom Limited", 6000000},
+        {"Softex Communication Ltd", 6000000},
+        {"Summit Communication Limited(Vertex)", 10000000},
+        {"Tele Exchange Limited", 6000000},
+        {"Teleplus Newyork Limited", 4000000},
+        {"Voicetel Ltd", 10000000}
+    };
+
+
 
     protected void ddl_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -123,137 +150,34 @@ public partial class DashboardAspx : Page
         //databaseSetting.DatabaseName = this.targetIcxName;
         string connectionString = DbUtil.getReadOnlyConStrWithDatabase(databaseSetting);
 
-        string sqlCommand = @"select 'Agni ICX' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from agni_cas.job 
-                            left join agni_cas.ne
-                            on agni_cas.job.idne = agni_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'BTCL' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from btcl_cas.job 
-                            left join btcl_cas.ne
-                            on btcl_cas.job.idne = btcl_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Bangla ICX' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from banglaicx_cas.job 
-                            left join banglaicx_cas.ne
-                            on banglaicx_cas.job.idne = banglaicx_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Bangla Telecom Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from banglatelecom_cas.job 
-                            left join banglatelecom_cas.ne
-                            on banglatelecom_cas.job.idne = banglatelecom_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Bantel Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from bantel_cas.job 
-                            left join bantel_cas.ne
-                            on bantel_cas.job.idne = bantel_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Cross World Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from crossworld_cas.job 
-                            left join crossworld_cas.ne
-                            on crossworld_cas.job.idne = crossworld_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Gazi Networks Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from gazinetworks_cas.job 
-                            left join gazinetworks_cas.ne
-                            on gazinetworks_cas.job.idne = gazinetworks_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Imam Network Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from imamnetwork_cas.job 
-                            left join imamnetwork_cas.ne
-                            on imamnetwork_cas.job.idne = imamnetwork_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Sheba ICX' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from sheba_cas.job 
-                            left join sheba_cas.ne
-                            on sheba_cas.job.idne = sheba_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'JibonDhara Solutions Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from jibondhara_cas.job 
-                            left join jibondhara_cas.ne
-                            on jibondhara_cas.job.idne = jibondhara_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'M&H Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from mnh_cas.job 
-                            left join mnh_cas.ne
-                            on mnh_cas.job.idne = mnh_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Mother Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from mothertelecom_cas.job 
-                            left join mothertelecom_cas.ne
-                            on mothertelecom_cas.job.idne = mothertelecom_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'New Generation Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from newgenerationtelecom_cas.job 
-                            left join newgenerationtelecom_cas.ne
-                            on newgenerationtelecom_cas.job.idne = newgenerationtelecom_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Paradise Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from paradise_cas.job 
-                            left join paradise_cas.ne
-                            on paradise_cas.job.idne = paradise_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Purple Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from purple_cas.job 
-                            left join purple_cas.ne
-                            on purple_cas.job.idne = purple_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'RingTech(Bangladesh) Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from ringtech_cas.job 
-                            left join ringtech_cas.ne
-                            on ringtech_cas.job.idne = ringtech_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'SR Telecom Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from srtelecom_cas.job 
-                            left join srtelecom_cas.ne
-                            on srtelecom_cas.job.idne = srtelecom_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Softex Communication Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from softex_cas.job 
-                            left join softex_cas.ne
-                            on softex_cas.job.idne = softex_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Summit Communication Limited(Vertex)' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from summit_cas.job 
-                            left join summit_cas.ne
-                            on summit_cas.job.idne = summit_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Tele Exchange Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from teleexchange_cas.job 
-                            left join teleexchange_cas.ne
-                            on teleexchange_cas.job.idne = teleexchange_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Teleplus Newyork Limited' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from teleplusnewyork_cas.job 
-                            left join teleplusnewyork_cas.ne
-                            on teleplusnewyork_cas.job.idne = teleplusnewyork_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE
-                            union all
-                            select 'Voicetel Ltd' as icx,SwitchName as 'SwitchName',count(JobName) as No_Of_Cdrs_in_last_24_hours from voicetel_cas.job 
-                            left join voicetel_cas.ne
-                            on voicetel_cas.job.idne = voicetel_cas.ne.idSwitch
-                            where idjobdefinition=1 and Status=1 and CreationTime >= '2023-10-05'and CompletionTime<= '2023-10-06'
-                            group by idNE;";
+        string date1 = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
+        string date2 = DateTime.Now.ToString("yyyy-MM-dd");
+
+        string sqlCommand = $@"
+select 'Agni ICX' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from agni_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'BTCL' as icx, '13000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from btcl_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Bangla ICX' as icx, '8000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from banglaicx_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Bangla Telecom Ltd' as icx, '8000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from banglatelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Bantel Limited' as icx, '4000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from bantel_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Cross World Telecom Limited' as icx, '9000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from crossworld_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Gazi Networks Limited' as icx, '10000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from gazinetworks_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Imam Network Ltd' as icx, '7000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from imamnetwork_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Sheba ICX' as icx, '3000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from sheba_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'JibonDhara Solutions Limited' as icx, '11000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from jibondhara_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'M&H Telecom Limited' as icx, '17000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from mnh_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Mother Telecom Limited' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from mothertelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'New Generation Telecom Limited' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from newgenerationtelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Paradise Telecom Limited' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from paradise_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Purple Telecom Limited' as icx, '4000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from purple_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'RingTech(Bangladesh) Limited' as icx, '8000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from ringtech_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'SR Telecom Limited' as icx, '6000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from srtelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Softex Communication Ltd' as icx, '6000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from softex_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Summit Communication Limited(Vertex)' as icx, '10000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from summit_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Tele Exchange Limited' as icx, '6000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from teleexchange_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Teleplus Newyork Limited' as icx, '4000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from teleplusnewyork_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Voicetel Ltd' as icx, '10000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from voicetel_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' ;
+
+";
 
         //sqlCommand = @"SELECT 'Teleplus Newyork Limited' AS icx, 'ZTE' AS 'SwitchName', 23 AS No_Of_Cdrs_in_last_24_hours
         //                      union all
@@ -262,7 +186,9 @@ public partial class DashboardAspx : Page
         //                      SELECT 'Softex Communication Ltd' AS icx, 'CATALIA' AS 'SwitchName', 10 AS No_Of_Cdrs_in_last_24_hours;";
         List<GridViewJobStatusForICX> gridViewCompletedJobStatus = new List<GridViewJobStatusForICX>();
 
+        
 
+        
         using (MySqlConnection connection = new MySqlConnection())
         {
             connection.ConnectionString = connectionString;
@@ -298,7 +224,21 @@ public partial class DashboardAspx : Page
         PopulateIcxDistributionRajshahi();
 
     }
+
+
+
+    protected string GetImageUrl(int billedDuration, string icx)
+    {        
+        int threshold = icxBillThreshold.ContainsKey(icx)
+            ? icxBillThreshold[icx]
+            : 100; 
      
+        return billedDuration > threshold
+            ? "~/img/correct.png"
+            : "~/img/error.png";
+    }
+    
+
     private void PopulateIpTdmPieChart()
     {
         int year = this.dropdownYear;
@@ -1209,8 +1149,8 @@ public partial class DashboardAspx : Page
     {
         public int id { get; set; }
         public string icx { get; set; }
-        public string SwitchName { get; set; }
-        public int No_Of_Cdrs_in_last_24_hours { get; set; }
+        public string tentativeDuration { get; set; }
+        public string billedDuration { get; set; }
     }
     private void UpdateInternationalIncoming()
     {
@@ -1292,8 +1232,8 @@ public partial class DashboardAspx : Page
                     GridViewJobStatusForICX record = new GridViewJobStatusForICX();
                    // record.id = Convert.ToInt32(row["id"]);
                     record.icx= row["icx"].ToString();
-                    record.SwitchName = row["SwitchName"].ToString();
-                    record.No_Of_Cdrs_in_last_24_hours = Convert.ToInt32(row["No_Of_Cdrs_in_last_24_hours"]);
+                    record.tentativeDuration = row["tentativeDuration"].ToString();
+                    record.billedDuration = row["billedDuration"].ToString();
 
                     records.Add(record);
                 }
