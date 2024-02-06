@@ -125,13 +125,13 @@
                             <ItemTemplate>
                                 <div style="text-align: center;">
                                     <asp:Image ID="Image1" runat="server" Width="14" Height="14" 
-                                               ImageUrl='<%# GetImageUrl(Convert.ToInt32(Eval("Billed Duration")), Eval("icx").ToString() ) %>' />
+                                               ImageUrl='<%# GetImageUrl(Convert.ToInt32(Eval("billedDuration")), Convert.ToString(Eval("icx")) ) %>' />
                                 </div>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="icx" HeaderText="ICX" SortExpression="icx" />
-                        <asp:BoundField DataField="Tentative Duration" HeaderText="Tentative Duration" SortExpression="Tentative Duration" />
-                        <asp:BoundField DataField="Billed Duration" HeaderText="Billed Duration" SortExpression="Billed Duration" />
+                        <asp:BoundField DataField="tentativeDuration" HeaderText="Tentative Duration" SortExpression="tentativeDuration" />
+                        <asp:BoundField DataField="billedDuration" HeaderText="Billed Duration" SortExpression="billedDuration" />
                  
                     </Columns>
                     <EditRowStyle BackColor="#999999" />
