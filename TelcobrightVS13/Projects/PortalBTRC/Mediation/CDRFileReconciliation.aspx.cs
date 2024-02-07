@@ -186,7 +186,11 @@ namespace PortalApp.Mediation
                 if (rows[i][0] == "" ) continue; // filename cant be empty
 
                 CDRFileComparer obj = new CDRFileComparer(rows[i]);
-                CDRFileComparers.Add(obj.FileName, obj);
+                if (!CDRFileComparers.ContainsKey(obj.FileName))
+                {
+                    CDRFileComparers.Add(obj.FileName, obj);
+                }
+                
             }
             return CDRFileComparers;
         }

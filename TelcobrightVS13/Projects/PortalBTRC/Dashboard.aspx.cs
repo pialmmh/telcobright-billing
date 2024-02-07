@@ -154,28 +154,31 @@ public partial class DashboardAspx : Page
         string date2 = DateTime.Now.ToString("yyyy-MM-dd");
 
         string sqlCommand = $@"
-select 'Agni ICX' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from agni_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'BTCL' as icx, '13000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from btcl_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Bangla ICX' as icx, '8000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from banglaicx_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Bangla Telecom Ltd' as icx, '8000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from banglatelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Bantel Limited' as icx, '4000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from bantel_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Cross World Telecom Limited' as icx, '9000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from crossworld_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Gazi Networks Limited' as icx, '10000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from gazinetworks_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Imam Network Ltd' as icx, '7000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from imamnetwork_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Sheba ICX' as icx, '3000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from sheba_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'JibonDhara Solutions Limited' as icx, '11000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from jibondhara_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'M&H Telecom Limited' as icx, '17000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from mnh_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Mother Telecom Limited' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from mothertelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'New Generation Telecom Limited' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from newgenerationtelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Paradise Telecom Limited' as icx, '12000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from paradise_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Purple Telecom Limited' as icx, '4000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from purple_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'RingTech(Bangladesh) Limited' as icx, '8000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from ringtech_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'SR Telecom Limited' as icx, '6000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from srtelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Softex Communication Ltd' as icx, '6000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from softex_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Summit Communication Limited(Vertex)' as icx, '10000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from summit_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Tele Exchange Limited' as icx, '6000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from teleexchange_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Teleplus Newyork Limited' as icx, '4000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from teleplusnewyork_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
-select 'Voicetel Ltd' as icx, '10000000' as 'tentativeDuration', sum(duration1)/60 'billedDuration' from voicetel_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' ;
+select 'Agni ICX' as icx, '12000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from agni_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'BTCL' as icx, '13000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from btcl_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Bangla ICX' as icx, '8000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from banglaicx_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Bangla Telecom Ltd' as icx, '8000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from banglatelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Bantel Limited' as icx, '4000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from bantel_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Cross World Telecom Limited' as icx, '9000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from crossworld_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Gazi Networks Limited' as icx, '10000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from gazinetworks_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Imam Network Ltd' as icx, '7000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from imamnetwork_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Sheba ICX' as icx, '3000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from sheba_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'JibonDhara Solutions Limited' as icx, '11000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from jibondhara_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'M&H Telecom Limited' as icx, '17000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from mnh_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Mother Telecom Limited' as icx, '12000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from mothertelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'New Generation Telecom Limited' as icx, '12000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from newgenerationtelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Paradise Telecom Limited' as icx, '12000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from paradise_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Purple Telecom Limited' as icx, '4000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from purple_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'RingTech(Bangladesh) Limited' as icx, '8000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from ringtech_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'SR Telecom Limited' as icx, '6000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from srtelecom_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Softex Communication Ltd' as icx, '6000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from softex_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Summit Communication Limited(Vertex)' as icx, '10000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from summit_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Tele Exchange Limited' as icx, '6000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from teleexchange_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Teleplus Newyork Limited' as icx, '4000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from teleplusnewyork_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' union all
+select 'Voicetel Ltd' as icx, '10000000' as 'tentativeDuration', ifnull((SUM(duration1) / 60), 0) 'billedDuration', ifnull(sum(successfulcalls), 0) cdrCount from voicetel_cas.sum_voice_day_01 where tup_starttime>= '{date1}' and tup_starttime < '{date2}' ;
+
+
+
 
 ";
 
@@ -227,17 +230,19 @@ select 'Voicetel Ltd' as icx, '10000000' as 'tentativeDuration', sum(duration1)/
 
 
 
-    protected string GetImageUrl(int billedDuration, string icx)
-    {        
-        int threshold = icxBillThreshold.ContainsKey(icx)
-            ? icxBillThreshold[icx]
-            : 100; 
-     
+    protected string GetImageUrl(object billedDurationObj, object icxObj)
+    {
+        // Convert to appropriate types and handle null values
+        double billedDuration = billedDurationObj != DBNull.Value ? Convert.ToDouble(billedDurationObj) : 0;
+        string icx = icxObj != DBNull.Value ? Convert.ToString(icxObj) : "";
+
+        int threshold = icxBillThreshold.ContainsKey(icx) ? icxBillThreshold[icx] : 100;
+
         return billedDuration > threshold
             ? "~/img/correct.png"
             : "~/img/error.png";
     }
-    
+
 
     private void PopulateIpTdmPieChart()
     {
@@ -1149,8 +1154,10 @@ select 'Voicetel Ltd' as icx, '10000000' as 'tentativeDuration', sum(duration1)/
     {
         public int id { get; set; }
         public string icx { get; set; }
-        public string tentativeDuration { get; set; }
-        public string billedDuration { get; set; }
+        public double tentativeDuration { get; set; }
+        public double billedDuration { get; set; }
+        public double cdrCount { get; set; }
+
     }
     private void UpdateInternationalIncoming()
     {
@@ -1232,8 +1239,10 @@ select 'Voicetel Ltd' as icx, '10000000' as 'tentativeDuration', sum(duration1)/
                     GridViewJobStatusForICX record = new GridViewJobStatusForICX();
                    // record.id = Convert.ToInt32(row["id"]);
                     record.icx= row["icx"].ToString();
-                    record.tentativeDuration = row["tentativeDuration"].ToString();
-                    record.billedDuration = row["billedDuration"].ToString();
+                    record.tentativeDuration = Convert.ToDouble(row["tentativeDuration"]);
+                    record.billedDuration = Convert.ToDouble( row["billedDuration"]);
+                    record.cdrCount = Convert.ToDouble(row["cdrCount"]);
+
 
                     records.Add(record);
                 }
