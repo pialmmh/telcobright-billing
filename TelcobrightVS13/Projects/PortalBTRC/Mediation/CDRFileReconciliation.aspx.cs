@@ -120,8 +120,8 @@ namespace PortalApp.Mediation
                     {
                         string jobNameTB = j.JobName;
                         fileNamesfromDB.Add(jobNameTB);
-                        string durationTB = j.JobSummary;
-                        string recordCountTB = j.NoOfSteps.ToString();
+                        string durationTB = j.JobSummary==null? "0.00" : j.JobSummary;
+                        string recordCountTB = j.NoOfSteps.ToString() == null? "0.00" : j.NoOfSteps.ToString();
 
                         CDRFileComparers[jobNameTB].ActualDuratinoTB = durationTB.ToString();
                         CDRFileComparers[jobNameTB].RecordCountFromTB = recordCountTB.ToString();
@@ -186,7 +186,11 @@ namespace PortalApp.Mediation
                 if (rows[i][0] == "" ) continue; // filename cant be empty
 
                 CDRFileComparer obj = new CDRFileComparer(rows[i]);
-                CDRFileComparers.Add(obj.FileName, obj);
+                if (!CDRFileComparers.ContainsKey(obj.FileName))
+                {
+                    CDRFileComparers.Add(obj.FileName, obj);
+                }
+                
             }
             return CDRFileComparers;
         }
@@ -205,6 +209,8 @@ namespace PortalApp.Mediation
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("comparer_data");
 
                 // Add header row
+                // Example: Set the first column as Text
+                worksheet.Column(1).Style.Numberformat.Format = "@";
                 for (int i = 0; i < gridView.HeaderRow.Cells.Count; i++)
                 {
                     worksheet.Cells[1, i + 1].Value = gridView.HeaderRow.Cells[i].Text;
@@ -215,23 +221,51 @@ namespace PortalApp.Mediation
                 {
                     for (int j = 0; j < gridView.Rows[i].Cells.Count; j++)
                     {
-                        worksheet.Cells[i + 2, j + 1].Value = gridView.Rows[i].Cells[j].Text;
-                        
+                        if(j==0)
+                            worksheet.Cells[i + 2, j + 1].Value = gridView.Rows[i].Cells[j].Text;
+                        else if (gridView.Rows[i].Cells[j].Text == "File Missing")
+                        {
+                            worksheet.Cells[i + 2, j + 1].Value = gridView.Rows[i].Cells[j].Text;
+                        }
+                        else
+                        {
+                            if (j <= 3)
+                            {
+                                var cell = worksheet.Cells[i + 2, j + 1];
+                                cell.Value = Convert.ToInt32(gridView.Rows[i].Cells[j].Text);
+                                //cell.Style.Numberformat.Format = "0.0000000";
+                            }
+                            else
+                            {
+                                var cell = worksheet.Cells[i + 2, j + 1];
+                                cell.Value = Convert.ToDouble(gridView.Rows[i].Cells[j].Text);
+                                cell.Style.Numberformat.Format = "0.0";
+                            }
+                        }
                     }
                 }
 
                 // Save the file
                 //string fileName = "CDRData.xlsx";
                 //FileInfo excelFile = new FileInfo(Server.MapPath($"C:/Users/Mahathir/Downloads/{fileName}"));
-                excelPackage.SaveAs(new FileInfo(filePath));
+                //excelPackage.SaveAs(new FileInfo(filePath));
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;  filename=" + fileName + "");
+                Response.BinaryWrite(excelPackage.GetAsByteArray());
+                Response.End();
+
             }
+            //
+            
+
+            //
             // Provide the file for download
-            Response.Clear();
-            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
-            Response.TransmitFile(filePath);
-            Response.Flush();
-            HttpContext.Current.ApplicationInstance.CompleteRequest();
+            //Response.Clear();
+            //Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            //Response.AddHeader("Content-Disposition", $"attachment; filename={fileName}");
+            //Response.TransmitFile(filePath);
+            //Response.Flush();
+            //HttpContext.Current.ApplicationInstance.CompleteRequest();
 
         }
         protected void DownloadButton_Click(object sender, EventArgs e)
@@ -262,10 +296,14 @@ namespace PortalApp.Mediation
                     worksheet.Cells[1, i + 1].Value = headerRow[i];
                 }
 
-                
+
                 // Save the file
                 //string fileName = "CDRData.xlsx";
                 //FileInfo excelFile = new FileInfo(Server.MapPath($"C:/Users/Mahathir/Downloads/{fileName}"));
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
                 excelPackage.SaveAs(new FileInfo(filePath));
             }
             // Provide the file for download

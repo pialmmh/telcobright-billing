@@ -102,8 +102,12 @@
 <div style="background-color:#edf2ef; color: black; display: flex; align-items: flex-start; border: 1px solid #707070; padding:10px; width:1530px;">
         
     <div style="font-weight: bold; padding-bottom:5px;">
-        <asp:Label ID="Label12" runat="server"  Text="Select Year & Month:"></asp:Label> <br>
-        <asp:DropDownList ID="DropDownYear1" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_SelectedIndexChanged" ></asp:DropDownList>
+        <asp:Label ID="Label13" runat="server" Text="Dashboard Panel" Style="font-weight: bold; color: #374044; font-size: 25px;  "></asp:Label>
+        <br />
+
+        
+        <asp:Label ID="Label12" runat="server"  Text="Select Year & Month:" Style="margin-left: 230px; padding: 2px;"></asp:Label> <br>
+        <asp:DropDownList ID="DropDownYear1" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_SelectedIndexChanged" Style="margin-left: 230px;" ></asp:DropDownList>
         <asp:DropDownList ID="DropDownMonth1" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_SelectedIndexChanged"></asp:DropDownList>
     </div>
         
@@ -116,7 +120,7 @@
             <%--div 1--%>
             <div style="float: left; width:475px;">
                 <div style="margin-left: auto; margin-right: auto; text-align: center;">
-                    <asp:Label ID="Label2" runat="server" Text="CDR File Receiving Status By ICX (Current Month)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
+                    <asp:Label ID="Label2" runat="server" Text="CDR File Sending Status By ICX (Last 24 Hour)" Font-Bold="true" Font-Size="Large" ForeColor="#08605c" CssClass="StrongText"></asp:Label>
                 </div>
                 <asp:GridView ID="GridViewCompleted" runat="server" AutoGenerateColumns="False" CellPadding="4" DataKeyNames="id" ForeColor="#333333" GridLines="None" BorderStyle="None" BorderWidth="1"  >
                     <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
@@ -124,14 +128,16 @@
                         <asp:TemplateField HeaderText="Status">
                             <ItemTemplate>
                                 <div style="text-align: center;">
-                                    <asp:Image ID="StatusImage" runat="server" Width="14" Height="14" 
-                                        ImageUrl='<%# Convert.ToInt32(Eval("No_Of_Cdrs_in_last_24_hours")) > 19 ? "~/img/correct.png" : "~/img/error.png" %>' />
+                                        <asp:Image ID="Image2" runat="server" Width="14" Height="14" 
+                                                   ImageUrl='<%# GetImageUrl(Eval("billedDuration"), Eval("icx")) %>' />                                   
                                 </div>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="icx" HeaderText="ICX" SortExpression="icx" />
-                        <asp:BoundField DataField="SwitchName" HeaderText="Switch Name" SortExpression="SwitchName" />
-                        <asp:BoundField DataField="No_Of_Cdrs_in_last_24_hours" HeaderText="No Of CDRs in last 24 hours" SortExpression="No_Of_Cdrs_in_last_24_hours" />
+                        <asp:BoundField DataField="tentativeDuration" HeaderText="Tentative Duration" SortExpression="tentativeDuration" Visible="False" />
+                        <asp:BoundField DataField="billedDuration" HeaderText="Billed Duration" SortExpression="billedDuration" Visible="False" />
+                        <asp:BoundField DataField="cdrCount" HeaderText="Number of CDRs Received" SortExpression="cdrCount" />
+
                  
                     </Columns>
                     <EditRowStyle BackColor="#999999" />
