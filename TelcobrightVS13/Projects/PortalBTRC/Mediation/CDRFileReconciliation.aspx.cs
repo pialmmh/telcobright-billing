@@ -120,8 +120,8 @@ namespace PortalApp.Mediation
                     {
                         string jobNameTB = j.JobName;
                         fileNamesfromDB.Add(jobNameTB);
-                        string durationTB = j.JobSummary;
-                        string recordCountTB = j.NoOfSteps.ToString();
+                        string durationTB = j.JobSummary==null? "0.00" : j.JobSummary;
+                        string recordCountTB = j.NoOfSteps.ToString() == null? "0.00" : j.NoOfSteps.ToString();
 
                         CDRFileComparers[jobNameTB].ActualDuratinoTB = durationTB.ToString();
                         CDRFileComparers[jobNameTB].RecordCountFromTB = recordCountTB.ToString();
