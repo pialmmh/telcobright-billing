@@ -276,6 +276,8 @@
     <Compile Include="FileOperations\RecursiveVaultFileMover.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
     <Compile Include="FileOperations\Unzipper.cs" />
+    <Compile Include="Mediation\CsvArrayHelper.cs" />
+    <Compile Include="Mediation\SheetImportTask.cs" />
     <Compile Include="MefData\Composers\AutomationContainer.cs" />
     <Compile Include="FileOperations\JobParamFileDelete.cs" />
     <Compile Include="FileOperations\RemoteFileInfoExt.cs" />
