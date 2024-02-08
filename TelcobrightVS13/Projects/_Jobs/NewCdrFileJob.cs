@@ -470,7 +470,7 @@ namespace Jobs
                         decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
                         decodedCdrRows = decodedCdrRows
                             .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
-                                        || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
                             .ToList();
                     }
                     else
