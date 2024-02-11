@@ -38,6 +38,7 @@ namespace LibraryExtensions
                 populateZipFiles();
                 populateCdrFiles(Prefixes, Extension);
                 populateUnwantedFile();
+                moveFiles(rootDir, AllFileInfos);
             }
 
             private void populateAllFilesRecursively(string parentDir)
@@ -49,10 +50,20 @@ namespace LibraryExtensions
                     AllFileInfos.Add(fileInfo);
                 }
 
+                string excludeFolder = Path.Combine(parentDir, "exclude");
+                
+
                 string[] subDirs = Directory.GetDirectories(parentDir);
                 foreach (string subDir in subDirs)
                 {
-                    if (!Directory.GetFileSystemEntries(subDir).Any())   // if a sub directory is empty then it will be deleted
+                    if (excludeFolder == subDir)
+                    {
+                        continue;
+                    }
+                    var currentTime = DateTime.Now;
+                    var dirCreationTime = File.GetCreationTime(subDir);
+
+                    if (!Directory.GetFileSystemEntries(subDir).Any() && currentTime.Subtract(dirCreationTime).TotalHours > 1)   // if a sub directory is empty then it will be deleted
                     {
                         Directory.Delete(subDir);
                         continue;
@@ -121,6 +132,11 @@ namespace LibraryExtensions
                     FileInfo originalFileInfo = new FileInfo(originalFile);
                     FileInfo tempFileInfo = new FileInfo(tmpFile);
 
+                    string testFile = "G:/telcobright/vault/resources/cdr/mnh/ip/temp/test.7z";
+                    if (testFile == tmpFile)
+                    {
+                        ;
+                    }
                     if (originalFileInfo.Length == tempFileInfo.Length)
                     {
                         File.Delete(originalFile);          //deleting original file
