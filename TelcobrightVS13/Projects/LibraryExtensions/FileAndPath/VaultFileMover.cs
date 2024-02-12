@@ -60,14 +60,14 @@ namespace LibraryExtensions
                 string[] subDirs = Directory.GetDirectories(parentDir);
                 foreach (string subDir in subDirs)
                 {
-                    if (excludeFolder == subDir)
+                    if (subDir == excludeFolder)
                     {
                         continue;
                     }
                     var currentTime = DateTime.Now;
                     var dirCreationTime = File.GetCreationTime(subDir);
 
-                    if (!Directory.GetFileSystemEntries(subDir).Any() && currentTime.Subtract(dirCreationTime).TotalHours > 1)   // if a sub directory is empty then it will be deleted
+                    if (!Directory.GetFileSystemEntries(subDir).Any() && currentTime.Subtract(dirCreationTime).TotalHours > 168)   // if a sub directory is empty then it will be deleted
                     {
                         Directory.Delete(subDir);
                         continue;
@@ -131,14 +131,24 @@ namespace LibraryExtensions
                     string originalFile = Path.Combine(fileInfo.DirectoryName, fileInfo.Name);
                     string tmpFile = Path.Combine(targetDir, fileInfo.Name + ".tmp");
 
-                    File.Copy(originalFile, tmpFile);      // tmp file copying here
+                    if (File.Exists(tmpFile))
+                    {
+                        File.Delete(tmpFile);
+                    }
+
+
+                    FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+                    if (pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                    {
+                        File.Copy(originalFile, tmpFile); // tmp file copying here
+                    }
 
                     FileInfo originalFileInfo = new FileInfo(originalFile);
                     FileInfo tempFileInfo = new FileInfo(tmpFile);
 
                     
-                    FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
-                    if (originalFileInfo.Length == tempFileInfo.Length && pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                    
+                    if (originalFileInfo.Length == tempFileInfo.Length )
                     {
                         File.Delete(originalFile);          //deleting original file
                         File.Move(tmpFile, tmpFile.Remove(tmpFile.Length - 4, 4));  //renaming tmp file to its original name
