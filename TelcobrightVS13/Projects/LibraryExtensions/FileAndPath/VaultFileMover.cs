@@ -43,7 +43,7 @@ namespace LibraryExtensions
 
             private void populateAllFilesRecursively(string parentDir)
             {
-                if (parentDir != RootDir)
+                if (parentDir != RootDir) // ignoring the files from the root dir. they dont need to move/copy to the same directiry
                 {
                     string[] filePahts = Directory.GetFiles(parentDir);
                     foreach (string filePath in filePahts)
