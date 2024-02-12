@@ -43,14 +43,18 @@ namespace LibraryExtensions
 
             private void populateAllFilesRecursively(string parentDir)
             {
-                string[] filePahts = Directory.GetFiles(parentDir);
-                foreach (string filePath in filePahts)
+                if (parentDir != RootDir)
                 {
-                    FileInfo fileInfo = new FileInfo(filePath);
-                    AllFileInfos.Add(fileInfo);
+                    string[] filePahts = Directory.GetFiles(parentDir);
+                    foreach (string filePath in filePahts)
+                    {
+                        FileInfo fileInfo = new FileInfo(filePath);
+                        AllFileInfos.Add(fileInfo);
+                    }
                 }
+                
 
-                string excludeFolder = Path.Combine(parentDir, "exclude");
+                string excludeFolder = Path.Combine(RootDir, "exclude");
                 
 
                 string[] subDirs = Directory.GetDirectories(parentDir);
@@ -132,12 +136,9 @@ namespace LibraryExtensions
                     FileInfo originalFileInfo = new FileInfo(originalFile);
                     FileInfo tempFileInfo = new FileInfo(tmpFile);
 
-                    string testFile = "G:/telcobright/vault/resources/cdr/mnh/ip/temp/test.7z";
-                    if (testFile == tmpFile)
-                    {
-                        ;
-                    }
-                    if (originalFileInfo.Length == tempFileInfo.Length)
+                    
+                    FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+                    if (originalFileInfo.Length == tempFileInfo.Length && pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
                     {
                         File.Delete(originalFile);          //deleting original file
                         File.Move(tmpFile, tmpFile.Remove(tmpFile.Length - 4, 4));  //renaming tmp file to its original name
