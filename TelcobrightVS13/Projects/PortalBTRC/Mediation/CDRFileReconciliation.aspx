@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-   <div style="background-color:#edf2ef;color: black;float:left;border: 1px solid #707070;padding:10px; padding-right: 645px;">
+   <div style="background-color:#edf2ef;color: black;float:left;border: 1px solid #707070;padding:10px; padding-right: 652px;">
         <div style=" font-weight: bold; padding-bottom:5px; ">
              <asp:Label ID="lblSelectOption" runat="server" Text="Select a switch for cdr file reconciliatiohn template:"></asp:Label>
         </div>

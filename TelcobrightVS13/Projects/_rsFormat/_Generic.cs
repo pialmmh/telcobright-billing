@@ -93,7 +93,7 @@ namespace RateSheetFormat
                        Missing.Value, Missing.Value, Missing.Value);
 
                 Worksheet sheet = new Worksheet();
-                sheet = (Worksheet)book.Worksheets[1];
+                sheet = getTargetSheetWithRates(book, DateFormats); ;
 
                 SheetImportTask ImportTask = new SheetImportTask(ImportTaskType.RateChanges,
                     sheet, dicCountryCode, dicCountryName, rp);
@@ -139,6 +139,83 @@ namespace RateSheetFormat
             //}
         }
 
+
+        private Worksheet getTargetSheetWithRates(Workbook book, string[] dateFormats)
+        {
+            Worksheet targetSheet = null;
+
+            foreach (var sh in book.Worksheets)
+            {
+                var thisSheet = (Worksheet)sh;
+                var range = thisSheet.UsedRange;
+                object[,] objArray = (object[,])range.get_Value(XlRangeValueDataType.xlRangeValueDefault);
+                int dim1 = objArray.GetLength(0);
+                int dim2 = objArray.GetLength(1);
+
+                //replace nulls with zero lengh string
+                for (int r = 1; r <= dim1; r++)
+                {
+                    for (int c = 1; c <= dim2; c++)
+                    {
+                        if (objArray[r, c] == null)
+                            objArray[r, c] = "";
+                    }
+                }
+
+                //remove char ' (single quote) from obj array, caused problem in Sql
+                for (int r = 1; r <= dim1; r++)
+                {
+                    for (int c = 1; c <= dim2; c++)
+                    {
+                        if (objArray[r, c] != null)
+                            objArray[r, c] = objArray[r, c].ToString().Replace("'", "");
+                    }
+                }
+
+                //for text and csv/delimited files dim2 could be one
+                //have to split the rows first
+                char sepCharForCsv = ',';
+                if (dim2 == 1)
+                {
+                    List<string[]> csvArr = new List<string[]>();
+                    csvArrayHelper.GetArrayFromCsv(ref objArray, ref csvArr, ref sepCharForCsv);
+
+                    //convert 0 based csv array to 1 based obj array to handle delimated files
+                    dim1 = csvArr.Count;
+                    dim2 = csvArr[0].GetLength(0);
+                    //objArray = new object[Dim1, Dim2];//don't use the 0 index, start from 1
+                    //objArray = Array.CreateInstance(typeof(object), new object[] { 1, Dim1 }, new object[] { 1, Dim2 });
+                    objArray = (object[,])Array.CreateInstance(typeof(object),
+                        new int[] { dim1, dim2 },
+                        new int[] { 1, 1 });
+                    for (int r = 1; r <= dim1; r++)
+                    {
+                        for (int c = 1; c <= dim2; c++)
+                        {
+                            objArray[r, c] = csvArr[r - 1][c - 1];
+                        }
+                    }
+                }
+                string dateSeparator = "";
+                global::SheetImportTask sit = new global::SheetImportTask(MyExcel.ImportTaskType.RateChanges,
+                    thisSheet, dicCountryCode, dicCountryName, new rateplan());
+                int firstRow = sit.FindFirstRow(ref objArray, dateFormats, ref dateSeparator);
+                if (firstRow > 0)
+                {
+                    targetSheet = thisSheet;
+                    break;
+                }
+
+            }
+
+            //targetSheet = (Worksheet)book.Worksheets[1];
+            if (targetSheet == null)
+            {
+                throw new Exception("Target sheet containing rates not found.");
+            }
+
+            return targetSheet;
+        }
 
 
         public enum VendorFormat
@@ -299,6 +376,7 @@ namespace RateSheetFormat
                             }
                         }
                     }
+                    //FirstRow = FindFirstRow(ref objArray, DateFormats, ref DateSeparator);
                     FirstRow = FindFirstRow(ref objArray, DateFormats, ref DateSeparator);
 
                     ImportTaskType ThisSheetType = ImportTaskType.RateChanges;
@@ -1150,7 +1228,9 @@ namespace RateSheetFormat
                     {
                         CellDataType? ThisColumnLike = CellDataType.NULL;
 
-                        ThisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString().Trim(), DateFormats, ref DateSeparator) : CellDataType.NULL);
+                        ThisColumnLike = (objArray[i, j] != null 
+                            ? FindCellDataType(objArray[i, j].ToString().Trim(), DateFormats, ref DateSeparator) 
+                            : CellDataType.NULL);
 
                         switch (ThisColumnLike)
                         {

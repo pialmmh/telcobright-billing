@@ -62,7 +62,8 @@ namespace Process
                         new CompressedFileHelperForVault(new List<string>()).MoveToOriginalPath(tempDir);
                         DirectoryLister dirlister = new DirectoryLister();
 
-//                        VaultFileMover vaultFileMover = new VaultFileMover(new List<string>(), "", vaultPath);
+                       VaultFileMover vaultFileMover = new VaultFileMover(new List<string> { thisSwitch.CDRPrefix}, thisSwitch.FileExtension, vaultPath);
+                       // vaultFileMover.moveFiles(vaultPath, vaultFileMover.AllFileInfos);
 
                         if (cdrSetting.UnzipCompressedFiles == true)
                         {

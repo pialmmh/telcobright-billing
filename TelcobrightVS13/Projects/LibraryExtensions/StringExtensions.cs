@@ -13,7 +13,7 @@ namespace LibraryExtensions
         public static T? GetValueOrNull<T>(this string valueAsString)
             where T : struct
         {
-            if (string.IsNullOrEmpty(valueAsString) || string.IsNullOrWhiteSpace(valueAsString))
+            if (string.IsNullOrEmpty(valueAsString) || string.IsNullOrWhiteSpace(valueAsString) || valueAsString == "\\N")
                 return null;
             return (T) Convert.ChangeType(valueAsString, typeof(T));
         }

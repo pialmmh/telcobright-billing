@@ -32,7 +32,7 @@ namespace PartnerRules
             }
             if (cdrSetting.useCasStyleProcessing == true &&
                     tbPartnerDb == "mnh_cas" && thisCdr.OutPartnerId <= 0 &&
-                    (thisCdr.OutgoingRoute == "1974" || thisCdr.OutgoingRoute == "1950" || thisCdr.OutgoingRoute == "1960")
+                    (thisCdr.OutgoingRoute == "1950" || thisCdr.OutgoingRoute == "1960")
                )
             {
                 ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();

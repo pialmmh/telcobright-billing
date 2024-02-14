@@ -38,21 +38,36 @@ namespace LibraryExtensions
                 populateZipFiles();
                 populateCdrFiles(Prefixes, Extension);
                 populateUnwantedFile();
+                moveFiles(rootDir, AllFileInfos);
             }
 
             private void populateAllFilesRecursively(string parentDir)
             {
-                string[] filePahts = Directory.GetFiles(parentDir);
-                foreach (string filePath in filePahts)
+                if (parentDir != RootDir) // ignoring the files from the root dir. they dont need to move/copy to the same directiry
                 {
-                    FileInfo fileInfo = new FileInfo(filePath);
-                    AllFileInfos.Add(fileInfo);
+                    string[] filePahts = Directory.GetFiles(parentDir);
+                    foreach (string filePath in filePahts)
+                    {
+                        FileInfo fileInfo = new FileInfo(filePath);
+                        AllFileInfos.Add(fileInfo);
+                    }
                 }
+                
+
+                string excludeFolder = Path.Combine(RootDir, "exclude");
+                
 
                 string[] subDirs = Directory.GetDirectories(parentDir);
                 foreach (string subDir in subDirs)
                 {
-                    if (!Directory.GetFileSystemEntries(subDir).Any())   // if a sub directory is empty then it will be deleted
+                    if (subDir == excludeFolder)
+                    {
+                        continue;
+                    }
+                    var currentTime = DateTime.Now;
+                    var dirCreationTime = File.GetCreationTime(subDir);
+
+                    if (!Directory.GetFileSystemEntries(subDir).Any() && currentTime.Subtract(dirCreationTime).TotalHours > 168)   // if a sub directory is empty then it will be deleted
                     {
                         Directory.Delete(subDir);
                         continue;
@@ -116,12 +131,24 @@ namespace LibraryExtensions
                     string originalFile = Path.Combine(fileInfo.DirectoryName, fileInfo.Name);
                     string tmpFile = Path.Combine(targetDir, fileInfo.Name + ".tmp");
 
-                    File.Copy(originalFile, tmpFile);      // tmp file copying here
+                    if (File.Exists(tmpFile))
+                    {
+                        File.Delete(tmpFile);
+                    }
+
+
+                    FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+                    if (pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                    {
+                        File.Copy(originalFile, tmpFile); // tmp file copying here
+                    }
 
                     FileInfo originalFileInfo = new FileInfo(originalFile);
                     FileInfo tempFileInfo = new FileInfo(tmpFile);
 
-                    if (originalFileInfo.Length == tempFileInfo.Length)
+                    
+                    
+                    if (originalFileInfo.Length == tempFileInfo.Length )
                     {
                         File.Delete(originalFile);          //deleting original file
                         File.Move(tmpFile, tmpFile.Remove(tmpFile.Length - 4, 4));  //renaming tmp file to its original name
