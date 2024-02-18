@@ -163,6 +163,127 @@ namespace PortalApp.ReportHelper
             ws.Cells[cell].Style.Border.Left.Style = ExcelBorderStyle.Thin;
         }
 
+        public static bool ExportToExcelMonthlyRoamingReport(string filename, HttpResponse response, List<SumDataOfMonth> monthlyRecords, string partnerName)
+        {
+            try
+            {
+                using (ExcelPackage pck = new ExcelPackage())
+                {
+                    //Create the worksheet
+                    ExcelWorksheet ws = pck.Workbook.Worksheets.Add("Sheet1");
+
+
+                    //Load the datatable into the sheet, starting from cell A1. Print the column names on row 1
+                    string icxCell = "A2";
+
+
+                    ws.Cells["B3"].Style.Font.Bold = true;
+
+                    createBtrcHeader(ws, "A1:H1", 8, $@"Monthly Roaming Report of -{ partnerName }");
+                    //createBtrcHeader(ws, "A2:A3", 8, "Sl No");
+                    //for (int i=1;i<monthlyRecords.Count;i++) ws.Cells[$"A{4+i.ToString()}"].Value= i;
+                    createBtrcHeader(ws, "A2", 8, "Start Time");
+                    createBtrcHeader(ws, "B2", 8, "Source Network");
+                    createBtrcHeader(ws, "C2", 8, "Destination Network");
+                    createBtrcHeader(ws, "D2", 8, "Caller Number (A NUM)");
+                    createBtrcHeader(ws, "E2", 8, "Called Number (B Num)");
+                    createBtrcHeader(ws, "F2", 8, "Redirect Number");
+                    createBtrcHeader(ws, "G2", 8, "Billed Duration");
+                    createBtrcHeader(ws, "H2", 8, "Remarks");
+
+
+
+
+
+
+
+                    int rowCount = monthlyRecords.Count;
+                    
+                    string reportStartCol = "A";
+                    int reportStartRow = 2;
+                    int totalStartRow = reportStartRow + rowCount + 1;
+                    string reportStartRange = reportStartCol + reportStartRow.ToString();
+                    string totalStartRange = reportStartCol + totalStartRow.ToString();
+                    ws.Cells[reportStartRange].LoadFromCollection<SumDataOfMonth>(monthlyRecords, true);
+                   // ws.Cells[totalStartRange].Value = "Total";
+                    ws.Cells[totalStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[totalStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    ws.Cells[totalStartRange].Style.Font.Bold = true;
+                    string nextCol = getNextRangeAtRight(totalStartRange);
+                    nextCol = getNextRangeAtRight(nextCol);
+                    //ws.Cells[nextCol].Value = $"{sum:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    //ws.Cells[nextCol].Value = $"{sum2:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    //ws.Cells[nextCol].Value = $"{sum3:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    //ws.Cells[nextCol].Value = $"{sum4:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    //ws.Cells[nextCol].Value = $"{sum5:n0}";
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    nextCol = getNextRangeAtRight(nextCol);
+                    //ws.Cells[nextCol].Value = $"{sum6:n0}";
+                    ws.Cells[nextCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[nextCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Right;
+                    ws.Cells[nextCol].Style.Font.Bold = true;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange + ":" + nextCol].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    ws.Cells[reportStartRange].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[reportStartRange].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    string mntCol = getNextRangeAtRight(reportStartRange);
+                    //ws.Cells[mntCol].Value = "No.of Minutes";
+                    ws.Cells[mntCol].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    ws.Cells[mntCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                   
+
+                    ws.Cells["A8:B8"].Style.Font.Bold = false;
+                    ws.Cells["D8:E8"].Style.Font.Bold = false;
+                    ws.Column(1).Width = 14;
+                    ws.Column(3).Width = 14;
+                    ws.Column(4).Width = 14;
+                    ws.Column(5).Width = 14;
+                    ws.Column(7).Width = 14;
+                    ws.Column(8).Width = 14;
+                    // Set baseColumns to auto-fit
+                    for (int i = 1; i <= ws.Dimension.Columns; i++)
+                    {
+                        ws.Column(i).AutoFit();
+                    }
+
+                    //Write it back to the client
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", "attachment;  filename=" + filename + "");
+                    response.BinaryWrite(pck.GetAsByteArray());
+                    response.End();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Trace.WriteLine("Failed, exception thrown: " + ex.Message);
+                return false;
+            }
+        }
+
+
         public static bool ExportToExcelMonthlyReport(string filename, HttpResponse response, List<MonthlyReportRowForExcel> monthlyRecords, string partnerName)
         {
             try

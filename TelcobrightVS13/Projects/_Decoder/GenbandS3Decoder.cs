@@ -12,19 +12,19 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class GenbandS3Decoder : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class GenbandS3Decoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
-        public int Id => 1;
-        public string HelpText => "Decodes Genband S3 CDR.";
-        public CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 1;
+        public override string HelpText => "Decodes Genband S3 CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string UniqueEventTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             List<string[]> decodedRows = new List<string[]>();
             inconsistentCdrs = new List<cdrinconsistent>();
@@ -41,9 +41,10 @@ namespace Decoders
             string strThisField = "";
             string[] thisNormalizedRow = null;
             int currentFieldNo = 0;
-            foreach (string[] thisRow in tempTable) //for each row
+
+            try
             {
-                try
+                foreach (string[] thisRow in tempTable) //for each row
                 {
                     thisNormalizedRow = null;
                     thisNormalizedRow = new string[input.MefDecodersData.Totalfieldtelcobright];
@@ -108,13 +109,13 @@ namespace Decoders
 
                                     break;
                                 case 16://ConnectTime, connect time may not be present for failed call
-                                        //has been set later by PDD
+                                    //has been set later by PDD
                                     break;
                                 case 17://AnswerTime, may not be present for failed calls
-                                        //has been set later by duration and charging status
+                                    //has been set later by duration and charging status
                                     break;
                                 case 18://charging status
-                                        ////has been set later by duration
+                                    ////has been set later by duration
                                     break;
                                 case 22://release direction
 
@@ -265,48 +266,64 @@ namespace Decoders
                             //add valid flag for this type of switch, valid flag comes from cdr for zte
                             thisNormalizedRow[54] = "1";
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
-                                                        //remove the text "end1", casue that will throw error for this field in cdr
+                            //remove the text "end1", casue that will throw error for this field in cdr
                             thisNormalizedRow[65] = "0";//a numeric value is ok as per cdrfieldlist
                             thisNormalizedRow[Fn.FinalRecord] = "1";
+                            thisNormalizedRow[Fn.Partialflag] = "0";
+
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }
-                }
-                catch (Exception e1)
-                {//if error found for one row, add this to inconsistent
+                    //try
+                    //{
+                    //    
 
-                    Console.WriteLine(e1);
-                    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
-                    ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.Telcobrightpartner.CustomerName);
-                    continue;//with next switch
-                }
-            }//for each row
-            return decodedRows;
+                    //}
+                    //catch (Exception e1)
+                    //{//if error found for one row, add this to inconsistent
+
+                    //    Console.WriteLine(e1);
+                    //    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
+                    //    continue;//with next switch
+                    //}
+                }//for each row
+                return decodedRows;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
+                throw e;
+            }
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getSelectExpressionForPartialCollection(Object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }

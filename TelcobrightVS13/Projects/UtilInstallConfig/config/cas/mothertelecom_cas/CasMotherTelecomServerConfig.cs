@@ -45,7 +45,7 @@ namespace InstallConfig
             servers.Add(server02);
             base.ValidateServers(servers);
 
-           
+
             return servers;
         }
     }

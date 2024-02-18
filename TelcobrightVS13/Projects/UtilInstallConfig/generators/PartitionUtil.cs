@@ -29,8 +29,8 @@ namespace InstallConfig
             string storageEngineForPartitionedTables = databaseSetting.StorageEngineForPartitionedTables;
             int partitionLenInDays = databaseSetting.PartitionLenInDays;
             string constr =
-                "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.AdminUserName +
-                ";password=" + databaseSetting.AdminPassword + ";Persist Security Info=True; default command timeout=3600";
+                "server=" + databaseSetting.ServerName + ";User Id=" + databaseSetting.WriteUserNameForApplication +
+                ";password=" + databaseSetting.WritePasswordForApplication + ";Persist Security Info=True; default command timeout=3600";
 
             Dictionary<string, TablePartitionManager> tableWisePartitionManager = new Dictionary<string, TablePartitionManager>();
             partitionedTables.ForEach(t =>

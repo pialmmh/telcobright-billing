@@ -7,10 +7,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using DocumentFormat.OpenXml.Wordprocessing;
 using PortalApp;
 using MediationModel;
-using Spring.Expressions;
 using TelcobrightMediation;
 
 public partial class ConfigPartner : System.Web.UI.Page

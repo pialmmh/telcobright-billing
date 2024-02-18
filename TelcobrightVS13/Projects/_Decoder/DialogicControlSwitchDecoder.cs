@@ -12,23 +12,23 @@ using LibraryExtensions;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class DialogicControlSwitchDecoder : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class DialogicControlSwitchDecoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public int Id => 2;
-        public string HelpText => "Decodes Dialogic (Veraz) Control Switch CDR.";
-        public CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 2;
+        public override string HelpText => "Decodes Dialogic (Veraz) Control Switch CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string UniqueEventTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
         protected virtual List<string[]> GetTxtCdrs()
         {
             return FileUtil.ParseTextFileToListOfStrArray(this.Input.FullPath, ';', 0);
         }
-        public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -41,12 +41,12 @@ namespace Decoders
             string strThisField = "";   
             string[] normalizedRow = null;
             int currentFieldNo = 0;
-            foreach (string[] csvRow in tempTable) //for each row
+            try
             {
-                if (csvRow[6].Trim() == "I")
-                    continue;
-                try
+                foreach (string[] csvRow in tempTable) //for each row
                 {
+                    if (csvRow[6].Trim() == "I")
+                        continue;
                     normalizedRow = null;
                     normalizedRow = new string[input.MefDecodersData.Totalfieldtelcobright];
                     int fldCount = 0;
@@ -346,41 +346,54 @@ namespace Decoders
                         normalizedRow[Fn.FinalRecord] = "1";
                         decodedRows.Add(normalizedRow);
                     }
+                    //try
+                    //{
+
+                    //}
+                    //catch (Exception e1)
+                    //{
+                    //    //if error found for one row, add this to inconsistent
+                    //    Console.WriteLine(e1);
+                    //    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(csvRow));
+                    //}
                 }
-                catch (Exception e1)
-                {
-                    //if error found for one row, add this to inconsistent
-                    Console.WriteLine(e1);
-                    inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(csvRow));
-                    ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.Telcobrightpartner.CustomerName);
-                }
+                return decodedRows;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                e.Data.Add("customError", "Possibly Corrupted");
+                e.Data.Add("jobId", input.TelcobrightJob.id);
+                throw e;
             }//for each row
-            return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getSelectExpressionForPartialCollection(Object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }

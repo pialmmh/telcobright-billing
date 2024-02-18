@@ -381,11 +381,12 @@ namespace Decoders
                 }
                 catch (Exception e1)
                 {
+                    if(e1.Message.Contains("System.OutOfMemoryException"))
+                    {
+                        throw;
+                    }
                     Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
-                    ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        "Encounterd error during decoding with ZteDecoderHelper."
-                        , input.Tbc.Telcobrightpartner.CustomerName);
                     continue;//with next switch
                 }
             }//for each row in byte array

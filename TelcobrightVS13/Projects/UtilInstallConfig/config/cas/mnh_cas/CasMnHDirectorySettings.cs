@@ -34,32 +34,25 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "G:/telcobright/vault/resources/cdr/mnh/tdm",
+                StartingPath = "X:/telcobright/vault/resources/cdr/mnh/tdm",
                 User = "",
                 Pass = "",
             };
 
-            FileLocation vaultJslcataliyaDhk = new FileLocation()
+            FileLocation vaultCataliya = new FileLocation()
             {
-                Name = "Vault.JslcataleyaDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.cataleya",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "G:/telcobright/vault/resources/cdr/mnh/ip",
+                StartingPath = "X:/telcobright/vault/resources/cdr/mnh/ip",
                 User = "",
                 Pass = "",
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
-           
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataliya.Name, vaultCataliya);
            
         }
     }

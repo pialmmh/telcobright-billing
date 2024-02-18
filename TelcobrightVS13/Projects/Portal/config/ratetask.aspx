@@ -566,7 +566,7 @@ select (select 1) as id,(select 'Yes') as Type "
                 <table id="Table1" runat="server" style="">
                     <tr>
                         <td>
-                            No data was returned.</td>
+                            No input was returned.</td>
                     </tr>
                 </table>
             </EmptyDataTemplate>
@@ -1226,7 +1226,7 @@ select (select 10) as status  ,(select 'Overlap Adjusted') as Description,count(
              
 
 
-             <%--field1 will show the Rate Change type e.g. new, delete,increase,decrease etc. in row data bound event--%>
+             <%--field1 will show the Rate Change type e.g. new, delete,increase,decrease etc. in row input bound event--%>
 
 
         </Columns>

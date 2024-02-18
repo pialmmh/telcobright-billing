@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+﻿ using System.ComponentModel.Composition;
 using System;
 using MediationModel;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Accounting.Invoice;
 using TelcobrightMediation.Cdr;
-using TransactionTuple = System.ValueTuple<int, int, long, int,long>;
+using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 
 namespace TelcobrightMediation
 {
@@ -43,7 +43,7 @@ namespace TelcobrightMediation
 
         public void SetAdditionalParams(Dictionary<string, object> additionalParams)
         {
-            
+
         }
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
@@ -60,8 +60,8 @@ namespace TelcobrightMediation
                 if (!useCasStyleProcessing)
                 {
                     if (incomingRoute.partner.PartnerType == IcxPartnerType.IOS
-                            && incomingRoute.NationalOrInternational == RouteLocalityType.International
-                        ) //IGW and route=international
+                        && incomingRoute.NationalOrInternational == RouteLocalityType.International
+                    ) //IGW and route=international
                     {
                         thisCdr.ServiceGroup = 3; //Intl in ICX
                     }
@@ -76,6 +76,8 @@ namespace TelcobrightMediation
                         incomingRoute.partner.PartnerType == IcxPartnerType.IOS) //ANS and route=national
                     {
                         thisCdr.ServiceGroup = 3; //Int incoming call
+                        decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
+                        thisCdr.Duration1 = roundedDuration;
                     }
 
 
@@ -83,7 +85,7 @@ namespace TelcobrightMediation
             }
         }
 
-        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary,CdrSetting cdrSetting)
         {
             //this._sgIntlTransitVoice.SetServiceGroupWiseSummaryParams(cdrExt, newSummary);
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
@@ -92,13 +94,16 @@ namespace TelcobrightMediation
             if (cdrExt.Cdr.ChargingStatus != 1) return;
 
             acc_chargeable chargeableCust = null;
-            cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
-            if (chargeableCust == null)
+            if (!cdrSetting.useCasStyleProcessing)
             {
-                throw new Exception("Chargeable info not found for customer direction.");
+                cdrExt.Chargeables.TryGetValue(new ValueTuple<int, int, int>(this.Id, 1, 1), out chargeableCust);
+                if (chargeableCust == null)
+                {
+                    throw new Exception("Chargeable info not found for customer direction.");
+                }
+                this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
+                newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
             }
-            this.sgIntlTransitVoice.SetChargingSummaryInCustomerDirection(chargeableCust, newSummary);
-            newSummary.tax1 = Convert.ToDecimal(chargeableCust.TaxAmount1);
         }
 
         public void ValidateInvoiceGenerationParams(object validationInput)
@@ -137,7 +142,7 @@ namespace TelcobrightMediation
             uom_conversion_dated usdConversionDated = context.uom_conversion_dated.Where(
                     c => c.PURPOSE_ENUM_ID == "INTERNAL_CONVERSION"
                          && c.UOM_ID == "USD" && c.UOM_ID_TO == "BDT" && c.FROM_DATE == lastSecondOfInvoicePeriod)
-                         .ToList().FirstOrDefault();
+                .ToList().FirstOrDefault();
             if (usdConversionDated == null)
                 throw new Exception("Usd conversion rate not found.");
             invoiceGenerationInputData.JsonDetail = jobParamsMap;
@@ -162,6 +167,6 @@ namespace TelcobrightMediation
                 = new CommonInvoicePostProcessor(invoicePostProcessingData, cdrOrSummarytableName, jsonDetail);
             return commonInvoicePostProcessor.Process();
         }
-        
+
     }
 }

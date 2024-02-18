@@ -70,33 +70,25 @@ namespace RateTaskSerializer
                     rsMefData.DicExtensions.Add(ext.Id.ToString(), ext);
                 }
 
-                string parseString = "";
+                string[] dateFormats = DateFormatHelper.GetDateFormats(dateParseSelector);
+
                 rateplan thisRatePlan = null;
-                using (PartnerEntities context = new PartnerEntities())
-                {
-                    parseString = context.enumdateparsestrings.Where(c => c.value == dateParseSelector).First().ParseString;
-                }
                 using (PartnerEntities conpartner = new PartnerEntities())
                 {
                     int intInd = Convert.ToInt32(idRatePlan);
                     thisRatePlan = conpartner.rateplans.Where(c => c.id == intInd).ToList().First();
                 }
-                string[] dateFormats = parseString.Split('`');
-                int count = dateFormats.GetLength(0);
-                for (int i = 0; i < count; i++)
-                {
-                    dateFormats[i] = dateFormats[i].Trim();
-                }
+
 
                 List<ratetask> lstRateTask = new List<ratetask>();
                 MyExcel pExcel = new MyExcel();
-                int idRateSheetFormat = pExcel.GetVendorFormat(fileUploadDirectory+Path.DirectorySeparatorChar+ importFilename, ref lstRateTask, thisRatePlan, false, dateFormats);
+                int idRateSheetFormat = pExcel.GetVendorFormat(fileUploadDirectory + Path.DirectorySeparatorChar + importFilename, ref lstRateTask, thisRatePlan, false, dateFormats);
                 if (rsMefData.DicExtensions.ContainsKey(idRateSheetFormat.ToString()) == false)
                 {
                     idRateSheetFormat = 1;//try generic/text/excel
                 }
                 IRateSheetFormat thisRsFormat = rsMefData.DicExtensions[idRateSheetFormat.ToString()];
-                string retval = thisRsFormat.GetRates(fileUploadDirectory+Path.DirectorySeparatorChar+ importFilename, ref lstRateTask, thisRatePlan, false, dateFormats);
+                string retval = thisRsFormat.GetRates(fileUploadDirectory + Path.DirectorySeparatorChar + importFilename, ref lstRateTask, thisRatePlan, false, dateFormats);
 
                 using (FileStream fs = File.Open(fileUploadDirectory + Path.DirectorySeparatorChar + tempExportFilename, FileMode.CreateNew))
                 using (StreamWriter sw = new StreamWriter(fs))
@@ -108,15 +100,15 @@ namespace RateTaskSerializer
                 }
 
                 //File.WriteAllText(, JsonConvert.SerializeObject());
-                if(File.Exists(fileUploadDirectory + Path.DirectorySeparatorChar + finalExportFilename))
+                if (File.Exists(fileUploadDirectory + Path.DirectorySeparatorChar + finalExportFilename))
                 {
                     File.Delete(fileUploadDirectory + Path.DirectorySeparatorChar + finalExportFilename);
                 }
                 File.Move(fileUploadDirectory + Path.DirectorySeparatorChar + tempExportFilename,
                     fileUploadDirectory + Path.DirectorySeparatorChar + finalExportFilename);
 
-                
-                
+
+
             }
             catch (Exception e1)
             {
@@ -126,5 +118,5 @@ namespace RateTaskSerializer
             }
 
         }
-    }
+       }
 }

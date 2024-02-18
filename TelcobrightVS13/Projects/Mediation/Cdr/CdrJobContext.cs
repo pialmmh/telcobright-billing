@@ -12,7 +12,6 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Web.ApplicationServices;
 using FlexValidation;
 using TelcobrightMediation.Cache;
 using TelcobrightMediation.Cdr;
@@ -42,7 +41,7 @@ namespace TelcobrightMediation
         public List<DateTime> DatesInvolved { get; } //set by new cdrs only, which covers old cdr case as well.
         public List<DateTime> HoursInvolved { get; } //set by new cdrs only, which covers old cdr case as well.
         public int SegmentSizeForDbWrite => this.MediationContext.Tbc.CdrSetting.SegmentSizeForDbWrite;
-        public job TelcobrightJob => this.CdrjobInputData.TelcobrightJob;
+        public job TelcobrightJob => this.CdrjobInputData.Job;
         public PartnerEntities Context => this.CdrjobInputData.Context;
         public DbCommand DbCmd { get; }
         public AutoIncrementManager AutoIncrementManager { get; }
@@ -62,7 +61,10 @@ namespace TelcobrightMediation
 
             if (this.DatesInvolved.Any())
             {
-                PopulateRateCacheForDatesInvolved();
+                if (!this.MediationContext.CdrSetting.useCasStyleProcessing)
+                {
+                    PopulateRateCacheForDatesInvolved();
+                }
                 this.AccountingContext.PopulatePrevLedgerSummary();
                 this.CdrSummaryContext.PopulatePrevSummary();
                 this.CdrSummaryContext.ValidateDayVsHourWiseSummaryCollection();
@@ -73,20 +75,56 @@ namespace TelcobrightMediation
         {
             //lock (parallelDbCallLock)
             {
-                this.DatesInvolved.ForEach(
-                    d =>
-                    {
-                        var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
-                        var dateRange = new DateRange(d.Date, d.AddDays(1));
-                        if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                var cdrSetting = this.CdrjobInputData.Tbc.CdrSetting;
+                var enableSameRatePeriodForIcx = false;//cdrSetting.EnableSameRatePeriodForICX;
+                DateRange sameRatePeriodForICX = cdrSetting.SameRatePeriodForICX;
+                if (!enableSameRatePeriodForIcx)//regular rate caching
+                {
+                    this.DatesInvolved.ForEach(
+                        d =>
                         {
-                            Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
-                            this.MediationContext.MefServiceFamilyContainer.RateCache
-                                .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
-                                    isCachingForMediation: true);
-                            Console.WriteLine("FINISHED.");
-                        }
-                    });
+                            var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
+                            var dateRange = new DateRange(d.Date, d.AddDays(1));
+                            if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                            {
+                                Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
+                                this.MediationContext.MefServiceFamilyContainer.RateCache
+                                    .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
+                                        isCachingForMediation: true);
+                                Console.WriteLine("FINISHED.");
+                            }
+                        });
+                }
+                else//enableSameRatePeriodForIcx
+                {
+                    var rateCache = this.MediationContext.MefServiceFamilyContainer.RateCache;
+                    var dayWiseRates = rateCache.DateRangeWiseRateDic;
+                    this.DatesInvolved.ForEach(
+                        d =>
+                        {
+                            var dateRange = new DateRange(d.Date, d.AddDays(1));
+                            if (dayWiseRates.Any() == false || !sameRatePeriodForICX.WithinRange(d))//ratecache empty
+                            {
+                                if (rateCache.DateRangeWiseRateDic.ContainsKey(dateRange) == false)
+                                {
+                                    Console.Write($"Populating ratecache for {d.ToString("yyyy-MM-dd")}...");
+                                    this.MediationContext.MefServiceFamilyContainer.RateCache
+                                        .PopulateDicByDay(dateRange, flagLcr: false, useInMemoryTable: true,
+                                            isCachingForMediation: true);
+                                    Console.WriteLine("FINISHED.");
+                                }
+                            }
+                            else
+                            {
+                                if (sameRatePeriodForICX.WithinRange(d) == true)
+                                {
+                                    DateRange thisDate= new DateRange(d, d.AddDays(1));
+                                    var rates = dayWiseRates.First().Value;
+                                    dayWiseRates.Add(thisDate, rates);
+                                }
+                            }
+                        });
+                }
             }
         }
 

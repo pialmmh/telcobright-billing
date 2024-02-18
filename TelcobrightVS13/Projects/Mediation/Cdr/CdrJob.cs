@@ -75,10 +75,23 @@ namespace TelcobrightMediation.Cdr
                 //write summaries, so that durationTotal in summary can be validated after writing cdrs
                 foreach (var summaryCache in this.CdrJobContext.CdrSummaryContext.TableWiseSummaryCache.Values)
                 {
-                    summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
-                        this.CdrJobContext.SegmentSizeForDbWrite);
-                }
+                    //if (this.CdrSetting.SkipSettingsForSummaryOnly.SkipHourlySummary == false
+                    //    && summaryCache.EntityOrTableName.Contains("sum_voice_hr") == false)
+                    //{
+                    //    summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
+                    //    this.CdrJobContext.SegmentSizeForDbWrite);
+                    //}
+                 
 
+                    if (summaryCache.EntityOrTableName.Contains("sum_voice_hr") != true ||
+                        this.CdrSetting.SkipSettingsForSummaryOnly.SkipHourlySummary != true)
+                    {
+                        summaryCache.WriteAllChanges(this.CdrJobContext.DbCmd,
+                            this.CdrJobContext.SegmentSizeForDbWrite);
+                    }
+                  
+                                    
+                }
                 CdrWritingResult cdrWritingResult = this.CdrProcessor?.WriteCdrs(parallelCdrExts);
                 
                 
@@ -106,10 +119,10 @@ namespace TelcobrightMediation.Cdr
         protected void ValidateCdrProcessorWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
-                new MediationTester(input.TelcobrightJob);
-            if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts))
+                new MediationTester(input.Job);
+            if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts,this.CdrSetting.useCasStyleProcessing))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
-            if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
+            if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts, this.CdrSetting.useCasStyleProcessing))
                 throw new Exception("Summary count is not twice as cdr count");
             //if (!mediationTester.CdrDurationMatchesSumOfInsertedAndUpdatedSummaryDurationInCache(this.CdrProcessor)) ;
             //throw new Exception("Cdr duration does not match inserted & updated summary instances duration in cache. ");
@@ -125,10 +138,10 @@ namespace TelcobrightMediation.Cdr
         protected void ValidateCdrEraserWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
-                new MediationTester(input.TelcobrightJob);
-            if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts))
+                new MediationTester(input.Job);
+            if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts,this.CdrSetting.useCasStyleProcessing))
                 throw new Exception("Duration sum in cdr and summary are not tollerably equal");
-            if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts))
+            if (!mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts, this.CdrSetting.useCasStyleProcessing))
                 throw new Exception("Summary count is not twice as cdr count");
             //if(!mediationTester
             //    .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(
@@ -142,9 +155,9 @@ namespace TelcobrightMediation.Cdr
         protected void AssertWithMediationTester(CdrJobInputData input, ParallelQuery<CdrExt> processedCdrExts)
         {
             MediationTester mediationTester =
-                new MediationTester(input.TelcobrightJob);
-            Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts));
-            Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts));
+                new MediationTester(input.Job);
+            Assert.IsTrue(mediationTester.DurationSumInCdrAndSummaryAreEqual(processedCdrExts,this.CdrSetting.useCasStyleProcessing));
+            Assert.IsTrue(mediationTester.SummaryCountTwiceAsCdrCount(processedCdrExts, this.CdrSetting.useCasStyleProcessing));
             //todo: do something about this test which makes database trip & need to modify this to work with both eraser & processor
             //Assert.IsTrue(mediationTester
             //  .SumOfPrevDayWiseDurationsAndNewSummaryInstancesIsEqualToSameInMergedSummaryCache(

@@ -26,7 +26,7 @@ namespace Jobs
         public string RuleName => GetType().Name;
         public string HelpText => "Account balance adjustment job";
         public int Id => 13;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData = (InvoiceGenerationInputData)jobInputData;
             BalanceAdjustmentHelper balanceAdjustmentHelper = new BalanceAdjustmentHelper(invoiceGenerationInputData);
@@ -34,7 +34,22 @@ namespace Jobs
             WriteToDb(adjustmentPostProcessingData);
             return JobCompletionStatus.Complete;
         }
-        
+
+        public object PreprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
+
         private void WriteToDb(BalanceAdjustmentPostProcessingData adjustmentPostProcessingData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData =
@@ -52,7 +67,7 @@ namespace Jobs
             var input = (AccountingJobInputData) jobInput;
             var context = input.Context;
             var cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText = $"select jobstate from job where id={input.TelcobrightJob.id}";
+            cmd.CommandText = $"select jobstate from job where id={input.Job.id}";
             string json = (string) cmd.ExecuteScalar();
             var jobStateMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             decimal finalInvoicedAmount = Convert.ToDecimal(jobStateMap["invoicedAmountAfterLastSegment"]);

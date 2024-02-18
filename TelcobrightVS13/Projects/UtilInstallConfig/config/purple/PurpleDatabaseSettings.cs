@@ -24,16 +24,16 @@ namespace InstallConfig
         {
             var databaseSetting = new DatabaseSetting()
             {
-                ServerName = "172.16.240.247",
+                ServerName = "114.130.13.18",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
-                AdminPassword = "Takay1#$ane",
-                AdminUserName = "root",
+                WritePasswordForApplication = "Takay1#$ane",
+                WriteUserNameForApplication = "root",
                 DatabaseEngine = "innodb",
                 StorageEngineForPartitionedTables = "tokudb",
                 PartitionStartDate = new DateTime(2023, 1, 1),
                 PartitionLenInDays = 1,
-                ReadOnlyUserName = "dbreader",
-                ReadOnlyPassword = "Takay1takaane",
+                ReadOnlyUserNameForApplication = "dbreader",
+                ReadOnlyPasswordForApplication = "Takay1takaane",
                 UseVarcharInsteadOfTextForMemoryEngine = true//required for windows
             };
 

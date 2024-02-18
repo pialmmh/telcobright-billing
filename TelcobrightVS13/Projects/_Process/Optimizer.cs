@@ -16,11 +16,13 @@ using MediationModel;
 using Quartz;
 using QuartzTelcobright;
 using TelcobrightFileOperations;
+using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Config;
 
 namespace Process
 {
 
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class ProcessOptimizer : AbstractTelcobrightProcess
     {
@@ -28,6 +30,7 @@ namespace Process
         {
             return this.RuleName;
         }
+
         public override string RuleName => "ProcessOptimizer";
         public override string HelpText => "Peforms clean up by deleting file or data";
         public override int ProcessId => 107;
@@ -35,120 +38,116 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
             try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
-                bool incompleteExists = true;
                 MefJobContainer jobData = new MefJobContainer();
                 jobData.CmpJob.Compose();
                 foreach (ITelcobrightJob ext in jobData.CmpJob.Jobs)
                 {
                     jobData.DicExtensions.Add(ext.Id.ToString(), ext);
                 }
-                while (incompleteExists)
+
+                var con = context.Database.Connection;
+                if (con.State != ConnectionState.Open) con.Open();
+                List<job> incompleteJobs= new List<job>();
+                if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
                 {
-                    string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
-                    using (PartnerEntities context = new PartnerEntities(entityConStr))
+                    incompleteJobs = context.Database
+                        .SqlQuery<job>($@"select * from job where idjobdefinition = 8 and status !=1 
+                                order by JobName desc limit 0,10000;").ToList();
+                    //incompleteJobs = context.jobs.Where(j=>j.Status!=1 && j.idjobdefinition==8)
+                    //    .OrderByDescending(j => j.JobName).Take(10000).ToList();
+                }
+                else
+                {
+                    incompleteJobs = context.Database
+                        .SqlQuery<job>($@"select * from job where idjobdefinition = 8 and status !=1 
+                                order by JobName  limit 0,10000;").ToList();
+                    //incompleteJobs = context.jobs.Where(j => j.Status != 1 && j.idjobdefinition == 8)
+                    //    .OrderBy(j => j.JobName).Take(10000).ToList();
+                }
+                string sql = "";
+                using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
+                {
+                    foreach (job thisJob in incompleteJobs)
                     {
-                        var con = context.Database.Connection;
-                        if (con.State != ConnectionState.Open) con.Open();
-                        List<int> jobDefsForThisQueue =
-                            context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id)
-                                .ToList();
-                        incompleteExists =
-                            context.jobs.Any(
-                                c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition));
-                        if (incompleteExists == false) break; //there is no job, just exit.
-                        List<job> lstIncomplete = context.jobs
-                            .Where(c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition)).ToList();
-                        if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
+                        //GarbageCollectionHelper.CompactGCNowForOnce();
+                        try
                         {
-                            lstIncomplete = lstIncomplete.OrderBy(c => c.priority).ThenByDescending(c => c.JobName)
-                                .ToList();
-                        }
-                        else lstIncomplete = lstIncomplete.OrderBy(c => c.priority).ToList();
-                        string sql = "";
-                        using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
-                        {
-                            foreach (job thisJob in lstIncomplete)
+                            sql = "set autocommit=0;";
+                            cmd.CommandText = sql;
+                            cmd.ExecuteNonQuery();
+                            //dont use a console.out here because it doesn't not guarantee that the job is being executed
+                            //e.g. when a delete job has pre-requisite, it will actually be not executed, showing "executing"
+                            //in console could be misleading.
+                            ITelcobrightJob iJob = null;
+                            jobData.DicExtensions.TryGetValue(thisJob.idjobdefinition.ToString(), out iJob);
+                            if (iJob != null)
                             {
-                                try
+                                OptimizerJobInputData optimizerJobInputData =
+                                    new OptimizerJobInputData(tbc, thisJob);
+
+                                JobCompletionStatus jobStatus =
+                                    (JobCompletionStatus) iJob.Execute(optimizerJobInputData);
+                                if (jobStatus == JobCompletionStatus.Complete)
                                 {
-                                    sql = "set autocommit=0;";
+                                    sql = " update job set CompletionTime='" +
+                                          DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
+                                          " Status=1, " +
+                                          " Error='' " +
+                                          " where id=" + thisJob.id;
                                     cmd.CommandText = sql;
                                     cmd.ExecuteNonQuery();
-                                    //dont use a console.out here because it doesn't not guarantee that the job is being executed
-                                    //e.g. when a delete job has pre-requisite, it will actually be not executed, showing "executing"
-                                    //in console could be misleading.
-                                    ITelcobrightJob iJob = null;
-                                    jobData.DicExtensions.TryGetValue(thisJob.idjobdefinition.ToString(), out iJob);
-                                    if (iJob != null)
-                                    {
-                                        OptimizerJobInputData optimizerJobInputData =
-                                            new OptimizerJobInputData(tbc, thisJob);
 
-                                        JobCompletionStatus jobStatus = iJob.Execute(optimizerJobInputData);
-                                        if (jobStatus == JobCompletionStatus.Complete)
-                                        {
-                                            sql = " update job set CompletionTime='" +
-                                                  DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
-                                                  " Status=1, " +
-                                                  " Error='' " +
-                                                  " where id=" + thisJob.id;
-                                            cmd.CommandText = sql;
-                                            cmd.ExecuteNonQuery();
-
-                                            sql = " commit; ";
-                                            cmd.CommandText = sql;
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                    }
+                                    sql = " commit; ";
+                                    cmd.CommandText = sql;
+                                    cmd.ExecuteNonQuery();
                                 }
-                                catch (Exception e1)
-                                {
-                                    Console.WriteLine(e1);
-                                    sql = " rollback; ";
-                                    cmd.CommandText = sql;
-                                    cmd.ExecuteNonQuery();
-
-                                    cmd.CommandText =
-                                        "set autocommit=1;"; //must change back immediately, even if rollback occurs
-                                    cmd.ExecuteNonQuery();
-
-
-                                    ErrorWriter wr = new ErrorWriter(e1, "Optimizer", thisJob, "", operatorName);
-
-                                    //also save the error information within the job
-                                    //use try catch in case DB is not accesible
-                                    try
-                                    {
-                                        sql = " update job set `Error`= '" +
-                                              e1.Message.Replace("'", "") + Environment.NewLine +
-                                              (e1.InnerException != null
-                                                  ? e1.InnerException.ToString().Replace("'", "")
-                                                  : "")
-                                              + "' " +
-                                              " where id=" + thisJob.id;
-                                        cmd.CommandText = sql;
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    catch (Exception e2)
-                                    {
-                                        ErrorWriter wr2 =
-                                            new ErrorWriter(e2, "Optimizer", thisJob, "", operatorName);
-                                    }
-                                    continue; //with next cdr or job
-                                } //end catch
                             }
                         }
+                        catch (Exception e1)
+                        {
+                            Console.WriteLine(e1);
+                            sql = " rollback; ";
+                            cmd.CommandText = sql;
+                            cmd.ExecuteNonQuery();
+
+                            cmd.CommandText =
+                                "set autocommit=1;"; //must change back immediately, even if rollback occurs
+                            cmd.ExecuteNonQuery();
+
+                            ErrorWriter.WriteError(e1, "Optimizer", thisJob, "", operatorName, context);
+                            //also save the error information within the job
+                            //use try catch in case DB is not accesible
+                            try
+                            {
+                                sql = " update job set `Error`= '" +
+                                      e1.Message.Replace("'", "") + Environment.NewLine +
+                                      (e1.InnerException != null
+                                          ? e1.InnerException.ToString().Replace("'", "")
+                                          : "")
+                                      + "' " +
+                                      " where id=" + thisJob.id;
+                                cmd.CommandText = sql;
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (Exception e2)
+                            {
+                                ErrorWriter.WriteError(e2, "Optimizer", thisJob, "", operatorName, context);
+                            }
+                            continue; //with next cdr or job
+                        } //end catch
                     }
-                } //while
+                }
             } //try
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "Optimizer", null, "", operatorName);
+                ErrorWriter.WriteError(e1, "Optimizer", null, "", operatorName, context);
             }
         }
 

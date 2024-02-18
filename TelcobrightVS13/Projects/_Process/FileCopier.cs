@@ -21,6 +21,7 @@ using LibraryExtensions;
 namespace Process
 {
 
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class FileCopier : AbstractTelcobrightProcess
     {
@@ -58,7 +59,7 @@ namespace Process
                 bool incompleteExists= context.Database.SqlQuery<job>(
                     $@"select * from job 
                     where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
-                    and jobparameter like '{syncPairNameAsJobNamePrefix}%' limit 0,1;").ToList().Any();
+                    and jobparameter like '{syncPairNameAsJobNamePrefix}%' order by Error limit 0,1;").ToList().Any();
 
                 if (incompleteExists == false) return; //there is no job, just exit.
                 
@@ -101,7 +102,7 @@ namespace Process
                                 throw new Exception("Filecopy Job definition not found " +
                                                     "after mef composition.");
                             FileCopyJobInputData fileCopyJobInputData = new FileCopyJobInputData(tbc, thisJob);
-                            JobCompletionStatus jobStatus = iJob.Execute(fileCopyJobInputData);
+                            JobCompletionStatus jobStatus = (JobCompletionStatus)iJob.Execute(fileCopyJobInputData);
                             if (jobStatus == JobCompletionStatus.Complete)
                             {
                                 sql = " update job set CompletionTime='" +
@@ -126,7 +127,7 @@ namespace Process
                                 cmd.CommandText = sql;
                                 cmd.ExecuteNonQuery();
 
-                                ErrorWriter wr = new ErrorWriter(e1, "ProcessFileCopy", thisJob, "", operatorName);
+                                ErrorWriter.WriteError(e1, "ProcessFileCopy", thisJob, "", operatorName,context);
 
                                 //also save the error information within the job
                                 //use try catch in case DB is not accesible
@@ -144,13 +145,14 @@ namespace Process
                                 }
                                 catch (Exception e2)
                                 {
-                                    ErrorWriter wr2 = new ErrorWriter(e2, "ProcessFileCopy", null, "", operatorName);
+                                    ErrorWriter.WriteError(e2, "ProcessFileCopy", null, "", operatorName,context);
                                 }
                                 continue; //with next cdr or job
                             }
                             catch (Exception e3)
                             {
                                 //reaching here would be database problem
+                                File.AppendAllText("telcobright.log", $"Error: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}, {e3.Message} " + Environment.NewLine);
                                 conPartner.Close();
                             }
                         } //end catch

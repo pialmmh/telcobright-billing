@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appcmd>
+    <SITE SITE.NAME="platinum" SITE.ID="1" bindings="http/192.168.2.216:80:" state="Started">
+        <site name="platinum" id="1" serverAutoStart="true">
+            <bindings>
+                <binding protocol="http" bindingInformation="192.168.2.216:80:" />
+            </bindings>
+            <limits />
+            <logFile>
+                <customFields>
+                </customFields>
+            </logFile>
+            <traceFailedRequestsLogging />
+            <applicationDefaults />
+            <virtualDirectoryDefaults />
+            <ftpServer>
+                <connections />
+                <security>
+                    <dataChannelSecurity />
+                    <commandFiltering>
+                    </commandFiltering>
+                    <ssl />
+                    <sslClientCertificates />
+                    <authentication>
+                        <anonymousAuthentication />
+                        <basicAuthentication />
+                        <clientCertAuthentication />
+                        <customAuthentication>
+                            <providers>
+                            </providers>
+                        </customAuthentication>
+                    </authentication>
+                    <customAuthorization>
+                        <provider />
+                    </customAuthorization>
+                </security>
+                <customFeatures>
+                    <providers>
+                    </providers>
+                </customFeatures>
+                <messages />
+                <fileHandling />
+                <firewallSupport />
+                <userIsolation>
+                    <activeDirectory />
+                </userIsolation>
+                <directoryBrowse />
+                <logFile />
+            </ftpServer>
+            <application path="/" applicationPool="platinum">
+                <virtualDirectoryDefaults />
+                <virtualDirectory path="/" physicalPath="C:/inetpub/wwwroot/platinum" />
+            </application>
+            <application path="/platinum" applicationPool="platinum">
+                <virtualDirectoryDefaults />
+                <virtualDirectory path="/" physicalPath="C:/inetpub/wwwroot/platinum" />
+            </application>
+        </site>
+    </SITE>
+    

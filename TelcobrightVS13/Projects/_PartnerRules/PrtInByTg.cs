@@ -18,7 +18,10 @@ namespace PartnerRules
         public int Id => 1;
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
-            var key = new ValueTuple<int,string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
+            thisCdr.InPartnerId = 0;
+            string tbPartnerDb = data.MediationContext.Tbc.Telcobrightpartner.databasename;
+            CdrSetting cdrSetting = data.MediationContext.CdrSetting;
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route thisRoute = null;
             data.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -29,10 +32,12 @@ namespace PartnerRules
 
             if (thisCdr.InPartnerId <= 0)
             {
-                CdrSetting cdrSetting = data.MediationContext.CdrSetting;
-                if (cdrSetting.useCasStyleProcessing == true)
+                if (cdrSetting.useCasStyleProcessing == true &&
+                    tbPartnerDb == "mnh_cas" && thisCdr.InPartnerId <= 0 && 
+                    (thisCdr.IncomingRoute == "1950" || thisCdr.IncomingRoute == "1960")
+                    )
                 {
-                    ANSInByPrefix ansInByPrefix= new ANSInByPrefix();
+                    ANSInByPrefix ansInByPrefix = new ANSInByPrefix();
                     int idPartner = ansInByPrefix.Execute(thisCdr, data);
                     if (idPartner > 0)
                     {
@@ -41,6 +46,7 @@ namespace PartnerRules
                     }
                 }
             }
+
             thisCdr.InPartnerId = 0;
             return 0;
         }

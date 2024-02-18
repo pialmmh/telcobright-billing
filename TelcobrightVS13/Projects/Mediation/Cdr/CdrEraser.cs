@@ -13,7 +13,6 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Web.ApplicationServices;
 using FlexValidation;
 using MediationModel.enums;
 using TelcobrightMediation.Cdr;
@@ -74,7 +73,7 @@ namespace TelcobrightMediation
             MediationTester mediationTester =
                 new MediationTester(this.CdrJobContext.TelcobrightJob);
             if (!mediationTester.DurationSumInCdrAndSummaryAreEqual(
-                this.CollectionResult.ConcurrentCdrExts.Values.AsParallel()))
+                this.CollectionResult.ConcurrentCdrExts.Values.AsParallel(),this.CdrSetting.useCasStyleProcessing))
                 throw new Exception("Duration sum in cdr and Summaries are not tollerably equal");
         }
 

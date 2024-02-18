@@ -21,6 +21,7 @@ using TelcobrightMediation.Config;
 
 namespace Process
 {
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class AccountingHelper : AbstractTelcobrightProcess
     {
@@ -34,82 +35,81 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
             try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
+                context.Database.Connection.Open();
+                var mediationContext = new MediationContext(tbc, context);
+                while (CheckIncomplete(context, mediationContext))
                 {
-                    context.Database.Connection.Open();
-                    var mediationContext = new MediationContext(tbc, context);
-                    while (CheckIncomplete(context, mediationContext))
+                    List<job> incompleteJobs = context.jobs //jobs other than newcdr
+                        .Where(c => c.CompletionTime == null && c.idjobdefinition == 1)
+                        .Where(c => c.enumjobdefinition.JobQueue == this.ProcessId)
+                        .OrderBy(c => c.priority).Take(Convert.ToInt32(100)).ToList();
+                    using (DbCommand cmd = context.Database.Connection.CreateCommand())
                     {
-                        List<job> incompleteJobs = context.jobs //jobs other than newcdr
-                            .Where(c => c.CompletionTime == null && c.idjobdefinition == 1)
-                            .Where(c => c.enumjobdefinition.JobQueue == this.ProcessId)
-                            .OrderBy(c => c.priority).Take(Convert.ToInt32(100)).ToList();
-                        using (DbCommand cmd = context.Database.Connection.CreateCommand())
+                        foreach (job telcobrightJob in incompleteJobs)
                         {
-                            foreach (job telcobrightJob in incompleteJobs)
+                            Console.WriteLine("Processing Accounting Job, JobName: " + telcobrightJob.JobName);
+                            try
                             {
-                                Console.WriteLine("Processing Accounting Job, JobName: " + telcobrightJob.JobName);
+                                cmd.ExecuteCommandText("set autocommit=0;");
+                                ITelcobrightJob iJob = null;
+                                mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
+                                    telcobrightJob.idjobdefinition.ToString(), out iJob);
+                                if (iJob == null)
+                                    throw new Exception("JobRule not found in MEF collection.");
+                                var cdrJobInputData =
+                                    new CdrJobInputData(mediationContext, context, null, telcobrightJob);
+                                iJob.Execute(cdrJobInputData); //EXECUTE
+                                cmd.ExecuteCommandText(" commit; ");
+                            }
+                            catch (Exception e)
+                            {
                                 try
                                 {
-                                    cmd.ExecuteCommandText("set autocommit=0;");
-                                    ITelcobrightJob iJob = null;
-                                    mediationContext.MefJobContainer.DicExtensionsIdJobWise.TryGetValue(
-                                        telcobrightJob.idjobdefinition.ToString(), out iJob);
-                                    if (iJob == null)
-                                        throw new Exception("JobRule not found in MEF collection.");
-                                    var cdrJobInputData =
-                                        new CdrJobInputData(mediationContext, context, null, telcobrightJob);
-                                    iJob.Execute(cdrJobInputData); //EXECUTE
-                                    cmd.ExecuteCommandText(" commit; ");
-                                }
-                                catch (Exception e)
-                                {
+                                    Console.WriteLine("xxxErrorxxx Processing Accounting Job:" +
+                                                      " JobName:" + telcobrightJob.JobName);
+                                    Console.WriteLine(e.Message);
+                                    cmd.ExecuteCommandText(" rollback; ");
+                                    ErrorWriter.WriteError(e, "AccountingHelper", telcobrightJob,
+                                        "Accounting job error.", tbc.Telcobrightpartner.CustomerName, context);
                                     try
                                     {
-                                        Console.WriteLine("xxxErrorxxx Processing Accounting Job:" +
-                                                          " JobName:" + telcobrightJob.JobName);
-                                        Console.WriteLine(e.Message);
-                                        cmd.ExecuteCommandText(" rollback; ");
-                                        ErrorWriter wr = new ErrorWriter(e, "AccountingHelper", telcobrightJob,
-                                            "Accounting job error.", tbc.Telcobrightpartner.CustomerName);
-                                        try
-                                        {
-                                            cmd.CommandText = " update job set `Error`= '" +
-                                                              e.Message.Replace("'", "") +
-                                                              Environment.NewLine +
-                                                              (e.InnerException?.ToString().Replace("'", "") ??
-                                                               "")
-                                                              + "' " +
-                                                              " where id=" + telcobrightJob.id;
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                        catch (Exception e2)
-                                        {
-                                            ErrorWriter wr2 = new ErrorWriter(e2, "Accounting Helper", telcobrightJob,
-                                                "Exception within catch block.", tbc.Telcobrightpartner.CustomerName);
-                                        }
-                                        continue; //with next cdr or job
+                                        cmd.CommandText = " update job set `Error`= '" +
+                                                          e.Message.Replace("'", "") +
+                                                          Environment.NewLine +
+                                                          (e.InnerException?.ToString().Replace("'", "") ??
+                                                           "")
+                                                          + "' " +
+                                                          " where id=" + telcobrightJob.id;
+                                        cmd.ExecuteNonQuery();
                                     }
-                                    catch (Exception)
+                                    catch (Exception e2)
                                     {
-                                        //reaching here would be database problem
-                                        context.Database.Connection.Close();
+                                        ErrorWriter.WriteError(e2, "Accounting Helper", telcobrightJob,
+                                            "Exception within catch block.", tbc.Telcobrightpartner.CustomerName,
+                                            context);
                                     }
-                                } //end catch
-                            } //for each job
-                        } //using mysql command
-                    } //while
-                }
+                                    continue; //with next cdr or job
+                                }
+                                catch (Exception)
+                                {
+                                    //reaching here would be database problem
+                                    context.Database.Connection.Close();
+                                }
+                            } //end catch
+                        } //for each job
+                    } //using mysql command
+                } //while
             } //try
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "AccountingHelper", null, "", operatorName);
+                ErrorWriter.WriteError(e1, "AccountingHelper", null, "", operatorName,context);
             }
         }
 

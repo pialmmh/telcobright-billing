@@ -6,12 +6,12 @@ namespace TelcobrightMediation
     {
         public TelcobrightConfig Tbc { get; }
 
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public PartnerEntities Context { get; }
         public StandardTelcobrightJobInput(TelcobrightConfig tbc, job telcobrightJob)
         {
             this.Tbc = tbc;
-            this.TelcobrightJob = telcobrightJob;
+            this.Job = telcobrightJob;
             this.Context = null;
         }
     }

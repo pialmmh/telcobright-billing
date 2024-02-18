@@ -19,7 +19,7 @@ namespace TelcobrightInfra
         public static string getDbConStrPipeWithoutDatabase(DatabaseSetting databaseSetting)
         {
             return
-                $"server={databaseSetting.ServerName};Pipe={databaseSetting.SocketNameForNamedPipeConnection};Protocol=pipe;Host=.;User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
+                $"server={databaseSetting.ServerName};Pipe={databaseSetting.SocketNameForNamedPipeConnection};Protocol=pipe;Host=.;User Id={databaseSetting.WriteUserNameForApplication};password={databaseSetting.WritePasswordForApplication};" +
                 $"Persist Security Info=True; default command timeout=21600;";//6 hour
         }
         
@@ -34,7 +34,7 @@ namespace TelcobrightInfra
         public static string getReadOnlyConStrWithoutDatabase(DatabaseSetting databaseSetting)
         {
             return
-                $"server={databaseSetting.ServerName};User Id={databaseSetting.ReadOnlyUserName};password={databaseSetting.ReadOnlyPassword};" +
+                $"server={databaseSetting.ServerName};User Id={databaseSetting.ReadOnlyUserNameForApplication};password={databaseSetting.ReadOnlyPasswordForApplication};" +
                 $"Persist Security Info=True; default command timeout=21600;";
         }
 
@@ -45,7 +45,7 @@ namespace TelcobrightInfra
         public static string getDbConStrWithoutDatabase(DatabaseSetting databaseSetting)
         {
             return
-                $"server={databaseSetting.ServerName};User Id={databaseSetting.AdminUserName};password={databaseSetting.AdminPassword};" +
+                $"server={databaseSetting.ServerName};User Id={databaseSetting.WriteUserNameForApplication};password={databaseSetting.WritePasswordForApplication};" +
                 $"Persist Security Info=True; default command timeout=21600;";
         }
 
@@ -67,7 +67,7 @@ namespace TelcobrightInfra
         {
             return $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;" +
                    $"provider=MySql.Data.MySqlClient;" +
-                   $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.AdminUserName}; password = {databaseSetting.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
+                   $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.WriteUserNameForApplication}; password = {databaseSetting.WritePasswordForApplication};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
         }
 
 

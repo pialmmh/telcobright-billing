@@ -21,8 +21,11 @@ namespace InstallConfig
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;
         private SyncPair zte_Vault;
-        private SyncPair zteCAS;
-        private SyncPair zteSummitFtp;
+        private SyncPair reveCAS;
+        private SyncPair ipCAS;
+        private SyncPair tdmCAS;
+        private SyncPair SummitFtpForIp;
+        private SyncPair SummitFtpForTdm;
 
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
@@ -93,6 +96,32 @@ namespace InstallConfig
 
             FileLocation cas_tdm = new FileLocation()//raw cdr archive
             {
+                Name = "cas_zte",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/",
+                ServerIp = "10.154.150.57", //server = "172.16.16.242",
+                User = "summit_tdm",
+                Pass = "g*GVC$HG1110",
+                IgnoreZeroLenghFile = 1
+            };
+
+            FileLocation cas_ip = new FileLocation()//raw cdr archive
+            {
+                Name = "cas_dialogic",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/",
+                ServerIp = "10.255.200.57", //server = "172.16.16.242",
+                User = "summit_ip",
+                Pass = "MdReMz!rm$&KJh7{",
+                IgnoreZeroLenghFile = 1
+            };
+
+            FileLocation cas_reve = new FileLocation()//raw cdr archive
+            {
                 Name = "cas",
                 LocationType = "ftp",
                 OsType = "windows",
@@ -104,14 +133,26 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            FileLocation summitFtp = new FileLocation()//raw cdr archive
+            FileLocation summitFtpForTdm = new FileLocation()//raw cdr archive
             {
                 Name = "summitftp",
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/",
-                ServerIp = "103.26.244.97", //server = "172.16.16.242",
+                StartingPath = @"/1 TDM",
+                ServerIp = "172.18.0.10", //server = "172.16.16.242",
+                User = "ftpuser",
+                Pass = "Takay1takaane",
+                IgnoreZeroLenghFile = 1
+            };
+            FileLocation summitFtpForIp = new FileLocation()//raw cdr archive
+            {
+                Name = "summitftp",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/2 IP",
+                ServerIp = "172.18.0.10", //server = "172.16.16.242",
                 User = "ftpuser",
                 Pass = "Takay1takaane",
                 IgnoreZeroLenghFile = 1
@@ -122,6 +163,8 @@ namespace InstallConfig
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
             tbc.DirectorySettings.FileLocations.Add(zte.Name, zte);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
+            tbc.DirectorySettings.FileLocations.Add(cas_reve.Name, cas_reve);
+            tbc.DirectorySettings.FileLocations.Add(cas_ip.Name, cas_ip);
             tbc.DirectorySettings.FileLocations.Add(cas_tdm.Name, cas_tdm);
 
             this.zte_Vault = new SyncPair("zte:Vault")
@@ -155,9 +198,60 @@ namespace InstallConfig
                 }
             };
 
-
             //sync pair Vault_S3:FileArchive1
-            this.zteCAS = new SyncPair("zte:cas")
+            this.reveCAS = new SyncPair("zte:cas")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultPrimary
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = cas_reve
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
+
+
+            this.ipCAS = new SyncPair("ip:cas")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultDialogic
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = cas_ip
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
+
+
+            this.tdmCAS = new SyncPair("tdm:cas")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -181,7 +275,8 @@ namespace InstallConfig
                     CompressionType = CompressionType.None,
                 }
             };
-            this.zteSummitFtp = new SyncPair("zte:summitftp")
+
+            this.SummitFtpForTdm = new SyncPair("zte:summitftpfortdm")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
@@ -191,7 +286,32 @@ namespace InstallConfig
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = summitFtp 
+                    FileLocation = summitFtpForTdm
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
+
+            this.SummitFtpForIp = new SyncPair("dlg:summitftpforip")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultDialogic
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = summitFtpForIp
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -208,16 +328,20 @@ namespace InstallConfig
 
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(zte_Vault.Name, zte_Vault);
-            //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(zteCAS.Name, zteCAS);
-            directorySetting.SyncPairs.Add(zteSummitFtp.Name, zteSummitFtp);
+            directorySetting.SyncPairs.Add(reveCAS.Name, reveCAS);
+            directorySetting.SyncPairs.Add(ipCAS.Name, ipCAS);
+            directorySetting.SyncPairs.Add(tdmCAS.Name, tdmCAS);
+            directorySetting.SyncPairs.Add(SummitFtpForTdm.Name, SummitFtpForTdm);
+            directorySetting.SyncPairs.Add(SummitFtpForIp.Name, SummitFtpForIp);
 
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
-                //vaultS3FileArchive1.Name,
-                zteCAS.Name,
-                zteSummitFtp.Name
+                reveCAS.Name,
+                ipCAS.Name,
+                tdmCAS.Name,
+                SummitFtpForTdm.Name,
+                SummitFtpForIp.Name
             };
         }
     }

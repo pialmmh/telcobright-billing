@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,8 +18,10 @@ namespace CasTelcobright
     public partial class Form1 : Form
     {
         Dictionary<string, DisplayPanel> displayPanels = new Dictionary<string, DisplayPanel>();
+        Dictionary<string, Process> topSelfProcesses = new Dictionary<string, Process>();
 
         List<string> allIcx = IcxFactory.getAllIcx();
+        List<Label> labels = new List<Label>();
         Dictionary<string, Button> buttons = new Dictionary<string, Button>();
         public static Dictionary<string, PictureBox> pictureBoxes = new Dictionary<string, PictureBox>();
         NavigationControl navigationControl;

@@ -21,6 +21,7 @@ using TelcobrightMediation.Config;
 
 namespace Process
 {
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class AutomationHandler : AbstractTelcobrightProcess
     {
@@ -49,7 +50,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "AccountingHelper", null, "", operatorName);
+                throw;
             }
         }
 

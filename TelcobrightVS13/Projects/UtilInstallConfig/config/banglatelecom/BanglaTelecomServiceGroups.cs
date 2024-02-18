@@ -61,6 +61,7 @@ namespace InstallConfig
                         {"TollFreeInvoiceSection2GeneratorWithTax","LTFSToIPTSPDetails1" },
                         {"TollFreeInvoiceSection3GeneratorWithTax","LTFSToIPTSPDetails2" }
                     },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "LTFSToIPTSP", "LTFSToIPTSPDetails1" },
                 }
             });
             
@@ -101,7 +102,8 @@ namespace InstallConfig
                         {"XyzSection1GeneratorWithTax","InternationalOutgoingToANS" },
                         {"XyzSection2GeneratorWithTax","InternationalOutgoingToANSDetails1" },
                         {"XyzSection3GeneratorWithTax","InternationalOutgoingToANSDetails2" }
-                    }
+                    },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "InternationalOutgoingToANS", "InternationalOutgoingToANSDetails1" },
                 }
             });
 
@@ -147,7 +149,8 @@ namespace InstallConfig
                     },
                     OtherParams = new Dictionary<string, string>() {
                         { "serviceGroupsToMergeInvoice","6"} //ltfs icx to be merged with domestic for summit icx
-                    }
+                    },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "DomesticToANS", "DomesticToANSDetails1" },
                 }
             });
             serviceGroupConfigurations.Add(
@@ -183,7 +186,8 @@ namespace InstallConfig
                             {"A2ZInvoiceSection1GeneratorWithCurrencyConversion","InternationalToIOS" },
                             {"A2ZInvoiceSection2GeneratorWithCurrencyConversion","InternationalToIOSDetails1" },
                             {"A2ZInvoiceSection3GeneratorWithCurrencyConversion","InternationalToIOSDetails2" }
-                        }
+                        },
+                        SectionNamesOfInvoiceForExport = new List<string>() { "InternationalToIOS", "InternationalToIOSDetails1" },
                     }
                 });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);

@@ -290,11 +290,11 @@ union all
 
                                <div style="height:5px;clear:left;"></div>
                                     
-                                    <div style="float: left;padding-left:4px;">
+                                    <div style="float: left;padding-left:4px;width: 1200px">
                                         <asp:UpdatePanel ID="UpdatePanel3" runat="server">
                                             <ContentTemplate>
                                         
-                                            Switch: 
+                                                 Switch: 
                                                  <asp:DropDownList ID="DropDownListSwitch" runat="server" AutoPostBack="true"
                                                      OnSelectedIndexChanged="DropDownListSwitch_SelectedIndexChanged">
                                                  </asp:DropDownList>

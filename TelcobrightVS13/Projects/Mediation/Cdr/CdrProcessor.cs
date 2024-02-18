@@ -15,7 +15,6 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Web.ApplicationServices;
 using FlexValidation;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
@@ -120,14 +119,17 @@ namespace TelcobrightMediation
                             }
                             if (allPartnersFound)
                             {
-                                ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules,
-                                    cdrExt);
-                                serviceGroup.ExecutePostRatingActions(cdrExt, this);
-                                ExecuteNerRule(this, cdrExt);
-                                if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
-                                    cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                                if (!this.MediationContext.CdrSetting.useCasStyleProcessing)
                                 {
-                                    SetPdd(cdrExt.Cdr);
+                                    ExecuteRating(serviceGroupConfiguration, serviceGroupConfiguration.Ratingtrules,
+                                        cdrExt);
+                                    serviceGroup.ExecutePostRatingActions(cdrExt, this);
+                                    ExecuteNerRule(this, cdrExt);
+                                    if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.CallConnectTimePresent == true &&
+                                        cdrExt.Cdr.ServiceGroup > 0 && cdrExt.Cdr.ChargingStatus == 1)
+                                    {
+                                        SetPdd(cdrExt.Cdr);
+                                    }
                                 }
                             }
                         }
@@ -229,8 +231,26 @@ namespace TelcobrightMediation
             {
                 foreach (var kv in processedCdrExt.TableWiseSummaries)
                 {
-                    CdrSummaryType summaryTargetTable = kv.Key;
-                    this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
+                    if (!this.MediationContext.CdrSetting.useCasStyleProcessing)
+                    {
+                        CdrSummaryType summaryTargetTable = kv.Key;
+                        this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
+                    }
+                    else//casStyleProcessing
+                    {
+                        CdrSummaryType summaryTargetTable = kv.Key;
+                        if (kv.Key == CdrSummaryType.sum_voice_day_01 || kv.Key == CdrSummaryType.sum_voice_day_02 ||
+                            kv.Key == CdrSummaryType.sum_voice_day_03 || kv.Key == CdrSummaryType.sum_voice_day_04 ||
+                            kv.Key == CdrSummaryType.sum_voice_day_06 || kv.Key == CdrSummaryType.sum_voice_day_06
+                        )
+                        {
+                            this.CdrJobContext.CdrSummaryContext.MergeAddSummary(summaryTargetTable, kv.Value);
+                        }
+                        else
+                        {
+                            Console.WriteLine("hello");
+                        }
+                    }
                 }
             });
         }
@@ -396,9 +416,10 @@ namespace TelcobrightMediation
             long writtenInconsistentCount = 0,
                 writtenErrorCount = 0,
                 writtenNonPartialCdrCount = 0,
+                writtenSuccessfulCount = 0,
                 writtenNormalizedPartialCdrCount = 0,
-                writtenCdrCount = 0;
-
+                writtenCdrCount = 0,
+                failedCallsCount = 0;
             if (this.CollectionResult.CdrInconsistents.Any())
                 writtenInconsistentCount = WriteCdrInconsistent();//code changed, from now on inconsistent will be written to cdrError too.
 
@@ -431,7 +452,18 @@ namespace TelcobrightMediation
             {
                 if (nonPartialCdrs.Any())
                 {
-                    writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
+                    if (this.MediationContext.CdrSetting.WriteFailedCallsToDb == false)//dont' write failed calls
+                    {
+                        failedCallsCount = nonPartialCdrs.Count(c => c.ChargingStatus == 0);
+                        nonPartialCdrs = nonPartialCdrs.Where(c => c.ChargingStatus == 1).ToList();
+                        writtenSuccessfulCount = WriteCdr(nonPartialCdrs);
+                        writtenNonPartialCdrCount = writtenSuccessfulCount + failedCallsCount;
+                                                    //although not written, but need to match validations
+                    }
+                    else//write failed calls
+                    {
+                        writtenNonPartialCdrCount = WriteCdr(nonPartialCdrs);
+                    }
                 }
                 if (normalizedPartialCdrs.Any())
                 {
@@ -455,10 +487,59 @@ namespace TelcobrightMediation
             {
                 uniqueEventCount = WriteUniqueEventsHistory(this.CollectionResult.FinalNonDuplicateEvents);
             }
-            if (this.CollectionResult.FinalNonDuplicateEvents != null &&
+            if (this.CollectionResult.FinalNonDuplicateEvents.Any() &&
                 uniqueEventCount != this.CollectionResult.FinalNonDuplicateEvents.Count)
             {
                 throw new Exception("Written number of unique event count does not match non-duplicate event count.");
+            }
+
+            var neAdditionalSetting = this.CdrJobContext.CdrjobInputData.NeAdditionalSetting;
+            int newRowsCouldNotBeAggreagatedCount = 0;
+            //int deletedRowsFromPartialEvent = 0;
+            int cdrDiscardedCount = 0;
+            if (neAdditionalSetting!=null && 
+                !neAdditionalSetting.AggregationStyle.IsNullOrEmptyOrWhiteSpace())
+            {
+                if (neAdditionalSetting.AggregationStyle == "telcobridge")
+                {
+                    if (this.CollectionResult.NewRowsCouldNotBeAggreagated.Any())
+                    {
+                        newRowsCouldNotBeAggreagatedCount =
+                            WriteNewRowsCouldNotBeaggreagated(this.CollectionResult.NewRowsCouldNotBeAggreagated);
+                        if (newRowsCouldNotBeAggreagatedCount != this.CollectionResult.NewRowsCouldNotBeAggreagated.Count)
+                            throw new Exception("Written number of partial event count does not match collection result.");
+                    }
+
+                    if (this.CollectionResult.NewRowsToBeDiscardedAfterAggregation.Any())
+                    {
+                        cdrDiscardedCount = WriteCdrDiscarded(this.CollectionResult.NewRowsToBeDiscardedAfterAggregation);
+                        if (cdrDiscardedCount != this.CollectionResult.NewRowsToBeDiscardedAfterAggregation.Count)
+                        {
+                            throw new Exception("Written number of partial event count does not match collection result.");
+                        }
+                    }
+                    
+                    //deletedRowsFromPartialEvent = DeleteAggregatedPartialInstances(this.CollectionResult.RowsToBeDiscardedAfterAggregation);
+                    //no need to delete parial unagg instances as they are in day wise table, later old tables should be dropped by optimizer
+                    //to clean up free space
+                }
+            }
+            
+            
+            //if (this.CollectionResult.RowsToBeDiscardedAfterAggregation.Any() &&
+            //    deletedRowsFromPartialEvent != this.CollectionResult.RowsToBeDiscardedAfterAggregation.Count)
+            //{
+            //    throw new Exception("Deleted number of partial cdr does not match RowsToBeDiscardedAfterAggregation.");
+            //}
+
+            if (this.CdrJobContext.CdrjobInputData.Ne.FilterDuplicateCdr == 1)
+            {
+                cdrDiscardedCount += WriteCdrDiscarded(this.CollectionResult.NewDuplicateEvents);
+            }
+            if (this.CollectionResult.NewDuplicateEvents.Any() &&
+                cdrDiscardedCount != this.CollectionResult.NewDuplicateEvents.Count+this.CollectionResult.NewRowsToBeDiscardedAfterAggregation.Count)
+            {
+                throw new Exception("Written number of cdrdiscarded/duplicates count does not match non-duplicate event count.");
             }
 
             List<PartialCdrContainer> partialCdrContainers = new List<PartialCdrContainer>();
@@ -492,14 +573,21 @@ namespace TelcobrightMediation
 
             if (this.CdrReProcessingType == CdrReProcessingType.NoneOrNew) //newCdrFile
             {
-                if (this.CollectionResult.RawCount !=
+                int rawCount = this.CdrJobContext.CdrjobInputData.MergedJobsDic.Any() == false
+                    ? this.CollectionResult.RawCount 
+                    : this.CdrJobContext.CdrjobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
+                if (rawCount + this.CollectionResult.OldPartialInstancesFromDB.Count !=
                     writtenNonPartialCdrCount + writtenNewRawInstances + writtenInconsistentCount
-                    + nonPartialCdrErrors.Count)
+                    + nonPartialCdrErrors.Count 
+                    + newRowsCouldNotBeAggreagatedCount
+                    +this.CollectionResult.OldRowsToBeDiscardedAfterAggregation.Count
+                    +this.CollectionResult.OldRowsCouldNotBeAggreagated.Count
+                    +cdrDiscardedCount)
                     throw new Exception(
                         "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");
 
                 if (nonPartialCdrs.Count + normalizedPartialCdrs.Count + normalizedPartialCdrErrors.Count
-                    + nonPartialCdrErrors.Count != writtenErrorCount + writtenCdrCount)
+                    + nonPartialCdrErrors.Count != writtenErrorCount + writtenCdrCount-failedCallsCount)
                     throw new Exception(
                         "RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
             }
@@ -509,6 +597,15 @@ namespace TelcobrightMediation
                     throw new Exception(
                         "RawCount in collection result must equal (inconsistentCount+ errorCount + cdrCount+rawPartialActualCount-distintPartialCount");
             }
+            if (neAdditionalSetting!=null && neAdditionalSetting.DumpAllInstancesToDebugCdrTable)
+            {
+                int insertCount = WriteCdrsForDebug();
+                if (insertCount != this.CollectionResult.DebugCdrsForDump.Count)
+                {
+                    throw new Exception("Inserted number of debugcdr did not match textcdr count.");
+                }
+            }
+            
             return new CdrWritingResult()
             {
                 CdrCount = writtenCdrCount,
@@ -557,11 +654,17 @@ namespace TelcobrightMediation
             collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
                 {
-                    int segmentCount = segment.Count();
+                    var cdrExts = segment as CdrExt[] ?? segment.ToArray();
+                    int segmentCount = cdrExts.Count();
+                    ParallelIterator<CdrExt, StringBuilder> iterator =
+                        new ParallelIterator<CdrExt, StringBuilder>(cdrExts);
+                    List<StringBuilder> insertCommands =
+                        iterator.getOutput(c => c.CdrError.GetExtInsertValues()).ToList();
+
                     int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
                         dbCmd: this.DbCmd,
                         command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror)
-                            .Append(string.Join(",", segment.AsParallel().Select(c => c.CdrError.GetExtInsertValues())))
+                            .Append(string.Join(",", insertCommands))
                             .ToString(),
                         expectedRecCount: segmentCount);
                     if (affectedRecordCount != segmentCount)
@@ -571,6 +674,9 @@ namespace TelcobrightMediation
                 });
             return errorInsertedCount;
         }
+
+        
+
 
         int WriteCdr(List<cdr> cdrs)
         {
@@ -582,10 +688,17 @@ namespace TelcobrightMediation
             collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
                 segment =>
                 {
-                    int segmentCount = segment.Count();
-                    var segmentAsParallel = segment.AsParallel();
-                    ParallelQuery<StringBuilder> sbs = segmentAsParallel.Select(c => c.GetExtInsertValues());
-                    durationSumSegmented += segmentAsParallel.AsParallel().Sum(c => c.DurationSec);
+                    var enumerable = segment as cdr[] ?? segment.ToArray();
+                    int segmentCount = enumerable.Count();
+                    durationSumSegmented += enumerable.Sum(c => c.DurationSec);
+
+                    ParallelIterator<cdr, StringBuilder> iterator =
+                        new ParallelIterator<cdr, StringBuilder>(enumerable);
+                    List<StringBuilder> sbs =
+                        iterator.getOutput(c => c.GetExtInsertValues()).ToList();
+
+                    //var segmentAsParallel = segment.AsParallel();
+                    //ParallelQuery<StringBuilder> sbs = segmentAsParallel.Select(c => c.GetExtInsertValues());
 
                     StringBuilder extInsertCommandsForthisSegment = StringBuilderJoiner.Join(",", sbs.ToList());
                     this.DbCmd.CommandType = CommandType.StoredProcedure;
@@ -605,6 +718,35 @@ namespace TelcobrightMediation
             return insertCount;
         }
 
+        int WriteCdrDiscarded(List<string[]> excludedEvents)
+        {
+            if (this.CdrJobContext.MediationContext.Tbc.CdrSetting.WriteCdrDiscarded == false)
+                return excludedEvents.Count;
+            List<cdrinconsistent> excludedEventsAsCdrInConsistents =
+                excludedEvents.Select(CdrConversionUtil.ConvertTxtRowToCdrinconsistent).ToList();
+            int errorInsertedCount = 0;
+            int startAt = 0;
+            CollectionSegmenter<cdrinconsistent> collectionSegmenter =
+                new CollectionSegmenter<cdrinconsistent>(excludedEventsAsCdrInConsistents, startAt);
+            collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    var cdrinconsistents = segment as cdrinconsistent[] ?? segment.ToArray();
+                    int segmentCount = cdrinconsistents.Count();
+                    int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+                        dbCmd: this.DbCmd,
+                        command: new StringBuilder(StaticExtInsertColumnHeaders.cdrerror.Replace("cdrerror", "cdrdiscarded"))
+                            .Append(string.Join(",", cdrinconsistents.Select(c => c.GetExtInsertValues())))
+                            .ToString(),
+                        expectedRecCount: segmentCount);
+                    if (affectedRecordCount != segmentCount)
+                        throw new Exception(
+                            "Affected record count does not match segment count while writing cdr errors.");
+                    errorInsertedCount += affectedRecordCount;
+                });
+            return errorInsertedCount;
+        }
+
         int WriteUniqueEventsHistory(Dictionary<string, string[]> finalNonDuplicateEvents)//<tuple, cdr row as text[] as decoded initially>
         {
             int insertCount = 0;
@@ -619,7 +761,7 @@ namespace TelcobrightMediation
             foreach (var kvDateWise in dateWiseTupleVsTextCdrs)
             {
                 DateTime date = kvDateWise.Key;
-                string tableName = $"uniqueevent{date:yyyyMMdd}";
+                string tableName = $"zz_uniqueevent_{date:yyyyMMdd}";
                 List<KeyValuePair<string, string[]>> tupleVsCdrRow = kvDateWise.Value;
 
                 CollectionSegmenter<KeyValuePair<string, string[]>> collectionSegmenter =
@@ -649,6 +791,140 @@ namespace TelcobrightMediation
                         insertCount += affectedRecordCount;
                     });
             }
+            return insertCount;
+        }
+
+        int WriteNewRowsCouldNotBeaggreagated(List<string[]> newRowsRemainedUnaggreagated)//<tuple, cdr row as text[] as decoded initially>
+        {
+            int insertCount = 0;
+            int startAt = 0;
+            //List<KeyValuePair<string, string[]>> tupleVsTextCdrs = newRowsRemainedUnaggreagated
+            //    .Select(kv => new KeyValuePair<string, string[]>(kv.Key, kv.Value)).ToList();
+
+            Dictionary<DateTime, List<string[]>> dateWiseRows =
+                newRowsRemainedUnaggreagated.GroupBy(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat().Date)
+                    .ToDictionary(grouping => grouping.Key, grouping => grouping.ToList());
+
+            foreach (var kv in dateWiseRows)
+            {
+                DateTime date = kv.Key;
+                List<string[]> unaggregatedRows = kv.Value;
+                string tableName = $"zz_zz_partialevent_{date:yyyyMMdd}";
+                //List<KeyValuePair<string, string[]>> tupleVsCdrRow = rows.Value;
+
+                CollectionSegmenter<string[]> collectionSegmenter =
+                    new CollectionSegmenter<string[]>(unaggregatedRows, startAt);
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                    segment =>
+                    {
+                        var segmentAsList = segment.ToList();
+                        int segmentCount = segmentAsList.Count;
+
+                        ParallelIterator<string[], StringBuilder> iterator =
+                            new ParallelIterator<string[], StringBuilder>(segmentAsList);
+                        List<StringBuilder> sbs =
+                            iterator.getOutput(row =>
+                            {
+                                //cdrerror, cdrinconsitent and partialEvents all have same structure
+                                cdrinconsistent cdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(row);
+                                return cdr.GetExtInsertValues();
+                            });
+
+                        //string sql = $" insert into {tableName}(tuple, starttime) values " +
+                        string sql = $"{StaticExtInsertColumnHeaders.cdrerror.Replace("insert into cdrerror","insert into " + tableName)}" +
+                                     $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
+                        this.DbCmd.CommandType = CommandType.StoredProcedure;
+                        this.DbCmd.CommandText = "sp_extInsert";
+
+                        int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+                            dbCmd: this.DbCmd,
+                            command: sql,
+                            expectedRecCount: segmentCount);
+                        if (affectedRecordCount != segmentCount)
+                            throw new Exception("Affected record count does not match segment count while writing cdrs.");
+                        insertCount += affectedRecordCount;
+                    });
+            }
+            return insertCount;
+        }
+        int DeleteAggregatedPartialInstances(List<string[]> rowsToBeDiscardedAfterAggregation)//<tuple, cdr row as text[] as decoded initially>
+        {
+            int deletedCount = 0;
+            int startAt = 0;
+            //List<KeyValuePair<string, string[]>> tupleVsTextCdrs = newRowsRemainedUnaggreagated
+            //    .Select(kv => new KeyValuePair<string, string[]>(kv.Key, kv.Value)).ToList();
+
+            Dictionary<DateTime, List<string[]>> dateWiseRows =
+                rowsToBeDiscardedAfterAggregation.GroupBy(r => r[Fn.AnswerTime].ConvertToDateTimeFromMySqlFormat().Date)
+                    .ToDictionary(grouping => grouping.Key, grouping => grouping.ToList());
+
+            foreach (var kv in dateWiseRows)
+            {
+                DateTime date = kv.Key;
+                List<string[]> rows = kv.Value;
+                string tableName = $"zz_zz_partialevent_{date:yyyyMMdd}";
+                //List<KeyValuePair<string, string[]>> tupleVsCdrRow = rows.Value;
+
+                CollectionSegmenter<string[]> collectionSegmenter =
+                    new CollectionSegmenter<string[]>(rows, startAt);
+                collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                    segment =>
+                    {
+                        var segmentAsList = segment.ToList();
+                        int segmentCount = segmentAsList.Count;
+
+                        string sql = $"delete from {tableName} where switchid={this.CdrJobContext.Ne.idSwitch} " +
+                        $" and idcall in (" +
+                        $"{string.Join(",", segment.Select(r => r[Fn.IdCall]))})";
+
+                        this.DbCmd.CommandType = CommandType.Text;
+                        this.DbCmd.CommandText = sql;
+
+                        int affectedRecordCount = this.DbCmd.ExecuteNonQuery();
+                        if (affectedRecordCount != segmentCount)
+                            throw new Exception("Affected record count does not match segment count while writing cdrs.");
+                        deletedCount += affectedRecordCount;
+                    });
+            }
+            return deletedCount;
+        }
+        int WriteCdrsForDebug()
+        {
+            List<string[]> rows = this.CollectionResult.DebugCdrsForDump;
+            int insertCount = 0;
+            int startAt = 0;
+            CollectionSegmenter<string[]> collectionSegmenter =
+                new CollectionSegmenter<string[]>(rows, startAt);
+            collectionSegmenter.ExecuteMethodInSegments(this.CdrJobContext.SegmentSizeForDbWrite,
+                segment =>
+                {
+                    var segmentAsList = segment.ToList();
+                    int segmentCount = segmentAsList.Count;
+
+                    ParallelIterator<string[], StringBuilder> iterator =
+                        new ParallelIterator<string[], StringBuilder>(segmentAsList);
+                    List<StringBuilder> sbs =
+                        iterator.getOutput(row =>
+                        {
+                            //cdrerror, cdrinconsitent and partialEvents all have same structure
+                            cdrinconsistent cdr = CdrConversionUtil.ConvertTxtRowToCdrinconsistent(row);
+                            return cdr.GetExtInsertValues();
+                        });
+
+                    string sql =
+                        $"{StaticExtInsertColumnHeaders.cdrerror.Replace("insert into cdrerror", "insert into cdrdebug")}" +
+                        $"{StringBuilderJoiner.Join(",", sbs).ToString()}";
+                    this.DbCmd.CommandType = CommandType.StoredProcedure;
+                    this.DbCmd.CommandText = "sp_extInsert";
+
+                    int affectedRecordCount = DbWriterWithAccurateCount.ExecSingleStatementThroughStoredProc(
+                        dbCmd: this.DbCmd,
+                        command: sql,
+                        expectedRecCount: segmentCount);
+                    if (affectedRecordCount != segmentCount)
+                        throw new Exception("Affected record count does not match segment count while writing cdrs.");
+                    insertCount += affectedRecordCount;
+                });
             return insertCount;
         }
 

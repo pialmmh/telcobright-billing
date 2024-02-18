@@ -19,7 +19,10 @@ namespace PartnerRules
 
         public int Execute(cdr thisCdr, MefPartnerRulesContainer data)
         {
-            var key = new ValueTuple<int,string>(thisCdr.SwitchId,thisCdr.OutgoingRoute);
+            thisCdr.OutPartnerId = 0;
+            string tbPartnerDb = data.MediationContext.Tbc.Telcobrightpartner.databasename;
+            CdrSetting cdrSetting = data.MediationContext.CdrSetting;
+            var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.OutgoingRoute);
             route thisRoute = null;
             data.SwitchWiseRoutes.TryGetValue(key, out thisRoute);
             if (thisRoute != null)
@@ -27,18 +30,17 @@ namespace PartnerRules
                 thisCdr.OutPartnerId = thisRoute.idPartner;
                 return thisRoute.idPartner;
             }
-            if (thisCdr.OutPartnerId <= 0)
+            if (cdrSetting.useCasStyleProcessing == true &&
+                    tbPartnerDb == "mnh_cas" && thisCdr.OutPartnerId <= 0 &&
+                    (thisCdr.OutgoingRoute == "1950" || thisCdr.OutgoingRoute == "1960")
+               )
             {
-                CdrSetting cdrSettOutg = data.MediationContext.CdrSetting;
-                if (cdrSettOutg.useCasStyleProcessing == true)
+                ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
+                int idPartner = ansOutByPrefix.Execute(thisCdr, data);
+                if (idPartner > 0)
                 {
-                    ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
-                    int idPartner = ansOutByPrefix.Execute(thisCdr, data);
-                    if (idPartner > 0)
-                    {
-                        thisCdr.OutPartnerId = idPartner;
-                        return idPartner;
-                    }
+                    thisCdr.OutPartnerId = idPartner;
+                    return idPartner;
                 }
             }
             thisCdr.OutPartnerId = 0;

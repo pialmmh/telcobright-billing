@@ -2,7 +2,6 @@
     CodeBehind="CasInternationalIn_ICX.aspx.cs" Inherits="CasDefaultRptIntlInIcx" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
-<%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
 
 
@@ -154,7 +153,7 @@
 
                 if (lblScreenTitle.Text == "")
                 {
-                    lblScreenTitle.Text = "Reports/Intl. Incoming/Traffic";
+                    lblScreenTitle.Text = "Reports/International Incoming";
                 }
                 //End of Site Map Part *******************************************************************
 
@@ -343,8 +342,8 @@
      </asp:DropDownList>
 
         View by Switch:
-        <asp:CheckBox ID="ViewBySwitch" AutoPostBack="True" runat="server" OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True"/>
-        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
+        <asp:CheckBox ID="ViewBySwitch" AutoPostBack="True" runat="server" OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False"/>
+        <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
         </asp:DropDownList>
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click"
@@ -607,12 +606,12 @@
 
                         <asp:BoundField DataField="ConnectedCount"
                             HeaderText="Connected Calls"
-                            SortExpression="ConnectedCount" />
+                            SortExpression="ConnectedCount" Visible="False"/>
 
                         <asp:BoundField DataField="Paid Minutes (International Incoming)"
                             DataFormatString="{0:F2}"
                             HeaderText="Actual Duration"
-                            SortExpression="Paid Minutes (International Incoming)" />
+                            SortExpression="Paid Minutes (International Incoming)" Visible="True"/>
                         <asp:BoundField DataField="RoundedDuration"
                             DataFormatString="{0:F2}"
                             HeaderText="Billed Duration"
@@ -620,27 +619,27 @@
                         <asp:BoundField DataField="Duration1"
                             DataFormatString="{0:F2}"
                             HeaderText="Carrier Duration"
-                            SortExpression="Duration1" />
+                            SortExpression="Duration1" Visible="False"/>
                         <asp:BoundField DataField="costansin"
                             DataFormatString="{0:F2}"
                             HeaderText="ANS (USD)"
-                            SortExpression="costansin" />
+                            SortExpression="costansin" Visible="False"/>
                         <asp:BoundField DataField="costicxin"
                             DataFormatString="{0:F2}"
                             HeaderText="ICX/IOS (USD)"
-                            SortExpression="costicxin" />
+                            SortExpression="costicxin" Visible="False"/>
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
                             HeaderText="Revenue (USD)"
-                            SortExpression="customercost" />
+                            SortExpression="customercost" Visible="False" />
                         <asp:BoundField DataField="tax1"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
-                            SortExpression="tax1" />
+                            SortExpression="tax1" Visible="False" />
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
                             HeaderText="IGW $"
-                            SortExpression="igwrevenuein" />
+                            SortExpression="igwrevenuein" Visible="False"/>
 
                         <asp:BoundField DataField="profit" Visible="false"
                             DataFormatString="{0:F2}"
@@ -651,7 +650,7 @@
                         <asp:BoundField DataField="ASR"
                             DataFormatString="{0:F2}"
                             HeaderText="ASR"
-                            SortExpression="ASR" />
+                            SortExpression="ASR" Visible="False"/>
                         <asp:BoundField DataField="ACD"
                             DataFormatString="{0:F2}"
                             HeaderText="ACD"
@@ -659,19 +658,19 @@
                         <asp:BoundField DataField="PDD"
                             DataFormatString="{0:F2}"
                             HeaderText="PDD"
-                            SortExpression="PDD" />
+                            SortExpression="PDD" Visible="False"/>
                         <asp:BoundField DataField="CCR"
                             DataFormatString="{0:F2}"
                             HeaderText="CCR"
-                            SortExpression="CCR" />
+                            SortExpression="CCR" Visible="False"/>
                         <asp:BoundField DataField="ConectbyCC"
                             DataFormatString="{0:F0}"
                             HeaderText="Connect Count (CC)"
-                            SortExpression="ConnectByCC" />
+                            SortExpression="ConnectByCC" Visible="False"/>
                         <asp:BoundField DataField="CCRByCC"
                             DataFormatString="{0:F2}"
                             HeaderText="CCR By CC"
-                            SortExpression="CCRByCC" />
+                            SortExpression="CCRByCC" Visible="False"/>
 
 
 

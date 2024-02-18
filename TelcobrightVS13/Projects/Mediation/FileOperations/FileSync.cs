@@ -221,13 +221,69 @@ namespace TelcobrightFileOperations
                     File.Delete(dstInfoLocal.FullPath);
                 }
                 string tempExt = "";
+                string secondaryDirectory = syncSettingsSource.SecondaryDirectory;
+                string downloadedDirFullPath = Path.GetDirectoryName(srcInfoRemote.FullPath).Replace(Path.DirectorySeparatorChar.ToString()
+                    ,Path.AltDirectorySeparatorChar.ToString()) + Path.AltDirectorySeparatorChar + secondaryDirectory;
+                string alternateDownloadPathFromSecondaryDir = downloadedDirFullPath + Path.AltDirectorySeparatorChar +
+                    Path.GetFileName(srcInfoRemote.FullPath);
+                
+                bool alreadyDownloadingFromSecondaryDir = false;
                 if (dstSettings.FileExtensionForSafeCopyWithTempFile != "")
                 {
+                    RemoteFileInfo remoteFileInfo = null;
                     tempExt = dstSettings.FileExtensionForSafeCopyWithTempFile;
                     dstInfoLocal.CreatePaths(null);
                     string tempFile = dstInfoLocal.FullPath + tempExt;
-                    RemoteFileInfo remoteFileInfo= session.GetFileInfo(srcInfoRemote.FullPath);
+                    try
+                    {
+                        //remoteFileInfo= session.GetFileInfo(srcInfoRemote.FullPath);
+                        if (session.FileExists(srcInfoRemote.FullPath))
+                        {
+                             remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);   
+                        }
+                        else
+                        {
+                            srcInfoRemote.FullPath = alternateDownloadPathFromSecondaryDir;
+                            remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);
+                            alreadyDownloadingFromSecondaryDir = true;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        
+                        if (e.Message.Contains("Can't get attributes of file") && !secondaryDirectory//file not found and there is a downloaded dir
+                                .IsNullOrEmptyOrWhiteSpace())
+                        {
+                            
+                            srcInfoRemote.FullPath = alternateDownloadPathFromSecondaryDir;
+                            remoteFileInfo = session.GetFileInfo(srcInfoRemote.FullPath);
+                            alreadyDownloadingFromSecondaryDir = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine(e);
+                            throw;
+                        }
+                    }
                     session.GetFiles(srcInfoRemote.FullPath, tempFile, removeOriginal);
+                
+                    if (removeOriginal == true)
+                    {
+                        session.RemoveFile(srcInfoRemote.FullPath);
+                    }
+                    else if (!secondaryDirectory.IsNullOrEmptyOrWhiteSpace())//move to secondary dir if set in config
+                    {
+
+                        if (!alreadyDownloadingFromSecondaryDir)
+                        {
+                            //string downloadedDirFullPath = "c:/sdfsdf/downloaded";
+                            if (session.FileExists(downloadedDirFullPath)==false)
+                            {
+                                session.CreateDirectory(downloadedDirFullPath);
+                            }
+                            session.MoveFile(srcInfoRemote.FullPath,alternateDownloadPathFromSecondaryDir);
+                        }
+                    }
                     long tempFileLength = new FileInfo(tempFile).Length;
                     if (tempFileLength != remoteFileInfo.Length) {
                         throw new Exception("Length of Downloaded File with temporary extension " + tempFileLength + " != remoteFile's length " + remoteFileInfo.Length);

@@ -26,10 +26,10 @@ namespace Jobs
         public string RuleName => GetType().Name;
         public string HelpText => "Invoice generation job";
         public int Id => 12;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             InvoiceGenerationInputData invoiceGenerationInputData = (InvoiceGenerationInputData)jobInputData;
-            job telcobrightJob = invoiceGenerationInputData.TelcobrightJob;
+            job telcobrightJob = invoiceGenerationInputData.Job;
             Dictionary<string, string> jobParamsMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
             var jsonDetailMainServiceGroup = jobParamsMap;//carry on jobs param along with invoice detail
@@ -73,6 +73,21 @@ namespace Jobs
             invoicePostProcessingData.TempTransaction = CreateTempTransaction(invoicePostProcessingData);
             WriteToDb(invoicePostProcessingData);//write the main invoice to db
             return JobCompletionStatus.Complete;
+        }
+
+        public object PreprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
         }
 
         private List<long> GenerateChildInvoicesToBeMerged(InvoiceGenerationInputData invoiceGenerationInputData, 
@@ -127,7 +142,7 @@ namespace Jobs
                 transactionTime = DateTime.Now,
                 glAccountId = Convert.ToInt64(invoicePostProcessingData.Invoice.BILLING_ACCOUNT_ID),
                 amount = Convert.ToDecimal(invoicePostProcessingData.Invoice.invoice_item.Single().AMOUNT),
-                createdByJob = invoicePostProcessingData.InvoiceGenerationInputData.TelcobrightJob.id
+                createdByJob = invoicePostProcessingData.InvoiceGenerationInputData.Job.id
             };
             return tempTransaction;
         }
@@ -170,7 +185,7 @@ namespace Jobs
                               $"(transactionTime,glAccountId,amount,createdByJob,debitOrCredit,idEvent,uomId,balanceBefore" +
                               $",balanceAfter) values" +
                               $"({tempTransaction.transactionTime.ToMySqlField()},{tempTransaction.glAccountId}," +
-                              $"{tempTransaction.amount},{invoiceGenerationInputData.TelcobrightJob.id},'d'," +
+                              $"{tempTransaction.amount},{invoiceGenerationInputData.Job.id},'d'," +
                               $"{generatedInvoiceId}," +
                               $"'{invoicePostProcessingData.Currency}',0,0)";
             cmd.ExecuteNonQuery();
@@ -194,7 +209,7 @@ namespace Jobs
             var input = (AccountingJobInputData) jobInput;
             var context = input.Context;
             var cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText = $"select jobstate from job where id={input.TelcobrightJob.id}";
+            cmd.CommandText = $"select jobstate from job where id={input.Job.id}";
             string json = (string) cmd.ExecuteScalar();
             var jobStateMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             decimal finalInvoicedAmount = Convert.ToDecimal(jobStateMap["invoicedAmountAfterLastSegment"]);

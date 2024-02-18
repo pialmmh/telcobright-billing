@@ -44,7 +44,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/teleplusnewyork/tdm",
+                StartingPath = "e:/telcobright/vault/resources/cdr/telePlusNewyork/tdm",
                 User = "",
                 Pass = "",
             };
@@ -56,7 +56,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/teleplusnewyork/ip",
+                StartingPath = "e:/telcobright/vault/resources/cdr/telePlusNewyork/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };
@@ -67,16 +67,6 @@ namespace InstallConfig
             tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
             tbc.DirectorySettings.FileLocations.Add(vaultWtl.Name, vaultWtl);
             
-
-            
-            
-
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //zteCAS.Name
-            };
         }
     }
 }

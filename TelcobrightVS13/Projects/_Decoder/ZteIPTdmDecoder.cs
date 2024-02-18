@@ -13,19 +13,20 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class ZteIpTdmDecoder : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+
+    public class ZteIpTdmDecoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
-        public int Id => 18;
-        public string HelpText => "Decodes ZTE IP TDM CDR.";
-        public CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 18;
+        public override string HelpText => "Decodes ZTE IP TDM CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string UniqueEventTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             //this.id = base.Id;
@@ -38,30 +39,36 @@ namespace Decoders
             return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
+
+        public override DateTime getEventDatetime(Object data)
+        {
+            throw new NotImplementedException();
+        }
+
 
         private static void SetIncomingRoute(string[] row)
         {

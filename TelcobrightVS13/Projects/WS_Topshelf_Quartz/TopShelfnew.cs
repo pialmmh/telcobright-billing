@@ -9,6 +9,7 @@ using Quartz;
 using QuartzTelcobright;
 using System.Configuration;
 using System.Diagnostics;
+using System.Threading;
 using CrystalQuartz.Core.SchedulerProviders;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
@@ -26,40 +27,25 @@ namespace WS_Telcobright_Topshelf
         Debug
     }
 
-    
+
     public class TelcobrightService
     {
         public static MefCollectiveAssemblyComposer mefColllectiveAssemblyComposer { get; set; }
         public static MefProcessContainer mefProcessContainer { get; set; }
-        private static string getLogFileName()
-        {
-            var binPath = System.IO.Path.GetDirectoryName(
-                            System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            binPath = binPath.Substring(6);
-            string logFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
-            return logFileName;
-        }
-
-        static string getLastGeneratedConfigFileName()
-        {
-            string execPath = FileAndPathHelper.GetCurrentExecPath();
-            DirectoryInfo configDir = new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
-                                                        Path.DirectorySeparatorChar + "Config");
-            string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";
-            return configFileName;
-        }
-
-
         static void Main(string[] args)
         {
-            string configFileName = args.Length >= 1 ? args[0] : "";//config file name can be sent by batch file as arg[0]
-            if (configFileName == "")
+            //Thread.Sleep(20000);
+
+            bool isConsoleApp = false;
+            string instanceName = args.Any() ? args[0] : "";
+            if (instanceName == "")
             {
+                isConsoleApp = true;
                 ConfigPathHelper configPathHelper = new ConfigPathHelper(
                     "WS_Topshelf_Quartz",
                     "portal",
                     "UtilInstallConfig",
-                    "generators","");
+                    "generators", "");
                 string deployedInstancesPath = configPathHelper.GetDeployedInstancesDir();
                 DirectoryInfo deployDir = new DirectoryInfo(deployedInstancesPath);
                 Dictionary<string, string> operatorNameVsConfigFile = new Dictionary<string, string>();
@@ -73,58 +59,42 @@ namespace WS_Telcobright_Topshelf
                 Menu menu = new Menu(operatorNameVsConfigFile.Keys.ToList(),
                     "Select an Operatorname to debug.", "");
                 string selectedOpName = menu.getSingleChoice();
-                configFileName = operatorNameVsConfigFile[selectedOpName];
+                string configFileName = operatorNameVsConfigFile[selectedOpName];
+                instanceName = Path.GetFileNameWithoutExtension(configFileName);
             }
-
-            string logFileName = getLogFileName();
-            mefColllectiveAssemblyComposer = new MefCollectiveAssemblyComposer("..//..//bin//Extensions//");
-            RemoteSchedulerProvider provider = new RemoteSchedulerProvider();
-            File.WriteAllLines(logFileName, new string[] { DateTime.Now.ToMySqlFormatWithoutQuote() + ": Telcobright started at " + provider.SchedulerHost });
-            try
+            if (instanceName != null)
             {
-                Console.WriteLine("Starting Telcobright Scheduler.");
-                mefProcessContainer = new MefProcessContainer(mefColllectiveAssemblyComposer);
-                TelcobrightConfig tbc = GetTelcobrightConfig(configFileName);
-                Console.Title = tbc.Telcobrightpartner.databasename;
-                provider.SchedulerHost = $"tcp://localhost:{tbc.TcpPortNoForRemoteScheduler}/QuartzScheduler";
-                provider.Init();
-                IScheduler runtimeScheduler = null;
-                try
-                {
-                    runtimeScheduler = GetScheduler(SchedulerRunTimeType.Runtime, tbc);
-                }
-                catch (Exception e1)
-                {
-                    if (e1.Message.Contains("Unable to bind"))
-                    {
-                        Console.WriteLine("Unable to start debug scheduler, " +
-                                          "telcobright service needs to be turned off.");
-                    }
-                    throw (e1);
-                }
-                Console.WriteLine("Starting RAMJobStore based scheduler....");
-                runtimeScheduler.Standby();
-                IScheduler debugScheduler = GetScheduler(SchedulerRunTimeType.Debug, tbc);
-                ScheduleDebugJobsThroughMenu(runtimeScheduler, debugScheduler);
-                debugScheduler.Context.Put("processes", mefProcessContainer);
-                debugScheduler.Context.Put("configs", tbc);
-                debugScheduler.Start();
-                Console.WriteLine("Telcobright Scheduler has been started.");
-                Console.ReadLine();
-                Console.WriteLine("Program Exited.");
+                Console.Title = instanceName;
+                //Telcobright2 tb = new Telcobright2($"{deploymentRoot}\\mothertelecom_cas\\mothertelecom_cas.conf", null);
+                Telcobright2 tb = new Telcobright2(instanceName, null);
+                tb.run(isConsoleApp);
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
-                throw;
+                throw new Exception("Could not find instance name.");
             }
-
+        }
+        private static string getLogFileName()
+        {
+            var binPath = System.IO.Path.GetDirectoryName(
+                            System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            binPath = binPath.Substring(6);
+            string logFileName = binPath + Path.DirectorySeparatorChar + "telcobright.log";
+            return logFileName;
+        }
+        static string getLastGeneratedConfigFileName()
+        {
+            string execPath = FileAndPathHelperReadOnly.GetCurrentExecPath();
+            DirectoryInfo configDir = new DirectoryInfo(new DirectoryInfo(execPath).Parent.FullName +
+                                                        Path.DirectorySeparatorChar + "Config");
+            string configFileName = configDir.FullName + Path.DirectorySeparatorChar + "telcobright.conf";
+            return configFileName;
         }
         private static TelcobrightConfig GetTelcobrightConfig(string configFileName)
         {
             bool disableParallelMediationForDebug =
                 Convert.ToBoolean(ConfigurationManager.AppSettings["disableParallelMediationForDebug"]);
-            
+
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromFile(configFileName);
             if (Debugger.IsAttached)
             {
@@ -132,9 +102,7 @@ namespace WS_Telcobright_Topshelf
             }
             return tbc;
         }
-
-
-        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType,TelcobrightConfig tbc)// IApplicationContext springContext)
+        static IScheduler GetScheduler(SchedulerRunTimeType runTimeType, TelcobrightConfig tbc)// IApplicationContext springContext)
         {
             QuartzPropertyFactory quartzPropertyFactoryRuntime;
             QuartzPropertyFactory quartzPropertyFactoryDebug;
@@ -162,7 +130,6 @@ namespace WS_Telcobright_Topshelf
             }
             return null;
         }
-
         private static void ScheduleDebugJobsThroughMenu(IScheduler runtimeScheduler, IScheduler debugScheduler)
         {
             List<TriggerKeyExt> triggerKeysForDebug = GetSelectedTriggerKeysFromMenu(runtimeScheduler)
@@ -184,7 +151,8 @@ namespace WS_Telcobright_Topshelf
             {
                 selectedTriggerKeysFinal = triggersKeys
                         .Where((item, index) => selectedtriggersFromConsoleWithArgs.Select(kv => kv.Key).Contains(index))
-                        .Select((t, index) => {
+                        .Select((t, index) =>
+                        {
                             string argsStr = "";
                             selectedtriggersFromConsoleWithArgs.TryGetValue(index, out argsStr);
                             return new TriggerKeyExt(t, argsStr);
@@ -193,7 +161,6 @@ namespace WS_Telcobright_Topshelf
             }
             return selectedTriggerKeysFinal;
         }
-
         static int ScheduleDebugJobs(IScheduler runtimeScheduler, IScheduler debugScheduler,
             List<TriggerKeyExt> triggerKeysForDebug)
         {
@@ -217,6 +184,7 @@ namespace WS_Telcobright_Topshelf
                             if (argsTelcobright != null)
                             {
                                 jobDetail.JobDataMap.Put("args", argsTelcobright);
+                                jobDetail.JobDataMap.Put("name", "apple");
                             }
                             debugScheduler.ScheduleJob(jobDetail, trigger);
                             jobCount++;
@@ -230,7 +198,6 @@ namespace WS_Telcobright_Topshelf
             }
             else throw new Exception("Scheduled job count did not match expected job count for debug scheduler.");
         }
-
         static void PauseNonSelectedTriggers(IScheduler runtimeScheduler, List<TriggerKeyExt> triggerKeysToPause)
         {
             if (triggerKeysToPause.Count > 0)
@@ -253,7 +220,6 @@ namespace WS_Telcobright_Topshelf
                 }
             }
         }
-
         private static Dictionary<int, string> DisplayMenu(List<ITrigger> triggers)
         {
             Console.Clear();
@@ -279,17 +245,17 @@ namespace WS_Telcobright_Topshelf
                 Console.WriteLine(Environment.NewLine + "No keys were pressed, starting all process...");
                 choices = string.Join(",", Enumerable.Range(1, triggers.Count).Select(num => num.ToString()));
             }
-            return choices.Split(',').Select(c=>c.Trim()).Select(keyWithArgs =>
-            {
-                var arr = keyWithArgs.Split(null).Select(item => item.Trim()).ToArray();
-                int key = Convert.ToInt32(arr[0]) - 1;//displayed menu items are 1 based, change to 0 based choise
+            return choices.Split(',').Select(c => c.Trim()).Select(keyWithArgs =>
+              {
+                  var arr = keyWithArgs.Split(null).Select(item => item.Trim()).ToArray();
+                  int key = Convert.ToInt32(arr[0]) - 1;//displayed menu items are 1 based, change to 0 based choise
                 string args = arr.Length > 1 ? arr[1] : "";
-                return new KeyValuePair<int, string>(key, args);
-            }).ToDictionary(kv => kv.Key, kv => kv.Value);
+                  return new KeyValuePair<int, string>(key, args);
+              }).ToDictionary(kv => kv.Key, kv => kv.Value);
         }
         static bool WaitForkeyPressForDebugMode()
         {
-            ConsoleKeyInfo k= new ConsoleKeyInfo();
+            ConsoleKeyInfo k = new ConsoleKeyInfo();
             int pressMenuWithinSec = 5;
             Console.Write("\r{0}   ", $"Press any key within {pressMenuWithinSec} seconds to selectively run processes from menu...");
             for (int cnt = pressMenuWithinSec; cnt > -1; cnt--)

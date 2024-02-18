@@ -13,19 +13,19 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class HuaweiSoftx3000Decoder : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class HuaweiSoftx3000Decoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public virtual int Id => 3;
-        public virtual string HelpText => "Decodes Huawei Softx3000 CDR.";
-        public virtual CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 3;
+        public override string HelpText => "Decodes Huawei Softx3000 CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string UniqueEventTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
 
-        public virtual List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -314,6 +314,7 @@ namespace Decoders
                     }
                     thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
+                    thisRow[Fn.Partialflag] = "0";
                     decodedRows.Add(thisRow);
                 }
                 catch (Exception e1)
@@ -321,36 +322,38 @@ namespace Decoders
 
                     Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
-                    ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.Telcobrightpartner.CustomerName);
                     continue;//with next row
                 }
             }//try for each row in byte array
             return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getSelectExpressionForPartialCollection(Object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }

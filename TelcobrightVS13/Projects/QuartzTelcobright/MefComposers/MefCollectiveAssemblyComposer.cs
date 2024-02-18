@@ -33,6 +33,5 @@ namespace QuartzTelcobright.MefComposers
             CompositionContainer executingAssemblyContainer = new CompositionContainer(assemblyCatalog);
             executingAssemblyContainer.ComposeParts(this);
         }
-
     }
 }

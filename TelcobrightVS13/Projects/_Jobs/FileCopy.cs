@@ -54,12 +54,12 @@ namespace Jobs
                 })
             { FullPath = fullPath };
         }
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             FileCopyJobInputData input = (FileCopyJobInputData)jobInputData;
             JobParamFileCopy paramFileCopy = new JobParamFileCopy();
             paramFileCopy = JsonConvert.DeserializeObject<JobParamFileCopy>
-                (input.TelcobrightJob.JobParameter.Replace("unsplit\\", "unsplit`"));
+                (input.Job.JobParameter.Replace("unsplit\\", "unsplit`"));
             paramFileCopy.RelativeFileName = paramFileCopy.RelativeFileName.Replace("unsplit`", @"unsplit\");
             SyncPair syncPair = input.Tbc.DirectorySettings.SyncPairs[paramFileCopy.SyncPairName];
             SyncLocation srcLocation = syncPair.SrcSyncLocation;
@@ -403,7 +403,23 @@ namespace Jobs
             }
 
             return JobCompletionStatus.Complete;
-        }//execute
+        }
+
+        public object PreprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
+//execute
 
 
         public void CreateJob(SyncPair syncPair, string fileName, TelcobrightConfig tbc)

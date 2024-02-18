@@ -21,7 +21,10 @@ namespace TelcobrightMediation
 
     public class CdrCollectionResult
     {
+        public List<string[]> OriginalRowsBeforeMerge { get; }
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
+
+        public List<string[]> NewDuplicateEvents { get; set; } = new List<string[]>();
         public CollectionResultProcessingState CollectionResultProcessingState { get; set; } =
             CollectionResultProcessingState.BeforeMediation;
 
@@ -36,7 +39,12 @@ namespace TelcobrightMediation
         public ne Ne { get; }
         public List<DateTime> DatesInvolved { get; }
         public List<DateTime> HoursInvolved { get; }
-
+        public List<string[]> NewRowsCouldNotBeAggreagated { get; set; } = new List<string[]>();
+        public List<string[]> OldRowsCouldNotBeAggreagated { get; set; } = new List<string[]>();
+        public List<string[]> NewRowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
+        public List<string[]> OldRowsToBeDiscardedAfterAggregation { get; set; } = new List<string[]>();
+        public List<string[]> DebugCdrsForDump { get; set; }= new List<string[]>();
+        public List<string[]> OldPartialInstancesFromDB { get; set; } = new List<string[]>();
         public ConcurrentDictionary<string, CdrExt> ConcurrentCdrExts
         {
             get
@@ -67,7 +75,7 @@ namespace TelcobrightMediation
         }
 
         public CdrCollectionResult(ne ne, List<CdrExt> cdrExts,
-            List<cdrinconsistent> cdrInconsistents, int rawCount)
+            List<cdrinconsistent> cdrInconsistents, int rawCount, List<string[]> originalRowsBeforeMerge)
         {
             this.Ne = ne;
             cdrExts.ForEach(c =>
@@ -80,6 +88,7 @@ namespace TelcobrightMediation
             this.DatesInvolved = this.HoursInvolved.Select(h => h.Date).Distinct().ToList();
             this.CdrInconsistents = cdrInconsistents;
             this.RawCount = rawCount;
+            this.OriginalRowsBeforeMerge = originalRowsBeforeMerge;
         }
 
         private cdrerror ConvertCdrToCdrError(ICdr cdr, string validationMsg)

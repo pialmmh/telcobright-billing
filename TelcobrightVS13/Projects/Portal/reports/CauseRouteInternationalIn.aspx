@@ -85,7 +85,7 @@
                                 return;
                             }
                         }
-                        //Load Report Templates in TreeView dynically from database.
+                        //Load Report Templates in TreeView dynically from inputbase.
                         CommonCode commonCode = new CommonCode();
                         commonCode.LoadReportTemplatesTree(ref masterTree);
                     }

@@ -1,0 +1,467 @@
+<?xml version="1.0" ?>
+<?job error="true" debug="false" ?>
+<!--
+'============================================================================
+' FUSION LOG VIEWER SETTINGS
+' FusLogVwSet.wsf
+' Travis Illig
+' tillig@paraesthesia.com
+' http://www.paraesthesia.com
+'
+' Overview:  Enables/disables custom settings for the fuslogvw.exe tool.
+'
+' Command syntax:  (Run "FusLogVwSet.wsf /?" for syntax and usage)
+'
+'============================================================================
+-->
+<package>
+	<job id="FusLogVwSet">
+		<runtime>
+			<description>
+FusLogVwSet
+---------------
+This script "enables" and "disables" custom settings for the Fusion Log Viewer tool.
+
+Enabling settings will:
+* Create a log folder (default: C:\fusionlogs)
+* Add HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogPath and set it to the log folder
+* Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogFailures to 1
+* Optionally set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\ForceLog to 1
+* Optionally set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogResourceBinds to 1
+
+Disabling settings will:
+* Delete the log folder and its contents
+* Delete HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogPath
+* Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogFailures to 0
+* Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\ForceLog to 0
+* Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogResourceBinds to 0
+			</description>
+			<named
+				name="enable"
+				helpstring="Enable custom fuslogvw.exe settings."
+				type="simple"
+				required="false"
+			/>
+			<named
+				name="all"
+				helpstring="When used with /enable, logs both failures and successes.  Only valid with /enable."
+				type="simple"
+				required="false"
+			/>
+			<named
+				name="disable"
+				helpstring="Disable custom fuslogvw.exe settings."
+				type="simple"
+				required="false"
+			/>
+			<named
+				name="logpath"
+				helpstring="Sets the log path (default is C:\fusionlogs).  Only valid with /enable."
+				type="string"
+				required="false"
+			/>
+		</runtime>
+
+
+		<!-- Helper Objects -->
+		<object id="fso" progid="Scripting.FileSystemObject" />
+		<object id="shell" progid="WScript.Shell" />
+
+		<!-- Main Script -->
+		<script language="VBScript">
+		<![CDATA[
+		
+		'============================================================================
+		' INITIALIZATION
+		Option Explicit
+		
+		'Declare variables/constants
+		Const SCRIPTNAME = "Fusion Log Viewer Settings"
+		Const VERSION = "1.0"
+		
+		Const DEFAULT_FUSIONLOGPATH = "C:\fusionlogs"
+		Const REG_LOGPATH = "HKLM\SOFTWARE\Microsoft\Fusion\LogPath"
+		Const REG_LOGFAILURES = "HKLM\SOFTWARE\Microsoft\Fusion\LogFailures"
+		Const REG_FORCELOG = "HKLM\SOFTWARE\Microsoft\Fusion\ForceLog"
+		Const REG_RESOURCEBINDS = "HKLM\SOFTWARE\Microsoft\Fusion\LogResourceBinds"
+
+
+		'============================================================================
+		'PRIMARY CODE
+		'============================================================================
+		On Error Resume Next
+
+		WScript.echo SCRIPTNAME & " v" & VERSION & vbCrLf
+		
+		'Parse arguments
+		Dim argsSpecified
+		Dim argsEnable, argsDisable, argsAll, argsLogPath
+		
+		argsEnable = WScript.Arguments.Named.Exists("enable")
+		argsDisable = WScript.Arguments.Named.Exists("disable")
+		argsAll = WScript.Arguments.Named.Exists("all")
+		If(WScript.Arguments.Named.Exists("logpath"))Then
+			argsLogPath = WScript.Arguments.Named.Item("logpath")
+		End If
+		
+		'Validate arguments
+		If(not argsEnable and not argsDisable)Then
+			' Must specify either enable or disable
+			WScript.Echo "*** You must specify enable or disable."
+			WScript.Arguments.ShowUsage
+			WScript.Quit
+		End If
+		
+		If(argsEnable and argsDisable)Then
+			' Can't enable and disable at the same time
+			WScript.Echo "*** You must specify EITHER enable OR disable; not both."
+			WScript.Arguments.ShowUsage
+			WScript.Quit
+		End If
+		
+		If(argsDisable and argsAll)Then
+			'all is only valid with enable
+			WScript.Echo "*** Argument 'all' is only valid with 'enable'."
+			WScript.Arguments.ShowUsage
+			WScript.Quit
+		End If
+		
+		If(argsDisable and WScript.Arguments.Named.Exists("logpath"))Then
+			'logpath is only valid with enable
+			WScript.Echo "*** Argument 'logpath' is only valid with 'enable'."
+			WScript.Arguments.ShowUsage
+			WScript.Quit
+		End If
+		
+		If(argsLogPath = "" and WScript.Arguments.Named.Exists("logpath"))Then
+			'If logpath is specified, must put a value
+			WScript.Echo "*** Argument 'logpath' must have a value if specified."
+			WScript.Arguments.ShowUsage
+			WScript.Quit
+		End If
+		
+		
+		' Output settings
+		If(argsEnable)Then
+			If(argsAll)Then
+				LogMessage "Action: Enable Custom Logging - Failure and Success", 0
+			Else
+				LogMessage "Action: Enable Custom Logging - Failure Only", 0
+			End If
+			If(argsLogPath <> "")Then
+				LogMessage "LogPath: " & argsLogPath, 0
+			End If
+		Else
+			LogMessage "Action: Disable Custom Logging", 0
+		End If
+		
+		
+		' Update settings
+		Dim logFolder, logFolderObj, regVal
+		If(argsEnable)Then
+			' Enable settings
+			' Create a log folder (default: C:\fusionlogs)
+			If(argsLogPath = "")Then
+				logFolder = DEFAULT_FUSIONLOGPATH
+			Else
+				logFolder = argsLogPath
+			End If
+			
+			If(FolderExists(logFolder))Then
+				' The folder already exists; since we're deleting it when we disable
+				' settings, we don't want to use a pre-existing folder.
+				LogMessage "Folder " & logFolder & " exists.  Custom log folder must not already exist.", 1
+				WScript.Quit(0)
+			End If
+			
+			Set logFolderObj = fso.CreateFolder(logFolder)
+			If Err.Number <> 0 Then
+				LogMessage "Unable to create log folder" & logFolder, 1
+				WScript.Quit(-1)
+			End If
+			Err.Clear
+			LogMessage "Created log folder " & logFolderObj.Path, 0
+
+
+			' Add HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogPath and set it to the log folder path.
+			SetRegKey REG_LOGPATH, logFolderObj.Path, "REG_SZ"
+			regVal = GetRegKey(REG_LOGPATH)
+			If(regVal <> logFolderObj.Path)Then
+				LogMessage "Unable to write registry key " & REG_LOGPATH, 1
+				WScript.Quit(-1)
+			End If
+			LogMessage "Wrote to " & REG_LOGPATH, 0
+			
+			' Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogFailures to 1
+			SetRegKey REG_LOGFAILURES, 1, "REG_DWORD"
+			regVal = GetRegKey(REG_LOGFAILURES)
+			If(regVal <> 1)Then
+				LogMessage "Unable to write registry key " & REG_LOGFAILURES, 1
+				WScript.Quit(-1)
+			End If
+			LogMessage "Wrote to " & REG_LOGFAILURES, 0
+			
+			If(argsAll)Then
+				' Optionally set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\ForceLog to 1
+				SetRegKey REG_FORCELOG, 1, "REG_DWORD"
+				regVal = GetRegKey(REG_FORCELOG)
+				If(regVal <> 1)Then
+					LogMessage "Unable to write registry key " & REG_FORCELOG, 1
+					WScript.Quit(-1)
+				End If
+				LogMessage "Wrote to " & REG_FORCELOG, 0
+
+				' Optionally set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogResourceBinds to 1
+				SetRegKey REG_RESOURCEBINDS, 1, "REG_DWORD"
+				regVal = GetRegKey(REG_RESOURCEBINDS)
+				If(regVal <> 1)Then
+					LogMessage "Unable to write registry key " & REG_RESOURCEBINDS, 1
+					WScript.Quit(-1)
+				End If
+				LogMessage "Wrote to " & REG_RESOURCEBINDS, 0
+			End If
+		Else
+			' Disable settings
+			logFolder = GetRegKey(REG_LOGPATH)
+			If(logFolder = "")Then
+				LogMessage "Unable to read registry key " & REG_LOGPATH, 1
+				WScript.Quit(-1)
+			End If
+			
+			If(FolderExists(logFolder))Then
+				' The folder exists; delete it and its contents
+				fso.DeleteFolder logFolder, true
+				If Err.Number <> 0 Then
+					LogMessage "Unable to delete log folder" & logFolder, 1
+					WScript.Quit(-1)
+				End If
+				Err.Clear
+				LogMessage "Deleted log folder " & logFolder, 0
+			End If
+			
+			' Delete HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogPath
+			If(DeleteRegKey(REG_LOGPATH))Then
+				LogMessage "Deleted registry key " & REG_LOGPATH, 0
+			Else
+				LogMessage "Unable to delete registry key " & REG_LOGPATH, 1
+				WScript.Quit(-1)
+			End If
+			
+			' Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogFailures to 0
+			SetRegKey REG_LOGFAILURES, 0, "REG_DWORD"
+			regVal = GetRegKey(REG_LOGFAILURES)
+			If(regVal <> 0)Then
+				LogMessage "Unable to write registry key " & REG_LOGFAILURES, 1
+				WScript.Quit(-1)
+			End If
+			LogMessage "Wrote to " & REG_LOGFAILURES, 0
+			
+			' Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\ForceLog to 0
+			SetRegKey REG_FORCELOG, 0, "REG_DWORD"
+			regVal = GetRegKey(REG_FORCELOG)
+			If(regVal <> 0)Then
+				LogMessage "Unable to write registry key " & REG_FORCELOG, 1
+				WScript.Quit(-1)
+			End If
+			LogMessage "Wrote to " & REG_FORCELOG, 0
+
+			' Set HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Fusion\LogResourceBinds to 0
+			SetRegKey REG_RESOURCEBINDS, 0, "REG_DWORD"
+			regVal = GetRegKey(REG_RESOURCEBINDS)
+			If(regVal <> 0)Then
+				LogMessage "Unable to write registry key " & REG_RESOURCEBINDS, 1
+				WScript.Quit(-1)
+			End If
+			LogMessage "Wrote to " & REG_RESOURCEBINDS, 0
+		End If
+
+		LogMessage "Log settings update COMPLETE.  You must reset IIS for changes to take effect in ASP.NET apps.", 0
+
+		On Error Goto 0
+		Wscript.Quit(0)
+
+
+		'============================================================================
+		' CreateNewObject
+		'
+		' Creates a new object, given a type, and performs requisite error checking.
+		' Exits the program if the object can't be created.
+		'
+		Function CreateNewObject(objType)
+			On Error Resume Next
+
+			'Create a new object
+			Dim obj
+			Set obj = WScript.CreateObject(objType)
+			If Err.Number <> 0 Then
+				LogMessage "Unable to create " & objType, 1
+				WScript.Quit(-1)
+			End If
+			Err.Clear
+
+			Set CreateNewObject = obj
+
+			On Error Goto 0
+		End Function
+
+
+		'============================================================================
+		' FolderExists
+		'
+		' Returns a Boolean based on whether a folder exists or not
+		'
+		Function FolderExists(foldername)
+			On Error Resume Next
+
+			'Create a FileSystemObject object
+			Dim fso
+			Set fso = CreateNewObject("Scripting.FileSystemObject")
+
+			'Check for the folder
+			FolderExists = false
+			FolderExists = fso.FolderExists(foldername)
+
+			Set fso = Nothing
+
+			On Error Goto 0
+		End Function
+
+
+		'============================================================================
+		' DeleteRegKey
+		'
+		' Deletes a given registry key
+		' Returns true if the delete was successful, false otherwise
+		'
+		Function DeleteRegKey(regkey_name)
+			On Error Resume Next
+
+			'Create a shell object
+			Dim wshell
+			Set wshell = CreateNewObject("WScript.Shell")
+
+			'Write the regkey
+			wshell.RegDelete regkey_name
+			If Err.Number <> 0 Then
+				'Something else went wrong
+				LogMessage "Unable to delete key " & regkey_name, 1
+				DeleteRegKey = false
+			Else
+				DeleteRegKey = true
+			End If
+			Err.Clear
+
+			Set wshell = Nothing
+
+			On Error Goto 0
+		End Function
+
+
+		'============================================================================
+		' SetRegKey
+		'
+		' Sets the value for a given registry key
+		'
+		Sub SetRegKey(regkey_name, regkey_value, regkey_type)
+			On Error Resume Next
+
+			'Create a shell object
+			Dim wshell
+			Set wshell = CreateNewObject("WScript.Shell")
+
+			'Write the regkey
+			wshell.RegWrite regkey_name, regkey_value, regkey_type
+			If Err.Number <> 0 Then
+				'Something else went wrong
+				LogMessage "Unable to write key " & regkey_name, 1
+			End If
+			Err.Clear
+
+			Set wshell = Nothing
+
+			On Error Goto 0
+		End Sub
+
+
+		'============================================================================
+		' GetRegKey
+		'
+		' Retrieves the value for a given registry key
+		'
+		Function GetRegKey(regkey_name)
+			On Error Resume Next
+
+			'Create a shell object
+			Dim wshell
+			Set wshell = CreateNewObject("WScript.Shell")
+
+			'Read the regkey
+			Dim val
+			val = wshell.RegRead(regkey_name)
+			If Err.Number <> 0 Then
+				'Either we don't have permission to read the key or the key doesn't exist.
+				' If the key doesn't exist, it's error -2147024894
+				If Err.Number = -2147024894 Then
+					'The key doesn't exist
+					val=""
+				Else
+					'Something else went wrong
+					LogMessage "Unable to read key " & regkey_name, 1
+					val=""
+				End If
+			End If
+			Err.Clear
+
+			Set wshell = Nothing
+
+			GetRegKey = val
+			On Error Goto 0
+		End Function
+
+
+		'============================================================================
+		' LogMessage
+		'
+		' Writes a message to the event log
+		'
+		' msgType:
+		'   0 = Info
+		'   1 = Error
+		'   2 = Warning
+		Sub LogMessage(msgBody, msgType)
+			On Error Resume Next
+
+			'Create a shell object
+			Dim wshell
+			Set wshell = WScript.CreateObject("WScript.Shell")
+			If Err.Number <> 0 Then
+				WScript.Quit(-1)
+			End If
+			Err.Clear
+
+			'Figure out the error type
+			Dim msgTypeFull
+			If(msgType = 0) Then
+				msgTypeFull = "INFO"
+			ElseIf(msgType = 1) Then
+				msgTypeFull = "ERROR"
+			ElseIf(msgType = 2) Then
+				msgTypeFull = "WARNING"
+			End If
+
+			msgBody = WScript.ScriptName & " -- " & msgTypeFull & ": " & msgBody
+			wscript.echo msgbody
+
+			'Log the message
+			wshell.LogEvent msgType, msgBody
+
+			'Cleanup
+			Set wshell = Nothing
+
+			On Error Goto 0
+		End Sub
+
+		]]>
+		</script>
+	</job>
+</package>

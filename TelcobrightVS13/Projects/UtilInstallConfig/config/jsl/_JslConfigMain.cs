@@ -22,19 +22,18 @@ namespace InstallConfig
     public partial class JslAbstractConfigGenerator:AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
-        public override int IdOperator { get; set; }
-        public override string CustomerName { get; set; }
-        public override string DatabaseName { get; set; }
-
+        public override int IdOperator { get; set; } = 1;
+        public override string CustomerName { get; set; } = "Jibondhara Solutions Ltd.";
+        public override string DatabaseName { get; set; } = "jsl";
         public JslAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
                     idCustomer = 7,
-                    CustomerName = "Jibondhara Solutions Ltd.",
+                    CustomerName = this.CustomerName,
                     idOperatorType = 2,
-                    databasename = "jsl",
+                    databasename = this.DatabaseName,
                     databasetype = "mysql",
                     user = "root",
                     pass = null,
@@ -72,7 +71,7 @@ namespace InstallConfig
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
-                DescendingOrderWhileListingFiles = false,
+                DescendingOrderWhileListingFiles = true,
                 DescendingOrderWhileProcessingListedFiles = false,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
@@ -82,12 +81,13 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = true,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
+                // FileSplitSetting = null,
                 FileSplitSetting = new FileSplitSetting()
                 {
                     FileSplitType = "byte",
                     BytesPerRecord = 559,
                     MaxRecordsInSingleFile = 30000,
-                    SplitFileIfSizeBiggerThanMbyte = 559 * 70000//559*30000
+                    SplitFileIfSizeBiggerThanMbyte =  559 * 70000//559*30000
                 },
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
                 {
@@ -219,9 +219,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading= 1500,
                     DecodingSpanCount= 100,
                     SkipAutoCreateJob= 1,
-                    SkipCdrListed= 1,
+                    SkipCdrListed= 0,
                     SkipCdrReceived= 1,
-                    SkipCdrDecoded= 1,
+                    SkipCdrDecoded= 0,
                     SkipCdrBackedup= 1,
                     KeepDecodedCDR= 1,
                     KeepReceivedCdrServer= 1,
@@ -239,11 +239,11 @@ namespace InstallConfig
                 {
                     idSwitch= 18,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 30,
+                    idcdrformat= 270,
                     idMediationRule= 2,
                     SwitchName= "JslcataleyaDhk",
                     CDRPrefix= "esdr",
-                    FileExtension= ".txt",
+                    FileExtension= ".gz",
                     Description= null,
                     SourceFileLocations= "Vault.JslcataleyaDhk",
                     BackupFileLocations= null,

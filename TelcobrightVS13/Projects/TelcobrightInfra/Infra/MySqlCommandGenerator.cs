@@ -5,6 +5,10 @@ namespace TelcobrightInfra
 {
     public class MySqlCommandGenerator
     {
+        public virtual string getDropUsers(MySqlUser user, string ipAddr)
+        {
+            return "DROP USER IF EXISTS " + user.Username + "@" + ipAddr + ";";
+        }
         public virtual string getCreateUsers(MySqlUser user, string ipAddr)
         {
             return "CREATE USER IF NOT EXISTS " + user.Username + "@" +ipAddr + " IDENTIFIED WITH mysql_native_password BY '{"+ user.Password + "}';";
@@ -25,6 +29,7 @@ namespace TelcobrightInfra
         public virtual List<string> createMySqlUserTelcobrightStyle(MySqlUser user)
         {
             List<string> lines = new List<string>();
+            lines.AddRange(user.HostnameOrIpAddresses.Select(ip => this.getDropUsers(user, ip)));
             lines.AddRange(user.HostnameOrIpAddresses.Select(ip => this.getCreateUsers(user, ip)));
             lines.AddRange(user.HostnameOrIpAddresses.Select(ip => this.getAlterUsers(user, ip)));
             lines.AddRange(user.HostnameOrIpAddresses.SelectMany(ip => this.getGrantPrivileges(user, ip)));

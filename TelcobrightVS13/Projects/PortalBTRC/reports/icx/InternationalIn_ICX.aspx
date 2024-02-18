@@ -2,7 +2,6 @@
     CodeBehind="InternationalIn_ICX.aspx.cs" Inherits="DefaultRptIntlInIcx" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <%@ Import Namespace="MediationModel" %>
-<%@ Import Namespace="TelcobrightMediation" %>
 <%@ Import Namespace="PortalApp" %>
 
 
@@ -118,6 +117,7 @@
                     }
 
                 }
+
 
                 DropDownListPartner_OnSelectedIndexChanged(DropDownListPartner, EventArgs.Empty);
                 DropDownListIgw_OnSelectedIndexChanged(DropDownListIgw, EventArgs.Empty);
@@ -348,12 +348,13 @@
                        
         <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
                           OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
+                          AutoPostBack="True"
                           Enabled="True">
         </asp:DropDownList>
 
         View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" Enabled="False" />
                        
         <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
         </asp:DropDownList>
@@ -651,11 +652,11 @@
                         <asp:BoundField DataField="customercost"
                             DataFormatString="{0:F2}"
                             HeaderText="Revenue (USD)"
-                            SortExpression="customercost" />
+                            SortExpression="customercost" Visible="False" />
                         <asp:BoundField DataField="tax1"
                             DataFormatString="{0:F2}"
                             HeaderText="BTRC Revenue Share"
-                            SortExpression="tax1" />
+                            SortExpression="tax1" Visible="False"/>
                         <asp:BoundField DataField="igwrevenuein"
                             DataFormatString="{0:F2}"
                             HeaderText="IGW $"

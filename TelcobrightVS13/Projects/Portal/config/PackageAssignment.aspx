@@ -3,7 +3,7 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="server=127.0.0.1;user id=root;password=Takay1#$ane;persistsecurityinfo=True;database=tpny" ProviderName="MySql.Data.MySqlClient" SelectCommand="select * from datedassignment"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="server=127.0.0.1;user id=root;password=Takay1#$ane;persistsecurityinfo=True;inputbase=tpny" ProviderName="MySql.Data.MySqlClient" SelectCommand="select * from datedassignment"></asp:SqlDataSource>
     <asp:FormView ID="FormView1" runat="server" DataSourceID="SqlDataSource1" AllowPaging="True" CellPadding="4" DataKeyNames="id" ForeColor="#333333" OnItemInserting="FormView1_ItemInserting">
         <EditItemTemplate>
             id:

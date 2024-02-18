@@ -15,7 +15,7 @@ namespace TelcobrightMediation.Cdr
 {
     public abstract class AbstractCdrJobPreProcessor
     {
-        public int RawCount { get; }
+        public int RawCount { get; set; }
         protected CdrCollectorInputData CdrCollectorInputData { get; }
         protected PartnerEntities Context => this.CdrCollectorInputData.CdrJobInputData.Context;
         public BlockingCollection<cdr> NonPartialCdrs { get; } = new BlockingCollection<cdr>();
@@ -104,14 +104,29 @@ namespace TelcobrightMediation.Cdr
                 }
             });
         }
-        public static List<string[]> ChangeDuplicateBillIds(List<string[]> txtRows)
+        public static List<string[]> ChangeDuplicateBillIdsForPartialCdrs(List<string[]> txtRows)
         {
             var duplicateBillIds = txtRows.GroupBy(c => c[Fn.UniqueBillId]).Where(g => g.Count() > 1)
                                             .Select(g => g.Key).ToList();
             foreach (string[] dupRow in txtRows.Where(row => duplicateBillIds.Contains(row[Fn.UniqueBillId])))
             {
-                dupRow[Fn.UniqueBillId] = "d" + dupRow[Fn.UniqueBillId] + "_" + rndSuffixForDupCorrection.Next();
+                dupRow[Fn.UniqueBillId] = "d_" + dupRow[Fn.UniqueBillId] + "_" + rndSuffixForDupCorrection.Next();
                 dupRow[Fn.Partialflag] = "2";
+            }
+            return txtRows;
+        }
+        public static List<string[]> ChangeDuplicateBillIdsForNonPartialCdrs(List<string[]> txtRows)
+        {
+            List<string[]> rowsWithDuplicateBillIds = txtRows.GroupBy(c => c[Fn.UniqueBillId])
+                .Where(g => g.Count() > 1).Select(g => new
+                {
+                    BillId = g.Key,
+                    Rows = g.ToList()
+                }).SelectMany(a => a.Rows).ToList();
+
+            foreach (var row in rowsWithDuplicateBillIds)
+            {
+                row[Fn.UniqueBillId] = "d_" + row[Fn.UniqueBillId] + "_" + rndSuffixForDupCorrection.Next();
             }
             return txtRows;
         }

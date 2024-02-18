@@ -22,20 +22,9 @@ namespace InstallConfig
     {
         public override DatabaseSetting GetDatabaseConfigs()
         {
-            //var databaseSetting= new DatabaseSetting()
-            //{
-            //    ServerName = "localhost",
-            //    DatabaseName = this.Tbc.Telcobrightpartner.databasename,
-            //    AdminPassword = "",
-            //    AdminUserName = "root",
-            //    DatabaseEngine = "innodb",
-            //    StorageEngineForPartitionedTables = "tokudb",
-            //    PartitionStartDate = new DateTime(2023, 1, 1),
-            //    PartitionLenInDays = 1,
-            //    ReadOnlyUserName = "dbreader",
-            //    ReadOnlyPassword = "Takay1takaane"
-            //};
-            var databaseSetting = CasConfigHelper.getCommonDatabaseSetting(this.Tbc.Telcobrightpartner.databasename);
+            
+            var databaseSetting = CasDockerDbHelper.getCommonDatabaseSetting(this.Tbc.Telcobrightpartner.databasename);
+
             Dictionary <string, List<string>> masterConfig = new Dictionary<string, List<string>>()
             {
                 {

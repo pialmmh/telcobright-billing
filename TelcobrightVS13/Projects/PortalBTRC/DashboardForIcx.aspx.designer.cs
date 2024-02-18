@@ -21,13 +21,40 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.WebControls.Label lblCustomerDisplayName;
     
     /// <summary>
-    /// ScriptManager1 control.
+    /// Label11 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.ScriptManager ScriptManager1;
+    protected global::System.Web.UI.WebControls.Label Label11;
+    
+    /// <summary>
+    /// GridView11 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.GridView GridView11;
+    
+    /// <summary>
+    /// Msg control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Msg;
+    
+    /// <summary>
+    /// ToolkitScriptManager1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
     
     /// <summary>
     /// UpdatePanel3 control.
@@ -120,13 +147,22 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.UpdatePanel UpdatePanel2;
     
     /// <summary>
-    /// HyperLink1 control.
+    /// Label2 control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.HyperLink HyperLink1;
+    protected global::System.Web.UI.WebControls.Label Label2;
+    
+    /// <summary>
+    /// NoDataLabel control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label NoDataLabel;
     
     /// <summary>
     /// GridViewCompleted control.
@@ -138,13 +174,121 @@ public partial class DashboardAspxForIcx {
     protected global::System.Web.UI.WebControls.GridView GridViewCompleted;
     
     /// <summary>
-    /// SqlDataSource1 control.
+    /// PreviousButton control.
     /// </summary>
     /// <remarks>
     /// Auto-generated field.
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
-    protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
+    protected global::System.Web.UI.WebControls.Button PreviousButton;
+    
+    /// <summary>
+    /// NextButton control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button NextButton;
+    
+    /// <summary>
+    /// Label7 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label7;
+    
+    /// <summary>
+    /// Label8 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label8;
+    
+    /// <summary>
+    /// ZiporCompressedFileStatus control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.GridView ZiporCompressedFileStatus;
+    
+    /// <summary>
+    /// Button2 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button Button2;
+    
+    /// <summary>
+    /// Button3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button Button3;
+    
+    /// <summary>
+    /// Label5 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label5;
+    
+    /// <summary>
+    /// DomesticCallForPreviousSevenDays control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.DataVisualization.Charting.Chart DomesticCallForPreviousSevenDays;
+    
+    /// <summary>
+    /// Label1 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label1;
+    
+    /// <summary>
+    /// InternationalIncommimng control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalIncommimng;
+    
+    /// <summary>
+    /// Label3 control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Label3;
+    
+    /// <summary>
+    /// InternationalOutgoing control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.DataVisualization.Charting.Chart InternationalOutgoing;
     
     /// <summary>
     /// Timer2 control.

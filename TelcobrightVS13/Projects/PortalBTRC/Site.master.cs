@@ -7,8 +7,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using System.Collections;
-using System.Drawing;
-using ClosedXML.Excel;
 using LibraryExtensions;
 using PortalApp;
 using MediationModel;
@@ -191,22 +189,23 @@ public partial class SiteMaster : System.Web.UI.MasterPage
                 }
             }
             //set home page link to dashboard if specified in portalsettings
-            
-            var x = (LinkButton)FindControl("LinkButtonHome");
-            if (!string.IsNullOrEmpty(tbc.PortalSettings.HomePageUrl))
-            {
 
-                x.PostBackUrl = tbc.PortalSettings.HomePageUrl;
-            }
-            //if (dbName=="btrc_cas")
+            var x = (LinkButton)FindControl("LinkButtonHome");
+            //if (!string.IsNullOrEmpty(tbc.PortalSettings.HomePageUrl))
             //{
             //    x.PostBackUrl = tbc.PortalSettings.HomePageUrl;
             //}
-            //else
-            //{
-            //    x.PostBackUrl = tbc.PortalSettings.HomePageUrlForIcx;
-            //}
+            if (dbName=="btrc_cas")
+            {
+                x.PostBackUrl = tbc.PortalSettings.HomePageUrl;
+            }
+            else
+            {
+                x.PostBackUrl = tbc.PortalSettings.HomePageUrlForIcx;
+            }
+
         }//if not postback
+       
     }
 
     public void AddNodesRecursivelyToDictionary(TreeNode thisNode, Dictionary<string, TreeNode> nodes)

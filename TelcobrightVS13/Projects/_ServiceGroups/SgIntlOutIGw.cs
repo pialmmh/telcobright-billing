@@ -111,7 +111,7 @@ namespace TelcobrightMediation
                 }
             }
         }
-        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary,CdrSetting cdrSetting)
         {
             newSummary.tup_matchedprefixcustomer = cdrExt.Cdr.MatchedPrefixY;
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;

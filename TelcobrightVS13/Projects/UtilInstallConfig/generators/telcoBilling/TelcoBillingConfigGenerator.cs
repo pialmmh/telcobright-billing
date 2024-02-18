@@ -93,24 +93,29 @@ namespace InstallConfig
                                                         this.Tbc.Telcobrightpartner.databasename))
                 {
                     Console.WriteLine();
-                    if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? Confirm again, will erase important tables. (Y/N) for " +
+                    if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? Confirm again, will erase important data. (Y/N) for " +
                                                         this.Tbc.Telcobrightpartner.databasename))
                     {
-                        Menu menu = new Menu(this.DdlScripts.Values.Select(s => s.RuleName),
-                            "select a ddl operation to run", "a");
-                        List<string> choices = menu.getChoices();
-                        foreach (string scriptName in choices)
+                        Console.WriteLine();
+                        if (ConsoleUtil.getConfirmationFromUser("Load ddl scripts? Confirm for the last time.\r\n This will erase important data. (Y/N) for " +
+                                                                this.Tbc.Telcobrightpartner.databasename))
                         {
-                            IScript script = this.DdlScripts[scriptName];
-                            string sql = script.GetScript(null);
-                            Console.WriteLine("Loading ddl script:" + script.RuleName);
-                            sql = $@"SET FOREIGN_KEY_CHECKS = 0;
+                            Menu menu = new Menu(this.DdlScripts.Values.Select(s => s.RuleName),
+                                "select a ddl operation to run", "a");
+                            List<string> choices = menu.getChoices();
+                            foreach (string scriptName in choices)
+                            {
+                                IScript script = this.DdlScripts[scriptName];
+                                string sql = script.GetScript(con);
+                                if(sql=="")continue;
+                                Console.WriteLine("Loading ddl script:" + script.RuleName);
+                                sql = $@"SET FOREIGN_KEY_CHECKS = 0;
                                     {sql}
                                   SET FOREIGN_KEY_CHECKS = 1;";
-                            dbWriter.executeScript(sql);
+                                dbWriter.executeScript(sql);
+                            }
+                            Console.WriteLine("Ddl scripts loaded successfully for " + Tbc.Telcobrightpartner.databasename);
                         }
-
-                        Console.WriteLine("Ddl scripts loaded successfully for " + Tbc.Telcobrightpartner.databasename);
                     }
                 }
                 else
@@ -171,25 +176,30 @@ namespace InstallConfig
             WriteBillingRules(dbSettings);
 
             NameValueCollection configFiles = (NameValueCollection) ConfigurationManager.GetSection("appSettings");
-            foreach (string key in configFiles)
+            List<string> configFileNames = new List<string>
             {
-                if (key.StartsWith("conf"))
-                {
-                    WriteAppAndWebConfigFiles(configFiles[key].Replace("/", Path.DirectorySeparatorChar.ToString()),
-                        dbSettings, tbc.PortalSettings);
-                }
+                $"{Path.Combine(new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath(),"web.config")} ",
+                $"{Path.Combine(new UpwordPathFinder<DirectoryInfo>("WS_Topshelf_Quartz").FindAndGetFullPath(),"app.config")} ",
+                $"{Path.Combine(new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath(),"RateTaskSerializer","app.config")} ",
+            };
+
+            foreach (string confFileName in configFileNames)
+            {
+                WriteAppAndWebConfigFiles(confFileName.Replace("/", Path.DirectorySeparatorChar.ToString()),
+                    dbSettings, tbc.PortalSettings);
             }
             string operatorShortName = tbc.DatabaseSetting.DatabaseName;
             //write config to operator's folder in util directory
             string configRoot = tbc.DirectorySettings.ConfigRoot;
             string targetDir =
                 configPathHelper.GetOperatorWiseConfigDirInUtil(operatorShortName, configRoot);
-            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            FileAndPathHelperMutable pathHelper= new FileAndPathHelperMutable();
+            pathHelper.DeleteFileContaining(targetDir, "*.conf");
             SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetOperatorWiseTargetFileNameInUtil(operatorShortName,configRoot));
             //write config for windows service
-            targetDir = configPathHelper.GetTopShelfConfigDir();
-             SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
-                eraseAllPrevFilesFromConfigDir: true);
+            //targetDir = configPathHelper.GetTopShelfConfigDir();
+            // SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTemplateConfigFileName("telcobright.conf"),
+            //    eraseAllPrevFilesFromConfigDir: true);
             //write config for portal
             targetDir = configPathHelper.GetPortalBinPath();
             //SerializeConfigAndWriteJsonFile(tbc, configPathHelper.GetTargetFileNameForPortal(operatorShortName));
@@ -198,8 +208,23 @@ namespace InstallConfig
 
             if (operatorShortName == "btrc_cas")
             {
-                portalConfigFilename = portalConfigFilename.Replace("portal", "portalBTRC");
+                //portalConfigFilename = portalConfigFilename.Replace("Portal", "BTRC");
                 SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);//
+
+                ConfigPathHelper configPathHelper2 = new ConfigPathHelper(
+                    "WS_Topshelf_Quartz",
+                    "portalBTRC",
+                    "UtilInstallConfig",
+                    "generators", "");
+                string prtalBTRCBinPAth = configPathHelper.GetPortalBtrcBinPath() + @"\text.json";
+                var settings = new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto
+                };
+
+                string tbcAsStr = JsonConvert.SerializeObject(CasDockerDbHelper.IcxVsdbHostNames, Formatting.Indented, settings);
+                File.WriteAllText(prtalBTRCBinPAth, tbcAsStr);
+
             }
 
             Console.WriteLine("Successfully written configuration template for " + operatorShortName);
@@ -236,6 +261,11 @@ namespace InstallConfig
 
         static void WriteAppAndWebConfigFiles(string fileName, DatabaseSetting dbSettings, PortalSettings portalSettings)
         {
+
+            if (dbSettings.DatabaseName == "btrc_cas")
+            {
+                fileName = fileName.Replace("portal", "PortalBTRC");
+            }
             List<string> fileLines = File.ReadAllLines(fileName).ToList();
             string fileNameOnly = Path.GetFileName(fileName);
             string appOrWebConfigFileName = fileNameOnly.ToLower().StartsWith("web") ? "web" : "app";
@@ -290,7 +320,8 @@ namespace InstallConfig
 
         static string GetConnectionStrinsgFromUtilConfig(string appOrWebConfigFileName, DatabaseSetting dbSettings)
         {
-            List<string> fileLines = File.ReadAllLines("..\\..\\app.config").ToList();
+            //List<string> fileLines = File.ReadAllLines("..\\..\\app.config").ToList();
+            List<string> fileLines = File.ReadAllLines(Path.Combine(new UpwordPathFinder<DirectoryInfo>("UtilInstallConfig").FindAndGetFullPath(), "app.config")).ToList();
             List<string> newFileLines = new List<string>();
             bool insideConnectionStrings = false;
 
@@ -369,8 +400,8 @@ namespace InstallConfig
 
 
             string constr =
-                "server=" + serverName + ";User Id=" + databaseSetting.AdminUserName +
-                ";password=" + databaseSetting.AdminPassword +
+                "server=" + serverName + ";User Id=" + databaseSetting.WriteUserNameForApplication +
+                ";password=" + databaseSetting.WritePasswordForApplication +
                 ";Persist Security Info=True;database=" + databaseSetting.DatabaseName;
 
             using (MySqlConnection con = new MySqlConnection(constr))

@@ -16,7 +16,7 @@ namespace TelcobrightMediation.Cdr
         private List<CdrExt> NewSuccessfulCdrExts { get; }
         private ConcurrentDictionary<string, CdrExt> OldSuccessfulCdrExts { get; }
         private BlockingCollection<acc_transaction> IncrementalTransactions { get; set; }
-
+        private Dictionary<long, account> Accounts { get; set; }
         public IncrementalTransactionCreator(CdrJob cdrJob)
         {
             this.CdrProcessor = cdrJob.CdrProcessor;
@@ -24,7 +24,7 @@ namespace TelcobrightMediation.Cdr
             this.CdrJobContext = cdrJob.CdrJobContext;
             this.NewSuccessfulCdrExts = this.CdrProcessor?.CollectionResult.ProcessedCdrExts
                                             .Where(c => c.Cdr.ChargingStatus == 1).ToList() ?? new List<CdrExt>();
-
+            this.Accounts = this.CdrProcessor?.CdrJobContext.AccountingContext.IdWiseAccounts;
             this.OldSuccessfulCdrExts = new ConcurrentDictionary<string, CdrExt>();
             this.CdrEraser?.CollectionResult.ConcurrentCdrExts.Values.Where(c => c.Cdr.ChargingStatus == 1).ToList()
                 .ForEach(c =>
@@ -112,14 +112,44 @@ namespace TelcobrightMediation.Cdr
                     foreach (KeyValuePair<long, AccWiseTransactionContainer> kv in newCdrExt
                         .AccWiseTransactionContainers)
                     {
-                        long accountId = kv.Key;
+                        long newAccountId = kv.Key;
                         AccWiseTransactionContainer newTransactionContainer = kv.Value;
-                        AccWiseTransactionContainer oldTransactionContainer = null;
-                        if (oldCdrExt.AccWiseTransactionContainers.TryGetValue(accountId,
-                                out oldTransactionContainer) == false)
+                        account newAccount = null;
+                        if (this.Accounts.TryGetValue(newAccountId, out newAccount) == false)
                         {
-                            throw new Exception("OldTransaction container not found in old CdrExt instance.");
+                            throw new Exception($"Could not find account for accountId:{newAccountId}");
                         }
+                        int serviceGroup = newAccount.serviceGroup;
+                        int serviceFamily = newAccount.serviceFamily;
+                        int product = newAccount.product;
+                        AccWiseTransactionContainer oldTransactionContainer = null;
+                        foreach (var kvOld in oldCdrExt.AccWiseTransactionContainers)
+                        {
+                            long oldAccountId = kvOld.Key;
+                            account oldAccount = null;
+                            if (this.Accounts.TryGetValue(oldAccountId, out oldAccount) == false)
+                            {
+                                throw new Exception($"Could not find account for accountId:{oldAccountId}");
+                            }
+                            if (serviceGroup==oldAccount.serviceGroup && serviceFamily==oldAccount.serviceFamily 
+                                && product== oldAccount.product)
+                            {
+                                oldTransactionContainer = kvOld.Value;
+                                break;
+                            }
+                        }
+                        if (oldTransactionContainer==null)
+                        {
+                            throw new Exception("Could not find old transactions in old cdrsexts.");
+                        }
+                        //if (oldCdrExt.AccWiseTransactionContainers.TryGetValue(newAccountId,
+                        //        out oldTransactionContainer) == false)
+                        //{
+                        //    throw new Exception("OldTransaction container not found in old CdrExt instance.");
+                        //}
+
+                        //int serviceGroup= newTransactionContainer.NewTransaction.
+
                         var incTrans = newTransactionContainer.NewTransaction.Clone();
                         incTrans.amount =
                             newTransactionContainer.NewTransaction.amount -

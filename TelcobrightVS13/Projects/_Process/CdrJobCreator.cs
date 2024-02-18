@@ -2,16 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using TelcobrightFileOperations;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using LibraryExtensions;
+using LibraryExtensions.LibraryExtensions;
 using MediationModel;
-using MySql.Data.MySqlClient;
 using Quartz;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
@@ -19,6 +16,7 @@ using TelcobrightMediation.Config;
 namespace Process
 {
 
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class CdrJobCreator : AbstractTelcobrightProcess
     {
@@ -33,150 +31,198 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            CdrSetting cdrSetting = tbc.CdrSetting;
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
+            Console.WriteLine($"CdrJobCreater {operatorName}");
             try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
+
+                int idOprator = context.telcobrightpartners
+                    .Where(c => c.databasename == tbc.Telcobrightpartner.databasename).Select(c => c.idCustomer)
+                    .First();
+                foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
                 {
-                    int idOprator = context.telcobrightpartners
-                        .Where(c => c.databasename == tbc.Telcobrightpartner.databasename).Select(c => c.idCustomer)
-                        .First();
-                       foreach (ne thisSwitch in context.nes.Where(c => c.idCustomer == idOprator).ToList())
+                    try
                     {
-                        try
+                        List<job> newJobCacheForWritingAtOnceToDB = new List<job>();
+                        if (thisSwitch.SkipCdrListed == 1) continue;
+                        Console.WriteLine($"Checking new cdr files for Switch {thisSwitch.SwitchName} in vault...");
+                        string vaultName = thisSwitch.SourceFileLocations;
+                        //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
+                        FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
+                        string vaultPath = fileLocation.StartingPath;
+                        DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(vaultPath, "temp"));
+                        if (Directory.Exists(tempDir.FullName) == false)
                         {
-                            List<job> newJobCacheForWritingAtOnceToDB = new List<job>();
-                            if (thisSwitch.SkipCdrListed == 1) continue;
-                            Console.WriteLine($"Checking new cdr files for Switch {thisSwitch.SwitchName} in vault...");
-                            string vaultName = thisSwitch.SourceFileLocations;
-                            //Vault vault = tbc.DirectorySettings.Vaults.First(c => c.Name == vaultName);
-                            FileLocation fileLocation = tbc.DirectorySettings.FileLocations[vaultName];
-                            string cdrPathLocal = fileLocation.StartingPath;
-                            //var fileNames = vault.GetFileListLocal()
-                            //var fileNames = Directory.GetFiles()
-                            //Dictionary<string, FileInfo> fileNames = new Dictionary<string, FileInfo>();
+                            Directory.CreateDirectory(tempDir.FullName);
+                        }
+                        new CompressedFileHelperForVault(new List<string>()).MoveToOriginalPath(tempDir);
+                        DirectoryLister dirlister = new DirectoryLister();
 
-                            //List<FileInfo> localFiles = this.LocalLocation.GetLocalFilesNonRecursive();
-                            DirectoryLister dirlister = new DirectoryLister();
-                            List<string> validFilePrefixes =
-                                thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
+                       VaultFileMover vaultFileMover = new VaultFileMover(new List<string> { thisSwitch.CDRPrefix}, thisSwitch.FileExtension, vaultPath);
+                       // vaultFileMover.moveFiles(vaultPath, vaultFileMover.AllFileInfos);
 
-                            List<FileInfo> fileInfos = dirlister.ListLocalDirectoryNonRecursive(cdrPathLocal)
-                                .Where(fInfo => {
-                                    if (thisSwitch.FileExtension == null)
-                                    {
-                                        return validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
-                                    }
-                                    return
-                                    validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) &&
-                                fInfo.Extension == thisSwitch.FileExtension
-                                    && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
-                                })
-                                    .ToList();
-                            int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
-                            fileInfos=fileInfos.Where(f =>
+                        if (cdrSetting.UnzipCompressedFiles == true)
+                        {
+                            List<string> extensions = new List<string> { ".zip", ".gz", ".tar.Z", ".rar", "7z", ".tgz" };
+                            List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath, extensions);
+
+                            if (zipFiles.Count > 0)
                             {
-                                DateTime currentTime = DateTime.Now;
-                                return (currentTime - f.CreationTime).TotalSeconds
-                                    > minDurationToSkip ;
-                            }).ToList();
-
-                            //take only those files whos size is not changing or not being written
-                            //bool[] constantSizeCheckResult= new bool[fileInfos.Count];
-                            //ParallelIterator<FileInfo,bool> parallelIterator= new ParallelIterator<FileInfo, bool>(fileInfos);
-                            //constantSizeCheckResult = parallelIterator.getOutput(fileInfo =>
-                            //    FileAndPathHelper.IsFileSizeConstantOverAPeriod(fileInfo,
-                            //        checkIntervalInSeconds: 1, noOfChecks: 3)).ToArray();
-                            //var templist= new List<FileInfo>();
-                            //for (var index = 0; index < fileInfos.Count; index++)
-                            //{
-                            //    var fileInfo = fileInfos[index];
-                            //    var sizeWasConstant = constantSizeCheckResult[index];
-                            //    if (sizeWasConstant)
-                            //    {
-                            //        templist.Add(fileInfo);
-                            //    }
-                            //    else
-                            //    {
-                            //        Console.WriteLine("Warning: File size varied during check before cdr job creation.");
-                            //    }
-                            //}
-                            //most of the files should be finished written by now, still...
-                            //double check if file is still being written, by trying exclusive f open
-                            var templist = fileInfos;
-                            fileInfos= new List<FileInfo>();
-                            foreach (var fileInfo in templist)
-                            {
-                                if (FileAndPathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                                Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
+                                foreach (FileInfo compressedFile in zipFiles)
                                 {
-                                    fileInfos.Add(fileInfo);
+                                    if (new FileAndPathHelperMutable().IsFileLockedOrBeingWritten(compressedFile))
+                                        continue;
+
+                                    CompressedFileHelperForVault compressedFileHelper =
+                                        new CompressedFileHelperForVault(new List<string> { thisSwitch.FileExtension }, vaultPath, tempDir.FullName);
+                                    compressedFileHelper.ExtractToTempDir(compressedFile.FullName, context.Database.Connection.ConnectionString);
+
+                                    //code reaching here means extraction successful, exceptions will not hit this and file will be kept
+                                    compressedFile
+                                        .Delete();
+                                    compressedFileHelper.MoveToOriginalPath(tempDir);
                                 }
                             }
-                            //**************
-                            Dictionary<string, FileInfo> newJobNameVsFileInfos  = fileInfos.Select(f => // kv<jobName,fileName>
+                        }
+
+                        List<string> validFilePrefixes =
+                            thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
+
+                        List<FileInfo> fileInfos = dirlister.ListLocalDirectoryNonRecursive(vaultPath)
+                            .Where(fInfo =>
+                            {
+                                if (thisSwitch.FileExtension == null)
+                                {
+                                    return validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) &&
+                                           !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
+                                }
+                                return validFilePrefixes.Any(p => fInfo.Name.StartsWith(p)) &&
+                                       fInfo.Extension == thisSwitch.FileExtension
+                                       && !fInfo.Name.EndsWith(".tmp") && !fInfo.Name.Contains(".filepart");
+                            }).ToList();
+                        int minDurationToSkip = fileLocation.DurationSecToSkipVeryNewPossiblyIncompleteFiles;
+
+                        fileInfos = fileInfos.Where(f =>
+                        {
+                            DateTime currentTime = DateTime.Now;
+                            return (currentTime - f.CreationTime).TotalSeconds > minDurationToSkip;
+                        }).ToList();
+
+                        Console.WriteLine(
+                            $"Found {fileInfos.Count} cdr files in vault, excluding duplicates...");
+
+                        FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
+                        if (fileSplitSetting != null)
+                        {
+                            foreach (FileInfo file in fileInfos)
+                            {
+                                if (file.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
+                                {
+                                    SplitFileByByteLen(file, fileSplitSetting);
+                                }
+                            }
+                        }
+
+                        //most of the files should be finished written by now, still...
+                        Dictionary<string, FileInfo> newJobNameVsFileInfos = fileInfos
+                            .Select(f => // kv<jobName,fileName>
                                 new
                                 {
                                     jobName = f.Name,
                                     fileName = f
                                 }).ToDictionary(a => a.jobName, a => a.fileName);
-                            Dictionary<string, string> existingJobNames 
-                                = getExistingJobNames(context, newJobNameVsFileInfos, thisSwitch.idSwitch);
-
-                            fileInfos = new List<FileInfo>();
-                            foreach (KeyValuePair<string, FileInfo> kv in newJobNameVsFileInfos)
-                            {
-                                bool jobExists = existingJobNames.ContainsKey(kv.Key);
-                                if (jobExists == false)
-                                {
-                                    fileInfos.Add(kv.Value);
-                                }
-                            }
-                            //*************
-                            Console.WriteLine($"Found {fileInfos.Count} new files with no prev job, checking split history...");
-                            if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
-                                fileInfos = fileInfos.OrderByDescending(c => c.Name).ToList();
-                            foreach (FileInfo fileInfo in fileInfos)
-                            {
-                                FileSplitSetting fileSplitSetting = tbc.CdrSetting.FileSplitSetting;
-                                if (fileSplitSetting == null ||
-                                    fileInfo.Length <= fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
-                                {
-                                    job newJob = CreateSingleCdrJob(context, thisSwitch, fileInfo, fileInfo.Name);
-                                    newJobCacheForWritingAtOnceToDB.Add(newJob);
-                                    //Console.WriteLine("Found cdr file for switch " + thisSwitch.SwitchName + ": " + newJob.JobName);
-                                    if (tbc.CdrSetting.BatchSizeForCdrJobCreationCheckingExistence ==
-                                        newJobCacheForWritingAtOnceToDB.Count)
-                                    {
-                                        writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
-                                        newJobCacheForWritingAtOnceToDB = new List<job>();
-                                    }
-                                }
-                                else if (fileInfo.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
-                                {
-                                    SplitFileByByteLen(context, thisSwitch, fileInfo, fileSplitSetting);
-                                }
-                            }
-                            if(newJobCacheForWritingAtOnceToDB.Count>0)
-                                writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB);
-                        } //try
-                        catch (Exception e1)
+                      
+                        Dictionary<string, string> existingJobNames
+                            = getExistingJobNames(context, newJobNameVsFileInfos, thisSwitch.idSwitch);
+                        Dictionary<string, FileInfo> alreadyExistingJobs = new Dictionary<string, FileInfo>();
+                        fileInfos = new List<FileInfo>();
+                        foreach (KeyValuePair<string, FileInfo> kv in newJobNameVsFileInfos)
                         {
-                            Console.WriteLine(e1);
-                            ErrorWriter wr =
-                                new ErrorWriter(e1, "CdrJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",
-                                    operatorName);
-                        } //catch
-                    } //for each customerswitchinfo
-                }
+                            bool jobExists = existingJobNames.ContainsKey(kv.Key);
+                            if (jobExists == false)
+                            {
+                                fileInfos.Add(kv.Value);
+                            }
+                            else
+                            {
+                                alreadyExistingJobs.Add(kv.Key, kv.Value);
+                            }
+
+                        }
+
+                        if (tbc.CdrSetting.useCasStyleProcessing)
+                        {
+                            if ( tbc.CdrSetting.BackupSyncPairNames == null|| tbc.CdrSetting.BackupSyncPairNames.Any() == false)
+                            {
+                                List<FileInfo> fileInfosToDelete =
+                                    getCompletedJobNames(context, alreadyExistingJobs, thisSwitch.idSwitch);
+                                fileInfosToDelete.ForEach(f =>
+                                {
+                                    if (File.Exists(f.FullName))
+                                        f.Delete();
+                                });
+                            }
+                        }
+
+                        //*************
+                        Console.WriteLine($"Checking exclusive lock...");
+                        FileAndPathHelperMutable pathHelper = new FileAndPathHelperMutable();
+                        var templist = new List<FileInfo>();
+                        foreach (var fileInfo in fileInfos)
+                        {
+                            if (pathHelper.IsFileLockedOrBeingWritten(fileInfo) == false)
+                            {
+                                templist.Add(fileInfo);
+                            }
+                        }
+                        fileInfos = templist;
+                        //**************
+                        if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
+                            fileInfos = fileInfos.OrderByDescending(c => c.Name).ToList();
+                        foreach (FileInfo fileInfo in fileInfos)
+                        {
+                            if (fileSplitSetting == null ||
+                                fileInfo.Length <= fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
+                            {
+                                job newJob = CreateSingleCdrJob(context, thisSwitch, fileInfo, fileInfo.Name);
+                                newJobCacheForWritingAtOnceToDB.Add(newJob);
+                                //Console.WriteLine("Found cdr file for switch " + thisSwitch.SwitchName + ": " + newJob.JobName);
+                                if (tbc.CdrSetting.BatchSizeForCdrJobCreationCheckingExistence ==
+                                    newJobCacheForWritingAtOnceToDB.Count)
+                                {
+                                    writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB, existingJobNames.Count);
+                                    newJobCacheForWritingAtOnceToDB = new List<job>();
+                                }
+                            }
+
+                            //else if (fileInfo.Length > fileSplitSetting.SplitFileIfSizeBiggerThanMbyte)
+                            //{
+                            //    SplitFileByByteLen(context, thisSwitch, fileInfo, fileSplitSetting);
+                            //}
+                        }
+                        if (newJobCacheForWritingAtOnceToDB.Count > 0)
+                            writeJobs(context, thisSwitch, newJobCacheForWritingAtOnceToDB, existingJobNames.Count);
+                    } //try
+                    catch (Exception e1)
+                    {
+                        Console.WriteLine(e1);
+                        ErrorWriter.WriteError(e1, "CdrJobCreator/SwitchId:" + thisSwitch.idSwitch, null, "",
+                                operatorName, context);
+                    } //catch
+                } //for each customerswitchinfo
             }
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "CdrJobCreator", null, "", operatorName);
+                ErrorWriter.WriteError(e1, "CdrJobCreator", null, "", operatorName, context);
             }
         }
+
         private static Dictionary<string, string> getExistingJobNames(PartnerEntities context,
             Dictionary<string, FileInfo> newJobNameVsFileName, int idSwitch)
         {
@@ -193,26 +239,42 @@ namespace Process
             List<string> existingJobNames = segmenter
                 .ExecuteMethodInSegmentsWithRetval(200000, getExistingJobNamesInSegment)
                 .ToList();
+
             return existingJobNames.ToDictionary(n => n);
         }
-        private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB)
+
+        private static List<FileInfo> getCompletedJobNames(PartnerEntities context,
+            Dictionary<string, FileInfo> existingJobs, int idSwitch)
+        {
+            CollectionSegmenter<string> segmenter = new CollectionSegmenter<string>(existingJobs.Keys, 0);
+            Func<IEnumerable<string>, List<string>> getExistingJobNamesInSegment = jobNames =>
+                context.Database.SqlQuery<string>(
+                    $@"select jobname from job 
+                    where status=1 and idjobdefinition=1 and idNe={idSwitch}
+                    and jobname in ({string.Join(",", jobNames.Select(f => "'" + f + "'"))})").ToList();
+
+            HashSet<string> completedJobNames = new HashSet<string>(segmenter
+                .ExecuteMethodInSegmentsWithRetval(200000, getExistingJobNamesInSegment));
+
+            return existingJobs.Where(kv => completedJobNames.Contains(kv.Key)).Select(kv => kv.Value).ToList();
+        }
+
+        private static void writeJobs(PartnerEntities context, ne thisSwitch, List<job> newJobCacheForWritingAtOnceToDB,
+            int existingCount)
         {
             if (!newJobCacheForWritingAtOnceToDB.Any())
             {
                 Console.WriteLine(" No new cdr file found, exiting...");
             }
-            Console.WriteLine(
-                $"Found {newJobCacheForWritingAtOnceToDB.Count} cdr files in vault, excluding duplicates...");
             Console.WriteLine("Writing " + newJobCacheForWritingAtOnceToDB.Count + " cdr jobs to db...");
             context.jobs.AddRange(newJobCacheForWritingAtOnceToDB);
             context.SaveChanges();
-            Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:" 
-                                + newJobCacheForWritingAtOnceToDB.Count + ", already existing:" + 
-                                newJobCacheForWritingAtOnceToDB.Count);
+            Console.WriteLine("switch: " + thisSwitch.SwitchName + ", new cdr job created:"
+                                + newJobCacheForWritingAtOnceToDB.Count + ", already existing:" + existingCount);
             newJobCacheForWritingAtOnceToDB = new List<job>();
         }
 
-        private static void SplitFileByByteLen(PartnerEntities context, ne thisSwitch, FileInfo fileInfo, FileSplitSetting fileSplitSetting)
+        private static void SplitFileByByteLen(FileInfo fileInfo, FileSplitSetting fileSplitSetting)
         {
             if (fileSplitSetting.FileSplitType == "byte")
             {
@@ -221,34 +283,35 @@ namespace Process
                                                                 number of bytes per cdr ({fileSplitSetting.BytesPerRecord})");
 
                 //save original file in unsplit directory before spliting
-                DirectoryInfo currentDir = new DirectoryInfo(fileInfo.DirectoryName);
-                var unsplitPath = currentDir.FullName + Path.DirectorySeparatorChar + "unsplit";
-                bool unsplitExists = Directory.Exists(unsplitPath);
-                if (unsplitExists == false)
-                {
-                    Directory.CreateDirectory(unsplitPath);
-                }
-                string unsplitBackupFileName = unsplitPath + Path.DirectorySeparatorChar + fileInfo.Name;
-                if (File.Exists(unsplitBackupFileName))
-                {
-                    File.Delete(unsplitBackupFileName);
-                }
-                File.Copy(fileInfo.FullName, unsplitBackupFileName);
+                //DirectoryInfo currentDir = new DirectoryInfo(fileInfo.DirectoryName);
+                //var unsplitPath = currentDir.FullName + Path.DirectorySeparatorChar + "unsplit";
+                //bool unsplitExists = Directory.Exists(unsplitPath);
+                //if (unsplitExists == false)
+                //{
+                //    Directory.CreateDirectory(unsplitPath);
+                //}
+                //string unsplitBackupFileName = unsplitPath + Path.DirectorySeparatorChar + fileInfo.Name;
+                //if (File.Exists(unsplitBackupFileName))
+                //{
+                //    File.Delete(unsplitBackupFileName);
+                //}
+                //File.Copy(fileInfo.FullName, unsplitBackupFileName);
 
-                List<string> splitedFileNames = FileSplitter.SplitFile(fileInfo,//split the files
+                FileSplitter.SplitFile(fileInfo,//split the files
                     fileSplitSetting.BytesPerRecord * fileSplitSetting.MaxRecordsInSingleFile);
                 File.Delete(fileInfo.FullName);
 
                 //create a database file to log the association of the split files to the original unsplit
                 //this is required to backup original file instead of the split versions after cdr job processing
-                string historyFileName = unsplitPath + Path.DirectorySeparatorChar +
-                                         fileInfo.Name + ".history";
-                if (File.Exists(historyFileName))
-                {
-                    File.Delete(historyFileName);
-                }
-                string splitHistory = string.Join(",", splitedFileNames.Select(f => Path.GetFileName(f)));
-                File.AppendAllText(historyFileName, splitHistory + Environment.NewLine);
+
+                //string historyFileName = unsplitPath + Path.DirectorySeparatorChar +
+                //                         fileInfo.Name + ".history";
+                //if (File.Exists(historyFileName))
+                //{
+                //    File.Delete(historyFileName);
+                //}
+                //string splitHistory = string.Join(",", splitedFileNames.Select(f => Path.GetFileName(f)));
+                //File.AppendAllText(historyFileName, splitHistory + Environment.NewLine);
 
                 var dirInfo = new DirectoryInfo(fileInfo.DirectoryName);
                 string searchPattern = $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}*" +

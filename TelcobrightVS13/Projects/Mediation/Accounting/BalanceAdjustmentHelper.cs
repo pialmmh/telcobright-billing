@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MediationModel;
 using Newtonsoft.Json;
-using org.springframework.beans.factory;
 
 namespace TelcobrightMediation.Accounting
 {
@@ -21,7 +20,7 @@ namespace TelcobrightMediation.Accounting
         public BalanceAdjustmentPostProcessingData Process()
         {
             BalanceAdjustmentPostProcessingData adjustmentPostProcessingData = new BalanceAdjustmentPostProcessingData(this.InvoiceGenerationInputData);
-            job telcobrightJob = InvoiceGenerationInputData.TelcobrightJob;
+            job telcobrightJob = InvoiceGenerationInputData.Job;
             Dictionary<string, string> jobParamsMap =
                 JsonConvert.DeserializeObject<Dictionary<string, string>>(telcobrightJob.JobParameter);
             var invoiceJsonDetail = jobParamsMap;//carry on jobs param along with invoice detail

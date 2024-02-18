@@ -112,6 +112,7 @@ public partial class DefaultRptAcdIcx : System.Web.UI.Page
     {
         MySqlCommand cmd = new MySqlCommand(sql, connection);
         cmd.Connection = connection;
+        cmd.CommandTimeout = 600;
         MySqlDataAdapter domDataAdapter = new MySqlDataAdapter(cmd);
         DataSet ds = new DataSet();
         domDataAdapter.Fill(ds);

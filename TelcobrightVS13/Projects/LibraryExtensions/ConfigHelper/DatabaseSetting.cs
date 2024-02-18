@@ -12,10 +12,10 @@ namespace LibraryExtensions.ConfigHelper
         public string BaseDir { get; set; }
         public string SocketNameForNamedPipeConnection { get; set; }
         public string DatabaseName { get; set; }
-        public string AdminUserName { get; set; }
-        public string AdminPassword { get; set; }
-        public string ReadOnlyUserName { get; set; }
-        public string ReadOnlyPassword { get; set; }
+        public string WriteUserNameForApplication { get; set; }
+        public string WritePasswordForApplication { get; set; }
+        public string ReadOnlyUserNameForApplication { get; set; }
+        public string ReadOnlyPasswordForApplication { get; set; }
         public string DatabaseEngine { get; set; } = "innodb";
         public List<string> DateWisePartitionedTablesWithPartitionColName { get; set; }
         public readonly int MaxPartitionsPerTable = 1024;

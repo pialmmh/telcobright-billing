@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Quartz;
 using System.IO;
 using LibraryExtensions;
+using TelcobrightInfra;
 namespace QuartzTelcobright
 {
     public abstract class AbstractTelcobrightProcess : ITelcobrightProcess

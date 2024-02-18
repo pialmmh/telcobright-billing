@@ -65,11 +65,11 @@ namespace CrystalQuarts.Samples.Common
                 new QuartzTbDaemonConfig(
                     new DatabaseSetting("asdf")
                     {
-                        AdminPassword = "Takay1#$ane",
-                        AdminUserName = "root",
+                        WritePasswordForApplication = "Takay1#$ane",
+                        WriteUserNameForApplication = "root",
                         DatabaseName = "platinum",
-                        ReadOnlyPassword = "adsf",
-                        ReadOnlyUserName = "adfadf",
+                        ReadOnlyPasswordForApplication = "adsf",
+                        ReadOnlyUserNameForApplication = "adfadf",
                         SectionName = "adsf",
                         SectionOrder = 0
                     },

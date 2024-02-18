@@ -13,24 +13,24 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class SansaySostSwitchDecoder : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class SansaySostSwitchDecoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public string RuleName => GetType().Name;
-        public int Id => 4;
-        public string HelpText => "Decodes Sansay CDR.";
-        public CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 4;
+        public override string HelpText => "Decodes Sansay CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string UniqueEventTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }//required for testing with derived mock collector class
         protected virtual List<string[]> GetTxtCdrs()
         {
             return FileUtil.ParseTextFileToListOfStrArray(this.Input.FullPath, ';', 0);
         }
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input,out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs=new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -243,6 +243,7 @@ namespace Decoders
                             thisNormalizedRow[54] = "1";//add valid flag for this type of switch, valid flag comes from cdr for zte
                             thisNormalizedRow[55] = "0";//for now mark as non-partial, single cdr
                             thisNormalizedRow[Fn.FinalRecord] = "1";
+                            thisNormalizedRow[Fn.Partialflag] = "0";
                             decodedRows.Add(thisNormalizedRow);
                         }
                     }
@@ -252,36 +253,38 @@ namespace Decoders
 
                     Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
-                    ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.Telcobrightpartner.CustomerName);
                     continue;//with next switch
                 }
             }//for each row
             return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getSelectExpressionForPartialCollection(Object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }

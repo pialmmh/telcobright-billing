@@ -8,47 +8,126 @@ using System.Threading.Tasks;
 using CasTelcobright.Forms;
 using LibraryExtensions;
 using WS_Telcobright_Topshelf;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
+using System.Security.Permissions;
 using TelcobrightInfra;
+
+
+
 namespace CasTelcobright
 {
+
     public class ProcessWrapper
     {
         public string instanceName;
-        private Telcobright2 telcobright;
+        //private Telcobright2 telcobright;
         private Thread thread;
-        
+
+        Process process;
+        public int processId;
+        public string appName;
+        private Action<string> callbackFromUI;
+
         public ProcessWrapper(string instanceName, Action<string> callbackFromUI)
         {
+            this.appName = instanceName+"_cas";
+            instanceName = ConfigurationManager.AppSettings["configRoot"] + "\\" + instanceName + "_cas" + "\\" + instanceName + "_cas.conf";
             this.instanceName = instanceName;
-            this.telcobright = new Telcobright2(instanceName, callbackFromUI);
-            this.thread = new Thread(() =>
-            {
-                this.telcobright.run();
-            });
+            this.callbackFromUI = callbackFromUI;
         }
 
         public void start()
         {
-            this.thread.Start();
+            try
+            {
+              
+                ProcessStartInfo processStartInfo;
+                StringBuilder outputBuilder;
+                outputBuilder = new StringBuilder();
+                ConfigPathHelper configPathHelper = new ConfigPathHelper(
+                    "WS_Topshelf_Quartz",
+                    "portal",
+                    "UtilInstallConfig",
+                    "generators", "");
+                string topshelfExe = configPathHelper.GetTopShelfConfigDirForCas() + Path.DirectorySeparatorChar +
+                                     "WS_Telcobright_Topshelf.exe";
+                processStartInfo = getProcessStartInfo(topshelfExe);
+                process = new Process();
+                process.StartInfo = processStartInfo;
+                process.EnableRaisingEvents = true;
+
+                process.OutputDataReceived += ProcessOnOutputDataReceived();
+                process.Start();
+                //Process.Start(this.appName);
+                //Console.Write("Main window Title : " + process.MainWindowTitle);
+                process.BeginOutputReadLine();
+                this.processId = process.Id;
+
+                Thread.Sleep(500);  
+                System.Diagnostics.Process procs = System.Diagnostics.Process.GetProcessById(this.processId, ".");// use "." for this machine
+                procs.CloseMainWindow();
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
         }
 
+        private DataReceivedEventHandler ProcessOnOutputDataReceived()
+        {
+            return new DataReceivedEventHandler
+            (
+                delegate (object sender, DataReceivedEventArgs e)
+                {
+                    if (e.Data != null)
+                    {
+                        this.callbackFromUI(e.Data);
+                    }
+                } 
+            );
+        }
+
+        private ProcessStartInfo getProcessStartInfo(string fileName)
+        {
+            ProcessStartInfo processStartInfo;
+            processStartInfo = new ProcessStartInfo(fileName);
+            processStartInfo.CreateNoWindow = true;
+            //processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            processStartInfo.RedirectStandardOutput = true;
+            processStartInfo.RedirectStandardInput = true;
+            processStartInfo.UseShellExecute = false;
+            processStartInfo.Arguments = $@"{this.appName}";
+            return processStartInfo;
+        }
+
+        //[SecurityPermission(SecurityAction.InheritanceDemand, ControlThread = true)]
+        [SecurityPermissionAttribute(SecurityAction.Demand, ControlThread = true)]
         public void stop()
         {
             try
             {
-                if (this.thread.IsAlive)
+                if(!this.process.HasExited)
                 {
-                    this.thread.Abort();
+                    Process procs = Process.GetProcessById(this.processId, "."); // use "." for this machine
+                    procs.Kill();
                 }
+                   
+           
             }
-            catch (ThreadAbortException e)
-            { 
+            catch (Exception e)
+            {
                 Thread.ResetAbort();
                 Console.WriteLine(e.StackTrace);
             }
         }
 
-        
+
 
     }
 }

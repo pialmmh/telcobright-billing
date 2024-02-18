@@ -11,16 +11,20 @@ namespace QuartzTelcobright.PropertyGen
     {
         public static NameValueCollection GetAdoJobStoreTemplate(int tcpPortNumber,string connectionString)
         {
+            string instanceName = connectionString.Split(';').Select(s => s.Trim())
+                .First(s => s.StartsWith("database")).Split('=')[1].Trim();
             return new NameValueCollection()
             {
-                {"quartz.scheduler.instanceName", "RemoteServerSchedulerClient"},
+                //{"quartz.scheduler.instanceName", "RemoteServerSchedulerClient"},
+                {"quartz.scheduler.instanceName", instanceName},
                 {"quartz.threadPool.type", "Quartz.Simpl.SimpleThreadPool, Quartz"},
                 {"quartz.threadPool.threadCount", "10"},
                 {"quartz.threadPool.threadPriority", "Normal"},
                 {"quartz.scheduler.exporter.type", "Quartz.Simpl.RemotingSchedulerExporter, Quartz"},
                 {"quartz.scheduler.exporter.port", tcpPortNumber.ToString()},
-                {"quartz.scheduler.exporter.bindName", "QuartzScheduler"},
+                {"quartz.scheduler.exporter.bindName", "QuartzScheduler"},          
                 {"quartz.scheduler.exporter.channelType", "tcp"},
+                {"quartz.scheduler.exporter.channelName", instanceName},
                 {"quartz.jobStore.driverDelegateType", "Quartz.Impl.AdoJobStore.MySQLDelegate, Quartz"},
                 {"quartz.jobStore.dataSource", "default"},
                 {"quartz.jobStore.type", "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz"},
@@ -31,6 +35,8 @@ namespace QuartzTelcobright.PropertyGen
                 {"quartz.jobStore.tablePrefix", "qrtz_"},
                 {"quartz.dataSource.default.provider", "MySql-65"}, //TILL NOW ONLY CONNECTOR.NET 6.5 SUPPORTED
                 {"quartz.jobStore.useProperties", "true"},
+
+             
             };
         }
         public static NameValueCollection GetRamJobStoreTemplate(int tcpPortNumber)

@@ -19,10 +19,10 @@ namespace MediationModel
 
         public int? Priority { get; set; }
         public int AssignmentFlag { get; set; }
-        private DateTime? Enddatebyrateplan { get; set; }
-        private DateTime? Startdatebyrateplan { get; set; }
+        public DateTime? Enddatebyrateplan { get; set; }
+        public DateTime? Startdatebyrateplan { get; set; }
 
-        private int OpenRateAssignment { get; set; }
+        public int OpenRateAssignment { get; set; }
 
         public int IdPartner { get; set; }
         public int IdRoute { get; set; }

@@ -10,12 +10,12 @@ namespace TelcobrightMediation.Accounting
     {
         public TelcobrightConfig Tbc { get; }
         public PartnerEntities Context { get; }
-        public job TelcobrightJob { get; }
+        public job Job { get; }
         public AccountingJobInputData(TelcobrightConfig tbc, PartnerEntities context, job telcobrightJob)
         {
             this.Tbc = tbc;
             this.Context = context;
-            this.TelcobrightJob = telcobrightJob;
+            this.Job = telcobrightJob;
         }
     }
 }

@@ -1,17 +1,21 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.IO;
+using LibraryExtensions;
 
 namespace TelcobrightMediation
 {
     public class DecoderComposer
     {
-        [ImportMany("Decoder", typeof(IFileDecoder))]
-        public IEnumerable<IFileDecoder> Decoders { get; set; }
+        [ImportMany("Decoder", typeof(AbstractCdrDecoder))]
+        public IEnumerable<AbstractCdrDecoder> Decoders { get; set; }
 
         public void Compose()
         {
-            var catalog = new DirectoryCatalog(@"..\..\bin\Extensions\");
+            UpwordPathFinder<DirectoryInfo> extFinder = new UpwordPathFinder<DirectoryInfo>("Extensions");
+            string extPath = extFinder.FindAndGetFullPath();
+            var catalog = new DirectoryCatalog(extPath);
             var container = new CompositionContainer(catalog);
             container.ComposeParts(this);
         }

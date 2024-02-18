@@ -89,8 +89,8 @@
         
            View by Switch:
         <asp:CheckBox ID="ViewBySwitch" runat="server" AutoPostBack="True"
-                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="True" />
-            <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="True">
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+            <asp:DropDownList ID="DropDownListShowBySwitch" runat="server" Visible="true" Enabled="False">
             </asp:DropDownList>
 
         <asp:Button Style="margin-left: 5px" ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />
@@ -343,12 +343,12 @@
           <Columns>
                 <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
               <%--<asp:BoundField DataField="tup_incomingroute" HeaderText="ICX" SortExpression="tup_incomingroute" />--%>
-              <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" />
+              <asp:BoundField DataField="icxName" HeaderText="ICX" SortExpression="IcxName" Visible="False"/>
                 <asp:BoundField DataField="Country" HeaderText="Country"
                     SortExpression="Country"/>
                 <asp:BoundField DataField="Destination" HeaderText="Destination"
                     SortExpression="Destination" />
-                <asp:BoundField DataField="IGW" HeaderText="ANSNotUse" SortExpression="ANSNotUse"  Visible="false"/>               
+                <asp:BoundField DataField="IGW" HeaderText="ANSNotUse" SortExpression="IGW" Visible="False"/>               
                 <asp:BoundField DataField="ANS" HeaderText="ANS" SortExpression="ANS" />
                 <asp:BoundField DataField="International Partner" HeaderText="IOS" SortExpression="International Partner" />
                 <asp:BoundField DataField="tup_outgoingroute" HeaderText="IOS Route" SortExpression="tup_outgoingroute" />
@@ -366,12 +366,12 @@
                 <asp:BoundField DataField="ConnectedCount"
                     DataFormatString="{0:#,0}"
                     HeaderText="Conn. Calls"
-                    SortExpression="ConnectedCount" />
+                    SortExpression="ConnectedCount" Visible="False"/>
 
                 <asp:BoundField DataField="Paid Minutes (Outgoing Internaitonal)"
                     DataFormatString="{0:#,0.#0}"
                     HeaderText="Actual Duration"
-                    SortExpression="Paid Minutes (Outgoing Internaitonal)"></asp:BoundField>
+                    SortExpression="Paid Minutes (Outgoing Internaitonal)" Visible="False"></asp:BoundField>
 
                 <asp:BoundField DataField="hmsduration"
                     DataFormatString="{0:#,0.#0}"
@@ -385,19 +385,19 @@
                 <asp:BoundField DataField="supplierduration"
                     DataFormatString="{0:#,0.#0}"
                     HeaderText="Supplier Duration"
-                    SortExpression="supplierduration"></asp:BoundField>
-                <asp:BoundField DataField="asr" DataFormatString="{0:#,0.#0}" HeaderText="ASR" SortExpression="asr" />
+                    SortExpression="supplierduration" Visible="False"></asp:BoundField>
+                <asp:BoundField DataField="asr" DataFormatString="{0:#,0.#0}" HeaderText="ASR" SortExpression="asr" Visible="False"/>
                 <asp:BoundField DataField="acd" DataFormatString="{0:#,0.#0}" HeaderText="ACD" SortExpression="acd" />
-                <asp:BoundField DataField="pdd" DataFormatString="{0:#,0.#0}" HeaderText="PDD" SortExpression="pdd" />
-                <asp:BoundField DataField="ccr" DataFormatString="{0:#,0.#0}" HeaderText="CCR" SortExpression="ccr" />
+                <asp:BoundField DataField="pdd" DataFormatString="{0:#,0.#0}" HeaderText="PDD" SortExpression="pdd" Visible="False"/>
+                <asp:BoundField DataField="ccr" DataFormatString="{0:#,0.#0}" HeaderText="CCR" SortExpression="ccr" Visible="False"/>
                 <asp:BoundField DataField="ConectbyCC"
                     DataFormatString="{0:F0}"
                     HeaderText="Connect Count (CC)"
-                    SortExpression="ConectbyCC" />
+                    SortExpression="ConectbyCC" Visible="False"/>
                 <asp:BoundField DataField="CCRByCC"
                     DataFormatString="{0:F2}"
                     HeaderText="CCR By CC"
-                    SortExpression="CCRByCC" />
+                    SortExpression="CCRByCC" Visible="False"/>
 
                 <asp:BoundField DataField="X RATE(BDT)" DataFormatString="{0:#,0.#0}" HeaderText="X RATE(BDT)" SortExpression="X RATE(BDT)" />
                 <asp:BoundField DataField="Y RATE(USD)" DataFormatString="{0:#,0.#0}" HeaderText="Y RATE(USD)" SortExpression="Y RATE(USD)" />
@@ -405,8 +405,8 @@
                 <asp:BoundField DataField="X (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="X (BDT)" SortExpression="X (BDT)" />
                 <asp:BoundField DataField="Y (USD)" DataFormatString="{0:#,0.#0}" HeaderText="Y (USD)" SortExpression="Y (USD)" />
                 <asp:BoundField DataField="Z (BDT)" DataFormatString="{0:#,0.#0}" HeaderText="Z (BDT)" SortExpression="Z (BDT)" />
-                <asp:BoundField DataField="revenueigwout" DataFormatString="{0:#,0.#0}" HeaderText="Revenue (BDT)" SortExpression="revenueigwout" />
-                <asp:BoundField DataField="tax1" DataFormatString="{0:#,0.#0}" HeaderText="BTRC Revenue Share" SortExpression="tax1" />
+                <asp:BoundField DataField="revenueigwout" DataFormatString="{0:#,0.#0}" HeaderText="Revenue (BDT)" SortExpression="revenueigwout" Visible="False"/>
+                <asp:BoundField DataField="tax1" DataFormatString="{0:#,0.#0}" HeaderText="BTRC Revenue Share" SortExpression="tax1" Visible="False"/>
 
 
                 <%-- <asp:BoundField DataField="profitminute" HeaderText="Profit/Minute" SortExpression="profitminute" />--%>

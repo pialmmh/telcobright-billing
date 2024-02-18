@@ -13,7 +13,7 @@ using TelcobrightMediation.Mediation.Cdr;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
     public class HuaweiSoftx3000DecoderBtcl : HuaweiSoftx3000Decoder
     {
         public override string ToString() => this.RuleName;
@@ -312,10 +312,22 @@ namespace Decoders
                         }
                         thisRow[Fn.AnswerTime] = "";//set answertime to null
                     }
+                    if (thisRow[Fn.OriginatingCallingNumber].IsNullOrEmptyOrWhiteSpace()
+                        &&
+                        thisRow[Fn.OriginatingCalledNumber].IsNullOrEmptyOrWhiteSpace())
+                    {
+                        thisRow[Fn.OriginatingCallingNumber] = thisRow[Fn.TerminatingCallingNumber];
+                        thisRow[Fn.OriginatingCalledNumber] = thisRow[Fn.TerminatingCalledNumber];
+                    }
+
+
                     thisRow[Fn.FinalRecord] = "1";
                     thisRow[Fn.Validflag] = "1";
+                    thisRow[Fn.Partialflag] = "0";
                     thisRow[Fn.Sequencenumber] = "1";
                     thisRow[Fn.StartTime] = thisRow[Fn.AnswerTime];
+                    thisRow[Fn.ConnectTime] = thisRow[Fn.AnswerTime];
+                    
 
 
                     //thisRowBytes = bytesFromFile.Skip(rowCnt * huaweiFixedBytePerRows).Take(huaweiFixedBytePerRows).ToArray();
@@ -327,16 +339,13 @@ namespace Decoders
 
                     Console.WriteLine(e1);
                     inconsistentCdrs.Add(CdrConversionUtil.ConvertTxtRowToCdrinconsistent(thisRow));
-                    ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.Telcobrightpartner.CustomerName);
                     continue;//with next row
                 }
             }//try for each row in byte array
             return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }

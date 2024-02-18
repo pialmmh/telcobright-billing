@@ -21,7 +21,7 @@ namespace Jobs
         public string RuleName => "TransactionPosting";
         public string HelpText => "Posts a transaction to accounting context with automatic update of ledger summary";
         public int Id => 14;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             TransactionJobInputData input = (TransactionJobInputData) jobInputData;
             List<acc_temp_transaction> tempTransactions = input.TempTransactions;
@@ -38,6 +38,21 @@ namespace Jobs
             accountingContext.ExecuteTransactions(
                tempTransactions.Select(TempTransactionHelper.ConvertTempTransactionToTransaction));
             return JobCompletionStatus.Complete;
-        } 
+        }
+
+        public object PreprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

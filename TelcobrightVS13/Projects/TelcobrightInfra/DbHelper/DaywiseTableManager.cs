@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,32 @@ namespace TelcobrightInfra
 {
     public class DaywiseTableManager
     {
-
+        public static List<string> getExistingTableNames(string databaseName, IEnumerable<string> tableNamesToCheckIfExists, MySqlConnection con)
+        {
+            List<string> existingTables = new List<string>();
+            using (MySqlCommand cmd= new MySqlCommand("", con))
+            {
+                cmd.CommandText = $"show tables from {databaseName} where tables_in_{databaseName} in (" +
+                                  $" {string.Join(",", tableNamesToCheckIfExists.Select(t => $"'{t}'"))});";
+                cmd.CommandType = CommandType.Text;
+                DbDataReader reader1 = cmd.ExecuteReader();
+                try
+                {
+                    while (reader1.Read())
+                    {
+                        existingTables.Add(reader1[0].ToString());
+                    }
+                    reader1.Close();
+                }
+                catch (Exception e)
+                {
+                    reader1.Close();
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+            return existingTables;
+        }
         public static void DeleteOldTables(string tablePrefix, int daysToRetainOldData, DbCommand cmd)
         {
 
@@ -43,20 +69,21 @@ namespace TelcobrightInfra
                 }
             }
         }
-        public static void CreateTables(string tablePrefix, string sql, List<DateTime>dateTimes,MySqlConnection con,
+        public static void CreateTables(string tablePrefix, string templateSql, List<DateTime>dateTimes,MySqlConnection con,
             bool partitionByHour,string partitionColName,string engine )
         {
             using (MySqlCommand cmd = new MySqlCommand("", con))
             {
                 foreach (DateTime tableDate in dateTimes)
                 {
-                    string date = tableDate.ToString("yyyyMMdd");
-                    string tableName = tablePrefix + date;
+                    string date = tableDate.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-","");
+                    string tableName = tablePrefix + "_" + date;
+                    string sql = templateSql.Replace("<" + tablePrefix + ">", tableName);
                     if (partitionByHour)
                     {
-                        sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine);
+                        sql += GetHourlytPartitionExpression(partitionColName, tableDate, engine) + ";";
                     }
-                    cmd.CommandText = sql;
+                    cmd.CommandText = sql;//avoid using if not exists, that might have triggered the table definition has changed exception
                     cmd.ExecuteNonQuery();
                 }
             } 
@@ -67,9 +94,10 @@ namespace TelcobrightInfra
             int mon = date.Month;
             int day = date.Day;
             DateTime partitionDay = new DateTime(yr, mon, day);
-
-            Func<DateTime, string> getPartitionExpression = dateHr =>
-                $"(PARTITION p{dateHr.Hour} VALUES LESS THAN ('{dateHr.ToMySqlFormatWithoutQuote()}') ENGINE = {engine});";
+            
+            Func<DateTime, string> getPartitionExpression = dateHr => 
+                new StringBuilder("PARTITION p").Append((dateHr.Hour==0?24:dateHr.Hour).ToString()).Append(" VALUES LESS THAN ('")
+                    .Append(dateHr.ToMySqlFormatWithoutQuote()).Append("') ENGINE = ").Append(engine).ToString();
 
             List<string> hourlyPartitionExpressions = Enumerable.Range(1, 23).Select(hr =>
             {
@@ -80,7 +108,7 @@ namespace TelcobrightInfra
             var nextDayZeroHour = partitionDay.AddDays(1);
             hourlyPartitionExpressions.Add(getPartitionExpression(nextDayZeroHour));
             return $"PARTITION BY RANGE  COLUMNS({partitionColName})\r\n" +
-                   string.Join("\r\b", hourlyPartitionExpressions);
+                    "(" + string.Join(",\r\n", hourlyPartitionExpressions) + ")";
         }
     }
 }

@@ -3,7 +3,6 @@
 
 <%--Common--%>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
-<%@ Import Namespace="System.ServiceModel.Security" %>
 <%@ Import Namespace="MediationModel" %>
 <%@ Import Namespace="PortalApp" %>
 <%@ Import Namespace="TelcobrightMediation" %>
@@ -22,6 +21,27 @@
                 string tempText = this.hidValueFilter.Value;
                 bool lastVisible = this.hidValueFilter.Value == "invisible" ? false : true;
                 var databaseSetting = telcobrightConfig.DatabaseSetting;
+                string logIdentityName = this.User.Identity.Name;
+                String selectedIcx = logIdentityName;
+                TelcobrightConfig tbc = PageUtil.GetTelcobrightConfig();
+                string selectedUserdbName;
+                Dictionary<string, string> userVsDbName = tbc.DeploymentProfile.UserVsDbName;
+                if (userVsDbName.ContainsKey(logIdentityName))
+                {
+                    selectedUserdbName = userVsDbName[logIdentityName];
+                }
+                else
+                {
+                    selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+                }
+                if (selectedUserdbName.Contains("btrc"))
+                {
+                    this.DropDownListViewIncomingRoute.Visible = true;
+                }
+                else
+                {
+                    this.DropDownListViewIncomingRoute.Visible = false;
+                }
                 if (this.hidValueSubmitClickFlag.Value == "false")
                 {
                     if (lastVisible)
@@ -39,7 +59,7 @@
                 if (!this.IsPostBack)
                 {
                     //load job type and job status dropdownlist
-
+     
                     using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(databaseSetting))
                     {
                         //populate switch
@@ -324,7 +344,7 @@
 
     
     <%--<span style="padding-left:0px;float:left;left:0px;font-weight:bold;margin-top:2px;margin-right:20px;color:Black;"> Report:</span>--%>
-     <span style="font-weight:bold;">
+     <span style="font-weight:bold;" id="icx">
          Select ICX:                
          <asp:DropDownList ID="DropDownListViewIncomingRoute" runat="server"
                            OnSelectedIndexChanged="DropDownListViewIncomingRoute_SelectedChanged"
@@ -461,7 +481,7 @@
 
 </div> <%--END OF date time/months field DIV--%>
 <div id="TimeSummary" style="float:left;margin-left:15px;padding-left:20px;height:70px;width: 280px;background-color: #faebd7;margin-top: 0px;">
-    <div style="font-weight:bold;float:left;">Quick View:<asp:CheckBox ID="CheckBoxDailySummary" runat="server" Visible="false" /></div> 
+    <div style="font-weight:bold;float:left;">Quick Select Period:<asp:CheckBox ID="CheckBoxDailySummary" runat="server" Visible="false" /></div> 
     <div style="clear:left;margin-top:5px;"></div>
     <div style="float:left; margin-right:5px;">
         <asp:LinkButton ID="LinkButtonToday" runat="server" 
@@ -524,17 +544,17 @@
             <input type="hidden" id="hidValueSubmitClickFlag" runat="server" value="false"/>
             <input type="hidden" id="hidValueTemplate" runat="server" />
          <asp:Button ID="Button2" runat="server" 
-            style="margin-left: 0px" Text="Export First " Visible="true" Enabled="false"
+            style="margin-left: 0px" Text="Export First " Visible="False" Enabled="false"
              onclick="Button2_Click" />
-             <asp:TextBox ID="TextBoxNoOfRecords" runat="server" Text="1000"></asp:TextBox> Records or, 
+             <asp:TextBox ID="TextBoxNoOfRecords" runat="server" Text="1000" Visible="False"></asp:TextBox> 
      <span style="padding-left:5px;">
      <asp:Button ID="Button3" runat="server" 
-            style="margin-left: 0px" Text="Export All" Visible="true" Enabled="false"
+            style="margin-left: 0px" Text="Export All" Visible="False" Enabled="false"
              onclick="Button1_Click" />
      </span>
-     <span style="padding-left:5px;"> (Might take long...)</span>
-         <span style="padding-left:20px;font-weight:bold;"> Real Time Update 
-                <asp:CheckBox ID="CheckBoxRealTimeUpdate" runat="server" AutoPostBack="true" oncheckedchanged="CheckBoxRealTimeUpdate_CheckedChanged"/></span>
+     <%--<span style="padding-left:5px;"> (Might take long...)</span>--%>
+         <span style="padding-left:20px;font-weight:bold;">
+                <asp:CheckBox ID="CheckBoxRealTimeUpdate" runat="server" AutoPostBack="true" oncheckedchanged="CheckBoxRealTimeUpdate_CheckedChanged" Visible="False"/></span>
     </div>
     <div style="clear:both;padding:1px;">
          <asp:Label ID="lblStatus" Visible="false" ForeColor="Black" Font-Bold="true" runat="server" Text=""></asp:Label>
@@ -575,7 +595,7 @@
             <asp:BoundField DataField="ne.switchname" HeaderText="Network Element" 
                 SortExpression="idSwitch" />
             <asp:BoundField DataField="SerialNumber" HeaderText="SerialNumber" 
-                SortExpression="SerialNumber" />
+                SortExpression="SerialNumber" visible="False"/>
             <asp:BoundField DataField="enumjobstatu.type" HeaderText="Status" 
                 SortExpression="Status" />
             <asp:BoundField DataField="Progress" HeaderText="Progress" 
@@ -590,9 +610,9 @@
                 SortExpression="NoOfSteps"/>
             <%--<asp:BoundField DataField="JobParameter" HeaderText="Parameters" ItemStyle-Width="500px" ItemStyle-Wrap="false"
                 SortExpression="JobParameter" />--%>
-            <asp:BoundField DataField="JobSummary" HeaderText="Summary" 
+            <asp:BoundField DataField="JobSummary" HeaderText="Actual Duration From Switch" 
                 SortExpression="JobSummary" />
-            <asp:BoundField DataField="Error" HeaderText="Execution Error" 
+            <asp:BoundField DataField="Error" HeaderText="Processing Error" 
                 SortExpression="Error" />
 
         </Columns>

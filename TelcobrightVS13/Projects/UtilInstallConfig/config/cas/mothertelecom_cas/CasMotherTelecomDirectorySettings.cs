@@ -44,19 +44,19 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/mothertelecom/tdm",
+                StartingPath = "d:/telcobright/vault/resources/cdr/mothertelecom/tdm",
                 User = "",
                 Pass = "",
             };
 
             this.vaultDialogic = new FileLocation()
             {
-                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Dialogic",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/mothertelecom/ip",
+                StartingPath = "d:/telcobright/vault/resources/cdr/mothertelecom/ip/Aug-Oc",
                 User = "",
                 Pass = "",
             };
@@ -66,14 +66,7 @@ namespace InstallConfig
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultNokia.Name, vaultNokia);
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
-           
             
-            
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-               
-            };
         }
     }
 }

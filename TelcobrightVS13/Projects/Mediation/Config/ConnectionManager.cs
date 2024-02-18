@@ -39,7 +39,7 @@ namespace TelcobrightMediation.Config
 
                     break;
                 case "PartnerEntities":
-                    constr = $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;provider=MySql.Data.MySqlClient;provider connection string=\"server = {dbSettings.ServerName}; user id = {dbSettings.AdminUserName}; password = {dbSettings.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=600;database={dbSettings.DatabaseName}\"";
+                    constr = $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;provider=MySql.Data.MySqlClient;provider connection string=\"server = {dbSettings.ServerName}; user id = {dbSettings.WriteUserNameForApplication}; password = {dbSettings.WritePasswordForApplication};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=600;database={dbSettings.DatabaseName}\"";
                     break;
             }
 
@@ -50,7 +50,7 @@ namespace TelcobrightMediation.Config
         {
             return $"metadata=res://*/PartnerModel.csdl|res://*/PartnerModel.ssdl|res://*/PartnerModel.msl;" +
                    $"provider=MySql.Data.MySqlClient;" +
-                   $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.AdminUserName}; password = {databaseSetting.AdminPassword};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
+                   $"provider connection string=\"server = {databaseSetting.ServerName}; user id = {databaseSetting.WriteUserNameForApplication}; password = {databaseSetting.WritePasswordForApplication};persistsecurityinfo=True;Convert Zero Datetime=True;default command timeout=300;database={databaseSetting.DatabaseName}\"";
         }
 
         private static void CacheConnectionStrings(string operatorShortName, TelcobrightConfig tbc)

@@ -76,7 +76,7 @@ a:active {
 		</table>
 		<br />
 		<legend>Create Define Table(Unuse any DataBase) </legend>
-		<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" Width="346px" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" EmptyDataText="There is no any data." ForeColor="Red">
+		<asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" Width="346px" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" EmptyDataText="There is no any input." ForeColor="Red">
 			<Columns>
 			<asp:CommandField ShowSelectButton="True" ShowEditButton="True" />
 				<asp:BoundField DataField="id" HeaderText="ID" Visible="False" />

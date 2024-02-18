@@ -19,7 +19,7 @@ namespace Jobs
         public string HelpText => "Sends email notification";
         public int Id => 20;
 
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             //returning corrrect jobCompletion status is important, because file may not be deleted due to pre-requisite
             //in that case the job must not be marked as "complete" in database
@@ -29,7 +29,7 @@ namespace Jobs
                 input.Tbc);
             JobParamFileDelete delParam = null;
             //check if prereq jobs have been finished or not
-            job telcobrightJob = input.TelcobrightJob;
+            job telcobrightJob = input.Job;
             using (PartnerEntities context = new PartnerEntities(entityConStr))
             {
                 if (delParam.JobPrerequisite.CheckComplete(context) == false)
@@ -38,7 +38,7 @@ namespace Jobs
                 }
                 if (delParam.FileLocation.LocationType == "local")
                 {
-                    Console.WriteLine("Processing Optimizer: " + input.TelcobrightJob.JobName + ", type: File Delete");
+                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete");
                     File.Delete(delParam.FileLocation.ServerIp.Replace("/", Path.DirectorySeparatorChar.ToString()) +
                                 Path.DirectorySeparatorChar.ToString() + delParam.FileName);
                     return JobCompletionStatus.Complete;
@@ -51,6 +51,21 @@ namespace Jobs
                 }
             }
             return JobCompletionStatus.Complete;
+        }
+
+        public object PreprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
         }
     }
 }

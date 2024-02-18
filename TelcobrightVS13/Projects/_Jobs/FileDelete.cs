@@ -20,7 +20,7 @@ namespace Jobs
         public string RuleName => "JobDeleteFile";
         public string HelpText => "Delete File in a location";
         public int Id => 8;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             //returning corrrect jobCompletion status is important, because file may not be deleted due to pre-requisite
             //in that case the job must not be marked as "complete" in database
@@ -37,32 +37,52 @@ namespace Jobs
                 }
                 if (delParam.FileLocation.LocationType == "local")
                 {
-                    Console.WriteLine("Processing Optimizer: " + input.TelcobrightJob.JobName + ", type: File Delete");
+                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete");
                     File.Delete(delParam.FileLocation.ServerIp.Replace("/", Path.DirectorySeparatorChar.ToString()) + Path.DirectorySeparatorChar.ToString() + delParam.FileName);
                     return JobCompletionStatus.Complete;
                 }
                 else if (delParam.FileLocation.LocationType == "vault")
                 {
-                    //Vault vault = input.Tbc.DirectorySettings.Vaults.First(c => c.Name == delParam.FileLocation.Name);
-                    //if (vault.DeleteSingleFile(delParam.FileName) == false) return JobCompletionStatus.Incomplete;
-                    File.Delete(delParam.FileName);
+                    Console.WriteLine("Processing Optimizer: " + input.Job.JobName + ", type: File Delete");
+                    string fileToDelete = delParam.FileLocation.StartingPath.Replace("/", Path.DirectorySeparatorChar.ToString()) + Path.DirectorySeparatorChar + delParam.FileName;
+                    if (File.Exists(fileToDelete))
+                    {
+                        File.Delete(fileToDelete);
+                    }
+                    return JobCompletionStatus.Complete;
                 }
             }
-            return JobCompletionStatus.Complete;
+            return JobCompletionStatus.Incomplete;
+        }
+
+        public object PreprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
         }
 
         private static JobParamFileDelete GetJobParamByHandlingDeserializeErrorFromBackslash
             (OptimizerJobInputData input)
         {
-            JobParamFileDelete delParam = null;
-            var jobParameter = input.TelcobrightJob.JobParameter;
+            JobParamFileDelete delParam = new JobParamFileDelete();
+            string jobParameter = input.Job.JobParameter;
             if (jobParameter.Contains("\"PathSeparator\":\"\\"))
             {
-                jobParameter = jobParameter.Replace("\"PathSeparator\":\"\\", "\"PathSeparator\":\"`");
-                jobParameter = jobParameter.Replace("unsplit\\", "unsplit`");
+                //jobParameter = jobParameter.Replace("\"PathSeparator\":\"\\", "\"PathSeparator\":\"`");
+                //jobParameter = jobParameter.Replace("unsplit\\", "unsplit`");
+                jobParameter = jobParameter.Replace("\\", "/");
                 delParam = JsonConvert.DeserializeObject<JobParamFileDelete>(jobParameter);
                 delParam.FileLocation.PathSeparator = delParam.FileLocation.PathSeparator.Replace("`", "\\");
-                delParam.FileName= delParam.FileName.Replace("`", "\\");
+                delParam.FileName = delParam.FileName.Replace("`", "\\");
 
                 return delParam;
             }

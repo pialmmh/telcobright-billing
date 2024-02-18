@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using QuartzTelcobright.MefComposer;
+using TelcobrightInfra;
 
 namespace QuartzTelcobright.MefComposers
 {
@@ -16,7 +17,8 @@ namespace QuartzTelcobright.MefComposers
             foreach (KeyValuePair<string, object> keyValuePair in mefCollectiveAssemblyComposer
                 .ComposedMefDictionaryBytype["AbstractTelcobrightProcess"])
             {
-                this.Processes.Add(keyValuePair.Key, (AbstractTelcobrightProcess) keyValuePair.Value);
+                var process = (AbstractTelcobrightProcess) keyValuePair.Value;
+                this.Processes.Add(keyValuePair.Key, process);
             }
         }
     }

@@ -84,6 +84,26 @@ namespace TelcobrightMediation.Reports.InvoiceReports.banglatelecom.ICX
                 xrTableCellAmountDueforPayment.Text = string.Format("{0:n2}", invTotalAmount);
             }
 
+            decimal subTotalAmountRev = invoiceBasicDatas.Sum(x => x.Amount / 2);
+            if (invoice.BILLING_ACCOUNT_ID == 15)
+            {
+                xrLabel17.Visible = true;
+                xrLabel18.Visible = true;
+                xrLabel22.Visible = true;
+                xrLabel23.Visible = true;
+                xrLabel24.Visible = true;
+                xrLabel22.Text = string.Format("{0:n2} BDT", subTotalAmountRev);
+                xrLabel24.Text = string.Format("{0:n2} BDT", subTotalAmountRev);
+            }
+            else
+            {
+                xrLabel17.Visible = false;
+                xrLabel18.Visible = false;
+                xrLabel22.Visible = false;
+                xrLabel23.Visible = false;
+                xrLabel24.Visible = false;
+            }
+
             #endregion
 
             #region Report Footer

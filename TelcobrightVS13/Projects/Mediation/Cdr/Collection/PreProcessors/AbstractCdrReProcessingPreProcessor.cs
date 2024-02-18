@@ -27,7 +27,7 @@ namespace TelcobrightMediation
             }
             var emptyCdrInconsistents = new List<cdrinconsistent>();
             var newCollectionResult = new CdrCollectionResult(base.CdrCollectorInputData.Ne,
-                newCdrExts, emptyCdrInconsistents, base.RawCount);
+                newCdrExts, emptyCdrInconsistents, base.RawCount, new List<string[]>());//original raw rows not used in reprocessing job
             return newCollectionResult;
         }
         protected override List<CdrExt> CreateNewCdrExts()

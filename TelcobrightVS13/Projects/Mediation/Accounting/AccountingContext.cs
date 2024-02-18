@@ -13,7 +13,8 @@ namespace TelcobrightMediation.Accounting
 {
 	public class AccountingContext
 	{
-		private PartnerEntities Context { get; }
+        public Dictionary<long, account> IdWiseAccounts { get;  }
+        private PartnerEntities Context { get; }
 		public AccountCache AccountCache { get;}
 		public SummaryCache<acc_ledger_summary, ValueTuple<long, DateTime>> LedgerSummaryCache { get;}
 		public TransactionCache TransactionCache { get;}
@@ -30,9 +31,10 @@ namespace TelcobrightMediation.Accounting
 			IAutoIncrementManager autoIncrementManager, List<DateTime> datesInvolved, int segmentSizeForDbWrite,
             SkipSettingsForSummaryOnly skipSettingsForSummaryOnly)
 		{
-		    this.SkipSetingsForSummaryOnly = skipSettingsForSummaryOnly;
+            this.SkipSetingsForSummaryOnly = skipSettingsForSummaryOnly;
             this.Context = context;
-			this.Cmd = ConnectionManager.CreateCommandFromDbContext(this.Context);
+		    this.IdWiseAccounts = this.Context.accounts.ToList().ToDictionary(a => a.id);
+            this.Cmd = ConnectionManager.CreateCommandFromDbContext(this.Context);
 			this.AccountingLevelOrDepth = accountingLevelOrDepth;
 			this.AutoIncrementManager = autoIncrementManager;
 			this.DatesInvolved = datesInvolved;

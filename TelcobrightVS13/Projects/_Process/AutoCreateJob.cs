@@ -14,6 +14,7 @@ using QuartzTelcobright;
 namespace Process
 {
 
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class TpAutoCreateJob: AbstractTelcobrightProcess
     {

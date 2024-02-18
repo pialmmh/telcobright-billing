@@ -19,7 +19,7 @@ namespace InstallConfig
     public sealed partial class CasVoicetelAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultHuwaei;
-        private FileLocation vaultDialogic;
+        private FileLocation vaultReve;
         private SyncPair huawei_Vault;
         private SyncPair zteCAS;
 
@@ -44,141 +44,34 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "E:/telcobright/vault/resources/cdr/voicetel/tdm",
+                StartingPath = "e:/telcobright/vault/resources/cdr/voiceTel/tdm",
                 User = "",
                 Pass = "",
             };
 
-            this.vaultDialogic = new FileLocation()
+            this.vaultReve = new FileLocation()
             {
-                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault.Reve",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "E:/telcobright/vault/resources/cdr/voicetel/ip",
+                StartingPath = "e:/telcobright/vault/resources/cdr/voiceTel/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };
 
-            FileLocation huawei = new FileLocation()
-            {
-                Name = "huawei",
-                LocationType = "ftp",
-                OsType = "linux",
-                UseActiveModeForFTP = true,
-                PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/delete/delete_reve",
-                ServerIp = "10.33.34.12",
-                User = "icxreve",
-                Pass = "icxreve123",
-                //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
-                IgnoreZeroLenghFile = 1,
-                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
-            };
+           
 
-            FileLocation fileArchive1 = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchive1Zip",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/ICX_CDR_BK",
-                ServerIp = "10.100.201.13", //server = "172.16.16.242",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1
-            };
-
-            FileLocation fileArchiveCAS = new FileLocation()//raw cdr archive
-            {
-                Name = "cas",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/",
-                ServerIp = "192.168.100.185", //server = "172.16.16.242",
-                User = "adnvertx",
-                Pass = "vtxicx296#",
-                IgnoreZeroLenghFile = 1
-            };
+            
+           
 
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
-            tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
-            tbc.DirectorySettings.FileLocations.Add(huawei.Name, huawei);
-            tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            tbc.DirectorySettings.FileLocations.Add(fileArchiveCAS.Name, fileArchiveCAS);
+            tbc.DirectorySettings.FileLocations.Add(vaultReve.Name, vaultReve);
+           
 
-            this.huawei_Vault = new SyncPair("huawei:Vault")
-            {
-                SkipSourceFileListing = false,
-                SrcSyncLocation = new SyncLocation()
-                {
-                    FileLocation = huawei,
-                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
-                },
-                DstSyncLocation = new SyncLocation()
-                {
-                    FileLocation = vaultHuwaei
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "downloaded",
-                    MoveFilesToSecondaryAfterCopy = false,
-                    Recursive = false,
-                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('ICX')
-                                                                and
-                                                                (Name.EndsWith('.DAT'))
-                                                                and Length>0")
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
-                    Overwrite = true,
-                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
-                }
-            };
-
-
-            //sync pair Vault_S3:FileArchive1
-            this.zteCAS = new SyncPair("zte:cas")
-            {
-                SkipCopyingToDestination = false,
-                SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation()
-                {
-                    FileLocation = vaultHuwaei
-                },
-                DstSyncLocation = new SyncLocation()
-                {
-                    FileLocation = fileArchiveCAS
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "downloaded",
-                    ExpFileNameFilter = null,
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",
-                    Overwrite = true,
-                    CompressionType = CompressionType.None,
-                }
-            };
-
-            //add sync pairs to directory config
-            directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
-            //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(zteCAS.Name, zteCAS);
-
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                zteCAS.Name
-            };
+            
         }
     }
 }

@@ -48,20 +48,7 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", this.zte_Vault.Name}
                     }),
-                //new QuartzTbDaemonConfig
-                //(
-                //    operatorName: operatorName,
-                //    identity: "FileLister [Dialogic:Vault]" + " [" + operatorName+"]",
-                //    group: operatorName,
-                //    cronExpression: "/30 * * ? * *",
-                //    fireOnceIfMissFired: false,
-                //    jobDataMap: new Dictionary<string, string>()
-                //    {
-                //        {"telcobrightProcessId", "106"},
-                //        {"operatorName", operatorName},
-                //        {"syncPair", this.vaultDialogic.Name}
-                //    }),
-            };
+                };
             return fileListerInstances;
         }
         private List<QuartzTbDaemonConfig> GetFileCopierInstances(string operatorName)
@@ -82,24 +69,25 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", this.zte_Vault.Name}
                     }),
-                //new QuartzTbDaemonConfig
-                //(
-                //    operatorName: operatorName,
-                //    identity: "FileCopier [Dialogic:Vault]" + " [" + operatorName+"]",
-                //    group: operatorName,
-                //    cronExpression: "/5 * * ? * *",
-                //    fireOnceIfMissFired: false,
-                //    jobDataMap: new Dictionary<string, string>()
-                //    {
-                //        {"telcobrightProcessId", "104"},
-                //        {"operatorName", operatorName},
-                //        {"syncPair", this.vaultDialogic.Name}
-                //    }),
+                
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [Reve:CAS]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", this.reveCAS.Name}
+                    }),
 
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileCopier [zte:CAS]" + " [" + operatorName+"]",
+                    identity: "FileCopier [ip:CAS]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -107,12 +95,12 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", this.zteCAS.Name}
+                        {"syncPair", this.ipCAS.Name}
                     }),
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileCopier [zte:summitFtp]" + " [" + operatorName+"]",
+                    identity: "FileCopier [tdm:CAS]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -120,8 +108,34 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", this.zteSummitFtp.Name}
+                        {"syncPair", this.tdmCAS.Name}
                     }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [zte:summitFtpForTdm]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", this.SummitFtpForTdm.Name}
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [dlg:summitFtpForIp]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", this.SummitFtpForIp.Name}
+                    })
             };
             return fileCopierInstances;
         }

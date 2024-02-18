@@ -38,43 +38,27 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "H:/telcobright/vault/resources/cdr/purple/tdm",
+                StartingPath = "f:/telcobright/vault/resources/cdr/purple/tdm",
+                User = "",
+                Pass = "",
+            };
+
+            FileLocation vaultCataleya = new FileLocation()
+            {
+                Name = "vault.Cataleya",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "f:/telcobright/vault/resources/cdr/purple/ip/Aug-Oct",
                 User = "",
                 Pass = "",
             };
 
             
-
-            FileLocation fileArchive1 = new FileLocation()//raw cdr archive
-            {
-                Name = "FileArchive1Zip",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/ICX_CDR_BK",
-                ServerIp = "10.100.201.13", //server = "172.16.16.242",
-                User = "iofcdr",
-                Pass = "blt#.45",
-                IgnoreZeroLenghFile = 1
-            };
-
-
-
-
-
-
-            //add sync pairs to directory config
-            //directorySetting.SyncPairs.Add(huawei_Vault.Name, huawei_Vault);
-            //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            //directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
 
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
             
         }
     }

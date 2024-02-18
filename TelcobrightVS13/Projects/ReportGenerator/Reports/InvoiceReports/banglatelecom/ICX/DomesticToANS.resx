@@ -59,12 +59,12 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msinput="urn:schemas-microsoft-com:xml-msinput">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
+    <xsd:element name="root" msinput:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+          <xsd:element name="metainput">
             <xsd:complexType>
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
@@ -81,22 +81,22 @@
               <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
-          <xsd:element name="data">
+          <xsd:element name="input">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msinput:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msinput:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msinput:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msinput:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msinput:Ordinal="4" />
               <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msinput:Ordinal="1" />
               </xsd:sequence>
               <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="xrPictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <input name="xrPictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         /9j/4AAQSkZJRgABAQEASABIAAD/7gAOQWRvYmUAZAAAAAAB/+EMJkV4aWYAAE1NACoAAAAIAAcBEgAD
         AAAAAQABAAABGgAFAAAAAQAAAGIBGwAFAAAAAQAAAGoBKAADAAAAAQACAAABMQACAAAAIgAAAHIBMgAC
@@ -564,15 +564,15 @@
         7RXCiyVo0nqLGBsl56VLhVX8tX8Y9A/zU8flq/jHoH+anj8tX8Y9A/zU8N9fbZ0h6gdZf3xaBLpHqTqX
         pTanJcJ9Pr4oqjpAPtdPWV3Q2ANth7GExG6QbbI2wAfS4RBVRRPkqp/1Af/Z
 </value>
-  </data>
-  <data name="xrLabel1.Text" xml:space="preserve">
+  </input>
+  <input name="xrLabel1.Text" xml:space="preserve">
     <value>"The billing/Invoice amount will be deemed correct and accepted by you unless you notify anything contrary within seven days from the date of receiving the invoice (One week per BTRC directives and ICX agreements for reconciliation and to raise dispute if any)."</value>
-  </data>
-  <data name="xrLabel7.Text" xml:space="preserve">
+  </input>
+  <input name="xrLabel7.Text" xml:space="preserve">
     <value>Payment should be made by A/C payee cheque or direct deposit to Bank A/C of "Bangla Telecom Limited."
 Account Number: 35551020022487
 Routing No: 175275357
 Bank Name: Pubali Bank Ltd
 Branch name: Principal Branch, Motijheel, Dhaka</value>
-  </data>
+  </input>
 </root>

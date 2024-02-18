@@ -24,7 +24,7 @@ namespace Jobs
         public string RuleName => "JobLCR";
         public string HelpText => "LCR Creating Job on a Particular DateTime";
         public int Id => 16;
-        public JobCompletionStatus Execute(ITelcobrightJobInput jobInputData)
+        public object Execute(ITelcobrightJobInput jobInputData)
         {
             LcrJobInputData lcrJobInputData = (LcrJobInputData) jobInputData;
             MediationContext mediationContext = null;
@@ -38,15 +38,16 @@ namespace Jobs
                 mediationContext = new MediationContext(lcrJobInputData.Tbc, partnerContext);
                 IServiceFamily sf = null;
                 mediationContext.MefServiceFamilyContainer.DicExtensions.TryGetValue(ServiceFamilyType.A2Z, out sf);
+                
                 if (sf == null)
                 {
                     throw new Exception("A2Z Service Family Extension Not Found! " +
-                                        lcrJobInputData.TelcobrightJob.JobName);
+                                        lcrJobInputData.Job.JobName);
                 }
                 //generate txt table
                 LcrJobData lData = null;
                 List<RouteWiseCdrsCollection> routeWiseCdrCollections =
-                    GenerateRouteWiseCdrsCollections(lcrJobInputData.TelcobrightJob, partnerContext, out lData);
+                    GenerateRouteWiseCdrsCollections(lcrJobInputData.Job, partnerContext, out lData);
                 IdCallWiseListOfRouteVsCost IdCallWiseListOfRouteVsCost = new IdCallWiseListOfRouteVsCost();
                 foreach (var singleRouteWiseCollection in routeWiseCdrCollections)
                 {
@@ -54,9 +55,9 @@ namespace Jobs
                         .Select(c => new CdrExt(c,CdrNewOldType.NewCdr)).ToList();
                     CdrCollectionResult collectionResult =
                         new CdrCollectionResult(lcrJobInputData.Ne, cdrExtsForThisRoute,
-                                new List<cdrinconsistent>(), cdrExtsForThisRoute.Count);
+                                new List<cdrinconsistent>(), cdrExtsForThisRoute.Count,new List<string[]>());
                     CdrJobInputData cdrJobInputData=new CdrJobInputData(mediationContext,partnerContext,
-                        lcrJobInputData.Ne,lcrJobInputData.TelcobrightJob);
+                        lcrJobInputData.Ne,lcrJobInputData.Job);
                     CdrJobContext cdrJobContext=new CdrJobContext(cdrJobInputData,
                         cdrExtsForThisRoute.Select(c=>c.StartTime.Date.RoundDownToHour()).Distinct().ToList());
                     CdrProcessor cdrProcessor=new CdrProcessor(cdrJobContext,collectionResult);
@@ -80,7 +81,7 @@ namespace Jobs
                     sql = " update job set CompletionTime='" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'," +
                           " NoOfRecords=" + lstNewLcr.Count + "," +
                           " Status=1 " +
-                          " where id=" + lcrJobInputData.TelcobrightJob.id;
+                          " where id=" + lcrJobInputData.Job.id;
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();
                     string databaseName = lcrJobInputData.Tbc.DatabaseSetting.DatabaseName;
@@ -92,6 +93,21 @@ namespace Jobs
                 }
                 return JobCompletionStatus.Complete;
             }
+        }
+
+        public object PreprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJob(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITelcobrightJob createNewNonSingletonInstance()
+        {
+            throw new NotImplementedException();
         }
 
         private void ExecutePseudoRating(route thisRoute, CdrProcessor cdrProcessor, IServiceFamily sf,

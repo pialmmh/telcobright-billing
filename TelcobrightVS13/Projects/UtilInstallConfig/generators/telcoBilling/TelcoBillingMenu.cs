@@ -173,7 +173,8 @@ namespace InstallConfig
                         goto Start;
                         break;
                     case '8':
-                        setupMySqlUsersAndPermissions();
+                        MySqlPermissionManager permissionManager= new MySqlPermissionManager(this.Deploymentprofile.MySqlClusters);
+                        permissionManager.setupMySqlUsersAndPermissions();
                         Console.WriteLine("Mysql users and permissions setup completed successfully.");
                         Console.WriteLine("Press any key to return.");
                         Console.Read();
@@ -188,52 +189,7 @@ namespace InstallConfig
             }
         }
 
-        void setupMySqlUsersAndPermissions()
-        {
-            MySqlCluster mySqlCluster = this.Deploymentprofile.MySqlCluster;
-            Dictionary<string, MySqlServer> mySqlServers =
-                new Dictionary<string, MySqlServer>
-                {
-                    {mySqlCluster.Master.FriendlyName, mySqlCluster.Master}
-                };
-            mySqlCluster.Slaves.ForEach(s=> mySqlServers.Add(s.FriendlyName,s));
-            Menu menu = new Menu(mySqlServers.Keys, "Select a mysql instance to configure:", "a");
-            List<string> choices = menu.getChoices();
-            foreach (var choice in choices)
-            {
-                MySqlServer mySqlServer = mySqlServers[choice];
-                DatabaseSetting dbSettingForAutomation = new DatabaseSetting
-                {
-                    ServerName = mySqlServer.BindAddressForAutomation.IpAddressOrHostName.Address,
-                    AdminUserName = mySqlServer.RootUserForAutomation,
-                    AdminPassword = mySqlServer.RootPasswordForAutomation,
-                    DatabaseName = "mysql"
-                };
-                string constr = DbUtil.getDbConStrWithDatabase(dbSettingForAutomation);
-                using (MySqlConnection con = new MySqlConnection(constr))
-                {
-                    MySqlSession mySqlSession= new MySqlSession(con);
-                    //mySqlSession.executeCommand();
-                    MySqlCommandGenerator comamndGenerator= new MySqlCommandGenerator();
-                    Dictionary<string, List<string>> userVsCreateScript = mySqlServer.Users
-                        .Select(user => new
-                        {
-                            userName=user.Username,
-                            script= comamndGenerator.createMySqlUserTelcobrightStyle(user)
-                        }).ToDictionary(a=>a.userName, a=>a.script);
-                    foreach (var kv in userVsCreateScript)
-                    {
-                        string username = kv.Key;
-                        Console.WriteLine("Creating mysql user for:" + username);
-                        List<string> commands = kv.Value;
-                        foreach (var command in commands)
-                        {
-                            mySqlSession.executeCommand(command);
-                        }
-                    }
-                }
-            }
-        }
+        
         void generateConfig()
         {
             List<TelcobrightConfig> selectedTbcs = getSelectedTbcs();
@@ -251,8 +207,8 @@ namespace InstallConfig
                 tbc.SchedulerDaemonConfigs = configGenerator.GetSchedulerDaemonConfigs();
                 TelcoBillingConfigGenerator generator = new TelcoBillingConfigGenerator(tbc, this.ConfigPathHelper, this.ConsoleUtil, this.DdlScripts,
                     this.SeedDataScripts);
-                generator.writeConfig();
                 generator.LoadDdlScripts();
+                generator.writeConfig();
                 generator.LoadSeedData();
                 generator.LoadAdditionalSeedData();
                 configureQuarzJobStore(tbc);
@@ -331,10 +287,9 @@ namespace InstallConfig
         private static void deployBinariesForProduction(TelcobrightConfig tbc)
         {
             Console.WriteLine("Deploying binaries for " + tbc.Telcobrightpartner.databasename);
-            string currentbinPath = FileAndPathHelper.getBinPath();
-            string solutionDir = new DirectoryInfo(currentbinPath).Parent.Parent.FullName;
+            string solutionDir = new UpwordPathFinder<DirectoryInfo>("Projects").FindAndGetFullPath();
             DeploymentHelper deploymentHelper =
-                new DeploymentHelper(tbc, solutionDir,DeploymentPlatform.Win32);
+                new DeploymentHelper(tbc, solutionDir,DeploymentPlatform.Win64);
             deploymentHelper.deploy();
             Console.WriteLine("Binaries deployed successfully for " + getOperatorShortName(tbc));
         }
@@ -351,9 +306,10 @@ namespace InstallConfig
         static void DeletePrevConfigFilesForPortalAndWinService(ConfigPathHelper configPathHelper)
         {
             string targetDir = configPathHelper.GetTopShelfConfigDir();
-            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            FileAndPathHelperMutable pathHelper= new FileAndPathHelperMutable();
+            pathHelper.DeleteFileContaining(targetDir, "*.conf");
             targetDir = configPathHelper.GetPortalBinPath();
-            FileAndPathHelper.DeleteFileContaining(targetDir, "*.conf");
+            pathHelper.DeleteFileContaining(targetDir, "*.conf");
         }
         
         static void CopyPortal(string operatorDatabaseName)

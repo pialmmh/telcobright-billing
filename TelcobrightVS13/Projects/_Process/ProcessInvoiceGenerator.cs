@@ -23,6 +23,7 @@ using TelcobrightMediation.Config;
 using TelcobrightMediation;
 namespace Process
 {
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class ProcessInvoiceGenerator : AbstractTelcobrightProcess
     {
@@ -36,83 +37,82 @@ namespace Process
         public override void Execute(IJobExecutionContext schedulerContext)
         {
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+                schedulerContext, operatorName);
+            string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
+
             try
             {
-                TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
-                    schedulerContext, operatorName);
-                string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName,tbc);
                 MefJobComposer mefJobComposer = new MefJobComposer();
                 mefJobComposer.Compose();
                 ITelcobrightJob mefInvoicingJob = mefJobComposer.Jobs.Single(c => c.RuleName == "MefCdrInvoicingJob");
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
+                context.Database.Connection.Open();
+                List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId)
+                    .Select(c => c.id).ToList();
+                while (CheckIncomplete(context))
                 {
-                    context.Database.Connection.Open();
-                    List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId)
-                        .Select(c => c.id).ToList();
-                    while (CheckIncomplete(context))
+                    tbc.GetPathIndependentApplicationDirectory();
+                    List<job> incompleteJobs = context.jobs //jobs other than newcdr
+                        .Where(c => c.Status != 1 && c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition))
+                        .OrderBy(c => c.priority).ToList();
+                    using (DbCommand cmd = context.Database.Connection.CreateCommand())
                     {
-                        tbc.GetPathIndependentApplicationDirectory();
-                        List<job> incompleteJobs = context.jobs //jobs other than newcdr
-                            .Where(c => c.Status!=1 && c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition))
-                            .OrderBy(c => c.priority).ToList();
-                        using (DbCommand cmd = context.Database.Connection.CreateCommand())
+                        foreach (job telcobrightJob in incompleteJobs)
                         {
-                            foreach (job telcobrightJob in incompleteJobs)
+                            try
+                            {
+                                cmd.ExecuteCommandText("set autocommit=0;");
+                                InvoiceGenerationInputData invoiceGenerationInputData =
+                                    new InvoiceGenerationInputData(tbc, context, telcobrightJob,
+                                        GetInvoiceGenerationConfigs(tbc), ComposeInvoiceGenerationRules(),
+                                        ComposeServiceGroups(), ComposeInvoiceSectionGenerators());
+
+                                mefInvoicingJob.Execute(invoiceGenerationInputData); //EXECUTE
+
+                                cmd.CommandText = $"update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
+                                                  $"status=1, NoOfSteps=1," +
+                                                  $"progress=1," +
+                                                  $"Error=null where id={telcobrightJob.id}";
+                                cmd.ExecuteNonQuery();
+                                cmd.ExecuteCommandText(" commit; ");
+                            }
+                            catch (Exception e)
                             {
                                 try
                                 {
-                                    cmd.ExecuteCommandText("set autocommit=0;");
-                                    InvoiceGenerationInputData invoiceGenerationInputData =
-                                        new InvoiceGenerationInputData(tbc, context, telcobrightJob,
-                                            GetInvoiceGenerationConfigs(tbc), ComposeInvoiceGenerationRules(),
-                                            ComposeServiceGroups(), ComposeInvoiceSectionGenerators());
-
-                                    mefInvoicingJob.Execute(invoiceGenerationInputData); //EXECUTE
-
-                                    cmd.CommandText = $"update job set CompletionTime={DateTime.Now.ToMySqlField()}, " +
-                                                      $"status=1, NoOfSteps=1," +
-                                                      $"progress=1," +
-                                                      $"Error=null where id={telcobrightJob.id}";
-                                    cmd.ExecuteNonQuery();
-                                    cmd.ExecuteCommandText(" commit; ");
-                                }
-                                catch (Exception e)
-                                {
+                                    cmd.ExecuteCommandText(" rollback; ");
                                     try
                                     {
-                                        cmd.ExecuteCommandText(" rollback; ");
-                                        try
-                                        {
-                                            UpdateJobWithErrorInfo(cmd, telcobrightJob, e);
-                                        }
-                                        catch (Exception e2)
-                                        {
-                                            ErrorWriter wr2 = new ErrorWriter(e2, "ProcessInvoiceGenerator",
-                                                telcobrightJob,
-                                                "Exception within catch block.",
-                                                tbc.Telcobrightpartner.CustomerName);
-                                        }
-                                        continue; //with next cdr or job
+                                        UpdateJobWithErrorInfo(cmd, telcobrightJob, e);
                                     }
-                                    catch (Exception)
+                                    catch (Exception e2)
                                     {
-                                        //reaching here would be database problem
-                                        context.Database.Connection.Close();
+                                        ErrorWriter.WriteError(e2, "ProcessInvoiceGenerator",
+                                            telcobrightJob,
+                                            "Exception within catch block.",
+                                            tbc.Telcobrightpartner.CustomerName,context);
                                     }
+                                    continue; //with next cdr or job
                                 }
-                            } //for each job
-                        } //using mysql command
-                    } //while
-                }
+                                catch (Exception)
+                                {
+                                    //reaching here would be database problem
+                                    context.Database.Connection.Close();
+                                }
+                            }
+                        } //for each job
+                    } //using mysql command
+                } //while
             } //try
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "ProcessInvoiceGenerator", null, "", operatorName);
+                ErrorWriter.WriteError(e1, "ProcessInvoiceGenerator", null, "", operatorName,context);
             }
         }
 
-        private static Dictionary<int,InvoiceGenerationConfig> GetInvoiceGenerationConfigs(TelcobrightConfig tbc)
+        private static Dictionary<int, InvoiceGenerationConfig> GetInvoiceGenerationConfigs(TelcobrightConfig tbc)
         {
             return tbc.CdrSetting.ServiceGroupConfigurations
                 .ToDictionary(kv => kv.Key, kv => kv.Value.InvoiceGenerationConfig);
@@ -124,7 +124,7 @@ namespace Process
             serviceGroupComposer.Compose();
             return serviceGroupComposer.ServiceGroups.ToDictionary(c => c.Id);
         }
-        private Dictionary<string,IInvoiceGenerationRule> ComposeInvoiceGenerationRules()
+        private Dictionary<string, IInvoiceGenerationRule> ComposeInvoiceGenerationRules()
         {
             InvoiceGenerationRuleComposer invoiceGenerationRuleComposer =
                                                     new InvoiceGenerationRuleComposer();

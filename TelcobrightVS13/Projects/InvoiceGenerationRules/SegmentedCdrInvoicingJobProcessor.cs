@@ -21,7 +21,7 @@ namespace TelcobrightMediation
 
         public SegmentedCdrInvoicingJobProcessor(InvoiceGenerationInputData invoiceGenerationInputData,
             string indexedColumnName, string dateColumnName)
-            : base(invoiceGenerationInputData.Tbc.CdrSetting,invoiceGenerationInputData.TelcobrightJob, invoiceGenerationInputData.Context,
+            : base(invoiceGenerationInputData.Tbc.CdrSetting,invoiceGenerationInputData.Job, invoiceGenerationInputData.Context,
                 invoiceGenerationInputData.Tbc.CdrSetting.BatchSizeWhenPreparingLargeSqlJob,
                 indexedColumnName, dateColumnName)
         {
@@ -44,7 +44,7 @@ namespace TelcobrightMediation
             if (con.State != ConnectionState.Open) con.Open();
             var cmd = con.CreateCommand();
             cmd.CommandText = $"select jobstate from job where id=" +
-                              $"{this.InvoiceGenerationInputData.TelcobrightJob.id}";
+                              $"{this.InvoiceGenerationInputData.Job.id}";
             string jobStateJson = (string)cmd.ExecuteScalar();
             Dictionary<string, string> jobStateMap = null;
             if (jobStateJson.IsNullOrEmptyOrWhiteSpace() == false)

@@ -8,7 +8,7 @@ using TelcobrightInfra;
 
 namespace InstallConfig
 {
-    public static class AllDeploymenProfiles
+    public static partial class AllDeploymenProfiles
     {
         public static List<Deploymentprofile> getDeploymentprofiles()
         {
@@ -106,10 +106,36 @@ namespace InstallConfig
                                 SchedulerPortNo = 561
                             },
                         }
-                    }
+                    },
+                    new Deploymentprofile
+                    {
+                        profileName = "paradise",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                Name = "paradise",
+                                SchedulerPortNo = 562
+                            },
+                        }
+                    },
+                    new Deploymentprofile
+                    {
+                        profileName = "mirtelecom",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                Name = "mirtelecom",
+                                SchedulerPortNo = 563
+                            },
+                        }
+                    },
                 };
 
-            var deploymentprofile = new Deploymentprofile
+            var casProfile = new Deploymentprofile
             {
                 profileName = "cas",
                 type = DeploymentProfileType.TelcoBilling,
@@ -118,28 +144,28 @@ namespace InstallConfig
                     {"admin@telcobright.com", "btrc_cas"},
                     {"btrcadmin@telcobright.com", "btrc_cas"},
                     {"btrc@telcobright.com", "btrc_cas"},
-                    //{"agni@telcobright.com", "agni_cas"},
-                    //{"banglatelecom@telcobright.com", "banglatelecom_cas"},
-                    //{"banglaicx@telcobright.com", "bangla_cas"},
-                    //{"bantel@telcobright.com", "bantel_cas"},
-                    //{"gazinetworks@telcobright.com", "gazinetworks_cas"},
-                    //{"imamnetwork@telcobright.com", "imamnetwork_cas"},
+                    {"agni@telcobright.com", "agni_cas"},
+                    {"btcl@telcobright.com", "btcl_cas"},
+                    {"banglaicx@telcobright.com", "banglaicx_cas"},
+                    {"banglatelecom@telcobright.com", "banglatelecom_cas"},
+                    {"bantel@telcobright.com", "bantel_cas"},
+                    {"crossworld@telcobright.com", "crossworld_cas"},
+                    {"gazinetworks@telcobright.com", "gazinetworks_cas"},
+                    {"imamnetwork@telcobright.com", "imamnetwork_cas"},
+                    {"sheba@telcobright.com", "sheba_cas"},
                     {"jibondhara@telcobright.com", "jibondhara_cas"},
-                    //{"mnh@telcobright.com", "mnh_cas"},
-                    //{"btcl@telcobright.com", "btcl_cas"},
-                    //{"paradise@telcobright.com", "paradise_cas"},
-                    //{"purple@telcobright.com", "purple_cas"},
-                    //{"ringtech@telcobright.com", "ringtech_cas"},
-                    //{"crossworld@telcobright.com", "crossworld_cas"},
+                    {"mnh@telcobright.com", "mnh_cas"},
+                    {"mothertelecom@telcobright.com", "mothertelecom_cas"},
+                    {"newgenerationtelecom@telcobright.com", "newgenerationtelecom_cas"},
+                    {"paradise@telcobright.com", "paradise_cas"},
+                    {"purple@telcobright.com", "purple_cas"},
+                    {"ringtech@telcobright.com", "ringtech_cas"},
                     {"srtelecom@telcobright.com", "srtelecom_cas"},
-                    //{"sheba@telcobright.com", "sheba_cas"},
-                    //{"softex@telcobright.com", "softex_cas"},
-                    //{"teleexchange@telcobright.com", "teleexchange_cas"},
-                    //{"newgenerationtelecom@telcobright.com", "newgenerationtelecom_cas"},
-                    //{"mothertelecom@telcobright.com", "mothertelecom_cas"},
-                    //{"teleplusnewyork@telcobright.com", "teleplusnewyork_cas"},
-                    //{"summit@telcobright.com", "summit_cas"},
-                    //{"voicetel@telcobright.com", "voicetel_cas"}
+                    {"softex@telcobright.com", "softex_cas"},
+                    {"summit@telcobright.com", "summit_cas"},
+                    {"teleexchange@telcobright.com", "teleexchange_cas"},
+                    {"teleplusnewyork@telcobright.com", "teleplusnewyork_cas"},
+                    {"voicetel@telcobright.com", "voicetel_cas"}
                 },
                 instances = new List<InstanceConfig>
                 {
@@ -245,199 +271,39 @@ namespace InstallConfig
                     },
                     new InstanceConfig
                     {
-                        Name = "bangla_cas",
+                        Name = "banglaicx_cas",
                         SchedulerPortNo = 590
                     },
                     new InstanceConfig
                     {
                         Name = "btcl_cas",
                         SchedulerPortNo = 591
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "newgenerationtelecom_cas",
+                        SchedulerPortNo = 592
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "mmcommunications_cas",
+                        SchedulerPortNo = 594
                     }
                 },
-                MySqlCluster = new MySqlCluster
-                {
-                    Master = new MySqlServer("master_win12")
-                    {
-                        MySqlVersion = MySqlVersion.MySql57,
-                        BindAddressForAutomation = new BindAddress
-                        {
-                            IpAddressOrHostName = new IpAddressOrHostName {Address = "localhost"},
-                            Port = 3306
-                        },
-                        RootUserForAutomation = "btrc",
-                        RootPasswordForAutomation = "Takay1takaane",
-                        Users = new List<MySqlUser>()
-                        {
-                            new MySqlUser(username: CasConfigHelper.Db.AdminUserName,
-                                password: CasConfigHelper.Db.AdminPassword,
-                                hostnameOrIpAddresses: new List<string> {"localhost", "10.0.0.29"},
-                                permissions: new List<MySqlPermission>
-                                {
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType> {MySqlPermissionType.all,}, "*"),
-                                }),
-                            new MySqlUser(username: "dbreader",
-                                password: "Takay1takaane",
-                                hostnameOrIpAddresses: new List<string> {"localhost", "10.0.0.29"},
-                                permissions: new List<MySqlPermission>
-                                {
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "agni_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "bangla_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "banglatelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "bantel_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "btcl_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "btrc_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "crossworld_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "gazinetworks_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "getco_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "imamnetwork_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "jibondhara_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "mmcommunications_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "mnh_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "mothertelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "newgenerationtelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "paradise_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "purple_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "ringtech_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "sheba_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "softex_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "srtelecom_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "summit_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "teleexchange_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "teleplusnewyork_cas"),
-                                    new MySqlPermission(
-                                        new List<MySqlPermissionType>
-                                        {
-                                            MySqlPermissionType.execute,
-                                            MySqlPermissionType.@select
-                                        }, "voicetel_cas")
-                                })
-                        }
-                    },
-                    Slaves = new List<MySqlServer>()
-                }
             };
-            allProfiles.Add(deploymentprofile);
+            Dictionary<string,MySqlCluster> mySqlClusters =new Dictionary<string, MySqlCluster>();
+            mySqlClusters.Add("AgniBanglatelBantel", AllDeploymenProfiles.getAgniBanglatelBantel());
+            mySqlClusters.Add("NewSoftShebaTeleex",getNewSoftShebaTeleex());
+            mySqlClusters.Add("MotherTelePlusVoice",getMotherTelePlusVoice());
+            mySqlClusters.Add("MnhSrtel",getMnhSrtel());
+            mySqlClusters.Add("JibonParaPurple",getJibonParaPurple());
+            mySqlClusters.Add("GaziSummitRing",getGaziSummitRing());
+            mySqlClusters.Add("BanIcxCross",getBanIcxCross());
+            mySqlClusters.Add("BTCLImam",getBTCLImam());
+
+
+            casProfile.MySqlClusters = mySqlClusters;
+            allProfiles.Add(casProfile);
             var tcpPortWisecount = allProfiles.SelectMany(p => p.instances.Select(i => i.SchedulerPortNo))
                 .GroupBy(portNo => portNo)
                 .Select(g => new

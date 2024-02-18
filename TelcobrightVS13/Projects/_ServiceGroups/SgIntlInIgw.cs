@@ -133,7 +133,7 @@ namespace TelcobrightMediation
             }
         }
 
-        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary)
+        public void SetServiceGroupWiseSummaryParams(CdrExt cdrExt, AbstractCdrSummary newSummary, CdrSetting cdrSetting)
         {
             newSummary.tup_countryorareacode = cdrExt.Cdr.CountryCode;
             newSummary.tup_destinationId = cdrExt.Cdr.AnsIdTerm.ToString();

@@ -19,6 +19,9 @@ namespace InstallConfig
 
     public sealed partial class CasShebaAbstractConfigGenerator //quartz config part
     {
+
+        private FileLocation vaultHuawei;
+        private FileLocation vaultReve;
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
             DirectorySettings directorySetting = new DirectorySettings("I:/telcobright", @"cas");
@@ -27,39 +30,32 @@ namespace InstallConfig
             //***FILE LOCATIONS**********************************************
             //local/vault1: all app servers will use same local file location
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
-            FileLocation vaultHuawei = new FileLocation()
+            this.vaultHuawei = new FileLocation()
             {
-                Name = "Vault.Huawei",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Huwaei",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/sheba/tdm",
+                StartingPath = "f:/telcobright/vault/resources/cdr/sheba/tdm",
                 User = "",
                 Pass = "",
             };
 
-            FileLocation vaultJslcataliyaDhk = new FileLocation()
+           this.vaultReve= new FileLocation()
             {
-                Name = "Vault.JslcataleyaDhk",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Reve",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "I:/telcobright/vault/resources/cdr/sheba/ip",
+                StartingPath = "f:/telcobright/vault/resources/cdr/sheba/ip",
                 User = "",
                 Pass = "",
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuawei.Name, vaultHuawei);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultJslcataliyaDhk.Name, vaultJslcataliyaDhk);
-           
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultReve.Name, vaultReve);
            
         }
     }

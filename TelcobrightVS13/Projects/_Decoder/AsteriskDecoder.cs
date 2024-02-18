@@ -13,17 +13,17 @@ using LibraryExtensions;
 namespace Decoders
 {
 
-    [Export("Decoder", typeof(IFileDecoder))]
-    public class AsteriskDecoder : IFileDecoder
+    [Export("Decoder", typeof(AbstractCdrDecoder))]
+    public class AsteriskDecoder : AbstractCdrDecoder
     {
         public override string ToString() => this.RuleName;
-        public virtual string RuleName => GetType().Name;
-        public int Id => 20;
-        public string HelpText => "Decodes Asterisk CDR.";
-        public CompressionType CompressionType { get; set; }
-        public string PartialTablePrefix { get; }
-        public string PartialTableStorageEngine { get; }
-        public string partialTablePartitionColName { get; }
+        public override string RuleName => GetType().Name;
+        public override int Id => 20;
+        public override string HelpText => "Decodes Asterisk CDR.";
+        public override CompressionType CompressionType { get; set; }
+        public override string UniqueEventTablePrefix { get; }
+        public override string PartialTableStorageEngine { get; }
+        public override string partialTablePartitionColName { get; }
         protected CdrCollectorInputData Input { get; set; }
         protected virtual List<string[]> GetTxtCdrs()
         {
@@ -31,7 +31,7 @@ namespace Decoders
         }
 
 
-        public List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
         {
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
@@ -61,15 +61,7 @@ namespace Decoders
                         foreach (string c in replaceChars) {
                             val = val.Replace(c, "");
                         }
-                        //temp code
                         
-                        if (val.Contains("<")|| val.Contains("'")|| val.Contains(">")) {
-                            Console.WriteLine("found");
-                        }
-                        if (val.Contains("0034711303061432"))
-                        {
-                            Console.WriteLine("found");
-                        }
                         switch (thisField.FieldNumber) {
                             case Fn.Sequencenumber:
                                 strThisField= val.Replace(".", "");
@@ -126,50 +118,37 @@ namespace Decoders
                     inconsistentCdr.SwitchId = input.Ne.idSwitch.ToString();
                     inconsistentCdr.FileName = input.TelcobrightJob.JobName;
                     inconsistentCdrs.Add(inconsistentCdr);
-                    ErrorWriter wr = new ErrorWriter(e1, "DecodeCdr", null,
-                        this.RuleName + " encounterd error during decoding and an Inconsistent cdr has been generated."
-                        , input.Tbc.Telcobrightpartner.CustomerName);
                 }
             }//for each row
             return decodedRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
+        public override string getTupleExpression(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getSqlWhereClauseForHourWiseSafeCollection(CdrCollectorInputData decoderInputData,DateTime hourOfDay, int minusHoursForSafeCollection, int plusHoursForSafeCollection)
+        public override string getCreateTableSqlForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        public override string getSelectExpressionForUniqueEvent(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getDuplicateCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getWhereForHourWiseCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getPartialCollectionSql(CdrCollectorInputData decoderInputData, DateTime hourOfTheDay, List<string> tuples)
+        public override string getSelectExpressionForPartialCollection(Object data)
         {
             throw new NotImplementedException();
         }
 
-        public string getCreateTableSqlForUniqueEvent(object data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getDuplicateCollectionSql(DateTime hourOfTheDay, List<string> tuples)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getPartialCollectionSql(DateTime hourOfTheDay, List<string> tuples)
+        public override DateTime getEventDatetime(Object data)
         {
             throw new NotImplementedException();
         }

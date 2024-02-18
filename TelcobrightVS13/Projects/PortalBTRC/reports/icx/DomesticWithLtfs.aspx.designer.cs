@@ -336,6 +336,24 @@ public partial class DefaultRptDomesticWithLtfsIcx {
     protected global::System.Web.UI.WebControls.DropDownList DropDownListAns;
     
     /// <summary>
+    /// CheckBoxShowIncomingRouteIcx control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.CheckBox CheckBoxShowIncomingRouteIcx;
+    
+    /// <summary>
+    /// DropDownListIncomingRouteIcx control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.DropDownList DropDownListIncomingRouteIcx;
+    
+    /// <summary>
     /// CheckBoxShowByIgw control.
     /// </summary>
     /// <remarks>

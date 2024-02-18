@@ -15,6 +15,7 @@ using TelcobrightMediation.Config;
 
 namespace Process
 {
+    [DisallowConcurrentExecution]
     [Export("TelcobrightProcess", typeof(AbstractTelcobrightProcess))]
     public class ProcessFileLister : AbstractTelcobrightProcess
     {
@@ -54,6 +55,8 @@ namespace Process
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                 schedulerContext, operatorName);
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            PartnerEntities context = new PartnerEntities(entityConStr);
+
             try
             {
                 string syncPairName = jobDataMap.GetString("syncPair");
@@ -67,7 +70,6 @@ namespace Process
                     newFileNames = newFileNames.OrderByDescending(c => c).ToList();
                 if (newFileNames.Any())
                     heartbeat1.end(); //heartbit1 successful, expect at least one good heartbeat in an hour
-                using (PartnerEntities context = new PartnerEntities(entityConStr))
                 {
                     var connection = context.Database.Connection;
                     connection.Open();
@@ -99,8 +101,7 @@ namespace Process
                         catch (Exception e1)
                         {
                             Console.WriteLine(e1);
-                            ErrorWriter wr =
-                                new ErrorWriter(e1, "FileLister/Filename:" + fileName, null, "", operatorName);
+                            ErrorWriter.WriteError(e1, "FileLister/Filename:" + fileName, null, "", operatorName, context);
                             continue; //with next file
                         }
                     }
@@ -115,7 +116,7 @@ namespace Process
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter wr = new ErrorWriter(e1, "FileLister", null, "", operatorName);
+                ErrorWriter.WriteError(e1, "FileLister", null, "", operatorName, context);
             }
         }
 

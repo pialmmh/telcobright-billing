@@ -11,6 +11,25 @@ namespace LibraryExtensions
         None = 0,
         Zip = 1,
         Sevenzip = 2,
-        Gzip = 3
+        Gzip = 3,
+        tarZip = 4,
+        rar = 5,
+        tGzip=6
+    }
+
+    public static class CompressionTypeHelper
+    {
+        public static Dictionary<string, CompressionType> ExtensionVsCompressionTypes =
+            new Dictionary<string, CompressionType>()
+            {
+                { "none", CompressionType.None},
+                { ".gz", CompressionType.Gzip},
+                { ".zip", CompressionType.Zip},
+                { ".7z", CompressionType.Sevenzip},
+                { ".Z", CompressionType.tarZip},
+                { ".rar", CompressionType.tarZip},
+                { ".tgz", CompressionType.tGzip},
+                { "tar.gz", CompressionType.Gzip}
+            };
     }
 }

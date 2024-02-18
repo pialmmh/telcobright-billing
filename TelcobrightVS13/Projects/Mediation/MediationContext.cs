@@ -37,10 +37,10 @@ namespace TelcobrightMediation
         public Dictionary<ValueTuple<int, string>, route> Routes { get; }
         public Dictionary<ValueTuple<int, string>, bridgedroute> BridgedRoutes { get; }
         public List<ansprefixextra> LstAnsPrefixExtra { get; private set; } //required for failed intl in calls where term number might be missing
-        public Dictionary<string, partnerprefix>AnsPrefixes0880 { get; }= new Dictionary<string, partnerprefix>();
-        public Dictionary<string, partnerprefix>AnsPrefixes880 { get; }= new Dictionary<string, partnerprefix>();
-        public Dictionary<string, partnerprefix>AnsPrefixes0 { get; }= new Dictionary<string, partnerprefix>();
-        public Dictionary<string, partnerprefix> AnsPrefixes { get; }= new Dictionary<string, partnerprefix>();  //ANSTermprefix partner dictionary with AnsPrefix as Key
+        public Dictionary<string, partnerprefix> AnsPrefixes00880 { get; } = new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix> AnsPrefixes880 { get; } = new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix> AnsPrefixes0 { get; } = new Dictionary<string, partnerprefix>();
+        public Dictionary<string, partnerprefix> AnsPrefixes { get; } = new Dictionary<string, partnerprefix>();  //ANSTermprefix partner dictionary with AnsPrefix as Key
         public Dictionary<int, cdrfieldlist> CdrFieldLists { get; private set; }
         public Dictionary<int, Dictionary<int, ServiceGroupConfiguration>> ServiceGroupConfigurations { get; } //<switchid,dic<servicegroupID,medruleassignment>>
         public Dictionary<int, SwitchWiseLookup> SwitchWiseLookups { get; }
@@ -48,20 +48,23 @@ namespace TelcobrightMediation
         public Dictionary<int, partner> Partners { get; }
         public Dictionary<string, ipaddressorpointcode> IpAddressorPointCodes { get; }
         public Trie IpAddressOrPointCodeTrie { get; }
+        public bool DisableTemporaryTablesCreation { get; }
+        public int TotalFieldTelcobright { get;  }
 
-        public MediationContext(TelcobrightConfig tbc, PartnerEntities context)
+        public MediationContext(TelcobrightConfig tbc, PartnerEntities context, bool disableTemporaryTablesCreation=false)
         {
             StaticExtInsertColumnParsedDic.Parse();
             this.Tbc = tbc;
             this.Context = context;
+            var cdrSetting = this.CdrSetting;
             this.AutoIncrementManager = new AutoIncrementManager(
                 counter => (int)AutoIncrementTypeDictionary.EnumTypes[counter.tableName],
                 counter => counter.GetExtInsertValues(),
                 counter => counter.GetUpdateCommand(
                     c => $@" where tableName='{AutoIncrementTypeDictionary.EnumTypes[counter.tableName]}'"),
-                null, this.Context.Database.Connection.CreateCommand(), this.CdrSetting.SegmentSizeForDbWrite);
+                null, this.Context.Database.Connection.CreateCommand(), cdrSetting.SegmentSizeForDbWrite);
             this.AutoIncrementManager.PopulateCache(() => context.autoincrementcounters
-            .ToDictionary(c => (int)AutoIncrementTypeDictionary.EnumTypes[c.tableName]));
+                .ToDictionary(c => (int)AutoIncrementTypeDictionary.EnumTypes[c.tableName]));
 
             this.MefDecoderContainer = new MefDecoderContainer(this.Context);
             this.MefServiceFamilyContainer = new MefServiceFamilyContainer();
@@ -82,22 +85,25 @@ namespace TelcobrightMediation
             this.BillingSpans = context.enumbillingspans.ToDictionary(c => c.ofbiz_uom_Id); //route data
             this.Routes = context.routes.Include(r => r.partner)
                 .ToDictionary(r => new ValueTuple<int, string>(r.SwitchId, r.RouteName));
-            this.IpAddressorPointCodes = context.Database
-                .SqlQuery<ipaddressorpointcode>("select routename from ipaddressorpointcode")
-                .ToDictionary(entity => entity.RouteName);
-            this.IpAddressOrPointCodeTrie = new Trie(this.IpAddressorPointCodes.Keys,
-                this.Tbc.DefaultRootCharForTrie);
+            //this.IpAddressorPointCodes = context.Database
+            //    .SqlQuery<ipaddressorpointcode>("select routename from ipaddressorpointcode")
+            //    .ToDictionary(entity => entity.RouteName);
+            //this.IpAddressOrPointCodeTrie = new Trie(this.IpAddressorPointCodes.Keys,
+            //    this.Tbc.DefaultRootCharForTrie);
             this.BridgedRoutes = context.bridgedroutes.Include(r => r.partner).Include(r => r.partner1)
                 .ToDictionary(r => new ValueTuple<int, string>(r.switchId, r.routeName));
 
-            this.AnsPrefixes = PopulateANSPrefix().OrderByDescending(p=>p.Prefix.Length).ToDictionary(p=>p.Prefix);
+            //this.AnsPrefixes = PopulateANSPrefix().OrderByDescending(p=>p.Prefix.Length).ToDictionary(p=>p.Prefix);
+
+            this.AnsPrefixes = PopulateANSPrefix().OrderBy(p => p.PrefixType).ThenBy(p => p.Prefix.Length).
+                ToDictionary(p => p.Prefix);//prefix type used as priority, order by priority first
             foreach (KeyValuePair<string, partnerprefix> kv in this.AnsPrefixes)
             {
                 string prefix = kv.Key;
                 var partnerPrefix = kv.Value;
-                this.AnsPrefixes0880.Add("0800" + prefix,partnerPrefix);    
-                this.AnsPrefixes880.Add("800" + prefix,partnerPrefix);    
-                this.AnsPrefixes0.Add("0" + prefix,partnerPrefix);    
+                this.AnsPrefixes00880.Add("00880" + prefix, partnerPrefix);
+                this.AnsPrefixes880.Add("880" + prefix, partnerPrefix);
+                this.AnsPrefixes0.Add("0" + prefix, partnerPrefix);
             }
             this.LstAnsPrefixExtra = context.ansprefixextras.OrderByDescending(c => c.PrefixBeforeAnsNumber.Length)
                 .ToList();
@@ -136,7 +142,7 @@ namespace TelcobrightMediation
                 };
 
             List<rateplanassignmenttuple> rateplanassignmenttuples
-                = context.rateplanassignmenttuples.Include(rt=> rt.billingruleassignment).ToList();
+                = context.rateplanassignmenttuples.Include(rt => rt.billingruleassignment).ToList();
             this.MefServiceFamilyContainer.IdWiseRateplanAssignmenttuplesIncludingBillingRules
                 = rateplanassignmenttuples.ToDictionary(c => c.id);
             Dictionary<int, List<rateplanassignmenttuple>> serviceGroupWiseRatePlanAssignmentTuples =
@@ -147,15 +153,17 @@ namespace TelcobrightMediation
                 this.MefServiceFamilyContainer.ServiceGroupWiseTupDefs.Add(kv.Key, new TupleDefinitions(kv.Value));
             }
             CdrSummaryTypeDictionary.Initialize();
-            CreateTemporaryTables();
+            if(!disableTemporaryTablesCreation)
+                CreateTemporaryTables();
             this.MefPartnerRuleContainer.MediationContext = this;
+            this.TotalFieldTelcobright= context.cdrfieldlists.Count();
         }
 
         List<partnerprefix> PopulateANSPrefix()
         {
             //load ans prefix from partnerprefix
             Dictionary<string, partnerprefix> dictAnsOrig = new Dictionary<string, partnerprefix>();
-            string sql = " select * from partnerprefix where prefixtype=3";
+            string sql = " select * from partnerprefix";
             List<partnerprefix> partnerprefixes = this.Context.Database.SqlQuery<partnerprefix>(sql).ToList();
             return partnerprefixes;
         }
@@ -258,11 +266,11 @@ namespace TelcobrightMediation
         private MefValidator<T> CreateValidatorInstanceFromRules<T>(List<IValidationRule<T>> rules)
         {
             var mefValidator = new MefValidator<T>(continueOnError: false,
-                                throwExceptionOnFirstError: false,
-                                rules: rules);
+                throwExceptionOnFirstError: false,
+                rules: rules);
             return mefValidator;
         }
-        private void CreateTemporaryTables()
+        public void CreateTemporaryTables()
         {
             DbCommand cmd = this.Context.Database.Connection.CreateCommand();
             cmd.CommandType = CommandType.Text;
@@ -284,8 +292,8 @@ namespace TelcobrightMediation
         {
             cmd.CommandText = "drop table if exists temp_rate;";
             cmd.ExecuteNonQuery();
-
-            cmd.CommandText = $@"create temporary table temp_rate  engine=memory
+            
+            cmd.CommandText = $@"create temporary  table temp_rate  engine=memory
                                      select * from rate where 1=2;";
             cmd.ExecuteNonQuery();
             cmd.CommandText =

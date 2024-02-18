@@ -12,17 +12,17 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using ExportToExcel;
 using LibraryExtensions;
-using reports;
 using MediationModel;
 using PortalApp;
 using PortalApp.ReportHelper;
+using reports;
 using TelcobrightInfra;
 
 public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 {
     DataTable _dt;
     bool _timerflag = false;
-
+    TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
     public TelcobrightConfig tbc;
    
     private string GetQuery()
@@ -52,15 +52,16 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                          tableName,
                          new List<string>()
                             {
+                                groupInterval=="Hourly"?"Date":string.Empty,
                                 getInterval(groupInterval),
-                                ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
+                                //ViewBySwitch.Checked==true?"tup_switchid":string.Empty,
                                 CheckBoxShowByCountry.Checked==true?"tup_countryorareacode":string.Empty,
                                 CheckBoxShowByDestination.Checked==true?"tup_matchedprefixcustomer":string.Empty,
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
-                                "usdRate",
+                                //CheckBoxShowByCustomerRate.Checked==true?"usdRate":string.Empty,
+                                //"usdRate",
                                 //CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
@@ -159,6 +160,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 
         GridView1.Columns[GetColumnIndexByName(GridView1, "Country")].Visible = CheckBoxShowByCountry.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "Destination")].Visible = CheckBoxShowByDestination.Checked;
+        GridView1.Columns[GetColumnIndexByName(GridView1, "ANS")].Visible = CheckBoxShowByIgw.Checked;
         //GridView1.Columns[3].Visible = CheckBoxShowByIgw.Checked;
         //GridView1.Columns[GetColumnIndexByName(GridView1, "tup_incomingroute")].Visible = CheckBoxViewIncomingRoute.Checked;
 
@@ -246,7 +248,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
                     tableNames: tableNames,
                     _baseSqlStartsWith: "(",
                     _baseSqlEndsWith: ") x");
-            string aggregatedSql = sqlAggregator.getFinalSql();
+            string aggregatedSql = sqlAggregator.getFinalSql().Replace("date_format(tup_starttime, '%m %d %y')", "date_format(tup_starttime, '%M %d %Y')");
             MySqlCommand cmd = new MySqlCommand(aggregatedSql, connection);
             cmd.Connection = connection;
 
@@ -927,7 +929,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
             }
             if (lblScreenTitle.Text == "")
             {
-                lblScreenTitle.Text = "Reports/Intl. Outgoing/Traffic";
+                lblScreenTitle.Text = "Reports/International Outgoing";
             }
 
             //End of Site Map Part *******************************************************************
@@ -1110,6 +1112,7 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
         if (ViewBySwitch.Checked == true)
         {
             DropDownListShowBySwitch.Enabled = true;
+            setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
         }
         else DropDownListShowBySwitch.Enabled = false;
     }
@@ -1658,6 +1661,46 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
     //    DropDownListShowBySwitch.Enabled = CheckBoxShowBySwitch.Checked;
     //}
 
+    protected void DropDownListViewIncomingRoute_SelectedChanged(object sender, EventArgs e)
+    {
+        setSwitchListDropDown(DropDownListViewIncomingRoute, EventArgs.Empty);
+    }
+
+    protected void setSwitchListDropDown(object sender, EventArgs e)
+    {
+
+
+        TelcobrightConfig tb = telcobrightConfig;
+        tb.DatabaseSetting.DatabaseName = DropDownListViewIncomingRoute.SelectedValue;
+        if (tb.DatabaseSetting.DatabaseName != "-1")
+        {
+            this.ViewBySwitch.Enabled = true;
+
+            //this.ViewBySwitch.Checked = true;
+            using (PartnerEntities context = PortalConnectionHelper.GetPartnerEntitiesDynamic(tb.DatabaseSetting))
+            {
+                //populate switch
+                List<ne> lstNe = context.nes.ToList();
+                this.DropDownListShowBySwitch.Items.Clear();
+                this.DropDownListShowBySwitch.Items.Add(new ListItem(" [All]", "-1"));
+                foreach (ne nE in lstNe)
+                {
+                    if (!nE.SwitchName.Contains("dummy"))
+                    {
+                        this.DropDownListShowBySwitch.Items.Add(new ListItem(nE.SwitchName, nE.idSwitch.ToString()));
+                    }
+
+                }
+            }
+        }
+        else
+        {
+            this.ViewBySwitch.Enabled = false;
+            this.ViewBySwitch.Checked = false;
+            this.DropDownListShowBySwitch.Enabled = false;
+        }
+    }
+
     protected void DropDownListIgw_OnSelectedIndexChanged(object sender, EventArgs e)
     {
         DropDownListViewIncomingRoute.Items.Clear();
@@ -1723,17 +1766,38 @@ public partial class CasDefaultRptIntlOutIcx : System.Web.UI.Page
 
     private void populateICX()
     {
-        DropDownListViewIncomingRoute.Items.Clear();
-        DropDownListViewIncomingRoute.Items.Add(new ListItem("[All]", "-1"));
-        foreach (var kv in tbc.DeploymentProfile.UserVsDbName)
+        string logIdentityName = this.User.Identity.Name;
+        String selectedIcx = logIdentityName;
+        TelcobrightConfig telcobrightConfig = PageUtil.GetTelcobrightConfig();
+        string selectedUserdbName;
+        Dictionary<string, string> userVsDbName = telcobrightConfig.DeploymentProfile.UserVsDbName;
+        if (userVsDbName.ContainsKey(logIdentityName))
         {
-            if (!kv.Value.Contains("btrc"))
+            selectedUserdbName = userVsDbName[logIdentityName];
+        }
+        else
+        {
+            selectedUserdbName = telcobrightConfig.DatabaseSetting.DatabaseName;
+        }
+        DropDownListViewIncomingRoute.Items.Clear();
+        if (selectedUserdbName.Contains("btrc"))
+        {
+            foreach (var kv in telcobrightConfig.DeploymentProfile.UserVsDbName)
             {
-                string username = kv.Key;
-                string dbNameAsRouteName = kv.Value;
-                string icxName = dbNameAsRouteName.Split('_')[0];
-                DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                if (!kv.Value.Contains("btrc"))
+                {
+                    string username = kv.Key;
+                    string dbNameAsRouteName = kv.Value;
+                    string icxName = dbNameAsRouteName.Split('_')[0];
+                    DropDownListViewIncomingRoute.Items.Add(new ListItem(icxName, dbNameAsRouteName));
+                }
+
             }
+        }
+        else
+        {
+            string individualIcxName = selectedUserdbName.Split('_')[0];
+            DropDownListViewIncomingRoute.Items.Add(new ListItem(individualIcxName, selectedUserdbName));
 
         }
     }

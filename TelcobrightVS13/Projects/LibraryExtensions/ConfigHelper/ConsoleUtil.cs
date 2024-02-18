@@ -16,6 +16,7 @@ namespace LibraryExtensions.ConfigHelper
         public bool getConfirmationFromUser(string promptOrMsg, List<char> confirmationChars=null)
         {
             List<char> confirm= confirmationChars ?? this._confirmationChars;
+            Console.WriteLine();
             Console.WriteLine(promptOrMsg);
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             Console.WriteLine();
