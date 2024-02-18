@@ -55,15 +55,20 @@ namespace LibraryExtensions
                 
 
                 string excludeFolder = Path.Combine(RootDir, "exclude");
-                
+                string predecodedFolder = Path.Combine(RootDir, "predecoded");
+
+
 
                 string[] subDirs = Directory.GetDirectories(parentDir);
                 foreach (string subDir in subDirs)
                 {
-                    if (subDir == excludeFolder)
+                    if (subDir == excludeFolder || subDir == predecodedFolder)
                     {
                         continue;
                     }
+
+
+
                     var currentTime = DateTime.Now;
                     var dirCreationTime = File.GetCreationTime(subDir);
 
