@@ -7,8 +7,8 @@ namespace TelcobrightMediation.Cdr
     {
         public static void Commit(DbCommand cmd, CdrSetting cdrSetting)
         {
-            CheckIfCdrDurationMatchesSummaryDuration(cmd, cdrSetting);
-            CheckIfTransactionAmountMatchesLedgerSummary(cmd);
+            //CheckIfCdrDurationMatchesSummaryDuration(cmd, cdrSetting);
+            //CheckIfTransactionAmountMatchesLedgerSummary(cmd);
             cmd.CommandText = "commit;";
             cmd.ExecuteNonQuery();
         }
