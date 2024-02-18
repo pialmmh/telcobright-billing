@@ -90,9 +90,14 @@ namespace Decoders
                     string answerTimeStr = lineAsArr[11].Trim();
                     string endTimeStr = lineAsArr[12].Trim();
 
-                    DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormat("yyyyMMddHHmmss.fff");
-                    DateTime anstime = answerTimeStr.ConvertToDateTimeFromCustomFormat("yyyyMMddHHmmss.fff");
-                    DateTime endtime = endTimeStr.ConvertToDateTimeFromCustomFormat("yyyyMMddHHmmss.fff");
+                    string dateformat = startTimestr.Split('.')[1].Length == 3 ? "yyyyMMddHHmmss.fff" : "yyyyMMddHHmmss.ffff";
+                    DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormat(dateformat);
+
+                    dateformat = answerTimeStr.Split('.')[1].Length == 3 ? "yyyyMMddHHmmss.fff" : "yyyyMMddHHmmss.ffff";
+                    DateTime anstime = answerTimeStr.ConvertToDateTimeFromCustomFormat(dateformat);
+
+                    dateformat = endTimeStr.Split('.')[1].Length == 3 ? "yyyyMMddHHmmss.fff" : "yyyyMMddHHmmss.ffff";
+                    DateTime endtime = endTimeStr.ConvertToDateTimeFromCustomFormat(dateformat);
 
                     textCdr[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
                     textCdr[Fn.AnswerTime] = anstime.ToMySqlFormatWithoutQuote();
