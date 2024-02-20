@@ -12,6 +12,7 @@ using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
+using LogPreProcessor;
 using MediationModel;
 using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
@@ -88,6 +89,39 @@ namespace InstallConfig
                     BytesPerRecord = 559,
                     MaxRecordsInSingleFile = 30000,
                     SplitFileIfSizeBiggerThanMbyte =  559 * 70000//559*30000
+                },
+                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
+                {
+                    { 7, new NeAdditionalSetting {//for zte
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 30,
+                        MinRowCountToStartBatchCdrProcessing = 70000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }},
+                    { 18, new NeAdditionalSetting {// cataleya
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }}
                 },
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
                 {
@@ -275,7 +309,7 @@ namespace InstallConfig
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
-            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc);
+            this.Tbc.PortalSettings = GetPortalSettings(this.Tbc.Telcobrightpartner.CustomerName);
             return this.Tbc;
         }
     }
