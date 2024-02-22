@@ -329,6 +329,14 @@
     <Compile Include="config\mirtelecom\MirQuartzConfig.cs" />
     <Compile Include="config\mirtelecom\MirServiceGroups.cs" />
     <Compile Include="config\mirtelecom\MirConfigMain.cs" />
+    <Compile Include="config\smshub\SmsHubConfigMain.cs" />
+    <Compile Include="config\smshub\SmsHubDatabaseSettings.cs" />
+    <Compile Include="config\smshub\SmsHubDirectorySettings.cs" />
+    <Compile Include="config\smshub\SmsHubPortalSetting.cs" />
+    <Compile Include="config\smshub\SmsHubProductAndServiceConfig.cs" />
+    <Compile Include="config\smshub\SmsHubQuartzConfig.cs" />
+    <Compile Include="config\smshub\SmsHubServerConfig.cs" />
+    <Compile Include="config\smshub\SmsHubServiceGroups.cs" />
     <Compile Include="config\paradise\ParadiseConfigMain.cs" />
     <Compile Include="config\paradise\ParadiseDatabaseSettings.cs" />
     <Compile Include="config\paradise\ParadiseDirectorySettings.cs" />
@@ -474,7 +482,6 @@
     <None Include="config\mirtelecom\tmplPortalAppPools.xml.bak" />
     <None Include="config\mirtelecom\tmplPortalFtpSite.txt.bak" />
     <None Include="config\mirtelecom\tmplPortalWebSite.txt.bak" />
-    <None Include="config\paradise\paradise.conf" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -546,6 +553,8 @@
     <Folder Include="config\paradise\_dbscripts\seedData\sql\" />
     <Folder Include="config\purple\_dbscripts\ddl\" />
     <Folder Include="config\purple\_dbscripts\seedData\" />
+    <Folder Include="config\smshub\_dbscripts\seedData\json\" />
+    <Folder Include="config\smshub\_dbscripts\seedData\sql\" />
     <Folder Include="config\srtelecom\_dbscripts\ddl\" />
     <Folder Include="config\srtelecom\_dbscripts\seedData\" />
     <Folder Include="config\summit\_dbscripts\ddl\" />
@@ -636,6 +645,12 @@
     <Content Include="config\mirtelecom\tmplPortalFtpSite.txt" />
     <Content Include="config\mirtelecom\tmplPortalWebSite.txt" />
     <Content Include="config\mirtelecom\_dbscripts\quartzTables.sql" />
+    <Content Include="config\smshub\tmplPortalAppPools.txt" />
+    <Content Include="config\smshub\tmplPortalFtpSite.txt" />
+    <Content Include="config\smshub\tmplPortalWebSite.txt" />
+    <Content Include="config\smshub\_dbscripts\ddl\sql\icxSp.sql" />
+    <Content Include="config\smshub\_dbscripts\ddl\sql\indexSwitch.txt" />
+    <Content Include="config\smshub\_dbscripts\quartzTables.sql" />
     <Content Include="config\paradise\tmplPortalAppPools.txt" />
     <Content Include="config\paradise\tmplPortalFtpSite.txt" />
     <Content Include="config\paradise\tmplPortalWebSite.txt" />

@@ -133,6 +133,19 @@ namespace InstallConfig
                             },
                         }
                     },
+                    new Deploymentprofile
+                    {
+                        profileName = "smshub",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                Name = "smshub",
+                                SchedulerPortNo = 564
+                            },
+                        }
+                    }
                 };
 
             var casProfile = new Deploymentprofile
