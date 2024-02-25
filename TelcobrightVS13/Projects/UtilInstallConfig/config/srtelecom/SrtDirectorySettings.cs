@@ -21,7 +21,8 @@ namespace InstallConfig
         private FileLocation vaultPrimary;
         private FileLocation vaultCataleya;
         private SyncPair Huawei_Vault;
-        private SyncPair vaultCAS;
+        private SyncPair ipCAS;
+        private SyncPair tdmCAS;
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
             { "vaultName","vault"},
@@ -42,7 +43,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/huawei",
                 User = "",
                 Pass = "",
             };
@@ -91,18 +92,33 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            FileLocation fileArchiveCAS = new FileLocation()//raw cdr archive
+
+            FileLocation cas_tdm = new FileLocation()//raw cdr archive
             {
-                Name = "cas",
+                Name = "cas_zte",
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
                 StartingPath = @"/",
-                ServerIp = "192.168.100.161", //server = "172.16.16.242",
-                User = "adminsrt",
-                Pass = "srticx725",
+                ServerIp = "10.154.150.35", //server = "172.16.16.242",
+                User = "srTelecom_tdm",
+                Pass = "q9%0p3la#WO8",
                 IgnoreZeroLenghFile = 1
             };
+
+            FileLocation cas_ip = new FileLocation()//raw cdr archive
+            {
+                Name = "cas_huawei",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/",
+                ServerIp = "10.255.200.35", 
+                User = "srTelecom_ip",
+                Pass = @"TYSDP*Fp@w\37a,;",
+                IgnoreZeroLenghFile = 1
+            };
+
 
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
@@ -139,19 +155,17 @@ namespace InstallConfig
                 }
             };
 
-
-            //sync pair Vault_S3:FileArchive1
-            this.vaultCAS = new SyncPair("Vault:CAS")
+            this.ipCAS = new SyncPair("ip:cas")
             {
                 SkipCopyingToDestination = false,
                 SkipSourceFileListing = true,
                 SrcSyncLocation = new SyncLocation()
                 {
-                    FileLocation = vaultPrimary
+                    FileLocation = vaultCataleya
                 },
                 DstSyncLocation = new SyncLocation()
                 {
-                    FileLocation = fileArchiveCAS
+                    FileLocation = cas_ip
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
@@ -166,17 +180,45 @@ namespace InstallConfig
                 }
             };
 
+
+            this.tdmCAS = new SyncPair("tdm:cas")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultPrimary
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = cas_tdm
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
+
+
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(Huawei_Vault.Name, Huawei_Vault);
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
-            directorySetting.SyncPairs.Add(vaultCAS.Name, vaultCAS);
+            directorySetting.SyncPairs.Add(ipCAS.Name, ipCAS);
+            directorySetting.SyncPairs.Add(tdmCAS.Name, tdmCAS);
 
-           
+
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
-                //vaultS3FileArchive1.Name,
-                vaultCAS.Name
+                ipCAS.Name,
+                tdmCAS.Name,
             };
         }
     }

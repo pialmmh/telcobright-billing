@@ -48,6 +48,32 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", Huawei_Vault.Name}
                     }),
+                //new QuartzTbDaemonConfig
+                //(
+                //    operatorName: operatorName,
+                //    identity: "FileLister [ip:Cas]" + " [" + operatorName+"]",
+                //    group: operatorName,
+                //    cronExpression: "/30 * * ? * *",
+                //    fireOnceIfMissFired: false,
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "106"},
+                //        {"operatorName", operatorName},
+                //        {"syncPair", this.ipCAS.Name}
+                //    }),
+                //new QuartzTbDaemonConfig
+                //(
+                //    operatorName: operatorName,
+                //    identity: "FileLister [tdm:Cas]" + " [" + operatorName+"]",
+                //    group: operatorName,
+                //    cronExpression: "/30 * * ? * *",
+                //    fireOnceIfMissFired: false,
+                //    jobDataMap: new Dictionary<string, string>()
+                //    {
+                //        {"telcobrightProcessId", "106"},
+                //        {"operatorName", operatorName},
+                //        {"syncPair", this.tdmCAS.Name}
+                //    }),
             };
             return fileListerInstances;
         }
@@ -67,13 +93,13 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", Huawei_Vault.Name}
+                        {"syncPair", this.Huawei_Vault.Name}
                     }),
                 
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
-                    identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
+                    identity: "FileCopier [ip:CAS]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",
                     fireOnceIfMissFired: false,
@@ -81,7 +107,20 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", vaultCAS.Name}
+                        {"syncPair", this.ipCAS.Name}
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [tdm:CAS]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", this.tdmCAS.Name}
                     }),
             };
             return fileCopierInstances;

@@ -17,6 +17,7 @@ using LibraryExtensions;
 using MediationModel;
 using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
+using LogPreProcessor;
 
 namespace InstallConfig
 {
@@ -85,7 +86,48 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
+                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
+                {
+                {
+                    8,
+                    new NeAdditionalSetting
+                    {//huawei
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }
+                },
+                {
+                    18,
+                    new NeAdditionalSetting
+                    {//cataleya
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }
+                }
+            }
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
@@ -101,7 +143,7 @@ namespace InstallConfig
                     FileExtension= ".dat",
                     Description= null,
                     SourceFileLocations= vaultPrimary.Name,
-                    BackupFileLocations= vaultCAS.Name,
+                    BackupFileLocations= this.tdmCAS.Name,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
@@ -127,14 +169,14 @@ namespace InstallConfig
                 {
                     idSwitch= 18,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 25,
+                    idcdrformat= 46,
                     idMediationRule= 2,
                     SwitchName= "cataleya",
                     CDRPrefix= "esdr",
-                    FileExtension= ".txt",
+                    FileExtension= ".gz",
                     Description= null,
                     SourceFileLocations= this.vaultCataleya.Name,
-                    BackupFileLocations= null,
+                    BackupFileLocations= this.ipCAS.Name,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
