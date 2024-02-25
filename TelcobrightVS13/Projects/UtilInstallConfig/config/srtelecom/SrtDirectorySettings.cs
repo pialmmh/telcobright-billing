@@ -65,7 +65,7 @@ namespace InstallConfig
                 LocationType = "ftp",
                 OsType = "windows",
                 PathSeparator = "/",
-                StartingPath = "/",
+                StartingPath = "",
                 //StartingPath = "/home/zxss10_bsvr/data/bfile/bill/zsmart_media_bak",
                 Sftphostkey = string.Empty,
                 //Sftphostkey = "ssh-rsa 2048 44:56:0b:fa:3a:79:c2:ee:1c:95:d9:05:b5:9b:56:4a",

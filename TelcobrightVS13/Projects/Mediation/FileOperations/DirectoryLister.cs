@@ -55,6 +55,7 @@ namespace TelcobrightFileOperations
         public List<RemoteFileInfoExt> ListRemoteDirectoryRecursive(Session session, string relativePath)
         {
             List<RemoteFileInfo> remoteFiles = new List<RemoteFileInfo>();
+            relativePath = relativePath.IsNullOrEmptyOrWhiteSpace() ? "/" : relativePath;
             RemoteDirectoryInfo directoryInfo = session.ListDirectory(relativePath);
             List<RemoteFileInfo> filesOnly = GetFilesOnlyWithoutFolders(directoryInfo);
             List<RemoteFileInfoExt> fileInfoExtOnly =
