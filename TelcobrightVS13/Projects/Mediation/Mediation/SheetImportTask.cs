@@ -43,7 +43,7 @@ public class SheetImportTask
         this.RatePlan = pRatePlan;
     }
 
-    
+
 
     public int GetVendorFormat(ref List<ratetask> lstRateTask, rateplan rp, Workbook book, string[] dateFormats,
         ref string dateSeparator)
@@ -696,9 +696,9 @@ public class SheetImportTask
                     valNewCodes = RangeToMultiplePrefix(valNewCodes);
                     SeparatedPrefixArray sepNewCodes = new SeparatedPrefixArray(valNewCodes);
                     finalPrefixesForThisRow = (from s in sepOldCodes.PrefixArray.Except(sepNewCodes.PrefixArray)
-                        where
-                        s != "" //exclude where old entries had only country, new code added, not significant for code deletion
-                        select s).ToArray();
+                                               where
+                                               s != "" //exclude where old entries had only country, new code added, not significant for code deletion
+                                               select s).ToArray();
                 }
 
                 int prefixcount = finalPrefixesForThisRow.Count();
@@ -721,7 +721,7 @@ public class SheetImportTask
                 }
 
                 foreach (string[] rstr in lstRows) //lstrows may contain one or multiple rows depending on
-                    //single or multiple prefix
+                                                   //single or multiple prefix
                 {
                     singlePrefixTableRows.Add(rstr);
                 }
@@ -746,7 +746,8 @@ public class SheetImportTask
         Rate,
         Datetime,
         Undetermined,
-        Null
+        Null,
+        Pulse
     }
 
     class RateTableMetaData
@@ -792,6 +793,7 @@ public class SheetImportTask
         public int PossCountryNameCount = 0;
         public int PossMultipleWordCount = 0;
         public int PossDateCount = 0;
+        public int PossPulseCount = 0;
 
 
 
@@ -836,6 +838,12 @@ public class SheetImportTask
                 max = this.PossDateCount;
                 maxLike = CellDataType.Datetime;
             }
+            if (this.PossPulseCount > max)
+            {
+                max = this.PossPulseCount;
+                maxLike = CellDataType.Pulse;
+            }
+
             return maxLike;
         }
 
@@ -895,6 +903,9 @@ public class SheetImportTask
                     case CellDataType.CountryCode:
                         rAttrib.PossCountryCodeCount++;
                         break;
+                    case CellDataType.Pulse:
+                        rAttrib.PossPulseCount++;
+                        break;
                 }
             }
 
@@ -945,6 +956,9 @@ public class SheetImportTask
                     break;
                 case CellDataType.CountryCode:
                     rAttrib.PossCountryCodeCount++;
+                    break;
+                case CellDataType.Pulse:
+                    rAttrib.PossPulseCount++;
                     break;
             }
         }
@@ -1018,6 +1032,9 @@ public class SheetImportTask
                         }
 
                         break;
+                    case CellDataType.Pulse:
+                        rAttrib.PossPulseCount++;
+                        break;
                 }
                 rAttrib.CharacterCount += objArray[i, j].ToString().Length;
 
@@ -1053,6 +1070,22 @@ public class SheetImportTask
 
             DateTime myDateTime = new DateTime(1, 1, 1);
 
+            if (value.Contains("-") && value.Count(ch => ch == '-') == 2 && value.Split('-')[0] == "0")
+            {
+                thisLike = CellDataType.Pulse;
+                return thisLike;
+            }
+            else if (value.Contains("/") && value.Count(ch => ch == '/') == 1)
+            {
+                thisLike = CellDataType.Pulse;
+                return thisLike;
+            }
+            else if (value.Contains("/") && value.Count(ch => ch == '/') == 2 && value.Split('-')[0] == "0" )
+            {
+                thisLike = CellDataType.Pulse;
+                return thisLike;
+            }
+
             if ((value.Contains("/")) &&
                 DateTime.TryParseExact(value, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None,
                     out myDateTime))
@@ -1085,7 +1118,7 @@ public class SheetImportTask
                 dateSeparator = " ";
                 return thisLike;
             }
-
+            
             //replace "/" with "-". If dates contain "/", datetime.tryparse didn't work with 
             else if (DateTime.TryParse(value.Replace("/", "-"), out myDateTime) &&
                      (value.Contains("/") || value.Contains("-")))
@@ -1247,6 +1280,7 @@ public class SheetImportTask
                 {
                     thisLike = CellDataType.MultiplePrefix;
                 }
+
             }
             return thisLike;
         }

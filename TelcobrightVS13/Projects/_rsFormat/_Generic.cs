@@ -72,7 +72,7 @@ namespace RateSheetFormat
             {
                 string DateSeparator = "";
                 //ApplicationClass app = new ApplicationClass(); // the Excel application.
-                var app = new Application();app.Visible = false;
+                var app = new Application(); app.Visible = false;
                 // the reference to the workbook,
                 // which is the xls document to read from.
                 Workbook book = null;
@@ -118,12 +118,12 @@ namespace RateSheetFormat
                     DelTask.MinDurationSec = "1";//set any minduration
                     lstCodeDeletes.Add(DelTask);
                 }
-                
+
 
                 //merge code delete instructions with main prefix list
                 lstRateTask.AddRange(lstCodeDeletes);//add the code delete instructions to strlines
 
-                
+
 
                 //delete all instance of excel, because it wasn't getting ended by the code of excel instancing
                 foreach (Process process in Process.GetProcessesByName("Excel"))
@@ -391,7 +391,7 @@ namespace RateSheetFormat
 
                     TableData = new RateTableMetaData();
                     FindTableMetaData(ref objArray, ref TableData, FirstRow, VFormat, DateFormats, ref DateSeparator);
-                    if (TableData.IndexRate<1 && TableData.IndexCountryCode>=1)
+                    if (TableData.IndexRate < 1 && TableData.IndexCountryCode >= 1)
                     {
                         TableData.IndexRate = TableData.IndexCountryCode;
                         TableData.IndexCountryCode = -1;
@@ -587,6 +587,28 @@ namespace RateSheetFormat
                         //Row 3://pulse
                         //NewRow[3] = 
                         NewTask.Resolution = (TableData.IndexPulse) > -1 ? ThisRow[TableData.IndexPulse - 1] : "";
+                        string value = NewTask.Resolution;
+                        if (value.Contains("-") && value.Count(ch => ch == '-') == 2 && value.Split('-')[0] == "0")
+                        {
+                            string[] pulseAndIncrement = value.Split('-');
+                            NewTask.OtherAmount4 = pulseAndIncrement[1]+ "." + pulseAndIncrement[2];
+                            NewTask.SurchargeTime = pulseAndIncrement[1];
+                            NewTask.Resolution= pulseAndIncrement[2];
+                        }
+                        else if (value.Contains("/") && value.Count(ch => ch == '/') == 1)
+                        {
+                            NewTask.OtherAmount4 = value.Replace('/','.');
+                            string[] pulseAndIncrement = value.Split('/');
+                            NewTask.SurchargeTime = pulseAndIncrement[0];
+                            NewTask.Resolution = pulseAndIncrement[1];
+                        }
+                        else if (value.Contains("/") && value.Count(ch => ch == '/') == 2 && value.Split('-')[0] == "0")
+                        {
+                            string[] pulseAndIncrement = value.Split('/');
+                            NewTask.OtherAmount4 = pulseAndIncrement[1] + "." + pulseAndIncrement[2];
+                            NewTask.SurchargeTime = pulseAndIncrement[1];
+                            NewTask.Resolution = pulseAndIncrement[2];
+                        }
                         if (NewTask.Resolution == "")
                         {
                             NewTask.Resolution = RatePlan.Resolution.ToString();//fetch default
@@ -682,7 +704,7 @@ namespace RateSheetFormat
                         }
                         //Row 8://surchargetime
                         //NewRow[8] 
-                        NewTask.SurchargeTime = (TableData.IndexSurchargeTime) > -1 ? ThisRow[TableData.IndexSurchargeTime - 1] : "";
+                        //NewTask.SurchargeTime = (TableData.IndexSurchargeTime) > -1 ? ThisRow[TableData.IndexSurchargeTime - 1] : "";
                         if (NewTask.SurchargeTime == "")
                         {
                             NewTask.SurchargeTime = RatePlan.SurchargeTime.ToString();//fetch default
@@ -943,7 +965,8 @@ namespace RateSheetFormat
                 Rate,
                 Datetime,
                 Undetermined,
-                NULL
+                NULL,
+                Pulse
             }
 
             class RateTableMetaData
@@ -989,13 +1012,14 @@ namespace RateSheetFormat
                 public int PossCountryNameCount = 0;
                 public int PossMultipleWordCount = 0;
                 public int PossDateCount = 0;
+                public int PossPulseCount = 0;
 
 
 
 
                 public int GetAttributeCount()
                 {
-                    return PossRateCount + PossPrefixCount + PossCountryCodeCount + PossCountryNameCount + PossMultipleWordCount + PossDateCount;
+                    return PossRateCount + PossPrefixCount + PossCountryCodeCount + PossCountryNameCount + PossMultipleWordCount + PossDateCount + PossPulseCount;
                 }
 
                 public CellDataType GetCellDataTypeByMaxAttributeCount()
@@ -1032,9 +1056,13 @@ namespace RateSheetFormat
                         Max = PossDateCount;
                         MaxLike = CellDataType.Datetime;
                     }
+                    if (PossPulseCount > Max)
+                    {
+                        Max = PossPulseCount;
+                        MaxLike = CellDataType.Pulse;
+                    }
                     return MaxLike;
                 }
-
             }
 
 
@@ -1228,8 +1256,8 @@ namespace RateSheetFormat
                     {
                         CellDataType? ThisColumnLike = CellDataType.NULL;
 
-                        ThisColumnLike = (objArray[i, j] != null 
-                            ? FindCellDataType(objArray[i, j].ToString().Trim(), DateFormats, ref DateSeparator) 
+                        ThisColumnLike = (objArray[i, j] != null
+                            ? FindCellDataType(objArray[i, j].ToString().Trim(), DateFormats, ref DateSeparator)
                             : CellDataType.NULL);
 
                         switch (ThisColumnLike)
@@ -1252,6 +1280,9 @@ namespace RateSheetFormat
                                 break;
                             case CellDataType.CountryCode:
                                 RAttrib.PossCountryCodeCount++;
+                                break;
+                            case CellDataType.Pulse:
+                                RAttrib.PossPulseCount++;
                                 break;
                         }
                     }
@@ -1302,6 +1333,9 @@ namespace RateSheetFormat
                         case CellDataType.CountryCode:
                             RAttrib.PossCountryCodeCount++;
                             break;
+                        case CellDataType.Pulse:
+                            RAttrib.PossPulseCount++;
+                            break;
                     }
                 }
 
@@ -1327,8 +1361,8 @@ namespace RateSheetFormat
                     int offsetDim1FirstRow = Dim1 - FirstRow;
                     if (offsetDim1FirstRow < 0)
                         throw new Exception("Offset between vertical dimension & first row must be >=0");
-                    int maxRowToScan = offsetDim1FirstRow <= 20 ? offsetDim1FirstRow+1 : (FirstRow + 19);
-                    for (i = FirstRow; i <= (i+maxRowToScan-1) && i <= Dim1; i++) //sampling over 20 rows will do
+                    int maxRowToScan = offsetDim1FirstRow <= 20 ? offsetDim1FirstRow + 1 : (FirstRow + 19);
+                    for (i = FirstRow; i <= (i + maxRowToScan - 1) && i <= Dim1; i++) //sampling over 20 rows will do
                     {
                         if (i > maxRowToScan) break;
                         CellDataType? ThisColumnLike = (objArray[i, j] != null ? FindCellDataType(objArray[i, j].ToString(), DateFormats, ref DateSeparator) : CellDataType.NULL);
@@ -1352,6 +1386,9 @@ namespace RateSheetFormat
                                 break;
                             case CellDataType.CountryCode:
                                 RAttrib.PossCountryCodeCount++;
+                                break;
+                            case CellDataType.Pulse:
+                                RAttrib.PossPulseCount++;
                                 break;
                             case CellDataType.DescriptionMultipleWord:
                                 RAttrib.PossMultipleWordCount++;
@@ -1395,13 +1432,30 @@ namespace RateSheetFormat
                 {
 
                     double rateDouble = -1;
-                    if ((Value.Contains(".")||Value.StartsWith("-")) && double.TryParse(Value, out rateDouble) == true)//-1 support
+                    if ((Value.Contains(".") || Value.StartsWith("-")) && double.TryParse(Value, out rateDouble) == true)//-1 support
                     {
                         ThisLike = CellDataType.Rate;
                         return ThisLike;
                     }
 
                     DateTime myDateTime = new DateTime(1, 1, 1);
+
+                    if (Value.Contains("-") && Value.Count(ch => ch == '-') == 2 && Value.Split('-')[0] == "0")
+                    {
+                        ThisLike = CellDataType.Pulse;
+                        return ThisLike;
+                    }
+                    else if (Value.Contains("/") && Value.Count(ch => ch == '/') == 1)
+                    {
+                        ThisLike = CellDataType.Pulse;
+                        return ThisLike;
+                    }
+                    else if (Value.Contains("/") && Value.Count(ch => ch == '/') == 2 && Value.Split('-')[0] == "0")
+                    {
+                        ThisLike = CellDataType.Pulse;
+                        return ThisLike;
+                    }
+
 
                     if ((Value.Contains("/")) &&
                         DateTime.TryParseExact(Value, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out myDateTime))
@@ -1433,7 +1487,7 @@ namespace RateSheetFormat
                     }
 
                     //replace "/" with "-". If dates contain "/", datetime.tryparse didn't work with 
-                    else if ((Value.Contains("/")&&Value.Count(ch=>ch=='/')==2 )
+                    else if ((Value.Contains("/") && Value.Count(ch => ch == '/') == 2)
                         && DateTime.TryParse(Value.Replace("/", "-"), out myDateTime) && (Value.Contains("/") || Value.Contains("-")))
                     {
                         ThisLike = CellDataType.Datetime;
@@ -1593,7 +1647,7 @@ namespace RateSheetFormat
                             ThisLike = CellDataType.MultiplePrefix;
                         }
                     }
-                    return ThisLike;
+                   return ThisLike;
                 }
                 catch (Exception e1)
                 {
@@ -1878,6 +1932,9 @@ namespace RateSheetFormat
                                 break;
                             case CellDataType.CountryCode:
                                 TableData.IndexCountryCode = j;
+                                break;
+                            case CellDataType.Pulse:
+                                TableData.IndexPulse = j;
                                 break;
                         }
 

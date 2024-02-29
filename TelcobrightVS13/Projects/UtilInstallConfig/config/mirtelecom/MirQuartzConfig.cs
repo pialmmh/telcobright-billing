@@ -46,6 +46,19 @@ namespace InstallConfig
                         {"telcobrightProcessId", "106"},
                         {"operatorName", operatorName},
                         {"syncPair", "mirDialogic:Vault"}
+                    }),
+                 new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileLister [mirHuawei:Vault]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "106"},
+                        {"operatorName", operatorName},
+                        {"syncPair", "mirHuawei:Vault"}
                     })
             };
             return fileListerInstances;
@@ -127,6 +140,19 @@ namespace InstallConfig
                         {"operatorName", operatorName},
                         {"syncPair", "mirDialogic:Vault"}
                     }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "FileCopier [mirHuawei:Vault]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", "mirHuawei:Vault"}
+                    })
             };
             return fileCopierInstances;
         }
