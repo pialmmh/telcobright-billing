@@ -69,6 +69,7 @@ namespace Decoders
 
                     }
                     foundRowCount++;
+                    if(lineAsArr.Length <= 1 ) continue;
                     string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
                     string durationStr = lineAsArr[17].Trim();
                     //decimal durationSec = 0;
