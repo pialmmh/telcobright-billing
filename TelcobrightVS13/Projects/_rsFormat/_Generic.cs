@@ -602,7 +602,7 @@ namespace RateSheetFormat
                             NewTask.SurchargeTime = pulseAndIncrement[0];
                             NewTask.Resolution = pulseAndIncrement[1];
                         }
-                        else if (value.Contains("/") && value.Count(ch => ch == '/') == 2 && value.Split('-')[0] == "0")
+                        else if (value.Contains("/") && value.Count(ch => ch == '/') == 2 && value.Split('/')[0] == "0")
                         {
                             string[] pulseAndIncrement = value.Split('/');
                             NewTask.OtherAmount4 = pulseAndIncrement[1] + "." + pulseAndIncrement[2];
@@ -705,7 +705,7 @@ namespace RateSheetFormat
                         //Row 8://surchargetime
                         //NewRow[8] 
                         //NewTask.SurchargeTime = (TableData.IndexSurchargeTime) > -1 ? ThisRow[TableData.IndexSurchargeTime - 1] : "";
-                        if (NewTask.SurchargeTime == "")
+                        if (NewTask.SurchargeTime == "" || NewTask.SurchargeTime == null)
                         {
                             NewTask.SurchargeTime = RatePlan.SurchargeTime.ToString();//fetch default
                         }
@@ -1447,10 +1447,14 @@ namespace RateSheetFormat
                     }
                     else if (Value.Contains("/") && Value.Count(ch => ch == '/') == 1)
                     {
-                        ThisLike = CellDataType.Pulse;
-                        return ThisLike;
+                        int i;
+                        if (int.TryParse(Value.Split('/')[0], out i))
+                        {
+                            ThisLike = CellDataType.Pulse;
+                            return ThisLike;
+                        }
                     }
-                    else if (Value.Contains("/") && Value.Count(ch => ch == '/') == 2 && Value.Split('-')[0] == "0")
+                    else if (Value.Contains("/") && Value.Count(ch => ch == '/') == 2 && Value.Split('/')[0] == "0")
                     {
                         ThisLike = CellDataType.Pulse;
                         return ThisLike;

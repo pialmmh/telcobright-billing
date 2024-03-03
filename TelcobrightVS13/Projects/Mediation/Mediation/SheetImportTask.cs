@@ -1077,10 +1077,19 @@ public class SheetImportTask
             }
             else if (value.Contains("/") && value.Count(ch => ch == '/') == 1)
             {
-                thisLike = CellDataType.Pulse;
-                return thisLike;
+                int i;
+                if (int.TryParse(value.Split('/')[0], out i))
+                { 
+                    thisLike = CellDataType.Pulse;
+                    return thisLike;
+                }
+                else
+                {
+                    thisLike = CellDataType.DescriptionMultipleWord;
+                    return thisLike;
+                }
             }
-            else if (value.Contains("/") && value.Count(ch => ch == '/') == 2 && value.Split('-')[0] == "0" )
+            else if (value.Contains("/") && value.Count(ch => ch == '/') == 2 && value.Split('/')[0] == "0" )
             {
                 thisLike = CellDataType.Pulse;
                 return thisLike;
