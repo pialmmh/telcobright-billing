@@ -25,7 +25,7 @@ namespace Decoders
         public override string UniqueEventTablePrefix { get; }
         public override string PartialTableStorageEngine { get; }
         public override string partialTablePartitionColName { get; }
-        protected CdrCollectorInputData Input { get; set; }
+        protected virtual CdrCollectorInputData Input { get; set; }
 
 
         private static DateTime parseStringToDate(string timestamp)  //20181028051316400 yyyyMMddhhmmssfff
@@ -39,6 +39,15 @@ namespace Decoders
             this.Input = input;
             string fileName = this.Input.FullPath; ;
             List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 0, "\"", ";");
+
+            return decodeLines(input, out inconsistentCdrs, fileName, lines);
+
+
+        }
+
+        public virtual List<string[]> decodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs,string fileName,List<string[]>lines)
+        {
+            this.Input = input;
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
@@ -63,7 +72,7 @@ namespace Decoders
                     }
                     foundRowCount++;
 
-
+                    if (lineAsArr.Length <= 1) continue;
                     string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
                     if (chargingStatus != "1") continue;
                     string[] textCdr = new string [input.MefDecodersData.Totalfieldtelcobright];

@@ -15,7 +15,7 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class MirAbstractConfigGenerator //quartz config part
+    public partial class SmsHubAbstractConfigGenerator //quartz config part
     {
         private List<QuartzTbDaemonConfig> DaemonConfigurations { get; set; }
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
@@ -25,6 +25,7 @@ namespace InstallConfig
             this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
+            this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
             return this.DaemonConfigurations;
         }
@@ -32,38 +33,59 @@ namespace InstallConfig
         private List<QuartzTbDaemonConfig> GetFileListerInstances(string operatorName)
         {
             //don't use foreach, do it manually for flixibility e.g. different repeating interval
-            List<QuartzTbDaemonConfig> fileListerInstances = new List<QuartzTbDaemonConfig>()
-            {
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileLister [mirDialogic:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/30 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "106"},
-                        {"operatorName", operatorName},
-                        {"syncPair", "mirDialogic:Vault"}
-                    }),
-                 new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileLister [mirHuawei:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/30 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "106"},
-                        {"operatorName", operatorName},
-                        {"syncPair", "mirHuawei:Vault"}
-                    })
-            };
+            List<QuartzTbDaemonConfig> fileListerInstances = new List<QuartzTbDaemonConfig>();
+            //{
+            //    new QuartzTbDaemonConfig
+            //    (
+            //        operatorName: operatorName,
+            //        identity: "FileLister [Huawei:Vault]" + " [" + operatorName+"]",
+            //        group: operatorName,
+            //        cronExpression: "/30 * * ? * *",
+            //        fireOnceIfMissFired: false,
+            //        jobDataMap: new Dictionary<string, string>()
+            //        {
+            //            {"telcobrightProcessId", "106"},
+            //            {"operatorName", operatorName},
+            //            {"syncPair", Huawei_Vault.Name}
+            //        }),
+            //};
             return fileListerInstances;
         }
-
+        private List<QuartzTbDaemonConfig> GetFileCopierInstances(string operatorName)
+        {
+            //don't use foreach, do it manually for flixibility e.g. different repeating interval
+            List<QuartzTbDaemonConfig> fileCopierInstances = new List<QuartzTbDaemonConfig>();
+            //{
+            //    new QuartzTbDaemonConfig
+            //    (
+            //        operatorName: operatorName,
+            //        identity: "FileCopier [Huawei:Vault]" + " [" + operatorName+"]",
+            //        group: operatorName,
+            //        cronExpression: "/5 * * ? * *",
+            //        fireOnceIfMissFired: false,
+            //        jobDataMap: new Dictionary<string, string>()
+            //        {
+            //            {"telcobrightProcessId", "104"},
+            //            {"operatorName", operatorName},
+            //            {"syncPair", Huawei_Vault.Name}
+            //        }),
+                
+            //    new QuartzTbDaemonConfig
+            //    (
+            //        operatorName: operatorName,
+            //        identity: "FileCopier [Vault:CAS]" + " [" + operatorName+"]",
+            //        group: operatorName,
+            //        cronExpression: "/5 * * ? * *",
+            //        fireOnceIfMissFired: false,
+            //        jobDataMap: new Dictionary<string, string>()
+            //        {
+            //            {"telcobrightProcessId", "104"},
+            //            {"operatorName", operatorName},
+            //            {"syncPair", vaultCAS.Name}
+            //        }),
+            //};
+            return fileCopierInstances;
+        }
         private List<QuartzTbDaemonConfig> GetLogFileJobCreatorInstances(string operatorName)
         {
             var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
@@ -103,6 +125,26 @@ namespace InstallConfig
             };
             return telcobrightProcessInstances;
         }
+        private List<QuartzTbDaemonConfig> GetOptimizerInstances(string operatorName)
+        {
+            //don't use foreach, do it manually for flixibility e.g. different repeating interval
+            List<QuartzTbDaemonConfig> optimizerInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "Optimizer" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "107"},
+                        {"operatorName", operatorName},
+                    }),
+            };
+            return optimizerInstances;
+        }
         private List<QuartzTbDaemonConfig> GetInvoiceGeneratorInstances(string operatorName)
         {
             var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
@@ -121,40 +163,6 @@ namespace InstallConfig
                 )
             };
             return telcobrightProcessInstances;
-        }
-        private List<QuartzTbDaemonConfig> GetFileCopierInstances(string operatorName)
-        {
-            //don't use foreach, do it manually for flixibility e.g. different repeating interval
-            List<QuartzTbDaemonConfig> fileCopierInstances = new List<QuartzTbDaemonConfig>()
-            {
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileCopier [mirDialogic:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/5 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "104"},
-                        {"operatorName", operatorName},
-                        {"syncPair", "mirDialogic:Vault"}
-                    }),
-                new QuartzTbDaemonConfig
-                (
-                    operatorName: operatorName,
-                    identity: "FileCopier [mirHuawei:Vault]" + " [" + operatorName+"]",
-                    group: operatorName,
-                    cronExpression: "/5 * * ? * *",
-                    fireOnceIfMissFired: false,
-                    jobDataMap: new Dictionary<string, string>()
-                    {
-                        {"telcobrightProcessId", "104"},
-                        {"operatorName", operatorName},
-                        {"syncPair", "mirHuawei:Vault"}
-                    })
-            };
-            return fileCopierInstances;
         }
     }
 }

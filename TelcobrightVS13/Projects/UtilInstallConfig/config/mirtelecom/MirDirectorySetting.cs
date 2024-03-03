@@ -20,6 +20,7 @@ namespace InstallConfig
     public partial class MirAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultDialogic;
+        private FileLocation vaultHuawei;
         public void PrepareDirectorySetting(TelcobrightConfig tbc)
         {
             DirectorySettings directorySettings = new DirectorySettings("c:/telcobright", "");
@@ -38,9 +39,22 @@ namespace InstallConfig
                 User = "",
                 Pass = "",
             };
-            
+
+            this.vaultHuawei = new FileLocation()
+            {
+                Name = "Vault.MirHuawei",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/mir/huawei",
+                User = "",
+                Pass = "",
+            };
+
 
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name,vaultDialogic);
+            tbc.DirectorySettings.FileLocations.Add(vaultHuawei.Name,vaultHuawei);
 
             FileLocation dialogic = new FileLocation()
             {
@@ -58,8 +72,56 @@ namespace InstallConfig
                 FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
             };
 
-            // dialogic
 
+            FileLocation huawei = new FileLocation()
+            {
+                Name = "huawei",
+                LocationType = "ftp",
+                OsType = "linux",
+                UseActiveModeForFTP = false,
+                PathSeparator = "/",
+                StartingPath = "/",
+                ServerIp = "123.176.59.19",
+                User = "igw_huawei24",
+                Pass = "Abc@123@456#",
+                //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                IgnoreZeroLenghFile = 1,
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
+            };
+
+            // huawei
+            SyncPair MirHuaweiVault = new SyncPair("mirHuawei:Vault")
+            {
+                SkipSourceFileListing = false,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = huawei,
+                    DescendingFileListByFileName = tbc.CdrSetting.DescendingOrderWhileListingFiles
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultHuawei,
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    MoveFilesToSecondaryAfterCopy = false,
+                    Recursive= true,
+                    ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('b')
+                                                                    and
+                                                                    (Name.EndsWith('.dat'))
+                                                                    and Length>0")
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
+                    Overwrite = true,
+                    ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
+                    CompressionType = CompressionType.None
+                }
+            };
+
+            // dialogic
             SyncPair MirDialogicVault = new SyncPair("mirDialogic:Vault")
             {
                 SkipSourceFileListing = false,
@@ -74,7 +136,7 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "incoming_sdr_bin_backup",
+                    SecondaryDirectory = "downloaded",
                     MoveFilesToSecondaryAfterCopy = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('sdr')
                                                                     and
@@ -93,6 +155,7 @@ namespace InstallConfig
 
             //add sync pairs to directory config
             directorySettings.SyncPairs.Add(MirDialogicVault.Name, MirDialogicVault);
+            directorySettings.SyncPairs.Add(MirHuaweiVault.Name, MirHuaweiVault);
 
             tbc.DirectorySettings = directorySettings;
 

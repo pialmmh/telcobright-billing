@@ -16,13 +16,12 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public sealed partial class CasSummitAbstractConfigGenerator //quartz config part
+    public partial class SmsHubAbstractConfigGenerator //quartz config part
     {
         private FileLocation vaultPrimary;
-        private FileLocation vaultDialogic;
-        private SyncPair huawei_Vault;
-        private SyncPair zteCAS;
-
+        private FileLocation vaultCataleya;
+        private SyncPair Huawei_Vault;
+        private SyncPair vaultCAS;
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
             { "vaultName","vault"},
@@ -30,8 +29,7 @@ namespace InstallConfig
         };
         public void PrepareDirectorySettings(TelcobrightConfig tbc)
         {
-            DirectorySettings directorySetting = new DirectorySettings("Directory Settings", @"cas");
-            
+            DirectorySettings directorySetting = new DirectorySettings("Directory Settings", "");
             tbc.DirectorySettings = directorySetting;
 
             //***FILE LOCATIONS**********************************************
@@ -39,35 +37,20 @@ namespace InstallConfig
             //the object "vault" will have a copy of below object for each app servers with server id as key and location as dictionary value
             this.vaultPrimary = new FileLocation()
             {
-                Name = "vault.ZTE",//this is refered in ne table, name MUST start with "Vault"
+                Name = "vault",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/summit/tdm",
+                StartingPath = "C:/files",
                 User = "",
                 Pass = "",
             };
+           
 
-            this.vaultDialogic = new FileLocation()
-            {
-                Name = "vaultDialogic",//this is refered in ne table, name MUST start with "Vault"
-                LocationType = "vault",//locationtype always lowercase
-                OsType = "windows",
-                PathSeparator = @"\",
-                ServerIp = "",
-                StartingPath = "e:/telcobright/vault/resources/cdr/summit/ip",
-                User = "",
-                Pass = "",
-            };
-
-            
-
-            //add locations to directory settings
-            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
-            tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
-
-            
+            //tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
+            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name,vaultPrimary);
+           
         }
     }
 }

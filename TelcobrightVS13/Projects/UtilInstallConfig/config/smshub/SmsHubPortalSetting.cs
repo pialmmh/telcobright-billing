@@ -17,13 +17,16 @@ using TelcobrightMediation.Config;
 
 namespace InstallConfig
 {
-    public partial class JslAbstractConfigGenerator //quartz config part
+    public partial class SmsHubAbstractConfigGenerator //quartz config part
     {
-        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetCurrentExecPath()).Parent.Parent.FullName
-                                               + Path.DirectorySeparatorChar + "Server.conf";
-*/
+        /*static string databaseConfigFileName = new DirectoryInfo(FileAndPathHelper.GetBinPath()).Parent.Parent.FullName
+                                               + Path.DirectorySeparatorChar + "Server.conf";*/
+
         PortalSettings GetPortalSettings(string operatorName)
         {
+            /*Dictionary<string, string> settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                File.ReadAllText(databaseConfigFileName));*/
+
             string portalLocalAccountNameAdministrator = "Administrator";
             string portalLocalAccountPassword = "Takay1#$ane%%";
 
@@ -47,16 +50,17 @@ namespace InstallConfig
                         SiteName = operatorName,
                         SiteId = 1,
                         PhysicalPath = "C:/inetpub/wwwroot/" + this.Tbc.Telcobrightpartner.CustomerName,
-                        BindAddress = "127.0.0.1:80",
+                        BindAddress = "0.0.0.0:80",
                         TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalWebSite.txt",
                         ApplicationPool=new IisApplicationPool()
                         {
                             AppPoolName = this.Tbc.Telcobrightpartner.CustomerName,
                             TemplateFileName = "../../" + this.Tbc.Telcobrightpartner.CustomerName + "/tmplPortalAppPools.txt",
                         },
-                        ImpersonateUserName =portalLocalAccountNameAdministrator,
+                         ImpersonateUserName =portalLocalAccountNameAdministrator,
                         ImpersonatePassword =portalLocalAccountPassword
                     },
+                  
                 },
                 DicConfigObjects = new Dictionary<string, object>()
                 {
@@ -83,6 +87,8 @@ namespace InstallConfig
                                     "duration1 as Duration1",
                                     "duration2 as Duration2",
                                     "Duration3 as Duration3",
+                                    "ifnull(opc,OriginatingIP) OriginatingAddress",
+                                    "ifnull(dpc,TerminatingIP) TerminatingAddress",
                                     "releasecauseingress as `Ingress CauseCode`",
                                 }
                             },
@@ -171,31 +177,32 @@ namespace InstallConfig
             };//settings for one role within a page
             List<SettingByRoles> settingIntlInRoute = new List<SettingByRoles>()
             {
-                new SettingByRoles()
                 {
-                    RoleNames = new List<string>()
+                    new SettingByRoles()
                     {
-                        "admin","billing"
-                    },
-                    SpringExpressionIfRole = new List<string>()
-                    {
-                        "CheckBoxShowCost.Enabled=true",
-                        "GridView1.Columns[6].Visible=true",//connect count
-                        "GridView1.Columns[8].Visible=true",//duration1
-                        "GridView1.Columns[19].Visible=true",//CCR
-                        "GridView1.Columns[20].Visible=false",//connect by cc
-                        "GridView1.Columns[21].Visible=false",//CCR by cc
-                    },
-                    SpringExpressionIfNotRole = new List<string>()
-                    {
-
-                        "CheckBoxShowCost.Enabled=false",
-                        "GridView1.Columns[6].Visible=true",
-                        "GridView1.Columns[8].Visible=false",
-                        "GridView1.Columns[7].HeaderText=Duration",
-                        "GridView1.Columns[19].Visible=true",//CCR
-                        "GridView1.Columns[20].Visible=false",//connect by cc
-                        "GridView1.Columns[21].Visible=false",//CCR by cc
+                        RoleNames = new List<string>()
+                        {
+                            "admin","billing"
+                        },
+                        SpringExpressionIfRole = new List<string>()
+                        {
+                            "CheckBoxShowCost.Enabled=true",
+                            "GridView1.Columns[6].Visible=true",//connect count
+                            "GridView1.Columns[8].Visible=true",//duration1
+                            "GridView1.Columns[19].Visible=true",//CCR
+                            "GridView1.Columns[20].Visible=false",//connect by cc
+                            "GridView1.Columns[21].Visible=false",//CCR by cc
+                        },
+                        SpringExpressionIfNotRole = new List<string>()
+                        {
+                            "CheckBoxShowCost.Enabled=false",
+                            "GridView1.Columns[6].Visible=true",
+                            "GridView1.Columns[8].Visible=false",
+                            "GridView1.Columns[7].HeaderText=Duration",
+                            "GridView1.Columns[19].Visible=true",//CCR
+                            "GridView1.Columns[20].Visible=false",//connect by cc
+                            "GridView1.Columns[21].Visible=false",//CCR by cc
+                        }
                     }
                 }
             };//settings for one role within a page
@@ -255,12 +262,11 @@ namespace InstallConfig
                                 {
                                     "nodes['Configuration'].Expanded=false",
                                     "nodes['Billing'].Expanded=false",
-                                    "nodes['Mediation'].Expanded=true",
-                                    "nodes['Mediation/Create Batch Job'].Expanded=false",
+                                    "nodes['Mediation'].Expanded=false",
                                     "nodes['Settings'].Expanded=false",
                                     "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
-                                    "nodes['Reports/Transit'].Expanded=false",
+                                    "nodes['Reports/Transit'].Expanded=false"
                                 }
                             },
                             new SettingByRoles()
@@ -299,13 +305,10 @@ namespace InstallConfig
                     { "~/reports/icx/InternationalIn_ICX.aspx",//settings for report pages
                         settingIntlIn
                     },
-                    { "~/reports/icx/InternationalOut_ICX.aspx",
+                    { "~/reports/icx/InternationalOut _ICX.aspx",
                         settingIntlOut
-                    },                 
-                    { "~/reports/icx/Domestic.aspx",
-                        settingIntlIn
                     },
-                    { "~/reports/icx/DomesticWithLtfs.aspx",
+                    { "~/reports/icx/Domestic.aspx",
                         settingIntlIn
                     },
                     { "~/reports/icx/LocalTollFree.aspx",
@@ -320,22 +323,18 @@ namespace InstallConfig
                     { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
                         settingIntlIn
                     },
-                    { "~/reports/icx/btrc/MonthlyReport.aspx",
-                        settingIntlIn
-                    },
                     { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
                         settingIntlIn
                     },
-                    { "~/reports/icx/btrc/MonthlyOutgoingDetail.aspx",
+                    { "~/reports/icx/btrc/MonthlyReport.aspx",
                         settingIntlIn
                     },
-                    { "~/reports/icx/btrc/AcdReport.aspx",
+                    { "~/reports/icx/customReports/BanglalinkRoamingReport.aspx",
                         settingIntlIn
                     },
-                    { "~/reports/icx/btrc/MonthlyRoamingReport.aspx",
+                    { "~/reports/icx/customReports/BanglalinkForwardingReport.aspx",
                         settingIntlIn
                     }
-
                 },//dictionary of page settings
 
             };

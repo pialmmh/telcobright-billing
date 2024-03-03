@@ -26,8 +26,6 @@ namespace RateTaskSerializer
                 dateFormats[i] = dateFormats[i].Trim();
             }
             return dateFormats;
-
         }
-        
     }
 }

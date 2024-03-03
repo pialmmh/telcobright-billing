@@ -45,7 +45,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/CDR/JSL/JslcataleyaDhk/ICX",
+                StartingPath = "C:/telcobright/Vault/Resources/CDR/JSL/JslcataleyaDhk",
                 User = "",
                 Pass = "",
             };

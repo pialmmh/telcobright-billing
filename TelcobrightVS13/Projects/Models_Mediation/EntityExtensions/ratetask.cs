@@ -20,6 +20,7 @@ namespace MediationModel
         }
         public string GetExtendedInsertSql()
         {
+            ;
             return
                 "('"
                 + (this.Prefix != null ? this.Prefix.Replace("'", "") : "") + "'" + "," +

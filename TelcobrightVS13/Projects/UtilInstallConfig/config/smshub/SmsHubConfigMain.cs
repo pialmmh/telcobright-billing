@@ -17,27 +17,26 @@ using LibraryExtensions;
 using MediationModel;
 using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
-using LogPreProcessor;
 
 namespace InstallConfig
 {
     [Export(typeof(AbstractConfigGenerator))]
-    public partial class SrtAbstractConfigGenerator : AbstractConfigGenerator
+    public partial class SmsHubAbstractConfigGenerator: AbstractConfigGenerator
     {
         public override TelcobrightConfig Tbc { get; set; }
         public override int IdOperator { get; set; }
         public override string CustomerName { get; set; }
         public override string DatabaseName { get; set; }
 
-        public SrtAbstractConfigGenerator()
+        public SmsHubAbstractConfigGenerator()
         {
             this.Tbc = new TelcobrightConfig(TelecomOperatortype.Icx,
                 new telcobrightpartner
                 {
-                    idCustomer = 8,
-                    CustomerName = "SR Telecom Ltd.",
+                    idCustomer = 40,
+                    CustomerName = "AIOBSMSHUB",
                     idOperatorType = 2,
-                    databasename = "srtelecom",
+                    databasename = "smshub",
                     databasetype = "",
                     user = null,
                     pass = null,
@@ -86,64 +85,23 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
-                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
-                {
-                {
-                    8,
-                    new NeAdditionalSetting
-                    {//huawei
-                        ProcessMultipleCdrFilesInBatch = false,
-                        PreDecodeAsTextFile = false,
-                        MaxConcurrentFilesForParallelPreDecoding = 10,
-                        MinRowCountToStartBatchCdrProcessing = 100000,
-                        MaxNumberOfFilesInPreDecodedDirectory = 500,
-                        EventPreprocessingRules = new List<EventPreprocessingRule>()
-                        {
-                            new CdrPredecoder()
-                            {
-                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
-                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
-                            }
-                        }
-                    }
-                },
-                {
-                    18,
-                    new NeAdditionalSetting
-                    {//cataleya
-                        ProcessMultipleCdrFilesInBatch = false,
-                        PreDecodeAsTextFile = false,
-                        MaxConcurrentFilesForParallelPreDecoding = 10,
-                        MinRowCountToStartBatchCdrProcessing = 100000,
-                        MaxNumberOfFilesInPreDecodedDirectory = 500,
-                        EventPreprocessingRules = new List<EventPreprocessingRule>()
-                        {
-                            new CdrPredecoder()
-                            {
-                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
-                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
-                            }
-                        }
-                    }
-                }
-            }
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
             {
                 new ne
                 {
-                    idSwitch= 8,
+                    idSwitch= 1,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 3,
+                    idcdrformat= 78,
                     idMediationRule= 2,
-                    SwitchName= "huawei",
-                    CDRPrefix= "SRT",
-                    FileExtension= ".dat",
+                    SwitchName= "Dialogic",
+                    CDRPrefix= "p",
+                    FileExtension= ".pcap",
                     Description= null,
                     SourceFileLocations= vaultPrimary.Name,
-                    BackupFileLocations= this.tdmCAS.Name,
+                    BackupFileLocations= null,//vaultCAS
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
@@ -163,42 +121,11 @@ namespace InstallConfig
                     ExistingSummaryCacheSpanHr= 6,
                     BatchToDecodeRatio= 3,
                     PrependLocationNumberToFileName= 0,
-                    UseIdCallAsBillId = 1,
+                    UseIdCallAsBillId = 0,
                 },
-                new ne
-                {
-                    idSwitch= 18,
-                    idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 46,
-                    idMediationRule= 2,
-                    SwitchName= "cataleya",
-                    CDRPrefix= "esdr",
-                    FileExtension= ".gz",
-                    Description= null,
-                    SourceFileLocations= this.vaultCataleya.Name,
-                    BackupFileLocations= this.ipCAS.Name,
-                    LoadingStopFlag= null,
-                    LoadingSpanCount= 100,
-                    TransactionSizeForCDRLoading= 1500,
-                    DecodingSpanCount= 100,
-                    SkipAutoCreateJob= 1,
-                    SkipCdrListed= 0,
-                    SkipCdrReceived= 0,
-                    SkipCdrDecoded= 0,
-                    SkipCdrBackedup= 1,
-                    KeepDecodedCDR= 0,
-                    KeepReceivedCdrServer= 1,
-                    CcrCauseCodeField= 56,
-                    SwitchTimeZoneId= null,
-                    CallConnectIndicator= "F5",
-                    FieldNoForTimeSummary= 29,
-                    EnableSummaryGeneration= "1",
-                    ExistingSummaryCacheSpanHr= 6,
-                    BatchToDecodeRatio= 3,
-                    PrependLocationNumberToFileName= 0,
-                    UseIdCallAsBillId = 1,
-                }
+               
             };
+
 
             this.PrepareProductAndServiceConfiguration();
             

@@ -2424,7 +2424,8 @@ public partial class ConfigRateTask : Page
 
 
 
-
+        // commenting otherAmount1 section for storing pulse/resolution/increment vendor format 
+        //thisTask.OtherAmount1 = newOtherAmount1;
         Single myFloat = 0;
         if (Single.TryParse(newOtherAmount1, out myFloat) == true)
         {
@@ -2446,9 +2447,9 @@ public partial class ConfigRateTask : Page
         }
 
 
+        thisTask.OtherAmount4 = newOtherAmount4;
 
         double myDec = 0;
-
         if (double.TryParse(newOtherAmount4, out myDec) == true)
         {
             thisTask.OtherAmount4 = myDec.ToString();
@@ -3082,7 +3083,7 @@ public partial class ConfigRateTask : Page
                             "7",
                             "000000",
                             "235959",
-                            "0",
+                            newSurchargeTime,
                             "0.0",
                             ratePlanType.ToString(),
                             newOtherAmount1,
