@@ -3454,8 +3454,10 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         }
         catch (Exception e1)
         {
-            StatusLabel.ForeColor = Color.Red;
-            StatusLabel.Text = e1.Message + "<br/>" + (e1.InnerException != null ? e1.InnerException.ToString() : "");
+            //StatusLabel.ForeColor = Color.Red;
+            myGridViewDataBind();
+            Response.Redirect("rateassignment.aspx");
+            //StatusLabel.Text = e1.Message + "<br/>" + (e1.InnerException != null ? e1.InnerException.ToString() : "");
         }
 
     }
