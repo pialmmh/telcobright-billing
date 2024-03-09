@@ -84,13 +84,35 @@ namespace TelcobrightMediation
             if(tups==null) return null;
             var prefixMatcher=new PrefixMatcher(this.ServiceContext, phoneNumber, category, subCategory,
                 tups, Convert.ToDateTime(this.Cdr.AnswerTime), flagLcr, useInMemoryTable);
-            Rateext rateWithAssigmentTupleId = prefixMatcher.MatchPrefix();
-            if (rateWithAssigmentTupleId == null) return null;
+            Rateext rateExt = prefixMatcher.MatchPrefix();
+            if (rateExt == null) return null;
             finalDuration = 0;
-            finalDuration = prefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, rateWithAssigmentTupleId);
-            finalAmount = prefixMatcher.GetA2ZAmount(finalDuration, rateWithAssigmentTupleId, 0,this.ServiceContext.CdrProcessor);
+            if (rateExt.SurchargeTime==0)
+            {
+                finalDuration = prefixMatcher.GetA2ZDuration(this.Cdr.DurationSec, rateExt);
+                finalAmount = prefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, rateExt, 0,this.ServiceContext.CdrProcessor);
+            }
+            else // pulse = 30/6 ,duration = 12.071 , initialperiodcharge=30, resulation=6
+            {
+                if (this.Cdr.DurationSec <= rateExt.SurchargeTime)
+                {
+                    finalDuration = rateExt.SurchargeTime;
+                    finalAmount = prefixMatcher.GetA2ZAmountWithSurCharge(finalDuration, rateExt, 0, this.ServiceContext.CdrProcessor);
+                }
+                else // this.cdr.duration > rateExt.Surchargetime
+                {
+                    decimal surchargeDuration = rateExt.SurchargeTime;
+                    decimal surchhargeAmount = prefixMatcher.GetA2ZAmountWithSurCharge(surchargeDuration, rateExt, 0, this.ServiceContext.CdrProcessor);
+
+                    decimal durationAfterInitialPeriod = this.Cdr.DurationSec - surchargeDuration;
+                    decimal roundedDurationAfterInitialPeriod = prefixMatcher.GetA2ZDuration(durationAfterInitialPeriod, rateExt);
+
+                    decimal amountAfterCharge = prefixMatcher.GetA2ZAmountWithSurCharge(roundedDurationAfterInitialPeriod, rateExt, 0, this.ServiceContext.CdrProcessor);
+                    finalAmount = surchhargeAmount + amountAfterCharge;
+                }
+            }
             
-            int ceilingUpPositionAfterDecimal = Convert.ToInt32(rateWithAssigmentTupleId.OtherAmount9);
+            int ceilingUpPositionAfterDecimal = Convert.ToInt32(rateExt.OtherAmount9);
             if (ceilingUpPositionAfterDecimal>0 && ceilingUpPositionAfterDecimal<=7)
             {
                 FractionCeilingHelper ceilingHelper =
@@ -100,21 +122,21 @@ namespace TelcobrightMediation
             switch (this.ServiceContext.AssignDir)
             {
                 case ServiceAssignmentDirection.Customer:
-                    this.Cdr.MatchedPrefixCustomer  = rateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
+                    this.Cdr.MatchedPrefixCustomer  = rateExt.Prefix;//remove - to avoid conflict in summary
                     this.Cdr.Duration1 = finalDuration;
                     this.Cdr.InPartnerCost = Convert.ToDecimal(finalAmount);
-                    this.Cdr.CustomerRate = rateWithAssigmentTupleId.rateamount;
-                    this.Cdr.CountryCode = rateWithAssigmentTupleId.CountryCode;
+                    this.Cdr.CustomerRate = rateExt.rateamount;
+                    this.Cdr.CountryCode = rateExt.CountryCode;
                     break;
                 case ServiceAssignmentDirection.Supplier:
-                    this.Cdr.MatchedPrefixSupplier = rateWithAssigmentTupleId.Prefix;//remove - to avoid conflict in summary
+                    this.Cdr.MatchedPrefixSupplier = rateExt.Prefix;//remove - to avoid conflict in summary
                     this.Cdr.Duration2 = finalDuration;
                     this.Cdr.OutPartnerCost = Convert.ToDecimal(finalAmount);
-                    this.Cdr.SupplierRate = rateWithAssigmentTupleId.rateamount;
-                    this.Cdr.CountryCode = rateWithAssigmentTupleId.CountryCode;
+                    this.Cdr.SupplierRate = rateExt.rateamount;
+                    this.Cdr.CountryCode = rateExt.CountryCode;
                     break;
             }
-            return rateWithAssigmentTupleId;
+            return rateExt;
         }
         private List<TupleByPeriod> GetAssignmentTuples(int idServiceGroup)
         {

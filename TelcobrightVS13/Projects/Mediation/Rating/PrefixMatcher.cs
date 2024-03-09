@@ -57,7 +57,7 @@ namespace TelcobrightMediation
                         prefixDicWithAssignmentTuples.Add(kv.Key, new RatesWithAssignmentTuple(tup, kv.Value));
                     }
                     if (RateCache.PriorityAndTupleWisePrefixDicWithAssignmentTuples.TryAdd(tupUniqueKeyWithPriority,
-                        prefixDicWithAssignmentTuples)==false)
+                            prefixDicWithAssignmentTuples) == false)
                     {
                         if (RateCache.PriorityAndTupleWisePrefixDicWithAssignmentTuples
                                 .ContainsKey(tupUniqueKeyWithPriority) == false)
@@ -140,7 +140,7 @@ namespace TelcobrightMediation
                 this.PriorityWisePrefixDicWithAssignTuple)
             {
                 bool matchFound = false;
-                Parallel.For((int) 0, this.phoneNumbersAsArray.Length, i =>
+                Parallel.For((int)0, this.phoneNumbersAsArray.Length, i =>
                 {
                     var prefix =
                         this.phoneNumbersAsArray[i]; //max length of prefix is processed first i.e. the whole number
@@ -258,7 +258,7 @@ namespace TelcobrightMediation
         }
 
 
-        public decimal GetA2ZAmount(decimal finalDurationSec, Rateext thisRate, int rateFieldNumber,
+        public decimal GetA2ZAmountWithOutSurCharge(decimal finalDurationSec, Rateext thisRate, int rateFieldNumber,
             CdrProcessor cdrProcessor)
         {
             int maxDecimalPrecision = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.MaxDecimalPrecision;
@@ -301,7 +301,6 @@ namespace TelcobrightMediation
             decimal durationExcludingSurcharge = finalDurationSec;
             decimal billedAmountExcludingSurcharge = 0;
 
-
             if (thisRate.SurchargeTime > 0)//surcharge applicable
             {
                 if (finalDurationSec >= thisRate.SurchargeTime)
@@ -313,10 +312,88 @@ namespace TelcobrightMediation
                     surchargeDuration = finalDurationSec;
                 }
                 durationExcludingSurcharge = finalDurationSec - surchargeDuration;
+                
                 surchareAmount = Convert.ToDecimal(thisRate.SurchargeAmount);
             }
 
             long bspanSec = GetBillingSpanByRateOrIfMissingByRatePlan(thisRate, cdrProcessor);
+            int rateAmountRoundUpTo = 0;
+            if (thisRate.RateAmountRoundupDecimal != null && thisRate.RateAmountRoundupDecimal > 0)
+            {
+                rateAmountRoundUpTo = Convert.ToInt32(thisRate.RateAmountRoundupDecimal);
+            }
+            else
+            {
+                rateAmountRoundUpTo = Convert.ToInt32(this.DicRatePlan[thisRate.idrateplan.ToString()].RateAmountRoundupDecimal);
+            }
+
+            if (rateAmountRoundUpTo > 0)
+            {
+                thisRateAmount = Math.Round(thisRateAmount, rateAmountRoundUpTo);
+            }
+
+            billedAmountExcludingSurcharge = durationExcludingSurcharge * (thisRateAmount / bspanSec);
+            finalAmount = billedAmountExcludingSurcharge + surchareAmount;
+            if (this.MaxDecimalPrecision > 0) finalAmount = decimal.Round(finalAmount, this.MaxDecimalPrecision);
+            return finalAmount;
+        }
+        public decimal GetA2ZAmountWithSurCharge(decimal finalDurationSec, Rateext thisRate, int rateFieldNumber,
+            CdrProcessor cdrProcessor)
+        {
+            int maxDecimalPrecision = cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.MaxDecimalPrecision;
+            decimal thisRateAmount = 0;
+            if (finalDurationSec == 0) return 0;
+            switch (rateFieldNumber)
+            {
+                case 0: thisRateAmount = thisRate.rateamount; break;
+                case 1:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount1).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 2:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount2).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 3:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount3).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 4:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount4).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 5:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount5).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 6:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount6).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 7:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount7).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 8:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount8).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+                case 9:
+                    thisRateAmount = Convert.ToDecimal(thisRate.OtherAmount9).RoundFractionsUpTo(maxDecimalPrecision);
+                    break;
+            }
+            decimal finalAmount = 0;
+            decimal durationToBeChargeble = 0;
+            decimal surchareAmount = 0;
+            decimal durationExcludingSurcharge = finalDurationSec;
+            decimal billedAmountExcludingSurcharge = 0;
+            long bspanSec = GetBillingSpanByRateOrIfMissingByRatePlan(thisRate, cdrProcessor);
+
+            if (thisRate.SurchargeTime > 0)//surcharge applicable
+            {
+                if (finalDurationSec >= thisRate.SurchargeTime)
+                {
+                    durationToBeChargeble = thisRate.SurchargeTime;
+                }
+                else
+                {
+                    durationToBeChargeble = finalDurationSec;
+                }
+                durationExcludingSurcharge = finalDurationSec - durationToBeChargeble;
+                surchareAmount = Convert.ToDecimal(durationToBeChargeble * (thisRateAmount / bspanSec));
+            }
 
             int rateAmountRoundUpTo = 0;
             if (thisRate.RateAmountRoundupDecimal != null && thisRate.RateAmountRoundupDecimal > 0)
@@ -338,7 +415,6 @@ namespace TelcobrightMediation
             if (this.MaxDecimalPrecision > 0) finalAmount = decimal.Round(finalAmount, this.MaxDecimalPrecision);
             return finalAmount;
         }
-
         long GetBillingSpanByRateOrIfMissingByRatePlan(Rateext rate, CdrProcessor cdrProcessor)
         {
             long bspanSec = Convert.ToInt64(rate.billingspan);
