@@ -14,6 +14,7 @@ using InstallConfig.config._helper;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
 using LibraryExtensions;
+using LogPreProcessor;
 using MediationModel;
 using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
@@ -71,6 +72,7 @@ namespace InstallConfig
             this.Tbc.CdrSetting = new CdrSetting
             {
                 EmptyFileAllowed = true,
+                UnzipCompressedFiles = true,
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
                 PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
@@ -85,8 +87,42 @@ namespace InstallConfig
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
-                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>()
+                ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
+                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting> 
+                {
+                { 1, new NeAdditionalSetting {//for huawei
+                    ProcessMultipleCdrFilesInBatch = false,
+                    PreDecodeAsTextFile = false,
+                    MaxConcurrentFilesForParallelPreDecoding = 30,
+                    MinRowCountToStartBatchCdrProcessing = 70000,
+                    MaxNumberOfFilesInPreDecodedDirectory = 500,
+                    EventPreprocessingRules = new List<EventPreprocessingRule>()
+                    {
+                        new CdrPredecoder()
+                        {
+                            RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
+                            ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                        }
+                    }
+                }},
+            { 2, new NeAdditionalSetting {//cataleya
+                ProcessMultipleCdrFilesInBatch = false,
+                PreDecodeAsTextFile = false,
+                MaxConcurrentFilesForParallelPreDecoding = 10,
+                MinRowCountToStartBatchCdrProcessing = 100000,
+                MaxNumberOfFilesInPreDecodedDirectory = 500,
+                EventPreprocessingRules = new List<EventPreprocessingRule>()
+                {
+                    new CdrPredecoder()
+                    {
+                        RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
+                        ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                    }
+                }
+            }}
+            }
             };
+            
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
             {
@@ -101,7 +137,7 @@ namespace InstallConfig
                     FileExtension= ".dat",
                     Description= null,
                     SourceFileLocations= vaultPrimary.Name,
-                    BackupFileLocations= null,//vaultCAS
+                    BackupFileLocations= this.tdmCAS.Name,//vaultCAS
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
@@ -134,7 +170,7 @@ namespace InstallConfig
                     FileExtension= ".txt",
                     Description= null,
                     SourceFileLocations= this.vaultCataleya.Name,
-                    BackupFileLocations= null,
+                    BackupFileLocations= this.ipCAS.Name,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
