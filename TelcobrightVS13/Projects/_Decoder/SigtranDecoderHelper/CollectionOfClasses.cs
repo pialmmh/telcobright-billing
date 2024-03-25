@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-namespace CAS_DECODER
+namespace Decoders
 {
     public  class Ip
     {
@@ -68,7 +68,8 @@ namespace CAS_DECODER
     }
     public class GSM_MAP
     {
-
+        [JsonProperty("gsm_sms.sms_text")]
+        public string Sms { get; set; }
     }
 
     public class SigtranPacket

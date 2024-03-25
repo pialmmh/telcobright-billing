@@ -4,31 +4,63 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using MediationModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace CAS_DECODER
+namespace Decoders
 {
-   
+    static class NativeMethods
+    {
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr LoadLibrary(string dllToLoad);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeLibrary(IntPtr hModule);
+    }
+
     class SigtranPacketDecoder
     {
         private string PcapFileName { get; set; }
-        public SigtranPacketDecoder(string pcapFilename)
+        private Dictionary<string, partnerprefix> Ansprefixes {get;set;}
+        public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansprefixes)
         {
             this.PcapFileName = pcapFilename;
+            this.Ansprefixes = ansprefixes;
         }
-        private const string LibTsharkDllPath = "C:\\Development\\wsbuild64\\run\\RelWithDebInfo\\libtshark.dll";
+        //private const string LibTsharkDllPath = "C:\\Development\\wsbuild64\\run\\RelWithDebInfo\\libtshark.dll";
 
-        [DllImport(LibTsharkDllPath, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr Tb_Main(string filename);
+        public static Dictionary<string, string> GT_Prefix = new Dictionary<string, string>();
+        public void populatePrefix()
+        {
+            GT_Prefix["88071"] = "GP";
+            GT_Prefix["88091"] = "BL";
+            GT_Prefix["88081"] = "RB";
+            GT_Prefix["8809638"] = "IC";
+            GT_Prefix["88017"] = "GP";
+        }
+        //[DllImport(LibTsharkDllPath, CallingConvention = CallingConvention.Cdecl)]
+        //private static extern IntPtr Tb_Main(string filename);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr Tb_Main(string filename);
 
         public List<SigtranPacket> GetPackets()
         {
-            IntPtr resultPtr = Tb_Main(PcapFileName);
-            string result = Marshal.PtrToStringAnsi(resultPtr);
+            IntPtr pDll = NativeMethods.LoadLibrary("libtshark.dll");
+            IntPtr pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Tb_Main");
+            Tb_Main tb_main = (Tb_Main)Marshal.GetDelegateForFunctionPointer(
+                                    pAddressOfFunctionToCall,
+                                    typeof(Tb_Main));
+            IntPtr resultPtr = tb_main(this.PcapFileName);
+            string output = Marshal.PtrToStringAnsi(resultPtr);
             Marshal.FreeCoTaskMem(resultPtr);
+            bool result = NativeMethods.FreeLibrary(pDll);
             List<JObject> packetList = new List<JObject>();
-            if (result != null) packetList = GetNewJObjectList(result);
+            if (output != null) packetList = GetNewJObjectList(output);
             List<SigtranPacket> sigtranPackets =
                 packetList.Select(packet => packet.ToObject<SigtranPacket>()).ToList();
 
@@ -124,7 +156,7 @@ namespace CAS_DECODER
             List<string[]> records = new List<string[]>();
             foreach (var packet in packets)
             {
-                string[] record = {};
+                string[] record = Enumerable.Repeat((string)null, 104).ToArray();
 
                 record[Fn.Originatingip] = packet.Ip.SrcIp;
                 record[Fn.TerminatingIp] = packet.Ip.DstIp;
@@ -147,11 +179,33 @@ namespace CAS_DECODER
                 record[Fn.InMgwId] = packet.Tcap.Otid;
                 record[Fn.OutMgwId] = packet.Tcap.Dtid;
 
+                record[Fn.AdditionalMetaData] = packet.GSM_MAP.Sms;
+
+                string[] GT_Pair = { Extract_GT_Prefix(record[Fn.OriginatingCalledNumber]), Extract_GT_Prefix(record[Fn.OriginatingCallingNumber]) };
+                Array.Sort(GT_Pair);
+                record[Fn.UniqueBillId] = GT_Pair[0] + "-" + GT_Pair[1] + "/" + record[Fn.Codec];
+
                 records.Add(record);
             }
             return records;
         }
+
         
+
+        private static string Extract_GT_Prefix(string GT)
+        {
+            string value;
+            if (GT_Prefix.TryGetValue(GT.Substring(0, 7), out value))
+            {
+                return GT_Prefix[GT.Substring(0, 7)];
+            }
+            else if (GT_Prefix.TryGetValue(GT.Substring(0, 5), out value))
+            {
+                return GT_Prefix[GT.Substring(0, 5)];
+            }
+            else return null;
+        }
+
     }
 }
 
