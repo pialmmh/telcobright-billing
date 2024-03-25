@@ -69,8 +69,15 @@ namespace Decoders
 
                     }
                     foundRowCount++;
+                    if(lineAsArr.Length <= 1 ) continue;
                     string chargingStatus = lineAsArr[2] == "S" ? "1" : "0";
                     string durationStr = lineAsArr[17].Trim();
+                    string nodeId = lineAsArr[5].Trim();
+                    string incomingRoute = lineAsArr[24].Trim();
+                    string outgoingRoute = lineAsArr[55].Trim();
+
+                    string incomingRouteWithNodeId = incomingRoute + '-' + nodeId;
+                    string outgoingRouteWithNodeId = outgoingRoute + '-' + nodeId;
                     //decimal durationSec = 0;
                     //decimal.TryParse(durationStr, out durationSec);
                     if (chargingStatus != "1") continue;
@@ -83,8 +90,12 @@ namespace Decoders
                     textCdr[Fn.Sequencenumber] = lineAsArr[0];
                     //cdr.SequenceNumber = Convert.ToInt64(lineAsArr[0]);
                     textCdr[Fn.Filename] = fileName;
-                    textCdr[Fn.IncomingRoute] = lineAsArr[24].Trim();
-                    textCdr[Fn.OutgoingRoute] = lineAsArr[55].Trim();
+
+                    textCdr[Fn.IncomingRoute] = incomingRouteWithNodeId;
+                    textCdr[Fn.OutgoingRoute] = outgoingRouteWithNodeId;
+
+                    //textCdr[Fn.IncomingRoute] = lineAsArr[24].Trim();
+                    //textCdr[Fn.OutgoingRoute] = lineAsArr[55].Trim();
                     textCdr[Fn.DurationSec] = durationStr;
                     //cdr.DurationSec = Convert.ToDecimal(lineAsArr[17]) / 1000;
                     string ipAddr = lineAsArr[36];

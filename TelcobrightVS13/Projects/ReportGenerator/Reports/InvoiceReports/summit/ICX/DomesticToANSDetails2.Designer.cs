@@ -54,7 +54,6 @@
             this.xrLabel6 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel5 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelBillingPeriod = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabelVatRegNo = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelType = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelPartnerVatRegNo = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabelPartnerName = new DevExpress.XtraReports.UI.XRLabel();
@@ -77,6 +76,7 @@
             this.xrTableCell4 = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellRevenueTotal = new DevExpress.XtraReports.UI.XRTableCell();
             this.xrTableCellSubTotalAmount = new DevExpress.XtraReports.UI.XRTableCell();
+            this.xrLabelVatRegNo = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xrTable3)).BeginInit();
@@ -328,16 +328,6 @@
             this.xrLabelBillingPeriod.Text = "Billing period";
             this.xrLabelBillingPeriod.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleLeft;
             // 
-            // xrLabelVatRegNo
-            // 
-            this.xrLabelVatRegNo.LocationFloat = new DevExpress.Utils.PointFloat(427.0002F, 136.375F);
-            this.xrLabelVatRegNo.Name = "xrLabelVatRegNo";
-            this.xrLabelVatRegNo.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabelVatRegNo.SizeF = new System.Drawing.SizeF(300F, 23F);
-            this.xrLabelVatRegNo.StylePriority.UseTextAlignment = false;
-            this.xrLabelVatRegNo.Text = "VatRegNo";
-            this.xrLabelVatRegNo.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
-            // 
             // xrLabelType
             // 
             this.xrLabelType.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -574,6 +564,16 @@
             this.xrTableCellSubTotalAmount.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleRight;
             this.xrTableCellSubTotalAmount.Weight = 0.462173267909711D;
             // 
+            // xrLabelVatRegNo
+            // 
+            this.xrLabelVatRegNo.LocationFloat = new DevExpress.Utils.PointFloat(427.0002F, 136.375F);
+            this.xrLabelVatRegNo.Name = "xrLabelVatRegNo";
+            this.xrLabelVatRegNo.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabelVatRegNo.SizeF = new System.Drawing.SizeF(300F, 23F);
+            this.xrLabelVatRegNo.StylePriority.UseTextAlignment = false;
+            this.xrLabelVatRegNo.Text = "VatRegNo";
+            this.xrLabelVatRegNo.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
+            // 
             // DomesticToANSDetails2
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -628,7 +628,6 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel6;
         private DevExpress.XtraReports.UI.XRLabel xrLabel5;
         private DevExpress.XtraReports.UI.XRLabel xrLabelBillingPeriod;
-        private DevExpress.XtraReports.UI.XRLabel xrLabelVatRegNo;
         private DevExpress.XtraReports.UI.XRLabel xrLabelType;
         private DevExpress.XtraReports.UI.XRLabel xrLabelPartnerVatRegNo;
         private DevExpress.XtraReports.UI.XRLabel xrLabelPartnerName;
@@ -644,5 +643,6 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell8;
         private DevExpress.XtraReports.UI.XRPictureBox xrPictureBox3;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellRevenueTotal;
+        private DevExpress.XtraReports.UI.XRLabel xrLabelVatRegNo;
     }
 }

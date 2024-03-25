@@ -1049,7 +1049,7 @@ select (select 10) as status  ,(select 'Overlap Adjusted') as Description,count(
 
             <asp:TemplateField HeaderText="Other Amount 4" SortExpression="OtherAmount4" Visible="true" ControlStyle-Width="70px">
                 <ItemTemplate>
-                    <asp:Label ID="lblOtherAmount4" runat="server" Text='<%# Eval("OtherAmount4")==null?"0": Convert.ToDecimal(Eval("OtherAmount4").ToString()).ToString("0.#00000") %>'></asp:Label>
+                    <asp:Label ID="lblOtherAmount4" runat="server" Text='<%# Eval("OtherAmount4")==null?"0": Eval("SurchargeTime").ToString() +"/"+ Eval("Resolution").ToString()  %>'></asp:Label>
                 </ItemTemplate>
                 <EditItemTemplate>
                     <asp:TextBox ID="txtOtherAmount4" Enabled="true" runat="server" Text='<%# Eval("OtherAmount4")==null?"0": Convert.ToDecimal(Eval("OtherAmount4").ToString()).ToString("0.#00000") %>'></asp:TextBox>

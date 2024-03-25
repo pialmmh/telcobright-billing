@@ -49,10 +49,10 @@ namespace TelcobrightMediation
             decimal tempDuration = thisCdr.DurationSec;
             finalDuration =
                 Convert.ToInt64(this.PrefixMatcher.GetA2ZDuration(tempDuration, matchedRateWithAssignmentTupleId));
-            decimal xAmountBdt = this.PrefixMatcher.GetA2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
+            decimal xAmountBdt = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
                 rateFieldNumber: 0, //rate amount
                 cdrProcessor: serviceContext.CdrProcessor);
-            decimal yAmountUsd = this.PrefixMatcher.GetA2ZAmount(finalDuration, matchedRateWithAssignmentTupleId,
+            decimal yAmountUsd = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
                 rateFieldNumber: 1, //other amount1
                 cdrProcessor: serviceContext.CdrProcessor);
             thisCdr.RoundedDuration = finalDuration;

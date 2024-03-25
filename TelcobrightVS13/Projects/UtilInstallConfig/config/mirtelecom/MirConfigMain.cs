@@ -93,6 +93,25 @@ namespace InstallConfig
                             }
                         }
                     }
+                },
+                {
+                    12,
+                    new NeAdditionalSetting
+                    {// huawei
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }
                 }
             }
             };
@@ -104,7 +123,7 @@ namespace InstallConfig
                 {
                     idSwitch= 11,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat= 35,
+                    idcdrformat= 235,
                     idMediationRule= 2,
                     SwitchName= "Dialogic",
                     CDRPrefix= "sdr",
@@ -134,7 +153,43 @@ namespace InstallConfig
                     FilterDuplicateCdr = 1,
                     UseIdCallAsBillId = 0,
                     AllowEmptyFile = 1
+                },
+                new ne
+                {
+                    idSwitch= 12,
+                    idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
+                    idcdrformat= 3,
+                    idMediationRule= 2,
+                    SwitchName= "Huawei",
+                    CDRPrefix= "b",
+                    FileExtension= ".dat",
+                    Description= null,
+                    SourceFileLocations= this.vaultHuawei.Name,
+                    BackupFileLocations= null,
+                    LoadingStopFlag= null,
+                    LoadingSpanCount= 100,
+                    TransactionSizeForCDRLoading= 1500,
+                    DecodingSpanCount= 100,
+                    SkipAutoCreateJob= 1,
+                    SkipCdrListed= 0,
+                    SkipCdrReceived= 0,
+                    SkipCdrDecoded= 0,
+                    SkipCdrBackedup= 1,
+                    KeepDecodedCDR= 0,
+                    KeepReceivedCdrServer= 1,
+                    CcrCauseCodeField= 56,
+                    SwitchTimeZoneId= null,
+                    CallConnectIndicator= "F5",
+                    FieldNoForTimeSummary= 29,
+                    EnableSummaryGeneration= "1",
+                    ExistingSummaryCacheSpanHr= 6,
+                    BatchToDecodeRatio= 3,
+                    PrependLocationNumberToFileName= 0,
+                    FilterDuplicateCdr = 0,
+                    UseIdCallAsBillId = 1,
+                    AllowEmptyFile = 1
                 }
+
             };
 
 

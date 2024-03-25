@@ -156,7 +156,10 @@ namespace LibraryExtensions
                     if (originalFileInfo.Length == tempFileInfo.Length )
                     {
                         File.Delete(originalFile);          //deleting original file
-                        File.Move(tmpFile, tmpFile.Remove(tmpFile.Length - 4, 4));  //renaming tmp file to its original name
+                        if (!File.Exists(tmpFile.Remove(tmpFile.Length - 4, 4)))
+                        {
+                            File.Move(tmpFile, tmpFile.Remove(tmpFile.Length - 4, 4));   //renaming tmp file to its original name
+                        } 
                     }
                 }
             }
