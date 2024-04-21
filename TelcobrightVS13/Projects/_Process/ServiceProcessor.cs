@@ -28,7 +28,7 @@ namespace Process
         }
 
         public override string RuleName => this.GetType().ToString();
-        public override string HelpText => "Processes CDR";
+        public override string HelpText => "Processes various services through web socket";
         public override int ProcessId => 109;
 
         public override void Execute(IJobExecutionContext schedulerContext)
