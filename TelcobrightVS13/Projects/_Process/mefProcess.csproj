@@ -110,7 +110,11 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp">
+      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomationHandler.cs" />
@@ -119,6 +123,9 @@
     <Compile Include="EventPreProcessor.cs" />
     <Compile Include="helper\CompressedFileHelperForVault.cs" />
     <Compile Include="helper\FilebasedDuplicateJobNameChecker.cs" />
+    <Compile Include="SmsSender.cs" />
+    <Compile Include="ServiceProcessor.cs" />
+    <Compile Include="PrepaidService.cs" />
     <Compile Include="ProcessInvoiceGenerator.cs" />
     <Compile Include="FileLister.cs" />
     <Compile Include="CdrJobCreator.cs" />

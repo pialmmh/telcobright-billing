@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
@@ -13,6 +14,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.paradise.ICX
     public partial class DomesticToANSDetails2 : DevExpress.XtraReports.UI.XtraReport, IInvoiceTemplate
     {
         public string TemplateName => TemplateNameHelper.GetTemplateName(GetType());
+        private static int currentInvoiceNumber = 1000;
 
         public DomesticToANSDetails2()
         {
@@ -23,17 +25,48 @@ namespace TelcobrightMediation.Reports.InvoiceReports.paradise.ICX
         {
             this.ExportToPdf(fileName);
         }
+        public bool IsDictionary(object o)
+        {
+            if (o == null) return false;
+            return o is IDictionary &&
+                   o.GetType().IsGenericType &&
+                   o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>));
+        }
 
         public void GenerateInvoice(object data)
         {
-            invoice invoice = (invoice)data;
+            invoice invoice = null;
+            invoice mergedInvoice = null;
+            if (IsDictionary(data))
+            {
+                var map = (Dictionary<string, object>)data;
+                invoice = (invoice)map["invoice"];
+                mergedInvoice = (invoice)map["mergedInvoice"];
+            }
+            else
+            {
+                invoice = (invoice)data;
+            }
+
+            //invoice invoice = (invoice)data;
             List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatas = this.GetReportData(invoice);
             invoice_item invoiceItem = invoice.invoice_item.Single();
             Dictionary<string, string> invoiceMap = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItem.JSON_DETAIL);
+
+            List<InvoiceSectionDataRowForA2ZVoice> invoiceBasicDatasMerged = null;
+            invoice_item invoiceItemMerged = null;
+            Dictionary<string, string> invoiceMapMerged = null;
+            if (mergedInvoice != null)
+            {
+                invoiceBasicDatasMerged = this.GetReportData(mergedInvoice);
+                invoiceItemMerged = mergedInvoice.invoice_item.Single();
+                invoiceMapMerged = JsonConvert.DeserializeObject<Dictionary<string, string>>(invoiceItemMerged.JSON_DETAIL);
+            }
+
             this.DataSource = invoiceBasicDatas;
 
             #region Page Header
-            //xrLabelVatRegNo.Text = "BIN: 001285404-0208";
+            xrLabelVatRegNo.Text = "BIN: 001285404-0208";
             xrLabelPartnerName.Text = invoiceMap["companyName"];
             xrLabelPartnerVatRegNo.Text = "BIN: " + invoiceMap["vatRegNo"];
             xrLabelType.Text = string.Format("Type: {0}", invoiceMap["customerType"]);
@@ -58,8 +91,6 @@ namespace TelcobrightMediation.Reports.InvoiceReports.paradise.ICX
 
             xrTableCellRevenueTotal.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
             xrTableCellSubTotalAmount.DataBindings.Add("Text", this.DataSource, "GrandTotalAmount", "{0:n2}");
-            xrTableCell9.DataBindings.Add("Text", this.DataSource, "TotalCalls", "{0:n2}");
-            xrTableCell10.DataBindings.Add("Text", this.DataSource, "TotalMinutes", "{0:n2}");
             #endregion
         }
         private List<InvoiceSectionDataRowForA2ZVoice> GetReportData(invoice invoice)
