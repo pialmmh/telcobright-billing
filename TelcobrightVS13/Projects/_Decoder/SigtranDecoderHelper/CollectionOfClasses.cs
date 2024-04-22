@@ -8,6 +8,11 @@ using Newtonsoft.Json;
 
 namespace Decoders
 {
+    public class Frame
+    {
+        [JsonProperty("frame.time_utc")]
+        public string Timestamp { get; set; }
+    }
     public  class Ip
     {
         [JsonProperty("ip.src")]
@@ -73,23 +78,26 @@ namespace Decoders
     }
 
     public class SigtranPacket
-        {
-            [JsonProperty("ip")]
-            public Ip Ip { get; set; }
+    {
+        [JsonProperty("frame")]
+        public Frame Frame { get; set; }
 
-            [JsonProperty("sctp")]
-            public Sctp Sctp { get; set; }
+        [JsonProperty("ip")]
+        public Ip Ip { get; set; }
 
-            [JsonProperty("m3ua")]
-            public M3Ua M3Ua { get; set; }
+        [JsonProperty("sctp")]
+        public Sctp Sctp { get; set; }
 
-            [JsonProperty("sccp")]
-            public Sccp Sccp { get; set; }
+        [JsonProperty("m3ua")]
+        public M3Ua M3Ua { get; set; }
 
-            [JsonProperty("tcap")]
-            public Tcap Tcap { get; set; }
+        [JsonProperty("sccp")]
+        public Sccp Sccp { get; set; }
 
-            [JsonProperty("gsm_map")]
-            public GSM_MAP GSM_MAP { get; set; }
-        }
+        [JsonProperty("tcap")]
+        public Tcap Tcap { get; set; }
+
+        [JsonProperty("gsm_map")]
+        public GSM_MAP GSM_MAP { get; set; }
+    }
 }

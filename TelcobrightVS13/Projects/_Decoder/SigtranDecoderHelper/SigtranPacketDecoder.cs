@@ -3,10 +3,16 @@ using System.Runtime.InteropServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using MediationModel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO.MemoryMappedFiles;
+using System.IO;
+using System.Text;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
+using LibraryExtensions;
+using System.Globalization;
 
 namespace Decoders
 {
@@ -22,45 +28,116 @@ namespace Decoders
         public static extern bool FreeLibrary(IntPtr hModule);
     }
 
+    public class JsonStringBuilderParser
+    {
+        public static List<JObject> ParseJsonArray(StringBuilder stringBuilder)
+        {
+            using (var jsonReader = new JsonTextReader(new StringBuilderReader(stringBuilder)))
+            {
+                jsonReader.SupportMultipleContent = true;
+                var serializer = new JsonSerializer();
+                var list = new List<JObject>();
+
+                while (jsonReader.Read())
+                {
+                    if (jsonReader.TokenType == JsonToken.StartObject)
+                    {
+                        JObject obj = serializer.Deserialize<JObject>(jsonReader);
+                        list.Add(obj);
+                    }
+                }
+
+                return list;
+            }
+        }
+
+        // Custom StringReader implementation for StringBuilder
+        private class StringBuilderReader : TextReader
+        {
+            private StringBuilder _stringBuilder;
+            private int _position;
+
+            public StringBuilderReader(StringBuilder stringBuilder)
+            {
+                _stringBuilder = stringBuilder;
+                _position = 0;
+            }
+
+            public override int Read()
+            {
+                if (_position >= _stringBuilder.Length)
+                    return -1;
+                else
+                    return _stringBuilder[_position++];
+            }
+
+            public override int Peek()
+            {
+                if (_position >= _stringBuilder.Length)
+                    return -1;
+                else
+                    return _stringBuilder[_position];
+            }
+        }
+    }
+
     class SigtranPacketDecoder
     {
         private string PcapFileName { get; set; }
-        private Dictionary<string, partnerprefix> Ansprefixes {get;set;}
-        public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansprefixes)
+        string filePath = "telco.bin";
+        Dictionary<string, partnerprefix> ansPrefixes { get; set; }
+        public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
             this.PcapFileName = pcapFilename;
-            this.Ansprefixes = ansprefixes;
+            this.ansPrefixes = ansPrefixes;
         }
-        //private const string LibTsharkDllPath = "C:\\Development\\wsbuild64\\run\\RelWithDebInfo\\libtshark.dll";
 
-        public static Dictionary<string, string> GT_Prefix = new Dictionary<string, string>();
-        public void populatePrefix()
+        StringBuilder DecodePacket()
         {
-            GT_Prefix["88071"] = "GP";
-            GT_Prefix["88091"] = "BL";
-            GT_Prefix["88081"] = "RB";
-            GT_Prefix["8809638"] = "IC";
-            GT_Prefix["88017"] = "GP";
+            StringBuilder data = new StringBuilder();
+            Process senderProcess = new Process();
+            //senderProcess.StartInfo.FileName = @"D:\PCAP_Reader\PCAP_Reader\bin\Debug\PCAP_Reader.exe";
+            senderProcess.StartInfo.FileName = @"C:\Development\wsbuild64\run\RelWithDebInfo\tshark.exe";
+            senderProcess.StartInfo.Arguments = PcapFileName;
+            senderProcess.StartInfo.UseShellExecute = false;
+            //senderProcess.StartInfo.RedirectStandardOutput = true;
+            senderProcess.StartInfo.CreateNoWindow = true;
+            senderProcess.Start();
+            senderProcess.WaitForExit();
+            data = ReadFromMemoryMappedFile();
+            return data;
         }
-        //[DllImport(LibTsharkDllPath, CallingConvention = CallingConvention.Cdecl)]
-        //private static extern IntPtr Tb_Main(string filename);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate IntPtr Tb_Main(string filename);
+        StringBuilder ReadFromMemoryMappedFile()
+        {
+            StringBuilder output = new StringBuilder();
+            const int chunkSize = 200 * 1024 * 1024; // 1 MB chunk size (adjust as needed)
+            using (MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open, null))
+            {
+                using (MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor())
+                {
+                    // Get the length of the memory-mapped file
+                    long fileSize = new FileInfo(filePath).Length;
+
+                    byte[] buffer = new byte[chunkSize];
+                    for (long offset = 0; offset < fileSize; offset += chunkSize)
+                    {
+                        int bytesToRead = (int)Math.Min(chunkSize, fileSize - offset);
+                        accessor.ReadArray(offset, buffer, 0, bytesToRead);
+                        output.Append(Encoding.UTF8.GetString(buffer, 0, bytesToRead));
+                    }
+                    mmf.Dispose();
+                }
+            }
+            return output;
+        }
 
         public List<SigtranPacket> GetPackets()
         {
-            IntPtr pDll = NativeMethods.LoadLibrary("libtshark.dll");
-            IntPtr pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Tb_Main");
-            Tb_Main tb_main = (Tb_Main)Marshal.GetDelegateForFunctionPointer(
-                                    pAddressOfFunctionToCall,
-                                    typeof(Tb_Main));
-            IntPtr resultPtr = tb_main(this.PcapFileName);
-            string output = Marshal.PtrToStringAnsi(resultPtr);
-            Marshal.FreeCoTaskMem(resultPtr);
-            bool result = NativeMethods.FreeLibrary(pDll);
+            StringBuilder output = DecodePacket();
             List<JObject> packetList = new List<JObject>();
             if (output != null) packetList = GetNewJObjectList(output);
+
             List<SigtranPacket> sigtranPackets =
                 packetList.Select(packet => packet.ToObject<SigtranPacket>()).ToList();
 
@@ -124,7 +201,7 @@ namespace Decoders
             {
                 string[] keys = pair.Key.Split(',');
                 string parentKey = keys[0];
-                if (keys.Length>1)
+                if (keys.Length > 1)
                 {
                     if (packet[parentKey] == null)
                     {
@@ -140,70 +217,86 @@ namespace Decoders
             return packet;
         }
 
-        private static List<JObject> GetNewJObjectList(string result)
+        private static List<JObject> GetNewJObjectList(StringBuilder result)
         {
-            var packets = JArray.Parse(result);
-            List<JObject> packetList = new List<JObject>();
-            foreach (var packet in packets.Cast<JObject>())
+            List<JObject> packets = JsonStringBuilderParser.ParseJsonArray(result);
+            ConcurrentBag<JObject> packetBag = new ConcurrentBag<JObject>();
+
+            Parallel.ForEach(packets.Cast<JObject>(), packet =>
             {
-                packetList.Add(GetNewJObject(GetKeyValuePairs(packet)));
-            }
-            return packetList;
+                packetBag.Add(GetNewJObject(GetKeyValuePairs(packet)));
+            });
+
+            return packetBag.ToList();
         }
+
 
         public List<string[]> CdrRecords(List<SigtranPacket> packets)
         {
-            List<string[]> records = new List<string[]>();
-            foreach (var packet in packets)
+            ConcurrentBag<string[]> records = new ConcurrentBag<string[]>();
+
+            Parallel.ForEach(packets, packet =>
             {
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
 
-                record[Fn.Originatingip] = packet.Ip.SrcIp;
-                record[Fn.TerminatingIp] = packet.Ip.DstIp;
+                record[Fn.StartTime] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-                record[Fn.IncomingRoute] = packet.Sctp.ToString();
-                record[Fn.OutgoingRoute] = packet.Sctp.ToString();
+                record[Fn.Originatingip] = packet.Ip?.SrcIp?.ToString();
+                record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
 
-                record[Fn.Opc] = packet.M3Ua.Opc.ToString();
-                record[Fn.Dpc] = packet.M3Ua.Dpc.ToString();
-                record[Fn.ReleaseDirection] = packet.M3Ua.RoutingContext.ToString();
-                record[Fn.Connectednumbertype] = packet.M3Ua.Si.ToString();
-                record[Fn.IdCall] = packet.M3Ua.Ni.ToString();
-                record[Fn.Sequencenumber] = packet.M3Ua.Sls.ToString();
+                record[Fn.IncomingRoute] = packet.Sctp?.SrcPort.ToString();
+                record[Fn.OutgoingRoute] = packet.Sctp?.DstPort.ToString();
 
-                record[Fn.OriginatingCallingNumber] = packet.Sccp.CallingPartyGt;
-                record[Fn.OriginatingCalledNumber] = packet.Sccp.CalledPartyGt;
-                record[Fn.AdditionalSystemCodes] = packet.Sccp.Ssn.ToString();
+                record[Fn.Opc] = packet.M3Ua?.Opc.ToString();
+                record[Fn.Dpc] = packet.M3Ua?.Dpc.ToString();
+                record[Fn.ReleaseDirection] = packet.M3Ua?.RoutingContext.ToString();
+                record[Fn.Connectednumbertype] = packet.M3Ua?.Si.ToString();
+                record[Fn.IdCall] = packet.M3Ua?.Ni.ToString();
+                record[Fn.Sequencenumber] = packet.M3Ua?.Sls.ToString();
 
-                record[Fn.Codec] = packet.Tcap.Tid;
-                record[Fn.InMgwId] = packet.Tcap.Otid;
-                record[Fn.OutMgwId] = packet.Tcap.Dtid;
+                record[Fn.OriginatingCallingNumber] = packet.Sccp?.CallingPartyGt;
+                record[Fn.OriginatingCalledNumber] = packet.Sccp?.CalledPartyGt;
+                record[Fn.AdditionalSystemCodes] = packet.Sccp?.Ssn.ToString();
 
-                record[Fn.AdditionalMetaData] = packet.GSM_MAP.Sms;
+                record[Fn.Codec] = packet.Tcap?.Tid;
+                record[Fn.InMgwId] = packet.Tcap?.Otid;
+                record[Fn.OutMgwId] = packet.Tcap?.Dtid;
+
+                record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString();
 
                 string[] GT_Pair = { Extract_GT_Prefix(record[Fn.OriginatingCalledNumber]), Extract_GT_Prefix(record[Fn.OriginatingCallingNumber]) };
                 Array.Sort(GT_Pair);
                 record[Fn.UniqueBillId] = GT_Pair[0] + "-" + GT_Pair[1] + "/" + record[Fn.Codec];
 
                 records.Add(record);
-            }
-            return records;
+            });
+
+            return records.ToList();
         }
 
-        
+
+        public static Dictionary<string, string> GT_Prefix = new Dictionary<string, string>();
+        public void populatePrefix()
+        {
+            GT_Prefix["88071"] = "GP";
+            GT_Prefix["88091"] = "BL";
+            GT_Prefix["88081"] = "RB";
+            GT_Prefix["8809638"] = "IC";
+            GT_Prefix["88017"] = "GP";
+        }
 
         private static string Extract_GT_Prefix(string GT)
         {
             string value;
-            if (GT_Prefix.TryGetValue(GT.Substring(0, 7), out value))
+            if (GT.Length >= 7 && GT_Prefix.TryGetValue(GT.Substring(0, 7), out value))
             {
                 return GT_Prefix[GT.Substring(0, 7)];
             }
-            else if (GT_Prefix.TryGetValue(GT.Substring(0, 5), out value))
+            else if (GT.Length >= 5 && GT_Prefix.TryGetValue(GT.Substring(0, 5), out value))
             {
                 return GT_Prefix[GT.Substring(0, 5)];
             }
-            else return null;
+            else return "none";
         }
 
     }
