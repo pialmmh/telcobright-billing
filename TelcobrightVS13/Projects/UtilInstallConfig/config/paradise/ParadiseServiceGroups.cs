@@ -58,7 +58,8 @@ namespace InstallConfig
                         {"TollFreeInvoiceSection1GeneratorWithTax","LTFSToIPTSP" },
                         {"TollFreeInvoiceSection2GeneratorWithTax","LTFSToIPTSPDetails1" },
                         {"TollFreeInvoiceSection3GeneratorWithTax","LTFSToIPTSPDetails2" }
-                    }
+                    },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "LTFSToIPTSP", "LTFSToIPTSPDetails1", "LTFSToIPTSPDetails2" }
                 }
             });
 
@@ -99,7 +100,8 @@ namespace InstallConfig
                         {"XyzSection1GeneratorWithTax","InternationalOutgoingToANS" },
                         {"XyzSection2GeneratorWithTax","InternationalOutgoingToANSDetails1" },
                         {"XyzSection3GeneratorWithTax","InternationalOutgoingToANSDetails2" }
-                    }
+                    },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "InternationalOutgoingToANS", "InternationalOutgoingToANSDetails1", "InternationalOutgoingToANSDetails2" }
                 }
             });
 
@@ -135,7 +137,11 @@ namespace InstallConfig
                         {"A2ZInvoiceSection1GeneratorWithTax","DomesticToANS" },
                         {"A2ZInvoiceSection2GeneratorWithTax","DomesticToANSDetails1" },
                         {"A2ZInvoiceSection3GeneratorWithTax","DomesticToANSDetails2" }
-                    }
+                    },
+                    OtherParams = new Dictionary<string, string>() {
+                        { "serviceGroupsToMergeInvoice","6"} //ltfs icx to be merged with domestic for paradise icx
+                    },
+                    SectionNamesOfInvoiceForExport = new List<string>() { "DomesticToANS", "DomesticToANSDetails1", "DomesticToANSDetails2" }
                 }
             });
             serviceGroupConfigurations.Add(
@@ -171,7 +177,8 @@ namespace InstallConfig
                             {"A2ZInvoiceSection1GeneratorWithCurrencyConversion","InternationalToIOS" },
                             {"A2ZInvoiceSection2GeneratorWithCurrencyConversion","InternationalToIOSDetails1" },
                             {"A2ZInvoiceSection3GeneratorWithCurrencyConversion","InternationalToIOSDetails2" }
-                        }
+                        },
+                        SectionNamesOfInvoiceForExport = new List<string>() { "InternationalToIOS", "InternationalToIOSDetails1", "InternationalToIOSDetails2" }
                     }
                 });
             return serviceGroupConfigurations.ToDictionary(s => s.IdServiceGroup);
