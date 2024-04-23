@@ -14,19 +14,19 @@ using TransactionTuple = System.ValueTuple<int, int, long, int, long>;
 namespace TelcobrightMediation
 {
     [Export("ServiceGroupPreProcessor", typeof(IServiceGroupPreProcessor))]
-    public class SgpCopyOrigCallToRedirect : IServiceGroupPreProcessor
+    public class SgpAddIgwOwnPrefixToTermNum : IServiceGroupPreProcessor
     {
         public override string ToString() => this.RuleName;
         public string RuleName => this.GetType().Name;
-        public string HelpText => "Copy originating called number to redirecting number.";
-        public int Id => 1;
+        public string HelpText => "Add Mir(igw) own prefix to  termination called number.";
+        public int Id => 2;
         
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
-            if (thisCdr.RedirectingNumber.IsNullOrEmptyOrWhiteSpace())
-            {
-                thisCdr.RedirectingNumber = thisCdr.OriginatingCalledNumber;
-            }
+            if(thisCdr.TerminatingCalledNumber.StartsWith("00") ||  
+               thisCdr.TerminatingCalledNumber.StartsWith("0013") || thisCdr.SwitchId == 11)
+                return;
+            thisCdr.TerminatingCalledNumber = "0013" + thisCdr.TerminatingCalledNumber;
         }
         
     }
