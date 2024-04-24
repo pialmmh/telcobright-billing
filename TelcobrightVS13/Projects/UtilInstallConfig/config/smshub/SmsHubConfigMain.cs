@@ -116,7 +116,7 @@ namespace InstallConfig
                     idcdrformat= 78,
                     idMediationRule= 2,
                     SwitchName= "Dialogic",
-                    CDRPrefix= "p",
+                    CDRPrefix= "mdr",
                     FileExtension= ".pcap",
                     Description= null,
                     SourceFileLocations= vaultPrimary.Name,
@@ -144,7 +144,6 @@ namespace InstallConfig
                 },
                
             };
-
 
             this.PrepareProductAndServiceConfiguration();
             

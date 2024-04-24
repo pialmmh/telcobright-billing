@@ -44,6 +44,11 @@ namespace Process
             PartnerEntities context = new PartnerEntities(entityConStr);
             try
             {
+                if (tbc.CdrSetting.isTableDelete == true)
+                {
+                    TableOptimizer optimize = TableOptimizer.creatDeleteTableObject();
+                    optimize.deleteTables(context);
+                }
                 MefJobContainer jobData = new MefJobContainer();
                 jobData.CmpJob.Compose();
                 foreach (ITelcobrightJob ext in jobData.CmpJob.Jobs)
@@ -109,6 +114,7 @@ namespace Process
                                 }
                             }
                         }
+
                         catch (Exception e1)
                         {
                             Console.WriteLine(e1);

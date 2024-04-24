@@ -229,6 +229,12 @@ namespace Decoders
 
             return packetBag.ToList();
         }
+        string ParseAndFormatTimestamp(string timestamp)
+        {
+            timestamp = timestamp.Substring(0, timestamp.Length - 4);
+            DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime.AddHours(6);
+            return parsedDate.ToString("yyyy-MM-dd HH:mm:ss");
+        }
 
 
         public List<string[]> CdrRecords(List<SigtranPacket> packets)
@@ -239,7 +245,8 @@ namespace Decoders
             {
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
 
-                record[Fn.StartTime] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                record[Fn.StartTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
+                record[Fn.AnswerTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
 
                 record[Fn.Originatingip] = packet.Ip?.SrcIp?.ToString();
                 record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
