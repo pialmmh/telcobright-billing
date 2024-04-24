@@ -104,7 +104,7 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
-                    SecondaryDirectory = "downloaded",
+                    SecondaryDirectory = "",
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive= true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('b')

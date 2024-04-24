@@ -67,6 +67,7 @@ namespace InstallConfig
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
+                ServiceGroupPreProcessingRules = new List<int>() {2},
                 DisableCdrPostProcessingJobCreationForAutomation = false,
                 DisableParallelMediation = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
