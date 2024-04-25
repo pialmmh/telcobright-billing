@@ -59,13 +59,11 @@ namespace Process
                         }
                         Console.WriteLine($"SMS Sent to respective {desNumber} number!");
                     }
-                    Console.ReadLine();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Failed to send SMS. Error: {ex.Message}");
                 }
-                Console.ReadLine();
             }
         }
     }
