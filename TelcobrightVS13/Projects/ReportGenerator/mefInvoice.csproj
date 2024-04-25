@@ -104,6 +104,42 @@
     <Compile Include="Helper\CurrencyHelper.cs" />
     <Compile Include="Helper\TemplateNameHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrier.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrier.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrierDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrierDetails1.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrierDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrierDetails2.Designer.cs">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOS.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOS.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOSDetails1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOSDetails1.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOSDetails2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOSDetails2.Designer.cs">
+      <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Reports\InvoiceReports\paradise\ICX\DomesticToANS.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -521,6 +557,24 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrier.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrierDetails1.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalIncomingToForeignCarrierDetails2.resx">
+      <DependentUpon>InternationalIncomingToForeignCarrierDetails2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOS.resx">
+      <DependentUpon>InternationalOutgoingToIOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOSDetails1.resx">
+      <DependentUpon>InternationalOutgoingToIOSDetails1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvoiceReports\mirtelecom\IGW\InternationalOutgoingToIOSDetails2.resx">
+      <DependentUpon>InternationalOutgoingToIOSDetails2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\InvoiceReports\paradise\ICX\DomesticToANS.resx">
       <DependentUpon>DomesticToANS.cs</DependentUpon>
     </EmbeddedResource>
@@ -747,6 +801,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(SolutionDir)Portal\Extensions\InvoiceTemplates\$(TargetFileName)
