@@ -26,6 +26,9 @@ namespace InstallConfig
             this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
+            this.DaemonConfigurations.AddRange(GetSmsSenderInstances(this.Tbc.Telcobrightpartner.databasename));
+            this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.Telcobrightpartner.databasename));
+            
             return this.DaemonConfigurations;
         }
 
@@ -155,6 +158,46 @@ namespace InstallConfig
                     })
             };
             return fileCopierInstances;
+        }
+        private static List<QuartzTbDaemonConfig> GetOptimizerInstances(string operatorName)
+        {
+            //don't use foreach, do it manually for flixibility e.g. different repeating interval
+            List<QuartzTbDaemonConfig> optimizerInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "Optimizer" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "107"},
+                        {"operatorName", operatorName},
+                    }),
+            };
+            return optimizerInstances;
+        }
+        private static List<QuartzTbDaemonConfig> GetSmsSenderInstances(string operatorName)
+        {
+            //don't use foreach, do it manually for flixibility e.g. different repeating interval
+            List<QuartzTbDaemonConfig> optimizerInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "Sms Sender" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "102"},
+                        {"operatorName", operatorName},
+                    }),
+            };
+            return optimizerInstances;
         }
     }
 }

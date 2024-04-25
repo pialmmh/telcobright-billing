@@ -210,6 +210,24 @@ namespace InstallConfig
                 EnableSsl = true
             };
 
+            this.Tbc.SmsSenderConfig = new SmsSenderConfig
+            {
+                ApiUrl = "http://entsms.microntechbd.com:8080/bulksms/personalizedbulksms",
+                Username = "MTLBilling",
+                Password = "12345678",
+                DestinationNumber = new List<string>
+                {
+                    "8801779747913",
+                    "8801866464603",
+                    "8801730329050",
+                    "8801755588298",
+                    "8801730739302",
+                    "8801730795764",
+                },
+                Source = "8809601000201",
+                Message = "Dear Valued Partner, \nOur system indicates that your cdr process has been stopped since one hour.\nTelcobright Billing Portal"
+            };
+
             return this.Tbc;
         }
 
