@@ -49,7 +49,7 @@ namespace TelcobrightMediation
         public bool ProcessNewCdrJobsBeforeReProcess { get; set; }
         public bool WriteFailedCallsToDb { get; set; }
         public bool WriteCdrDiscarded { get; set; }
-        public DateTime? ExcludeBefore { get; set; } 
+        public DateTime ExcludeBefore { get; set; } 
         public bool isTableDelete { get; set; }
 
         public CdrSetting()
