@@ -53,12 +53,12 @@ namespace LibraryExtensions
         }
         public string GetPortalBinPath()
         {
-            return new UpwordPathFinder<DirectoryInfo>("PortalBTRC").FindAndGetFullPath()
+            return new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath()
                    + Path.DirectorySeparatorChar + "bin";
         }
         public string GetPortalBtrcBinPath()
         {
-            return new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath()
+            return new UpwordPathFinder<DirectoryInfo>("PortalBTRC").FindAndGetFullPath()
                    + Path.DirectorySeparatorChar + "bin";
         }
         public string GetOperatorWiseConfigDirInUtil(string operatorShortName,string configRoot)
