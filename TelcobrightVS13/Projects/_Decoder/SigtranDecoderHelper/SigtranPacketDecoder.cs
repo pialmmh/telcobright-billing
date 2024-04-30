@@ -85,8 +85,10 @@ namespace Decoders
     {
         private string PcapFileName { get; set; }
         string filePath = "telco.bin";
-        private static string TSharkExe = new UpwordPathFinder<DirectoryInfo>("Tshark").FindAndGetFullPath()
-                                       + Path.DirectorySeparatorChar + "tshark.exe";
+
+        private static string TSharkExe =
+            Path.Combine(new UpwordPathFinder<DirectoryInfo>("ToolsAndScripts").FindAndGetFullPath(),
+                "externalResources", "Tshark", "tshark.exe");
         Dictionary<string, partnerprefix> ansPrefixes { get; set; }
         public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
