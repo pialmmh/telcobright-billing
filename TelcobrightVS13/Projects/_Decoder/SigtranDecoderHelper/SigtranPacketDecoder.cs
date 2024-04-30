@@ -85,6 +85,8 @@ namespace Decoders
     {
         private string PcapFileName { get; set; }
         string filePath = "telco.bin";
+        private static string TSharkExe = new UpwordPathFinder<DirectoryInfo>("Tshark").FindAndGetFullPath()
+                                       + Path.DirectorySeparatorChar + "tshark.exe";
         Dictionary<string, partnerprefix> ansPrefixes { get; set; }
         public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
@@ -97,7 +99,7 @@ namespace Decoders
             StringBuilder data = new StringBuilder();
             Process senderProcess = new Process();
             //senderProcess.StartInfo.FileName = @"D:\PCAP_Reader\PCAP_Reader\bin\Debug\PCAP_Reader.exe";
-            senderProcess.StartInfo.FileName = @"C:\Development\wsbuild64\run\RelWithDebInfo\tshark.exe";
+            senderProcess.StartInfo.FileName = TSharkExe;
             senderProcess.StartInfo.Arguments = PcapFileName;
             senderProcess.StartInfo.UseShellExecute = false;
             //senderProcess.StartInfo.RedirectStandardOutput = true;
