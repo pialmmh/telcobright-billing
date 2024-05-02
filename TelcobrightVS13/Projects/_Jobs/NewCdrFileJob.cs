@@ -452,13 +452,17 @@ namespace Jobs
                     throw new Exception("Could not get exclusive lock on file before decoding, file transfer may be not finished yet through the network or FTP.");
                 }
                 List<string[]> decodedCdrRows = new List<string[]>();
+                var casStyleProcessing = this.CollectorInput.CdrSetting.useCasStyleProcessing;
                 try
                 {
                     decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
-                    decodedCdrRows = decodedCdrRows
-                        .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
-                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
-                        .ToList();
+                    if (casStyleProcessing)
+                    {
+                        decodedCdrRows = decodedCdrRows
+                            .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
+                                        || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                            .ToList();
+                    }
 
                 }
                 catch (Exception e)
@@ -468,10 +472,17 @@ namespace Jobs
                         Console.WriteLine("WARNING!!!!!!!! MANUAL GARBAGE COLLECTION AND COMPACTION OF LOH.");
                         GarbageCollectionHelper.CompactGCNowForOnce();
                         decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
-                        decodedCdrRows = decodedCdrRows
-                            .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
-                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
-                            .ToList();
+                        if (casStyleProcessing)
+                        {
+                            decodedCdrRows = decodedCdrRows
+                                .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() &&
+                                             r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >=
+                                             this.CollectorInput.CdrSetting.ExcludeBefore)
+                                            || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() &&
+                                                r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >=
+                                                this.CollectorInput.CdrSetting.ExcludeBefore))
+                                .ToList();
+                        }
                     }
                     else
                     {
