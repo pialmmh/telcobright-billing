@@ -47,13 +47,18 @@ namespace TelcobrightMediation
             AbstractCdrDecoder decoder = getDecoder();
             List<cdrinconsistent> cdrinconsistents = new List<cdrinconsistent>();
             List<string[]> decodedCdrRows = new List<string[]>();
+            bool casStyleProcessing = this.CollectorInput.CdrSetting.useCasStyleProcessing;
+
             if (this.CollectFromPreDecodedFile == false)//regular decoding
             {
                 decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents);
-                decodedCdrRows = decodedCdrRows
-                    .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
+                if (casStyleProcessing)
+                {
+                    decodedCdrRows = decodedCdrRows
+                        .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
                                     || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
                         .ToList();
+                }
             }
             else//collect from pre-decoded, but fallback to decode if predecoded file doesn't exist
             {
@@ -62,18 +67,26 @@ namespace TelcobrightMediation
                 {
                     decodedCdrRows =
                         FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(predecodedFileName, ',', 0, "`", ";"); //backtick separated
-                    decodedCdrRows = decodedCdrRows
-                        .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
-                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
-                        .ToList();
+                    if (casStyleProcessing)
+                    {
+                        decodedCdrRows = decodedCdrRows
+                            .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
+                                        || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                            .ToList();
+                    }
+                    
                 }
                 else
                 {
                     decodedCdrRows = decoder.DecodeFile(this.CollectorInput, out cdrinconsistents); //collect
-                    decodedCdrRows = decodedCdrRows
-                        .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
-                                    || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
-                        .ToList();
+
+                    if (casStyleProcessing)
+                    {
+                        decodedCdrRows = decodedCdrRows
+                            .Where(r => (!r[Fn.ConnectTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.ConnectTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore)
+                                        || (!r[Fn.StartTime].IsNullOrEmptyOrWhiteSpace() && r[Fn.StartTime].ConvertToDateTimeFromMySqlFormat() >= this.CollectorInput.CdrSetting.ExcludeBefore))
+                            .ToList();
+                    }
                 }
             }
             var newCdrPreProcessor = new NewCdrPreProcessor(decodedCdrRows, cdrinconsistents, this.CollectorInput);
