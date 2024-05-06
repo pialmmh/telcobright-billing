@@ -10,7 +10,7 @@ namespace InstallConfig
 {
     public class CasDockerDbHelper
     {
-        public  static  Dictionary<string, string> IcxVsdbHostNames = new Dictionary<string, string>()
+        public readonly static  Dictionary<string, string> IcxVsdbHostNames = new Dictionary<string, string>()
         {
             {"agni_cas","172.16.1.21"},
             {"banglatelecom_cas","172.16.1.21"},

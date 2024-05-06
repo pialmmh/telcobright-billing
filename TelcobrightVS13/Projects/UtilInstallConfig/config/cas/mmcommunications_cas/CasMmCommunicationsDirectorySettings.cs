@@ -54,13 +54,6 @@ namespace InstallConfig
             this.Tbc.DirectorySettings.FileLocations.Add(vaultZte.Name, vaultZte);
             this.Tbc.DirectorySettings.FileLocations.Add(vaultcataleya.Name, vaultcataleya);
            
-            //add archive locations to CdrSettings
-            this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
-            {
-                //vaultS3FileArchive1.Name,
-                //vaultCAS.Name
-            };
-           
         }
     }
 }

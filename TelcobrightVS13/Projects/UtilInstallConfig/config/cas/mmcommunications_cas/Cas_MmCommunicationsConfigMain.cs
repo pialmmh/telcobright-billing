@@ -54,7 +54,7 @@ namespace InstallConfig
                 neWiseAdditionalSettings.Add(ne.idSwitch, additionalSetting);
             }
             this.Tbc.CdrSetting.NeWiseAdditionalSettings = neWiseAdditionalSettings;
-            this.Tbc.CdrSetting.ExcludeBefore = new DateTime(2023,01,01);
+            this.Tbc.CdrSetting.isTableDelete = true;
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();

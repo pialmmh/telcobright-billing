@@ -58,7 +58,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "Z:/telcobright/vault/resources/cdr/btcl/ip/Aug-Oct",
+                StartingPath = "Z:/telcobright/vault/resources/cdr/btcl/ip",
                 User = "",
                 Pass = "",
             };

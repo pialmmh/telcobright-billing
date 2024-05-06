@@ -56,7 +56,7 @@ namespace InstallConfig
                 neWiseAdditionalSettings.Add(ne.idSwitch,additionalSetting);
             }
             this.Tbc.CdrSetting.NeWiseAdditionalSettings = neWiseAdditionalSettings;
-
+            this.Tbc.CdrSetting.isTableDelete = true;
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
