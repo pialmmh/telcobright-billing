@@ -37,11 +37,10 @@ namespace Decoders
         }
         public List<string[]> decodeLine(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string filePath, string jobName)
         {
-            Dictionary<string, partnerprefix> ansPrefixes = input.MediationContext.AnsPrefixes;
+            Dictionary<string, partnerprefix> ansPrefixes = input.MediationContext.AnsPrefixes880;
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodeRows = new List<string[]>();
             SigtranPacketDecoder decoder = new SigtranPacketDecoder(filePath,ansPrefixes);
-            decoder.populatePrefix();
             List<SigtranPacket> packets = decoder.GetPackets();
             decodeRows = decoder.CdrRecords(packets);
             return decodeRows;

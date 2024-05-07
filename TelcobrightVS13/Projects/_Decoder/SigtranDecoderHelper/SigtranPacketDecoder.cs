@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using LibraryExtensions;
 using System.Globalization;
+using Decoders.Helper;
 
 namespace Decoders
 {
@@ -89,7 +90,7 @@ namespace Decoders
         private static string TSharkExe =
             Path.Combine(new UpwordPathFinder<DirectoryInfo>("ToolsAndScripts").FindAndGetFullPath(),
                 "externalResources", "Tshark", "tshark.exe");
-        Dictionary<string, partnerprefix> ansPrefixes { get; set; }
+        Dictionary<string, partnerprefix> ansPrefixes { get; }
         public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
             this.PcapFileName = pcapFilename;
@@ -100,7 +101,6 @@ namespace Decoders
         {
             StringBuilder data = new StringBuilder();
             Process senderProcess = new Process();
-            //senderProcess.StartInfo.FileName = @"D:\PCAP_Reader\PCAP_Reader\bin\Debug\PCAP_Reader.exe";
             senderProcess.StartInfo.FileName = TSharkExe;
             senderProcess.StartInfo.Arguments = PcapFileName;
             senderProcess.StartInfo.UseShellExecute = false;
@@ -252,6 +252,9 @@ namespace Decoders
                 record[Fn.StartTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
                 record[Fn.AnswerTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
 
+                record[Fn.Duration1] = "60";
+                record[Fn.DurationSec] = "60";
+
                 record[Fn.Originatingip] = packet.Ip?.SrcIp?.ToString();
                 record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
 
@@ -275,9 +278,21 @@ namespace Decoders
 
                 record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString();
 
-                string[] GT_Pair = { Extract_GT_Prefix(record[Fn.OriginatingCalledNumber]), Extract_GT_Prefix(record[Fn.OriginatingCallingNumber]) };
+                string[] GT_Pair =
+                {
+                    ExtractGtPrefix(record[Fn.OriginatingCalledNumber]).ToString(),
+                    ExtractGtPrefix(record[Fn.OriginatingCallingNumber]).ToString()
+                };
                 Array.Sort(GT_Pair);
-                record[Fn.UniqueBillId] = GT_Pair[0] + "-" + GT_Pair[1] + "/" + record[Fn.Codec];
+
+                string timeWindow = new TimeWindowCalculator(TimeSpan.FromMinutes(5))
+                                        .GetRoundedDownDateTime(Convert.ToDateTime(record[Fn.AnswerTime]))
+                                        .ToString("yyyy-MM-dd HH:mm:ss");
+
+                record[Fn.UniqueBillId] = GT_Pair[0] + "-" 
+                                        + GT_Pair[1] + "/" 
+                                        + timeWindow + "/" 
+                                        + record[Fn.Codec];
 
                 records.Add(record);
             });
@@ -285,29 +300,18 @@ namespace Decoders
             return records.ToList();
         }
 
-
-        public static Dictionary<string, string> GT_Prefix = new Dictionary<string, string>();
-        public void populatePrefix()
+        private int ExtractGtPrefix(string GT)
         {
-            GT_Prefix["88071"] = "GP";
-            GT_Prefix["88091"] = "BL";
-            GT_Prefix["88081"] = "RB";
-            GT_Prefix["8809638"] = "IC";
-            GT_Prefix["88017"] = "GP";
-        }
-
-        private static string Extract_GT_Prefix(string GT)
-        {
-            string value;
-            if (GT.Length >= 7 && GT_Prefix.TryGetValue(GT.Substring(0, 7), out value))
+            partnerprefix value;
+            if (GT.Length >= 7 && ansPrefixes.TryGetValue(GT.Substring(0, 7), out value))
             {
-                return GT_Prefix[GT.Substring(0, 7)];
+                return value.idPartner;
             }
-            else if (GT.Length >= 5 && GT_Prefix.TryGetValue(GT.Substring(0, 5), out value))
+            else if (GT.Length >= 5 && ansPrefixes.TryGetValue(GT.Substring(0, 5), out value))
             {
-                return GT_Prefix[GT.Substring(0, 5)];
+                return value.idPartner;
             }
-            else return "none";
+            else return 0;
         }
 
     }
