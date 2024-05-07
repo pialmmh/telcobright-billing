@@ -55,6 +55,7 @@ namespace InstallConfig
                 neWiseAdditionalSettings.Add(ne.idSwitch, additionalSetting);
             }
             this.Tbc.CdrSetting.NeWiseAdditionalSettings = neWiseAdditionalSettings;
+            this.Tbc.CdrSetting.isTableDelete = true;
             this.Tbc.CdrSetting.UnzipCompressedFiles = false;
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
