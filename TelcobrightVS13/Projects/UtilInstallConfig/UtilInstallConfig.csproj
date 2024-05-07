@@ -329,6 +329,14 @@
     <Compile Include="config\mirtelecom\MirQuartzConfig.cs" />
     <Compile Include="config\mirtelecom\MirServiceGroups.cs" />
     <Compile Include="config\mirtelecom\MirConfigMain.cs" />
+    <Compile Include="config\agni\AgniConfigMain.cs" />
+    <Compile Include="config\agni\AgniDatabaseSettings.cs" />
+    <Compile Include="config\agni\AgniDirectorySettings.cs" />
+    <Compile Include="config\agni\AgniPortalSetting.cs" />
+    <Compile Include="config\agni\AgniProductAndServiceConfig.cs" />
+    <Compile Include="config\agni\AgniQuartzConfig.cs" />
+    <Compile Include="config\agni\AgniServerConfig.cs" />
+    <Compile Include="config\agni\AgniServiceGroups.cs" />
     <Compile Include="config\smshub\SmsHubConfigMain.cs" />
     <Compile Include="config\smshub\SmsHubDatabaseSettings.cs" />
     <Compile Include="config\smshub\SmsHubDirectorySettings.cs" />
@@ -538,6 +546,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="config\agni\_dbscripts\seedData\json\" />
+    <Folder Include="config\agni\_dbscripts\seedData\sql\" />
     <Folder Include="config\allDeployment\cas\" />
     <Folder Include="config\banglatelecom\_dbscripts\ddl\" />
     <Folder Include="config\banglatelecom\_dbscripts\seedData\json\" />
@@ -645,6 +655,12 @@
     <Content Include="config\mirtelecom\tmplPortalFtpSite.txt" />
     <Content Include="config\mirtelecom\tmplPortalWebSite.txt" />
     <Content Include="config\mirtelecom\_dbscripts\quartzTables.sql" />
+    <Content Include="config\agni\tmplPortalAppPools.txt" />
+    <Content Include="config\agni\tmplPortalFtpSite.txt" />
+    <Content Include="config\agni\tmplPortalWebSite.txt" />
+    <Content Include="config\agni\_dbscripts\ddl\sql\icxSp.sql" />
+    <Content Include="config\agni\_dbscripts\ddl\sql\indexSwitch.txt" />
+    <Content Include="config\agni\_dbscripts\quartzTables.sql" />
     <Content Include="config\smshub\tmplPortalAppPools.txt" />
     <Content Include="config\smshub\tmplPortalFtpSite.txt" />
     <Content Include="config\smshub\tmplPortalWebSite.txt" />

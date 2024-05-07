@@ -145,6 +145,19 @@ namespace InstallConfig
                                 SchedulerPortNo = 564
                             },
                         }
+                    },
+                    new Deploymentprofile
+                    {
+                        profileName = "agni",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                Name = "agni",
+                                SchedulerPortNo = 565
+                            },
+                        }
                     }
                 };
 

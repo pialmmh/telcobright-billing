@@ -112,6 +112,7 @@
     <Compile Include="DialogicBorderNetSummitWithFailedGzip.cs" />
     <Compile Include="GenbandC3.cs" />
     <Compile Include="GenbandC3WithGz.cs" />
+    <Compile Include="GNEWDecoderAgniTEST.cs" />
     <Compile Include="Helper\NokiaDecodeHelper.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderNGT.cs" />
     <Compile Include="Helper\NokiaSiemensDecoderMother.cs" />
