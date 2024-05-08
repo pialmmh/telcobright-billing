@@ -91,7 +91,16 @@ namespace TelcobrightMediation
                     jobsegment jobSegment = getJobSegment(cmd, idJobSegment);
                     int progressSoFar = getJobProgressSoFar(cmd);
                     if (progressSoFar > noOfSteps)
+                    {
+                        if (this.CdrSetting.useCasStyleProcessing)
+                        {
+                            cmd.ExecuteCommandText("set autocommit=0;");
+                            cmd.ExecuteCommandText($@"delete from job where id={this.TelcobrightJob.id}");
+                            cmd.ExecuteCommandText(" commit; ");
+                            Console.WriteLine($"Progress cannot be > total no of steps for a job. job {this.TelcobrightJob.id} deleted");
+                        }
                         throw new Exception("Progress cannot be > total no of steps for a job.");
+                    }
                     Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
                                       + this.TelcobrightJob.JobName + ". Progress=" + progressSoFar + "/"
                                       + this.TelcobrightJob.NoOfSteps.ToString());
@@ -175,25 +184,25 @@ namespace TelcobrightMediation
             return progressSoFar;
         }
 
-        private jobsegment getJobSegment(DbCommand cmd,int idJobSegment)
+        private jobsegment getJobSegment(DbCommand cmd, int idJobSegment)
         {
             string sqlProgress = " select id,idjob,segmentnumber,stepscount,status,segmentdetail from jobsegment " +
                                  " where id=" + idJobSegment.ToString();
             cmd.CommandText = sqlProgress;
-            DbDataReader reader=null;
+            DbDataReader reader = null;
             try
             {
                 reader = cmd.ExecuteReader();
-                List<jobsegment> jobsegments= new List<jobsegment>();
+                List<jobsegment> jobsegments = new List<jobsegment>();
                 while (reader.Read())
                 {
-                    jobsegment segment= new jobsegment();
+                    jobsegment segment = new jobsegment();
                     segment.id = Convert.ToInt64(reader["id"].ToString());
                     segment.idJob = Convert.ToInt64(reader["idjob"].ToString());
-                    segment.segmentNumber= Convert.ToInt32(reader["segmentnumber"].ToString());
-                    segment.stepsCount= Convert.ToInt32(reader["stepscount"].ToString());
-                    segment.status= Convert.ToInt32(reader["status"].ToString());
-                    segment.SegmentDetail= reader["segmentdetail"].ToString();
+                    segment.segmentNumber = Convert.ToInt32(reader["segmentnumber"].ToString());
+                    segment.stepsCount = Convert.ToInt32(reader["stepscount"].ToString());
+                    segment.status = Convert.ToInt32(reader["status"].ToString());
+                    segment.SegmentDetail = reader["segmentdetail"].ToString();
                     reader.Close();
                     return segment;
                 }
