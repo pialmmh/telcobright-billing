@@ -75,6 +75,9 @@ namespace Decoders
     {
         [JsonProperty("gsm_sms.sms_text")]
         public string Sms { get; set; }
+
+        [JsonProperty("gsm_old.localValue")]
+        public string LocalValue { get; set; }
     }
 
     public class SigtranPacket
