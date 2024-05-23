@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using LibraryExtensions;
 using System.Globalization;
+using System.Net;
 using Decoders.Helper;
 
 namespace Decoders
@@ -255,6 +256,8 @@ namespace Decoders
                 record[Fn.Duration1] = "60";
                 record[Fn.DurationSec] = "60";
 
+
+
                 record[Fn.Originatingip] = packet.Ip?.SrcIp?.ToString();
                 record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
 
@@ -270,13 +273,14 @@ namespace Decoders
 
                 record[Fn.OriginatingCallingNumber] = packet.Sccp?.CallingPartyGt;
                 record[Fn.OriginatingCalledNumber] = packet.Sccp?.CalledPartyGt;
-                record[Fn.AdditionalSystemCodes] = packet.Sccp?.Ssn.ToString();
+                record[Fn.Duration3] = packet.Sccp?.Ssn.ToString();
 
                 record[Fn.Codec] = packet.Tcap?.Tid;
                 record[Fn.InMgwId] = packet.Tcap?.Otid;
                 record[Fn.OutMgwId] = packet.Tcap?.Dtid;
 
                 record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString();
+                record[Fn.Duration4] = packet.GSM_MAP?.LocalValue?.ToString();
 
                 string[] GT_Pair =
                 {
@@ -293,6 +297,9 @@ namespace Decoders
                                         + GT_Pair[1] + "/" 
                                         + timeWindow + "/" 
                                         + record[Fn.Codec];
+
+                record[Fn.Validflag] = "1";
+                record[Fn.Partialflag] = "1";
 
                 records.Add(record);
             });
