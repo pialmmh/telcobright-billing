@@ -340,6 +340,7 @@ namespace TelcobrightFileOperations
     {
         public CompressionType CompressionType { get; set; }
         public string FileExtensionForSafeCopyWithTempFile { get; set; }//string.empty means do not use safe copy
+        public string PrefixForUniqueName { get; set; }
         public bool Overwrite { get; set; }
         public SpringExpression ExpDestFileName { get; set; }
         public SyncSettingsDstSubDirectoryRule SubDirRule { get; set; }

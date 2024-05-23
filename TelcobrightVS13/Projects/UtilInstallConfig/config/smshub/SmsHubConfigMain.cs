@@ -119,7 +119,7 @@ namespace InstallConfig
                     CDRPrefix= "mdr",
                     FileExtension= ".pcap",
                     Description= null,
-                    SourceFileLocations= vaultPrimary.Name,
+                    SourceFileLocations= this.vaultPrimary.Name,
                     BackupFileLocations= null,//vaultCAS
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,

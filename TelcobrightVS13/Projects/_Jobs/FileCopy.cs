@@ -77,6 +77,10 @@ namespace Jobs
             }
             string destinationRelativePath = archiveDir != "" ? (archiveDir + dstLocation.FileLocation.GetPathSeparator()
                 + destinationFileNameOnly) : destinationFileNameOnly;
+            if (syncSettingDst.PrefixForUniqueName != "")
+            {
+                destinationRelativePath = syncSettingDst.PrefixForUniqueName + destinationRelativePath;
+            }
             FileSyncInfo destinationSyncInfo = new FileSyncInfo(destinationRelativePath, dstLocation);
 
             FileSyncher fs = new FileSyncher();
