@@ -22,20 +22,22 @@ namespace InstallConfig
     {
         public override DatabaseSetting GetDatabaseConfigs()
         {
-            var databaseSetting = CasDockerDbHelper.getCommonDatabaseSetting(this.Tbc.Telcobrightpartner.databasename);
-            //var databaseSetting = new DatabaseSetting()
-            //{
-            //    ServerName = "localhost",
-            //    DatabaseName = this.Tbc.Telcobrightpartner.databasename,
-            //    WritePasswordForApplication = "Takay1#$ane",
-            //    WriteUserNameForApplication = "root",
-            //    DatabaseEngine = "innodb",
-            //    StorageEngineForPartitionedTables = "innodb",
-            //    PartitionStartDate = new DateTime(2023, 1, 1),
-            //    PartitionLenInDays = 1,
-            //    ReadOnlyUserNameForApplication = "dbreader",
-            //    ReadOnlyPasswordForApplication = "Takay1takaane"
-            //};
+            //var databaseSetting = CasDockerDbHelper.getCommonDatabaseSetting(this.Tbc.Telcobrightpartner.databasename);
+
+            var databaseSetting = new DatabaseSetting()
+            {
+                ServerName = "localhost",
+                DatabaseName = this.Tbc.Telcobrightpartner.databasename,
+                WritePasswordForApplication = "",
+                WriteUserNameForApplication = "root",
+                DatabaseEngine = "innodb",
+                StorageEngineForPartitionedTables = "innodb",
+                PartitionStartDate = new DateTime(2023, 1, 1),
+                PartitionLenInDays = 1,
+                ReadOnlyUserNameForApplication = "dbreader",
+                ReadOnlyPasswordForApplication = "Takay1takaane",
+                UseVarcharInsteadOfTextForMemoryEngine = true
+            };
             Dictionary<string, List<string>> masterConfig = new Dictionary<string, List<string>>()
             {
                 {

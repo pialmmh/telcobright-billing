@@ -249,6 +249,7 @@ namespace Decoders
             Parallel.ForEach(packets, packet =>
             {
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
+                if(packet.GSM_MAP== null )return;
 
                 record[Fn.StartTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
                 record[Fn.AnswerTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
