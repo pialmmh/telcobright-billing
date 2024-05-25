@@ -17,7 +17,7 @@ namespace Jobs
     public static class FileTransferSessionCache
     {
         //Tuple<string,string>= Tuple<src fileLocationName,serverIP, startingpath, protocol (e.g. ftp or sftp)>
-        public static Dictionary<Tuple<string, string,string,string>, Session> sessionCache = new Dictionary<Tuple<string, string,string,string>, Session>();
+        public static Dictionary<Tuple<string, string, string, string>, Session> sessionCache = new Dictionary<Tuple<string, string, string, string>, Session>();
         public static Dictionary<Tuple<string, string, string, string>, int> sessionCacheUsage = new Dictionary<Tuple<string, string, string, string>, int>();
     }
 
@@ -203,7 +203,7 @@ namespace Jobs
                 else
                 {
                     SessionOptions sessionOptions = srcLocation.GetRemoteFileTransferSessionOptions(input.Tbc);
-                    var sessionLookupKey = new Tuple<string, string,string,string>
+                    var sessionLookupKey = new Tuple<string, string, string, string>
                         (srcLocation.Name, srcLocation.FileLocation.ServerIp, srcLocation.FileLocation.StartingPath, sessionOptions.Protocol.ToString());
                     int sessionReOpeningInterval = srcLocation.FileLocation.FtpSessionCloseAndReOpeningtervalByFleTransferCount;//tyring to save winscp from crashing by closign it in every 100 attempts
                     Session session = null;
@@ -218,7 +218,7 @@ namespace Jobs
                         if (sessionUsageCount % sessionReOpeningInterval == 0)
                         {
                             sessionUsageCount = 0;
-                            session.Abort();
+                            if (session.Opened) session.Abort();
                             session.Dispose();
                             session = null;
                             sessionCache.Remove(sessionLookupKey);
@@ -238,10 +238,11 @@ namespace Jobs
                             sessionCacheUsage.Add(sessionLookupKey, ++sessionUsageCount);
                         }
                     }
-                    if (session == null || session.Opened==false)
+                    if (session == null || session.Opened == false)
                     {
-                        if (session?.Opened == false) {
-                            session.Abort();
+                        if (session?.Opened == false)
+                        {
+                            // session.Abort();
                             session.Dispose();
                             session = null;
                             sessionCache.Remove(sessionLookupKey);
@@ -254,7 +255,8 @@ namespace Jobs
                         session = new Session();
                         session.SessionLogPath = null;
                         session.Open(sessionOptions);
-                        if (sessionCache.ContainsKey(sessionLookupKey)) {
+                        if (sessionCache.ContainsKey(sessionLookupKey))
+                        {
                             sessionCache.Remove(sessionLookupKey);
                         }
                         sessionCache.Add(sessionLookupKey, session);
@@ -423,7 +425,7 @@ namespace Jobs
         {
             throw new NotImplementedException();
         }
-//execute
+        //execute
 
 
         public void CreateJob(SyncPair syncPair, string fileName, TelcobrightConfig tbc)
