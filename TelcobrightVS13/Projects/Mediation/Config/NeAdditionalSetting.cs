@@ -14,6 +14,8 @@ namespace TelcobrightMediation
         public int ExpectedNoOfCdrIn24Hour { get; set; }
         public string AggregationStyle { get; set; }
         public bool DumpAllInstancesToDebugCdrTable { get; set; }
+        public bool CreateJobRecursively { get; set; }
+
         public List<EventPreprocessingRule> EventPreprocessingRules { get; set; }= new List<EventPreprocessingRule>();
 
         public List<CompressionType> SupportedCompressedLogTypes { get; set; } = new List<CompressionType>()

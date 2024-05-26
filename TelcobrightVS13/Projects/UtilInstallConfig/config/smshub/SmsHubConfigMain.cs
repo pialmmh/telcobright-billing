@@ -95,6 +95,7 @@ namespace InstallConfig
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 100000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        CreateJobRecursively = true,
                         EventPreprocessingRules = new List<EventPreprocessingRule>()
                         {
                             new CdrPredecoder()

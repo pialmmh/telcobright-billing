@@ -23,6 +23,8 @@ namespace TelcobrightFileOperations
             return filesOnly;
         }
 
+
+
         List<RemoteFileInfo> GetFoldersOnly(RemoteDirectoryInfo directoryInfo)
         {
             List<RemoteFileInfo> foldersOnly = new List<RemoteFileInfo>();
@@ -88,6 +90,30 @@ namespace TelcobrightFileOperations
             return remoteFiles;
         }
 
+        public void ListLocalFileRecursive(string sFullPath, List<FileInfo> fileInfoList)
+        {
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(sFullPath);
+                FileInfo[] files = di.GetFiles();
+
+                foreach (FileInfo file in files)
+                    fileInfoList.Add(file);
+
+                //Scan recursively
+                DirectoryInfo[] dirs = di.GetDirectories();
+                if (dirs == null || dirs.Length < 1)
+                    return;
+                foreach (DirectoryInfo dir in dirs)
+                    ListLocalFileRecursive(dir.FullName, fileInfoList);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in DirectoryLister.ListLocalFileRecursive{ex}");
+            }
+        }
+
         public List<FileInfo> ListLocalDirectoryRecursive(string dir)
         {
             List<FileInfo> localFiles = new List<FileInfo>();
@@ -101,6 +127,7 @@ namespace TelcobrightFileOperations
             }
             return localFiles;
         }
+
 
         public List<FileInfo> ListLocalDirectoryNonRecursive(string dir)
         {

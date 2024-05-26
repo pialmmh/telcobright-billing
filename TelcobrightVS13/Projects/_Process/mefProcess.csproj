@@ -120,6 +120,7 @@
     <Compile Include="AutomationHandler.cs" />
     <Compile Include="AccountingHelper.cs" />
     <Compile Include="CdrErrorJobCreator.cs" />
+    <Compile Include="MdrJobCreator.cs" />
     <Compile Include="EventPreProcessor.cs" />
     <Compile Include="helper\CompressedFileHelperForVault.cs" />
     <Compile Include="helper\FilebasedDuplicateJobNameChecker.cs" />
