@@ -164,13 +164,13 @@ namespace InstallConfig
             {
                 new QuartzTbDaemonConfig(
                     operatorName: operatorName,
-                    identity: "CdrJobCreator" + " [" + operatorName+"]",
+                    identity: "MdrJobCreator" + " [" + operatorName+"]",
                     @group: operatorName,
                     fireOnceIfMissFired: false,
                     cronExpression: "/5 * * ? * *",
                     jobDataMap: new Dictionary<string, string>()
                     {
-                        {"telcobrightProcessId", "101"},
+                        {"telcobrightProcessId", "111"},
                         {"operatorName", operatorName}
                     }
                 )
