@@ -68,15 +68,33 @@ namespace Jobs
             SyncSettingsDest syncSettingDst = syncPair.DstSettings;
             CompressionType compType = syncPair.DstSettings.CompressionType;
             FileSyncInfo sourceSyncInfo = new FileSyncInfo(paramFileCopy.RelativeFileName, srcLocation);
+            string destRecursiveFileName = sourceSyncInfo.RelativePath;
             string destinationFileNameOnly = syncSettingDst.GetDestinationFileNamebyExpression(sourceSyncInfo.FileNameOnly, syncPair.DstSettings, dstLocation.FileLocation);
+            string dstVaultLocation = dstLocation.FileLocation.StartingPath +'/'+ destRecursiveFileName;
+            string VaultDirectory = Path.GetDirectoryName(dstVaultLocation);
+
+
             string archiveDir = "";
             if (syncSettingDst != null && syncSettingDst.SubDirRule != null && syncSettingDst.SubDirRule.ExpDatePartInFileName != null && syncSettingDst.SubDirRule.ExpDatePartInFileName.Expression != "")//datewise archive part
             {
                 archiveDir = syncSettingDst.SubDirRule.GetDateWiseArchiveFolderNameByFileName(sourceSyncInfo.FileNameOnly,
                     dstLocation.FileLocation.GetPathSeparator().ToString());
             }
-            string destinationRelativePath = archiveDir != "" ? (archiveDir + dstLocation.FileLocation.GetPathSeparator()
-                + destinationFileNameOnly) : destinationFileNameOnly;
+            string destinationRelativePath;
+            if (syncSettingDst.RecursiveFileStore)
+            {
+                if (Directory.Exists(VaultDirectory)==false)
+                {
+                    Directory.CreateDirectory(VaultDirectory);
+                }
+                destinationRelativePath =  destRecursiveFileName;
+            }
+            else
+            {
+                destinationRelativePath = archiveDir != "" ? (archiveDir + dstLocation.FileLocation.GetPathSeparator()
+                                                              + destinationFileNameOnly) : destinationFileNameOnly;
+            }
+            
             if (syncSettingDst.PrefixForUniqueName != "")
             {
                 destinationRelativePath = syncSettingDst.PrefixForUniqueName + destinationRelativePath;

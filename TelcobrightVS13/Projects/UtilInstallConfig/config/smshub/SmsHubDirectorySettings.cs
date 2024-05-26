@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/borak1",
                 User = "",
                 Pass = "",
             };
@@ -57,7 +57,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/borak2",
                 User = "",
                 Pass = "",
             };
@@ -68,7 +68,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/khaja1",
                 User = "",
                 Pass = "",
             };
@@ -79,7 +79,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/khaja2",
                 User = "",
                 Pass = "",
             };
@@ -144,7 +144,8 @@ namespace InstallConfig
                 {
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
-                    PrefixForUniqueName = "borak_1_",
+                    PrefixForUniqueName = "",
+                    RecursiveFileStore=true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None
                 }
@@ -190,7 +191,7 @@ namespace InstallConfig
                 {
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
-                    PrefixForUniqueName = "borak_2_",
+                    PrefixForUniqueName = "",
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None
                 }
@@ -235,7 +236,7 @@ namespace InstallConfig
                 {
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
-                    PrefixForUniqueName = "khaja_1_",
+                    PrefixForUniqueName = "",
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None
                 }
@@ -280,7 +281,7 @@ namespace InstallConfig
                 {
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
-                    PrefixForUniqueName = "khaja_2_",
+                    PrefixForUniqueName = "",
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None
                 }
