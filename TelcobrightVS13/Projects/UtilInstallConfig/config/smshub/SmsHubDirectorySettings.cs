@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/borak1",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/borak1",
                 User = "",
                 Pass = "",
             };
@@ -57,7 +57,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/borak2",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/borak2",
                 User = "",
                 Pass = "",
             };
@@ -68,7 +68,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/khaja1",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/khaja1",
                 User = "",
                 Pass = "",
             };
@@ -79,7 +79,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/khaja2",
+                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/khaja2",
                 User = "",
                 Pass = "",
             };
@@ -100,7 +100,6 @@ namespace InstallConfig
             tbc.DirectorySettings.FileLocations.Add(vaultBorak2.Name, vaultBorak2);
             tbc.DirectorySettings.FileLocations.Add(vaultKhaja1.Name, vaultKhaja1);
             tbc.DirectorySettings.FileLocations.Add(vaultKhaja2.Name, vaultKhaja2);
-            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
 
 
 
@@ -309,6 +308,8 @@ namespace InstallConfig
                     sp.SrcSyncLocation.FileLocation,
                     sp.DstSyncLocation.FileLocation
                 }).ToDictionary(floc => floc.Name);
+
+            tbc.DirectorySettings.FileLocations.Add(vaultPrimary.Name, vaultPrimary);
         }
     }
 }
