@@ -27,6 +27,7 @@ namespace InstallConfig
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
+            this.DaemonConfigurations.AddRange(GetRamDiskMounterInstances(this.Tbc.Telcobrightpartner.databasename));
             return this.DaemonConfigurations;
         }
 
@@ -230,6 +231,26 @@ namespace InstallConfig
                     jobDataMap: new Dictionary<string, string>()
                     {
                         {"telcobrightProcessId", "108"},
+                        {"operatorName", operatorName}
+                    }
+                )
+            };
+            return telcobrightProcessInstances;
+        }
+
+        private List<QuartzTbDaemonConfig> GetRamDiskMounterInstances(string operatorName)
+        {
+            List<QuartzTbDaemonConfig> telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig(
+                    operatorName: operatorName,
+                    identity: "RamDiskMounter" + " [" + operatorName+"]",
+                    @group: operatorName,
+                    fireOnceIfMissFired: false,
+                    cronExpression: "/5 * * ? * *",
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "112"},
                         {"operatorName", operatorName}
                     }
                 )
