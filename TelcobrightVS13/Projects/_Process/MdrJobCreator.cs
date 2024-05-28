@@ -477,13 +477,14 @@ namespace Process
             newCdr.JobName = jobName;
             //if (exists == false) //File Name Does not exist
             //{
+            string unsplitFileName = "";
             int priority = context.enumjobdefinitions.First(c => c.id == 1).Priority;
             newCdr.idNE = thisSwitch.idSwitch;
             newCdr.CreationTime = DateTime.Now;
             newCdr.Status = 7; //local, so downloaded in local switch directory
             newCdr.priority = priority;
             newCdr.idjobdefinition = 1; //new cdr
-            newCdr.JobParameter = fileInfo.FullName;
+            newCdr.JobParameter = "unsplitFileName=" + unsplitFileName;
             return newCdr;
             //context.jobs.Add(newCdr);
             //context.SaveChanges();
