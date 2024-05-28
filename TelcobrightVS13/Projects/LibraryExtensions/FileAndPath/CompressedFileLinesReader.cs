@@ -55,5 +55,27 @@ namespace LibraryExtensions
             Directory.Delete(this.ExtractedTempDir.FullName,true);
             return lines;
         }
+
+        public string readFromTempCompressedFile()
+        {
+            // Extract the .gz file into the temporary file
+            using (FileStream gzFileStream = File.OpenRead(this.CompressedFileInfo.FullName))
+            {
+                using (FileStream tempFileStream = File.Create(this.ExtractedTempFileName))
+                {
+                    using (GZipStream gzipStream = new GZipStream(gzFileStream, CompressionMode.Decompress))
+                    {
+                        gzipStream.CopyTo(tempFileStream);
+                        gzipStream.Close();
+                    }
+                    tempFileStream.Close();
+                }
+                gzFileStream.Close();
+            }
+            return this.ExtractedTempDir.FullName
+                   + Path.DirectorySeparatorChar 
+                   + Path.GetFileNameWithoutExtension(this.CompressedFileInfo.FullName);
+        }
+
     }
 }
