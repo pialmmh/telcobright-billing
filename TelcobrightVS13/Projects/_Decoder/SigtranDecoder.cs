@@ -9,8 +9,10 @@ using TelcobrightMediation.Mediation.Cdr;
 using System.Linq;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using LibraryExtensions;
 using TelcobrightInfra.PerformanceAndOptimization;
+using TelcobrightMediation.Cdr.Collection.PreProcessors;
 
 namespace Decoders
 {
@@ -46,65 +48,92 @@ namespace Decoders
             return decodeRows;
         }
 
-        public string getTupleExpression(CdrCollectorInputData decoderInputData, string[] row)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string getTupleExpression(Object data)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)data;
+            CdrCollectorInputData collectorInput = (CdrCollectorInputData)dataAsDic["collectorInput"];
+            CdrSetting cdrSetting = collectorInput.CdrSetting;
+            string[] row = (string[])dataAsDic["row"];
+            int switchId = collectorInput.Ne.idSwitch;
+            DateTime startTime = getEventDatetime(new Dictionary<string, object>
+            {
+                {"cdrSetting", cdrSetting},
+                {"row", row}
+            });
+            //23:00 hours eventid to be rounded up as 00:00 next hour in uniqueEventTupleId                        
+            //aggregation logic checks cdr for +-1 hour, so collection and aggregation will be possible            
+            if (startTime.Hour == 23)
+            {
+                startTime = startTime.Date.AddDays(1);
+            }
+            else
+            {
+                //startTime = startTime.Date.AddHours(startTime.Hour); prev logic
+                startTime = startTime.Date; //new logic
+            }
+            string sessionId = row[Fn.UniqueBillId];
+            string separator = "/";
+            return new StringBuilder(switchId.ToString()).Append(separator)
+                .Append(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote()).Append(separator)
+                .Append(sessionId).ToString();
         }
 
-        public override string getCreateTableSqlForUniqueEvent(object data)
+
+        public override EventAggregationResult Aggregate(object data)
         {
-            throw new NotImplementedException();
+            return SmsHubAggregationHelper.Aggregate((NewAndOldEventsWrapper<string[]>)data);
         }
 
-        public override string getSelectExpressionForUniqueEvent(object data)
-        {
-            throw new NotImplementedException();
-        }
+        //public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public override string getWhereForHourWiseCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
+        //public string getSelectExpressionForUniqueEvent(CdrCollectorInputData decoderInputData)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public override string getSelectExpressionForPartialCollection(Object data)
-        {
-            throw new NotImplementedException();
-        }
+        //public string getWhereForHourWiseUniqueEventCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public override DateTime getEventDatetime(Object data)
-        {
-            throw new NotImplementedException();
-        }
+        //public string getSelectExpressionForPartialCollection(CdrCollectorInputData decoderInputData)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public string getWhereForHourWisePartialCollection(CdrCollectorInputData decoderInputData, DateTime hourOfDay)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public override string getCreateTableSqlForUniqueEvent(object data)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public override string getSelectExpressionForUniqueEvent(object data)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public override string getWhereForHourWiseCollection(Object data)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public override string getSelectExpressionForPartialCollection(Object data)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public override DateTime getEventDatetime(Object data)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
 
     }
 }
