@@ -300,7 +300,7 @@ namespace Decoders
                 string separator = "/";
 
                 record[Fn.UniqueBillId] = new StringBuilder(string.Join("-", gtPair)).Append(separator)
-                    .Append(Convert.ToDateTime(record[Fn.AnswerTime]).ToMySqlFormatDateOnlyWithoutTimeAndQuote())
+                    .Append(Convert.ToDateTime(record[Fn.AnswerTime]).ToMySqlFormatWithMsWithoutQuote())
                     .Append(separator)
                     .Append(record[Fn.Codec]).ToString();
 
