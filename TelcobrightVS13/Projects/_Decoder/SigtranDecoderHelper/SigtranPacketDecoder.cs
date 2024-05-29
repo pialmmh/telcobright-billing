@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using LibraryExtensions;
 using System.Globalization;
 using System.Net;
-using Decoders.Helper;
+
 
 namespace Decoders
 {
@@ -280,24 +280,34 @@ namespace Decoders
                 record[Fn.InMgwId] = packet.Tcap?.Otid;
                 record[Fn.OutMgwId] = packet.Tcap?.Dtid;
 
-                record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString();
+                record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString().EncodeToBase64();
+
+                //record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString().Replace("'", " ").Replace(@"\", @"\\");
+                //    .Replace("\n", "")
+                //    .Replace("\t", "")
+                //    .Replace("\r", "");
+
                 record[Fn.Duration4] = packet.GSM_MAP?.LocalValue?.ToString();
 
-                string[] GT_Pair =
+                string[] gtPair =
                 {
                     ExtractGtPrefix(record[Fn.OriginatingCalledNumber]).ToString(),
                     ExtractGtPrefix(record[Fn.OriginatingCallingNumber]).ToString()
                 };
-                Array.Sort(GT_Pair);
+                Array.Sort(gtPair);
 
-                string timeWindow = new TimeWindowCalculator(TimeSpan.FromMinutes(5))
-                                        .GetRoundedDownDateTime(Convert.ToDateTime(record[Fn.AnswerTime]))
-                                        .ToString("yyyy-MM-dd HH:mm:ss");
 
-                record[Fn.UniqueBillId] = GT_Pair[0] + "-" 
-                                        + GT_Pair[1] + "/" 
-                                        + timeWindow + "/" 
-                                        + record[Fn.Codec];
+                string separator = "/";
+
+                record[Fn.UniqueBillId] = new StringBuilder(string.Join("-", gtPair)).Append(separator)
+                    .Append(Convert.ToDateTime(record[Fn.AnswerTime]).ToMySqlFormatDateOnlyWithoutTimeAndQuote())
+                    .Append(separator)
+                    .Append(record[Fn.Codec]).ToString();
+
+                //record[Fn.UniqueBillId] = GT_Pair[0] + "-" 
+                //                        + GT_Pair[1] + "/" 
+                //                        + timeWindow + "/" 
+                //                        + record[Fn.Codec];
 
                 record[Fn.Validflag] = "1";
                 record[Fn.Partialflag] = "1";
@@ -308,14 +318,14 @@ namespace Decoders
             return records.ToList();
         }
 
-        private int ExtractGtPrefix(string GT)
+        private int ExtractGtPrefix(string gt)
         {
             partnerprefix value;
-            if (GT.Length >= 7 && ansPrefixes.TryGetValue(GT.Substring(0, 7), out value))
+            if (gt.Length >= 7 && ansPrefixes.TryGetValue(gt.Substring(0, 7), out value))
             {
                 return value.idPartner;
             }
-            else if (GT.Length >= 5 && ansPrefixes.TryGetValue(GT.Substring(0, 5), out value))
+            else if (gt.Length >= 5 && ansPrefixes.TryGetValue(gt.Substring(0, 5), out value))
             {
                 return value.idPartner;
             }

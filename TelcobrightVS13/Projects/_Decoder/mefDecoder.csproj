@@ -119,6 +119,7 @@
     <Compile Include="GenbandC3Gazi.cs" />
     <Compile Include="GenbandC3CrossWorld.cs" />
     <Compile Include="GenbandC3DecoderBangla.cs" />
+    <Compile Include="Helper\SmsHubAggregationHelper.cs" />
     <Compile Include="Helper\TelcobridgeAggregationHelper.cs" />
     <Compile Include="Helper\TimeWindowCalculator.cs" />
     <Compile Include="HuaweiSoftx3000DecoderBntel.cs" />
