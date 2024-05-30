@@ -90,7 +90,7 @@ namespace InstallConfig
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting> 
                 {
-                { 1, new NeAdditionalSetting {//for huawei
+                { 13, new NeAdditionalSetting {//for huawei
                     ProcessMultipleCdrFilesInBatch = false,
                     PreDecodeAsTextFile = false,
                     MaxConcurrentFilesForParallelPreDecoding = 30,
@@ -105,7 +105,7 @@ namespace InstallConfig
                         }
                     }
                 }},
-            { 2, new NeAdditionalSetting {//cataleya
+            { 23, new NeAdditionalSetting {//cataleya
                 ProcessMultipleCdrFilesInBatch = false,
                 PreDecodeAsTextFile = false,
                 MaxConcurrentFilesForParallelPreDecoding = 10,
@@ -128,7 +128,7 @@ namespace InstallConfig
             {
                 new ne
                 {
-                    idSwitch= 1,
+                    idSwitch= 13,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 31,
                     idMediationRule= 2,
@@ -161,13 +161,13 @@ namespace InstallConfig
                 },
                 new ne
                 {
-                    idSwitch= 2,
+                    idSwitch= 23,
                     idCustomer= this.Tbc.Telcobrightpartner.idCustomer,
                     idcdrformat= 58,
                     idMediationRule= 2,
                     SwitchName= "GNEW",
-                    CDRPrefix= "tt1",
-                    FileExtension= ".rd",
+                    CDRPrefix= "0",
+                    FileExtension= ".cdr",
                     Description= null,
                     SourceFileLocations= this.vaultCataleya.Name,
                     BackupFileLocations= this.ipCAS.Name,

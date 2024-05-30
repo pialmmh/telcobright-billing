@@ -63,15 +63,15 @@ namespace Decoders
 
 
                     textCdr[Fn.Sequencenumber] = "1";
-                    //string startTime = lineAsArr[11].Trim().Split('/')[1];
-                    string startTime = lineAsArr[11].Trim();
+                    string startTime = lineAsArr[11].Trim().Split('/')[1];
+                    //string startTime = lineAsArr[11].Trim();
                     if (!string.IsNullOrEmpty(startTime))
                     {
                         startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
                     }
 
-                    //string endTime = lineAsArr[12].Trim().Split('/')[1];
-                    string endTime = lineAsArr[12].Trim();
+                    string endTime = lineAsArr[12].Trim().Split('/')[1];
+                    //string endTime = lineAsArr[12].Trim();
                     if (!string.IsNullOrEmpty(endTime))
                     {
                         endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
@@ -129,12 +129,12 @@ namespace Decoders
                     if (lineAsArr[88].Any(t => t == '/') == true)
                     {
                         string tempstr = lineAsArr[88].Split('/')[1];
-                        textCdr[Fn.IncomingRoute] = tempstr.Trim();
+                        textCdr[Fn.IncomingRoute] = tempstr.Replace("?", "").Trim();
 
                     }
                     else
                     {
-                        textCdr[Fn.IncomingRoute] = lineAsArr[88].Trim();
+                        textCdr[Fn.IncomingRoute] = lineAsArr[88].Replace("?", "").Trim();
                     }
 
 
@@ -142,12 +142,12 @@ namespace Decoders
                     if (lineAsArr[89].Any(t => t == '/') == true)
                     {
                         string tempstr = lineAsArr[89].Split('/')[1];
-                        textCdr[Fn.OutgoingRoute] = tempstr.Trim();
+                        textCdr[Fn.OutgoingRoute] = tempstr.Replace("?", "").Trim();
 
                     }
                     else
                     {
-                        textCdr[Fn.OutgoingRoute] = lineAsArr[89].Trim();
+                        textCdr[Fn.OutgoingRoute] = lineAsArr[89].Replace("?", "").Trim();
                     }
                 
                 
