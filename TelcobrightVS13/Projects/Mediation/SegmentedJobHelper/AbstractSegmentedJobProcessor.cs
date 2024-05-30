@@ -99,7 +99,11 @@ namespace TelcobrightMediation
                             cmd.ExecuteCommandText(" commit; ");
                             Console.WriteLine($"Progress cannot be > total no of steps for a job. job {this.TelcobrightJob.id} deleted");
                         }
-                        throw new Exception("Progress cannot be > total no of steps for a job.");
+                        else
+                        {
+                            throw new Exception("Progress cannot be > total no of steps for a job.");
+
+                        }
                     }
                     Console.WriteLine("Processing Segment:" + (jobSegment.segmentNumber) + " for job "
                                       + this.TelcobrightJob.JobName + ". Progress=" + progressSoFar + "/"
@@ -127,7 +131,20 @@ namespace TelcobrightMediation
                         //cmd.ExecuteCommandText(" commit; ");
                         progressSoFar = getJobProgressSoFar(cmd);
                         if (progressSoFar > noOfSteps)
-                            throw new Exception("Progress cannot be > total no of steps for a job.");
+                        {
+                            if (this.CdrSetting.useCasStyleProcessing)
+                            {
+                                cmd.ExecuteCommandText("set autocommit=0;");
+                                cmd.ExecuteCommandText($@"delete from job where id={this.TelcobrightJob.id}");
+                                cmd.ExecuteCommandText(" commit; ");
+                                Console.WriteLine($"Progress cannot be > total no of steps for a job. job {this.TelcobrightJob.id} deleted");
+                            }
+                            else
+                            {
+                                throw new Exception("Progress cannot be > total no of steps for a job.");
+
+                            }
+                        }
                         CdrJobCommiter.Commit(cmd, this.CdrSetting);
                     }
                     catch (Exception e)
