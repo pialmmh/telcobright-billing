@@ -72,9 +72,9 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
                 StartingPath = @"/",
-                ServerIp = "10.154.150.36", //server = "172.16.16.242",
-                User = "paradise_tdm",
-                Pass = "KqM0of^j6Q6^",
+                ServerIp = "10.154.150.11", //server = "172.16.16.242",
+                User = "agni_tdm",
+                Pass = "5D87zmZu0%jb",
                 IgnoreZeroLenghFile = 1
             };
 
@@ -85,9 +85,9 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"/",//backslash didn't work with winscp
                 StartingPath = @"/",
-                ServerIp = "10.255.200.36",
-                User = "paradise_ip",
-                Pass = @"G5_(XnTV[DK++_\k",
+                ServerIp = "10.255.200.30",
+                User = "agni_ip",
+                Pass = @":LR(Z3zf-*2g-=Dt",
                 IgnoreZeroLenghFile = 1
             };
 
