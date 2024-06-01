@@ -329,33 +329,34 @@ namespace Decoders
                 }
 
                 string serviceCentreAddress = packet.GSM_MAP?.ServiceCentreAddress?.ToString();
-                string number = packet.GSM_MAP?.SmsPartyNum?.ToString();
+                string calledNumber = packet.GSM_MAP?.CalledPartyNum?.ToString();
+                string callerNumber = packet.GSM_MAP?.CallerPartyNum?.ToString();
+
                 string imsi = packet.GSM_MAP?.Imsi?.ToString();
 
-                record[Fn.Redirectingnumber] = packet.GSM_MAP?.Imsi?.ToString();
                 // imsi, A Party,B Party
                 if (systemCodes == SmsType.InvokeSendRoutingInfoForSm)
                 {
                     // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
-                    record[Fn.TerminatingCalledNumber] = number;
+                    record[Fn.TerminatingCalledNumber] = calledNumber;
                     record[Fn.Redirectingnumber] = serviceCentreAddress;
                 }
                 if(systemCodes == SmsType.ReturnResultLastSendRoutingInfoForSm)
                 {
                     //	e164.msisdn => terminating called number,imsi => redirect number
-                    record[Fn.TerminatingCalledNumber] = number;
+                    record[Fn.TerminatingCalledNumber] = calledNumber;
                     record[Fn.Redirectingnumber] = imsi;
                 }
                 if (systemCodes == SmsType.InvokeMtForwardSm)
                 {
                     // e164.msisdn => terminating caller number	,imsi => redirectnumber
-                    record[Fn.TerminatingCallingNumber] = number;
+                    record[Fn.TerminatingCallingNumber] = callerNumber;
                     record[Fn.Redirectingnumber] = imsi;
                 }
                 if (systemCodes == SmsType.ReturnResultLastMtForwardSm)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
-                    record[Fn.TerminatingCallingNumber] = number;
+                    record[Fn.TerminatingCallingNumber] = callerNumber;
                     record[Fn.Redirectingnumber] = imsi;
                 }
 

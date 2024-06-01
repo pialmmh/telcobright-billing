@@ -88,8 +88,11 @@ namespace Decoders
         [JsonProperty("gsm_map.sm.serviceCentreAddress")]
         public string ServiceCentreAddress { get; set; }
 
+        [JsonProperty("gsm_map.sm.msisdn_tree.e164.msisdn")]
+        public string CalledPartyNum { get; set; }
+
         [JsonProperty("e164.msisdn")]
-        public string SmsPartyNum { get; set; }
+        public string CallerPartyNum { get; set; }
 
     }
 
