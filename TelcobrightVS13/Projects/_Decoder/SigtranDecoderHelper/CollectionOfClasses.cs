@@ -81,8 +81,16 @@ namespace Decoders
 
         [JsonProperty("e212.imsi")]
         public string Imsi { get; set; }
+
         [JsonProperty("gsm_map.old.Component")]
         public string SystemCodes { get; set; }
+
+        [JsonProperty("gsm_map.sm.serviceCentreAddress")]
+        public string ServiceCentreAddress { get; set; }
+
+        [JsonProperty("e164.msisdn")]
+        public string SmsPartyNum { get; set; }
+
     }
 
     public class SigtranPacket

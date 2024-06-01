@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using LibraryExtensions;
 using System.Globalization;
 using System.Net;
+using TelcobrightMediation;
 
 
 namespace Decoders
@@ -92,6 +93,22 @@ namespace Decoders
             Path.Combine(new UpwordPathFinder<DirectoryInfo>("ToolsAndScripts").FindAndGetFullPath(),
                 "externalResources", "Tshark", "tshark.exe");
         Dictionary<string, partnerprefix> ansPrefixes { get; }
+
+        private readonly List<string> opcList = new List<string>()
+        {
+            "4702",
+            "4699",
+            "4700",
+            "4701"
+        };
+
+        private readonly Dictionary<string, SmsType> causeCodes = new Dictionary<string, SmsType>
+        {
+            {"1:44",SmsType.InvokeMtForwardSm},
+            {"2:44",SmsType.ReturnResultLastMtForwardSm},
+            {"1:45",SmsType.InvokeSendRoutingInfoForSm},
+            {"2:45",SmsType.ReturnResultLastSendRoutingInfoForSm}
+        };
         public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
             this.PcapFileName = pcapFilename;
@@ -250,28 +267,12 @@ namespace Decoders
             {
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
                 if (packet.GSM_MAP == null) return;
-                List<string> opcList = new List<string>()
-                {
-                    "4702",
-                    "4699",
-                    "4700",
-                    "4701"
-                };
-                Dictionary<string, string> causeCodes = new Dictionary<string, string>
-                {
-                    {"1:44","Invoke mt-ForwardSM"},
-                    {"2:44","returnResultLast mt-ForwardSM"},
-                    {"1:45","Invoke sendRoutingInfoForSM"},
-                    {"2:45","returnResultLast sendRoutingInfoForSM"}
-                };
 
                 record[Fn.StartTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
                 record[Fn.AnswerTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
 
                 record[Fn.Duration1] = "60";
                 record[Fn.DurationSec] = "60";
-
-
 
                 record[Fn.Originatingip] = packet.Ip?.SrcIp?.ToString();
                 record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
@@ -281,7 +282,7 @@ namespace Decoders
 
                 string opc = packet.M3Ua?.Opc.ToString();
 
-                bool isOpcContained = opcList.Any(x => opc != null && opc.Contains(x));
+                bool isOpcContained = this.opcList.Any(x => opc != null && opc.Contains(x));
 
                 if (!isOpcContained)
                     return;
@@ -295,7 +296,7 @@ namespace Decoders
 
                 record[Fn.OriginatingCallingNumber] = packet.Sccp?.CallingPartyGt;
                 record[Fn.OriginatingCalledNumber] = packet.Sccp?.CalledPartyGt;
-                record[Fn.Duration3] = packet.Sccp?.Ssn.ToString();
+                record[Fn.Duration2] = packet.Sccp?.Ssn.ToString();
 
                 record[Fn.Codec] = packet.Tcap?.Tid;
                 record[Fn.InMgwId] = packet.Tcap?.Otid;
@@ -303,22 +304,60 @@ namespace Decoders
 
                 record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString().EncodeToBase64();
 
-                //record[Fn.AdditionalMetaData] = packet.GSM_MAP?.Sms?.ToString().Replace("'", " ").Replace(@"\", @"\\");
-                //    .Replace("\n", "")
-                //    .Replace("\t", "")
-                //    .Replace("\r", "");
-
                 string localValue = packet.GSM_MAP?.LocalValue?.ToString();
-                record[Fn.Duration4] = localValue;
-                record[Fn.Redirectingnumber] = packet.GSM_MAP?.Imsi?.ToString();
 
-                string tempSystemCodes = new StringBuilder(packet.GSM_MAP?.SystemCodes?.ToString())
+                // excluding reportSM-DeliveryStatus
+                if (localValue == "47")return;
+
+                record[Fn.Duration4] = localValue;
+
+                //gsm_map.old.Component
+                string smsSystemcodes = packet.GSM_MAP?.SystemCodes?.ToString();
+
+                string tempSystemCodes = new StringBuilder(smsSystemcodes)
                     .Append(":")
                     .Append(localValue).ToString();
 
-                string systemCodes;
-                record[Fn.AdditionalSystemCodes] = causeCodes.TryGetValue(tempSystemCodes,out systemCodes)? systemCodes:"";
+                // combination of gsm_map.old.Component and gsm_old.localValue
+                SmsType systemCodes;
+                record[Fn.Duration3] = this.causeCodes.TryGetValue(tempSystemCodes, out systemCodes)? systemCodes.ToString():SmsType.Empty.ToString();
 
+                // Sms Type ReturnError
+                if (smsSystemcodes == "3" && record[Fn.Duration3] == "0")
+                {
+                    record[Fn.Duration3] = SmsType.ReturnError.ToString();
+                }
+
+                string serviceCentreAddress = packet.GSM_MAP?.ServiceCentreAddress?.ToString();
+                string number = packet.GSM_MAP?.SmsPartyNum?.ToString();
+                string imsi = packet.GSM_MAP?.Imsi?.ToString();
+
+                record[Fn.Redirectingnumber] = packet.GSM_MAP?.Imsi?.ToString();
+                // imsi, A Party,B Party
+                if (systemCodes == SmsType.InvokeSendRoutingInfoForSm)
+                {
+                    // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
+                    record[Fn.TerminatingCalledNumber] = number;
+                    record[Fn.Redirectingnumber] = serviceCentreAddress;
+                }
+                if(systemCodes == SmsType.ReturnResultLastSendRoutingInfoForSm)
+                {
+                    //	e164.msisdn => terminating called number,imsi => redirect number
+                    record[Fn.TerminatingCalledNumber] = number;
+                    record[Fn.Redirectingnumber] = imsi;
+                }
+                if (systemCodes == SmsType.InvokeMtForwardSm)
+                {
+                    // e164.msisdn => terminating caller number	,imsi => redirectnumber
+                    record[Fn.TerminatingCallingNumber] = number;
+                    record[Fn.Redirectingnumber] = imsi;
+                }
+                if (systemCodes == SmsType.ReturnResultLastMtForwardSm)
+                {
+                    // e164.msisdn => terminating caller number, imsi => redirect number
+                    record[Fn.TerminatingCallingNumber] = number;
+                    record[Fn.Redirectingnumber] = imsi;
+                }
 
                 string[] gtPair =
                 {
@@ -327,18 +366,11 @@ namespace Decoders
                 };
                 Array.Sort(gtPair);
 
-
                 string separator = "/";
-
                 record[Fn.UniqueBillId] = new StringBuilder(string.Join("-", gtPair))
                     .Append(separator)
                     .Append(record[Fn.Codec]).ToString();
-
-                //record[Fn.UniqueBillId] = GT_Pair[0] + "-" 
-                //                        + GT_Pair[1] + "/" 
-                //                        + timeWindow + "/" 
-                //                        + record[Fn.Codec];
-
+                
                 record[Fn.Validflag] = "1";
                 record[Fn.Partialflag] = "1";
 
