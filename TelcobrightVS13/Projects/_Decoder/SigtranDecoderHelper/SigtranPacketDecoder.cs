@@ -307,6 +307,7 @@ namespace Decoders
                 //    .Replace("\r", "");
 
                 record[Fn.Duration4] = packet.GSM_MAP?.LocalValue?.ToString();
+                record[Fn.Redirectingnumber] = packet.GSM_MAP?.Imsi?.ToString();
 
                 string[] gtPair =
                 {

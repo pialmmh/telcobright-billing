@@ -78,6 +78,9 @@ namespace Decoders
 
         [JsonProperty("gsm_old.localValue")]
         public string LocalValue { get; set; }
+
+        [JsonProperty("e212.imsi")]
+        public string Imsi { get; set; }
     }
 
     public class SigtranPacket
