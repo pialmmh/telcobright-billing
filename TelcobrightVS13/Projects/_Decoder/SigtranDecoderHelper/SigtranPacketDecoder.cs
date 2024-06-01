@@ -320,12 +320,12 @@ namespace Decoders
 
                 // combination of gsm_map.old.Component and gsm_old.localValue
                 SmsType systemCodes;
-                record[Fn.Duration3] = this.causeCodes.TryGetValue(tempSystemCodes, out systemCodes)? systemCodes.ToString():SmsType.Empty.ToString();
+                systemCodes = this.causeCodes.TryGetValue(tempSystemCodes, out systemCodes)? systemCodes:SmsType.Empty;
 
                 // Sms Type ReturnError
-                if (smsSystemcodes == "3" && record[Fn.Duration3] == "0")
+                if (smsSystemcodes == "3" && systemCodes == SmsType.Empty)
                 {
-                    record[Fn.Duration3] = SmsType.ReturnError.ToString();
+                    record[Fn.Duration3] = "5";
                 }
 
                 string serviceCentreAddress = packet.GSM_MAP?.ServiceCentreAddress?.ToString();
@@ -340,24 +340,28 @@ namespace Decoders
                     // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
                     record[Fn.TerminatingCalledNumber] = calledNumber;
                     record[Fn.Redirectingnumber] = serviceCentreAddress;
+                    record[Fn.Duration3] = "1";
                 }
                 if(systemCodes == SmsType.ReturnResultLastSendRoutingInfoForSm)
                 {
                     //	e164.msisdn => terminating called number,imsi => redirect number
                     record[Fn.TerminatingCalledNumber] = calledNumber;
                     record[Fn.Redirectingnumber] = imsi;
+                    record[Fn.Duration3] = "2";
                 }
                 if (systemCodes == SmsType.InvokeMtForwardSm)
                 {
                     // e164.msisdn => terminating caller number	,imsi => redirectnumber
                     record[Fn.TerminatingCallingNumber] = callerNumber;
                     record[Fn.Redirectingnumber] = imsi;
+                    record[Fn.Duration3] = "3";
                 }
                 if (systemCodes == SmsType.ReturnResultLastMtForwardSm)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
                     record[Fn.TerminatingCallingNumber] = callerNumber;
                     record[Fn.Redirectingnumber] = imsi;
+                    record[Fn.Duration3] = "4";
                 }
 
                 string[] gtPair =
