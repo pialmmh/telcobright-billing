@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Decoders;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
@@ -13,7 +14,8 @@ namespace Decoders
         [JsonProperty("frame.time_utc")]
         public string Timestamp { get; set; }
     }
-    public  class Ip
+
+    public class Ip
     {
         [JsonProperty("ip.src")]
         public string SrcIp { get; set; }
@@ -21,6 +23,7 @@ namespace Decoders
         [JsonProperty("ip.dst")]
         public string DstIp { get; set; }
     }
+
     public class Sctp
     {
         [JsonProperty("sctp.srcport")]
@@ -29,6 +32,7 @@ namespace Decoders
         [JsonProperty("sctp.dstport")]
         public int DstPort { get; set; }
     }
+
     public class M3Ua
     {
         [JsonProperty("mtp3.opc")]
@@ -49,6 +53,7 @@ namespace Decoders
         [JsonProperty("mtp3.sls")]
         public int Sls { get; set; }
     }
+
     public class Sccp
     {
         [JsonProperty("sccp.called.digits")]
@@ -60,6 +65,7 @@ namespace Decoders
         [JsonProperty("sccp.ssn")]
         public int Ssn { get; set; }
     }
+
     public class Tcap
     {
         [JsonProperty("tcap.tid")]
@@ -71,6 +77,7 @@ namespace Decoders
         [JsonProperty("tcap.dtid")]
         public string Dtid { get; set; }
     }
+
     public class GSM_MAP
     {
         [JsonProperty("gsm_sms.sms_text")]
@@ -88,15 +95,23 @@ namespace Decoders
         [JsonProperty("gsm_map.sm.serviceCentreAddress")]
         public string ServiceCentreAddress { get; set; }
 
-        [JsonProperty("gsm_map.sm.msisdn_tree.e164.msisdn")]
-        public string CalledPartyNum { get; set; }
+        [JsonProperty("gsm_map.sm.msisdn_tree")]
+        public MsisdnTree MsisdnTree { get; set; }
 
         [JsonProperty("e164.msisdn")]
         public string CallerPartyNum { get; set; }
 
     }
 
-    public class SigtranPacket
+    public class MsisdnTree
+    {
+        [JsonProperty("e164.msisdn")]
+        public string CallerPartyNum { get; set; }
+    }
+
+
+
+public class SigtranPacket
     {
         [JsonProperty("frame")]
         public Frame Frame { get; set; }

@@ -329,7 +329,7 @@ namespace Decoders
                 }
 
                 string serviceCentreAddress = packet.GSM_MAP?.ServiceCentreAddress?.ToString();
-                string calledNumber = packet.GSM_MAP?.CalledPartyNum?.ToString();
+                string calledNumber = packet.GSM_MAP?.MsisdnTree?.CallerPartyNum?.ToString();
                 string callerNumber = packet.GSM_MAP?.CallerPartyNum?.ToString();
 
                 string imsi = packet.GSM_MAP?.Imsi?.ToString();
