@@ -249,7 +249,7 @@ namespace Decoders
             Parallel.ForEach(packets, packet =>
             {
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
-                if(packet.GSM_MAP== null )return;
+                if (packet.GSM_MAP == null) return;
 
                 record[Fn.StartTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
                 record[Fn.AnswerTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
@@ -265,7 +265,26 @@ namespace Decoders
                 record[Fn.IncomingRoute] = packet.Sctp?.SrcPort.ToString();
                 record[Fn.OutgoingRoute] = packet.Sctp?.DstPort.ToString();
 
-                record[Fn.Opc] = packet.M3Ua?.Opc.ToString();
+                string opc = packet.M3Ua?.Opc.ToString();
+                if (opc.IsNullOrEmptyOrWhiteSpace())
+                {
+                    throw new Exception("opc can not be null or empty");
+                }
+
+                List<string> opcList = new List<string>()
+                {
+                    "4702",
+                    "4699",
+                    "4700",
+                    "4701"
+                };
+
+                bool isOpcContained = opcList.Any(x => opc.Contains(x));
+
+                if (!isOpcContained)
+                    return;
+
+                record[Fn.Opc] = opc;
                 record[Fn.Dpc] = packet.M3Ua?.Dpc.ToString();
                 record[Fn.ReleaseDirection] = packet.M3Ua?.RoutingContext.ToString();
                 record[Fn.Connectednumbertype] = packet.M3Ua?.Si.ToString();
@@ -299,8 +318,7 @@ namespace Decoders
 
                 string separator = "/";
 
-                record[Fn.UniqueBillId] = new StringBuilder(string.Join("-", gtPair)).Append(separator)
-                    .Append(Convert.ToDateTime(record[Fn.AnswerTime]).ToMySqlFormatWithMsWithoutQuote())
+                record[Fn.UniqueBillId] = new StringBuilder(string.Join("-", gtPair))
                     .Append(separator)
                     .Append(record[Fn.Codec]).ToString();
 
