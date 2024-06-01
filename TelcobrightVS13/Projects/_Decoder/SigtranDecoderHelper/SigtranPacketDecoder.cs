@@ -250,6 +250,20 @@ namespace Decoders
             {
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
                 if (packet.GSM_MAP == null) return;
+                List<string> opcList = new List<string>()
+                {
+                    "4702",
+                    "4699",
+                    "4700",
+                    "4701"
+                };
+                Dictionary<string, string> causeCodes = new Dictionary<string, string>
+                {
+                    {"1:44","Invoke mt-ForwardSM"},
+                    {"2:44","returnResultLast mt-ForwardSM"},
+                    {"1:45","Invoke sendRoutingInfoForSM"},
+                    {"2:45","returnResultLast sendRoutingInfoForSM"}
+                };
 
                 record[Fn.StartTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
                 record[Fn.AnswerTime] = ParseAndFormatTimestamp(packet.Frame?.Timestamp);
@@ -266,20 +280,8 @@ namespace Decoders
                 record[Fn.OutgoingRoute] = packet.Sctp?.DstPort.ToString();
 
                 string opc = packet.M3Ua?.Opc.ToString();
-                if (opc.IsNullOrEmptyOrWhiteSpace())
-                {
-                    throw new Exception("opc can not be null or empty");
-                }
 
-                List<string> opcList = new List<string>()
-                {
-                    "4702",
-                    "4699",
-                    "4700",
-                    "4701"
-                };
-
-                bool isOpcContained = opcList.Any(x => opc.Contains(x));
+                bool isOpcContained = opcList.Any(x => opc != null && opc.Contains(x));
 
                 if (!isOpcContained)
                     return;
@@ -306,8 +308,17 @@ namespace Decoders
                 //    .Replace("\t", "")
                 //    .Replace("\r", "");
 
-                record[Fn.Duration4] = packet.GSM_MAP?.LocalValue?.ToString();
+                string localValue = packet.GSM_MAP?.LocalValue?.ToString();
+                record[Fn.Duration4] = localValue;
                 record[Fn.Redirectingnumber] = packet.GSM_MAP?.Imsi?.ToString();
+
+                string tempSystemCodes = new StringBuilder(packet.GSM_MAP?.SystemCodes?.ToString())
+                    .Append(":")
+                    .Append(localValue).ToString();
+
+                string systemCodes;
+                record[Fn.AdditionalSystemCodes] = causeCodes.TryGetValue(tempSystemCodes,out systemCodes)? systemCodes:"";
+
 
                 string[] gtPair =
                 {
