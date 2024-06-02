@@ -328,9 +328,9 @@ namespace Decoders
                     record[Fn.Duration3] = "5";
                 }
 
-                string serviceCentreAddress = packet.GSM_MAP?.ServiceCentreAddress?.ToString();
-                string calledNumber = packet.GSM_MAP?.MsisdnTree?.CallerPartyNum?.ToString();
-                string callerNumber = packet.GSM_MAP?.CallerPartyNum?.ToString();
+                string serviceCentreAddress = packet.GSM_MAP?.ComponentTree?.InvokeElement.ServiceCentreAddress?.ToString();
+                string calledNumber = packet.GSM_MAP?.ComponentTree?.InvokeElement?.MsisdnTree?.CalledPartyNum.ToString();
+                string callerNumber = packet.GSM_MAP?.ComponentTree?.InvokeElement?.ServiceCentreAddressTree.ServiceCentreMsisdn?.ToString();
 
                 string imsi = packet.GSM_MAP?.Imsi?.ToString();
 

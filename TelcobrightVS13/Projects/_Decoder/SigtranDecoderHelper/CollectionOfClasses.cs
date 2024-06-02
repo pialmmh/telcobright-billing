@@ -92,26 +92,45 @@ namespace Decoders
         [JsonProperty("gsm_map.old.Component")]
         public string SystemCodes { get; set; }
 
-        [JsonProperty("gsm_map.sm.serviceCentreAddress")]
-        public string ServiceCentreAddress { get; set; }
+        [JsonProperty("gsm_map.old.Component_tree")]
+        public ComponentTree ComponentTree { get; set; }
+    }
 
-        [JsonProperty("gsm_map.sm.msisdn_tree")]
-        public MsisdnTree MsisdnTree { get; set; }
-
-        [JsonProperty("e164.msisdn")]
-        public string CallerPartyNum { get; set; }
-
+    public class ComponentTree
+    {
+        [JsonProperty("gsm_old.invoke_element")]
+        public InvokeElement InvokeElement { get; set; }
     }
 
     public class MsisdnTree
     {
         [JsonProperty("e164.msisdn")]
-        public string CallerPartyNum { get; set; }
+        public string CalledPartyNum { get; set; }
+    }
+
+
+    public class ServiceCentreAddressTree
+    {
+        [JsonProperty("e164.msisdn")]
+        public string ServiceCentreMsisdn { get; set; }
+
     }
 
 
 
-public class SigtranPacket
+    public class InvokeElement
+    {
+        [JsonProperty("gsm_map.sm.msisdn_tree")]
+        public MsisdnTree MsisdnTree { get; set; }
+
+        [JsonProperty("gsm_map.sm.serviceCentreAddress")]
+        public string ServiceCentreAddress { get; set; }
+
+        [JsonProperty("gsm_map.sm.serviceCentreAddress_tree")]
+        public ServiceCentreAddressTree ServiceCentreAddressTree { get; set; }
+    }
+
+    public class SigtranPacket
     {
         [JsonProperty("frame")]
         public Frame Frame { get; set; }
