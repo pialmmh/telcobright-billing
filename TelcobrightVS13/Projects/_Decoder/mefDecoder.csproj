@@ -126,6 +126,7 @@
     <Compile Include="HuaweiSoftx3000DecoderBtcl.cs" />
     <Compile Include="SigtranDecoder.cs" />
     <Compile Include="SigtranDecoderHelper\CollectionOfClasses.cs" />
+    <Compile Include="SigtranDecoderHelper\CustomJObjectParser.cs" />
     <Compile Include="SigtranDecoderHelper\SigtranPacketDecoder.cs" />
     <Compile Include="TelcobridgeDecoderTelexchange.cs" />
     <Compile Include="TelcobridgeDecoderGazi.cs" />

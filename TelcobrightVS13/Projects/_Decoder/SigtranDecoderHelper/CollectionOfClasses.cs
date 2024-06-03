@@ -9,12 +9,6 @@ using Newtonsoft.Json;
 
 namespace Decoders
 {
-    public class Frame
-    {
-        [JsonProperty("frame.time_utc")]
-        public string Timestamp { get; set; }
-    }
-
     public class Ip
     {
         [JsonProperty("ip.src")]
@@ -23,74 +17,156 @@ namespace Decoders
         [JsonProperty("ip.dst")]
         public string DstIp { get; set; }
     }
+    public class SigtranPacket
+    {
+        [JsonProperty("_index")]
+        public string Index { get; set; }
+
+        [JsonProperty("_source")]
+        public Source Source { get; set; }
+    }
+
+    public class Source
+    {
+        [JsonProperty("layers")]
+        public Layers Layers { get; set; }
+    }
+
+    public class Layers
+    {
+        [JsonProperty("frame")]
+        public Frame Frame { get; set; }
+
+        [JsonProperty("sctp")]
+        public Sctp Sctp { get; set; }
+
+        [JsonProperty("m3ua")]
+        public M3ua M3Ua { get; set; }
+
+        [JsonProperty("sccp")]
+        public Sccp Sccp { get; set; }
+
+        [JsonProperty("tcap")]
+        public Tcap Tcap { get; set; }
+
+        [JsonProperty("gsm_map")]
+        public GsmMap GsmMap { get; set; }
+
+        [JsonProperty("gsm_sms")]
+        public GsmSms GsmSms { get; set; }
+    }
+
+    public class Frame
+    {
+        [JsonProperty("frame.time_utc")]
+        public string FrameTimeUtc { get; set; }
+    }
 
     public class Sctp
     {
         [JsonProperty("sctp.srcport")]
-        public int SrcPort { get; set; }
+        public string SrcPort { get; set; }
 
         [JsonProperty("sctp.dstport")]
-        public int DstPort { get; set; }
+        public string DstPort { get; set; }
     }
 
-    public class M3Ua
+    public class M3ua
+    {
+        [JsonProperty("Routing context (1 context)")]
+        public RoutingContext RoutingContext { get; set; }
+
+        [JsonProperty("Protocol data")]
+        public ProtocolData ProtocolData { get; set; }
+    }
+
+    public class RoutingContext
+    {
+        [JsonProperty("m3ua.routing_context")]
+        public string RoutingContextValue { get; set; }
+    }
+
+    public class ProtocolData
+    {
+        [JsonProperty("m3ua.protocol_data_si")]
+        public string ProtocolDataSi { get; set; }
+
+        [JsonProperty("MTP3 equivalents")]
+        public Mtp3Equivalents Mtp3Equivalents { get; set; }
+    }
+
+    public class Mtp3Equivalents
     {
         [JsonProperty("mtp3.opc")]
-        public int Opc { get; set; }
+        public string Opc { get; set; }
 
         [JsonProperty("mtp3.dpc")]
-        public int Dpc { get; set; }
-
-        [JsonProperty("m3ua.routing_context")]
-        public long RoutingContext { get; set; }
-
-        [JsonProperty("m3ua.protocol_data_si")]
-        public int Si { get; set; }
+        public string Dpc { get; set; }
 
         [JsonProperty("mtp3.ni")]
-        public int Ni { get; set; }
+        public string Ni { get; set; }
 
         [JsonProperty("mtp3.sls")]
-        public int Sls { get; set; }
+        public string Sls { get; set; }
     }
 
     public class Sccp
     {
-        [JsonProperty("sccp.called.digits")]
-        public string CalledPartyGt { get; set; }
+        [JsonProperty("Called Party address")]
+        public PartyAddress CalledPartyAddress { get; set; }
 
-        [JsonProperty("sccp.calling.digits")]
-        public string CallingPartyGt { get; set; }
+        [JsonProperty("Calling Party address")]
+        public PartyAddress CallingPartyAddress { get; set; }
+    }
 
+    public class PartyAddress
+    {
         [JsonProperty("sccp.ssn")]
-        public int Ssn { get; set; }
+        public string Ssn { get; set; }
+
+        [JsonProperty("Global Title 0x4")]
+        public GlobalTitle GlobalTitle { get; set; }
+    }
+
+    public class GlobalTitle
+    {
+        [JsonProperty("sccp.called.digits", NullValueHandling = NullValueHandling.Ignore)]
+        public string CalledDigits { get; set; }
+
+        [JsonProperty("sccp.calling.digits", NullValueHandling = NullValueHandling.Ignore)]
+        public string CallingDigits { get; set; }
     }
 
     public class Tcap
     {
+        [JsonProperty("tcap.begin_element")]
+        public Element BeginElement { get; set; }
+        [JsonProperty("tcap.end_element")]
+        public Element EndElement { get; set; }
+    }
+
+    public class Element
+    {
         [JsonProperty("tcap.tid")]
         public string Tid { get; set; }
 
+        [JsonProperty("Source Transaction ID")]
+        public SourceTransactionID SourceTransactionID { get; set; }
+
         [JsonProperty("tcap.otid")]
         public string Otid { get; set; }
+    }
 
+    public class SourceTransactionID
+    {
         [JsonProperty("tcap.dtid")]
         public string Dtid { get; set; }
     }
 
-    public class GSM_MAP
+    public class GsmMap
     {
-        [JsonProperty("gsm_sms.sms_text")]
-        public string Sms { get; set; }
-
-        [JsonProperty("gsm_old.localValue")]
-        public string LocalValue { get; set; }
-
-        [JsonProperty("e212.imsi")]
-        public string Imsi { get; set; }
-
         [JsonProperty("gsm_map.old.Component")]
-        public string SystemCodes { get; set; }
+        public string OldComponent { get; set; }
 
         [JsonProperty("gsm_map.old.Component_tree")]
         public ComponentTree ComponentTree { get; set; }
@@ -102,55 +178,60 @@ namespace Decoders
         public InvokeElement InvokeElement { get; set; }
     }
 
-    public class MsisdnTree
-    {
-        [JsonProperty("e164.msisdn")]
-        public string CalledPartyNum { get; set; }
-    }
-
-
-    public class ServiceCentreAddressTree
-    {
-        [JsonProperty("e164.msisdn")]
-        public string ServiceCentreMsisdn { get; set; }
-
-    }
-
-
-
     public class InvokeElement
     {
+        [JsonProperty("gsm_old.opCode_tree")]
+        public OpCodeTree OpCodeTree { get; set; }
         [JsonProperty("gsm_map.sm.msisdn_tree")]
         public MsisdnTree MsisdnTree { get; set; }
 
-        [JsonProperty("gsm_map.sm.serviceCentreAddress")]
-        public string ServiceCentreAddress { get; set; }
+        [JsonProperty("gsm_map.sm.sm_RP_DA_tree")]
+        public SmRpDaTree SmRpDaTree { get; set; }
 
-        [JsonProperty("gsm_map.sm.serviceCentreAddress_tree")]
-        public ServiceCentreAddressTree ServiceCentreAddressTree { get; set; }
+        [JsonProperty("gsm_map.sm.sm_RP_OA_tree")]
+        public SmRpOaTree SmRpOaTree { get; set; }
+        [JsonProperty("gsm_map.sm.serviceCentreAddress")]
+        public string ServiceCenterAddress { get; set; }
+    }
+    
+    public class OpCodeTree
+    {
+        [JsonProperty("gsm_old.localValue")]
+        public string LocalValue { get; set; }
+    }
+    
+    public class MsisdnTree
+    {
+        [JsonProperty("e164.msisdn")]
+        public string Msisdn { get; set; }
+    }
+    public class SmRpDaTree
+    {
+        [JsonProperty("e212.imsi")]
+        public string Imsi { get; set; }
     }
 
-    public class SigtranPacket
+    public class SmRpOaTree
     {
-        [JsonProperty("frame")]
-        public Frame Frame { get; set; }
+        [JsonProperty("gsm_map.sm.serviceCentreAddressOA_tree")]
+        public ServiceCentreAddressOaTree ServiceCentreAddressOaTree { get; set; }
+    }
 
-        [JsonProperty("ip")]
-        public Ip Ip { get; set; }
+    public class ServiceCentreAddressOaTree
+    {
+        [JsonProperty("e164.msisdn")]
+        public string Msisdn { get; set; }
+    }
 
-        [JsonProperty("sctp")]
-        public Sctp Sctp { get; set; }
+    public class GsmSms
+    {
+        [JsonProperty("TP-User-Data")]
+        public TpUserData TpUserData { get; set; }
+    }
 
-        [JsonProperty("m3ua")]
-        public M3Ua M3Ua { get; set; }
-
-        [JsonProperty("sccp")]
-        public Sccp Sccp { get; set; }
-
-        [JsonProperty("tcap")]
-        public Tcap Tcap { get; set; }
-
-        [JsonProperty("gsm_map")]
-        public GSM_MAP GSM_MAP { get; set; }
+    public class TpUserData
+    {
+        [JsonProperty("gsm_sms.sms_text")]
+        public string SmsText { get; set; }
     }
 }
