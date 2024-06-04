@@ -143,6 +143,10 @@ namespace Decoders
         public Element BeginElement { get; set; }
         [JsonProperty("tcap.end_element")]
         public Element EndElement { get; set; }
+
+        [JsonProperty("tcap.continue_element")]
+        public Element ContinueElement { get; set; }
+        
     }
 
     public class Element
