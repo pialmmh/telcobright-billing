@@ -170,14 +170,31 @@ namespace Decoders
 
         [JsonProperty("gsm_map.old.Component_tree")]
         public ComponentTree ComponentTree { get; set; }
+
     }
 
     public class ComponentTree
     {
         [JsonProperty("gsm_old.invoke_element")]
         public InvokeElement InvokeElement { get; set; }
+
+        [JsonProperty("gsm_old.returnResultLast_element")]
+        public ReturnResultLastElement ReturnResultLastElement { get; set; }
+
     }
 
+    public class ReturnResultLastElement
+    {
+        [JsonProperty("gsm_old.resultretres_element")]
+        public ResultretresElement ResultretresElement { get; set; }
+
+    }
+    public class ResultretresElement
+    {
+        [JsonProperty("gsm_old.opCode_tree")]
+        public OpCodeTree OpCodeTree { get; set; }
+
+    }
     public class InvokeElement
     {
         [JsonProperty("gsm_old.opCode_tree")]
@@ -193,13 +210,13 @@ namespace Decoders
         [JsonProperty("gsm_map.sm.serviceCentreAddress")]
         public string ServiceCenterAddress { get; set; }
     }
-    
+
     public class OpCodeTree
     {
         [JsonProperty("gsm_old.localValue")]
         public string LocalValue { get; set; }
     }
-    
+
     public class MsisdnTree
     {
         [JsonProperty("e164.msisdn")]
