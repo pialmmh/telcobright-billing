@@ -150,14 +150,17 @@ namespace Decoders
         [JsonProperty("tcap.tid")]
         public string Tid { get; set; }
 
+        [JsonProperty("Destination Transaction ID")]
+        public TransactionId DestinationTransactionId { get; set; }
+
         [JsonProperty("Source Transaction ID")]
-        public SourceTransactionID SourceTransactionID { get; set; }
+        public TransactionId SourceTransactionId { get; set; }
 
         [JsonProperty("tcap.otid")]
         public string Otid { get; set; }
     }
 
-    public class SourceTransactionID
+    public class TransactionId
     {
         [JsonProperty("tcap.dtid")]
         public string Dtid { get; set; }
