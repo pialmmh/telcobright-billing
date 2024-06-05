@@ -274,9 +274,8 @@ namespace Decoders
             {
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
 
+                // gms layer
                 GsmMap gsmMapLayer = packet.Source.Layers.GsmMap;
-
-
                 if (gsmMapLayer == null) return;
 
                 Frame frameLayer = packet.Source.Layers.Frame;
@@ -290,11 +289,12 @@ namespace Decoders
                 //record[Fn.Originatingip] = packet.Ip?.SrcIp?.ToString();
                 //record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
 
+                // sctp layer
                 Sctp sctpLayer = packet.Source.Layers.Sctp;
                 record[Fn.IncomingRoute] = sctpLayer?.SrcPort.ToString();
                 record[Fn.OutgoingRoute] = sctpLayer?.DstPort.ToString();
 
-
+                // m3ua layer
                 M3ua m3UaLayer = packet.Source.Layers.M3Ua;
                 Mtp3Equivalents mtp3Equ = m3UaLayer.ProtocolData.Mtp3Equivalents;
                 string opc = mtp3Equ?.Opc.ToString();
@@ -312,29 +312,42 @@ namespace Decoders
                 record[Fn.Sequencenumber] = mtp3Equ?.Sls.ToString();
 
                 Sccp sccpLayer = packet.Source.Layers.Sccp;
-                record[Fn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
-                record[Fn.OriginatingCalledNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
+                record[Fn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CallingDigits?.ToString();
+                record[Fn.OriginatingCalledNumber] = sccpLayer?.CalledPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
                 //record[Fn.Duration2] = sccpLayer?.CalledPartyAddress.Ssn.ToString();
 
+                // tcap layer
                 Tcap tcapLayer = packet.Source.Layers.Tcap;
+
                 var transid = tcapLayer.BeginElement?.Tid == null ? tcapLayer.EndElement?.Tid : tcapLayer.BeginElement.Tid;
-                record[Fn.Codec] = transid.ToString();
+                if (transid == null)
+                {
+                    transid = tcapLayer.ContinueElement?.Tid;
+                }
+                record[Fn.Codec] = transid?.ToString();
 
                 transid = tcapLayer.BeginElement?.Otid == null
                     ? tcapLayer.EndElement?.Otid
                     : tcapLayer.BeginElement.Otid;
-                record[Fn.InMgwId] = transid.ToString();
+                record[Fn.InMgwId] = transid?.ToString();
 
-                transid = tcapLayer.BeginElement?.SourceTransactionID?.Dtid== null
-                    ? tcapLayer.EndElement?.SourceTransactionID?.Dtid
+                transid = tcapLayer.BeginElement?.SourceTransactionId?.Dtid == null
+                    ? tcapLayer.EndElement?.DestinationTransactionId?.Dtid
                     : tcapLayer.BeginElement.Otid;
-                record[Fn.OutMgwId] = transid.ToString();
+                record[Fn.OutMgwId] = transid?.ToString();
 
+                // gsm sms
                 GsmSms gsmSmsLayer = packet.Source.Layers.GsmSms;
-                record[Fn.AdditionalMetaData] = gsmSmsLayer?.TpUserData.SmsText?.ToString().EncodeToBase64();
+                record[Fn.AdditionalMetaData] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
 
-                string localValue = gsmMapLayer.ComponentTree?.InvokeElement?.OpCodeTree?.LocalValue?.ToString();
+                ComponentTree componentTree = gsmMapLayer.ComponentTree;
+                string localValue = componentTree?.InvokeElement?.OpCodeTree?.LocalValue ??
+                                    componentTree?.ReturnResultLastElement?.ResultretresElement?.OpCodeTree?.LocalValue;
 
+                if (localValue == null)
+                {
+                    // throw new Exception("OpCode tree local can not be null");
+                }
                 // excluding reportSM-DeliveryStatus
                 if (localValue == "47") return;
 
@@ -348,7 +361,7 @@ namespace Decoders
                     .Append(localValue).ToString();
 
                 // combination of gsm_map.old.Component and gsm_old.localValue
-                SmsType systemCodes= SmsType.None;
+                SmsType systemCodes = SmsType.None;
                 systemCodes = this.causeCodes.TryGetValue(tempSystemCodes, out systemCodes) ? systemCodes : SmsType.None;
 
                 // Sms Type ReturnError
@@ -357,11 +370,12 @@ namespace Decoders
                     record[Fn.Duration3] = "5";
                 }
 
-                string serviceCentreAddress = gsmMapLayer?.ComponentTree?.InvokeElement?.ServiceCenterAddress?.ToString();
-                string calledNumber = gsmMapLayer?.ComponentTree?.InvokeElement?.MsisdnTree?.Msisdn?.ToString();
-                string callerNumber = gsmMapLayer?.ComponentTree?.InvokeElement?.SmRpOaTree?.ServiceCentreAddressOaTree?.Msisdn?.ToString();
+                InvokeElement componentTreeInvokeElement = gsmMapLayer?.ComponentTree?.InvokeElement;
+                string serviceCentreAddress = componentTreeInvokeElement?.ServiceCenterAddress?.ToString();
+                string calledNumber = componentTreeInvokeElement?.MsisdnTree?.Msisdn?.ToString();
+                string callerNumber = componentTreeInvokeElement?.SmRpOaTree?.ServiceCentreAddressOaTree?.Msisdn?.ToString();
 
-                string imsi = gsmMapLayer?.ComponentTree?.InvokeElement?.SmRpDaTree?.Imsi?.ToString();
+                string imsi = componentTreeInvokeElement?.SmRpDaTree?.Imsi?.ToString();
 
                 // imsi, A Party,B Party
                 if (systemCodes == SmsType.InvokeSendRoutingInfoForSm)
