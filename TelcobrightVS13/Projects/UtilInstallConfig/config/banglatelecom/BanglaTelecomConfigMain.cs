@@ -80,8 +80,8 @@ namespace InstallConfig
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
                 {
                     { 9, new NeAdditionalSetting {//for huawei
-                        ProcessMultipleCdrFilesInBatch = true,
-                        PreDecodeAsTextFile = true,
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
                         MaxConcurrentFilesForParallelPreDecoding = 30,
                         MinRowCountToStartBatchCdrProcessing = 70000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
@@ -95,8 +95,8 @@ namespace InstallConfig
                         }
                     }},
                     { 10, new NeAdditionalSetting {//dialogic
-                        ProcessMultipleCdrFilesInBatch = true,
-                        PreDecodeAsTextFile = true,
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 100000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
@@ -131,9 +131,9 @@ namespace InstallConfig
                     TransactionSizeForCDRLoading = 1500,
                     DecodingSpanCount = 1000,
                     SkipAutoCreateJob = 1,
-                    SkipCdrListed = 1,
+                    SkipCdrListed = 0,
                     SkipCdrReceived = 0,
-                    SkipCdrDecoded = 1,
+                    SkipCdrDecoded = 0,
                     SkipCdrBackedup = 1,
                     KeepDecodedCDR = 0,
                     KeepReceivedCdrServer = 1,

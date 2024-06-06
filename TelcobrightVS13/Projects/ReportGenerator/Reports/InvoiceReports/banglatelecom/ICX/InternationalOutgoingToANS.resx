@@ -570,9 +570,10 @@
   </data>
   <data name="xrLabel16.Text" xml:space="preserve">
     <value>Payment should be made by A/C payee cheque or direct deposit to Bank A/C of "Bangla Telecom Limited."
-Account Number: 35551020022487
+Account Number: Bangla Telecom Limited.
+Account Number: 3555102002487
 Routing No: 175275357
-Bank Name: Pubali Bank Ltd
-Branch name: Principal Branch, Motijheel, Dhaka</value>
+Bank Name: Pubali Bank PLC
+Branch name: Principal Branch, Dhaka</value>
   </data>
 </root>
