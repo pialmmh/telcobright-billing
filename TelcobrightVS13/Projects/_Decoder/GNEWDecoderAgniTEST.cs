@@ -49,6 +49,37 @@ namespace Decoders
             List<string[]> decodedRows = new List<string[]>();
             //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
+            Dictionary<string, string> prefixWiseAnsIncomingOrOutgoingRoute = new Dictionary<string, string>
+            {
+                { "88091", "BL_DOM_DHK_M11" },
+                { "88071", "GP_DOM_DHK_S11" },
+                { "88081", "RB_DOM_DHK_P11" },
+                { "88051", "TBL_DOM_DHK_R11" },
+                { "09606", "ASL_DOM_DHK_S11" },
+                { "09611", "DCL_DOM_DHK_S11" },
+                { "09604", "FNT_DOM_DHK_S11" },
+                { "09609", "BOL_DOM_DHK_S11" },
+                { "0978", "L3L_DOM_DHK_A11" },
+                { "09699", "ALO_DOM_DHK_S11" },
+                { "09646", "CIL_DOM_DHK_S11" },
+                { "9606", "ASL_DOM_DHK_S11" },
+                { "9611", "DCL_DOM_DHK_S11" },
+                { "9604", "FNT_DOM_DHK_S11" },
+                { "9609", "BOL_DOM_DHK_S11" },
+                { "978", "L3L_DOM_DHK_A11" },
+                { "9699", "ALO_DOM_DHK_S11" },
+                { "9646", "CIL_DOM_DHK_S11" },
+            };
+            Dictionary<string, string> prefixWiseIosIncomingRoute = new Dictionary<string, string>
+            {
+                { "61", "UL_ROM_TT_DHK_S11" },
+                { "62", "DG_ROM_TT_DHK_S11" },
+                { "63", "MT_ROM_TT_DHK_S11" },
+                { "64", "BTRAC_TT_ROM_DHK_S11" },
+                { "65", "NT_ROM_TT_DHK_S11" },
+                { "66", "RT_ROM_TT_DHK_S11" },
+                { "67", "GT_ROM_TT_DHK_S11" }
+            };
 
             try
             {
@@ -116,6 +147,7 @@ namespace Decoders
                     if (lineAsArr[66].Any(t => t == '/')==true)
                     {
                         string tempstr = lineAsArr[66].Split('/')[1];
+                        if(tempstr.Contains("0.-")) continue;
                         textCdr[Fn.DurationSec] = tempstr.Trim();
 
                     }
@@ -129,12 +161,35 @@ namespace Decoders
                     if (lineAsArr[88].Any(t => t == '/') == true)
                     {
                         string tempstr = lineAsArr[88].Split('/')[1];
-                        textCdr[Fn.IncomingRoute] = tempstr.Replace("?", "").Trim();
+                        tempstr = tempstr.Replace("�", "");
+                        textCdr[Fn.IncomingRoute] = tempstr.Trim();
+                        string tempstrOrigiCalling = lineAsArr[9].Split('/')[1].Trim();
+                        string tempstrOrigiCalled = lineAsArr[10].Split('/')[1].Trim();
+
+                        if (string.IsNullOrEmpty(tempstr))
+                        {
+                            foreach (var ansPrefix in prefixWiseAnsIncomingOrOutgoingRoute)
+                            {
+                                if (tempstrOrigiCalling.StartsWith(ansPrefix.Key))
+                                {
+                                    textCdr[Fn.IncomingRoute] = ansPrefix.Value;
+                                }
+                            }
+
+                            foreach (var iosPrefix in prefixWiseIosIncomingRoute)
+                            {
+                                if (tempstrOrigiCalled.StartsWith(iosPrefix.Key))
+                                {
+                                    textCdr[Fn.IncomingRoute] = iosPrefix.Value;
+                                }
+                            }
+                        }
 
                     }
                     else
                     {
-                        textCdr[Fn.IncomingRoute] = lineAsArr[88].Replace("?", "").Trim();
+                        textCdr[Fn.IncomingRoute] = lineAsArr[88].Trim();
+                      
                     }
 
 
@@ -142,12 +197,24 @@ namespace Decoders
                     if (lineAsArr[89].Any(t => t == '/') == true)
                     {
                         string tempstr = lineAsArr[89].Split('/')[1];
-                        textCdr[Fn.OutgoingRoute] = tempstr.Replace("?", "").Trim();
+                        tempstr = tempstr.Replace("�", "");
+                        textCdr[Fn.OutgoingRoute] = tempstr.Trim();
+                        string tempstrOrigiCalled = lineAsArr[10].Split('/')[1].Trim();
+                        if (string.IsNullOrEmpty(tempstr))
+                        {
+                            foreach (var ansPrefix in prefixWiseAnsIncomingOrOutgoingRoute)
+                            {
+                                if (tempstrOrigiCalled.StartsWith(ansPrefix.Key))
+                                {
+                                    textCdr[Fn.OutgoingRoute] = ansPrefix.Value;
+                                }
+                            }
+                        }
 
                     }
                     else
                     {
-                        textCdr[Fn.OutgoingRoute] = lineAsArr[89].Replace("?", "").Trim();
+                        textCdr[Fn.OutgoingRoute] = lineAsArr[89].Trim();
                     }
                 
                 

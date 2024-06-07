@@ -672,17 +672,17 @@
             // 
             // xrLabel16
             // 
-            this.xrLabel16.LocationFloat = new DevExpress.Utils.PointFloat(10F, 296F);
+            this.xrLabel16.LocationFloat = new DevExpress.Utils.PointFloat(10.00001F, 288.4167F);
             this.xrLabel16.Multiline = true;
             this.xrLabel16.Name = "xrLabel16";
             this.xrLabel16.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel16.SizeF = new System.Drawing.SizeF(495.0004F, 78.50006F);
+            this.xrLabel16.SizeF = new System.Drawing.SizeF(495.0004F, 86.08347F);
             this.xrLabel16.Text = resources.GetString("xrLabel16.Text");
             // 
             // xrLabel13
             // 
             this.xrLabel13.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(10F, 273F);
+            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(10F, 265.4167F);
             this.xrLabel13.Name = "xrLabel13";
             this.xrLabel13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel13.SizeF = new System.Drawing.SizeF(192.2913F, 23F);
@@ -694,9 +694,9 @@
             // xrPictureBox2
             // 
             this.xrPictureBox2.ImageAlignment = DevExpress.XtraPrinting.ImageAlignment.MiddleCenter;
-            this.xrPictureBox2.ImageUrl = "D:\\sftp_root\\TelcobrightProject\\TelcobrightVS13\\Projects\\Portal\\img\\rsz_1signatur" +
-    "_1.jpg";
-            this.xrPictureBox2.LocationFloat = new DevExpress.Utils.PointFloat(50.83351F, 216F);
+            this.xrPictureBox2.ImageUrl = "D:\\sftp_root\\TelcobrightProject\\TelcobrightVS13\\Projects\\Portal\\img\\rsz_signature" +
+    ".jpg";
+            this.xrPictureBox2.LocationFloat = new DevExpress.Utils.PointFloat(55.87518F, 206F);
             this.xrPictureBox2.Name = "xrPictureBox2";
             this.xrPictureBox2.SizeF = new System.Drawing.SizeF(100F, 30F);
             this.xrPictureBox2.Sizing = DevExpress.XtraPrinting.ImageSizeMode.ZoomImage;
@@ -705,7 +705,7 @@
             // 
             this.xrLabel7.Borders = DevExpress.XtraPrinting.BorderSide.Top;
             this.xrLabel7.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel7.LocationFloat = new DevExpress.Utils.PointFloat(10F, 250F);
+            this.xrLabel7.LocationFloat = new DevExpress.Utils.PointFloat(10.00001F, 239.4166F);
             this.xrLabel7.Name = "xrLabel7";
             this.xrLabel7.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel7.SizeF = new System.Drawing.SizeF(192.5F, 23.00003F);
@@ -719,7 +719,7 @@
             // 
             this.xrLabel3.Borders = DevExpress.XtraPrinting.BorderSide.Top;
             this.xrLabel3.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel3.LocationFloat = new DevExpress.Utils.PointFloat(505.0001F, 241F);
+            this.xrLabel3.LocationFloat = new DevExpress.Utils.PointFloat(457F, 239.4166F);
             this.xrLabel3.Name = "xrLabel3";
             this.xrLabel3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel3.SizeF = new System.Drawing.SizeF(211.9999F, 23.00003F);
@@ -969,7 +969,7 @@
             this.PageFooter,
             this.ReportFooter});
             this.Font = new System.Drawing.Font("Arial Narrow", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margins = new System.Drawing.Printing.Margins(50, 50, 50, 50);
+            this.Margins = new System.Drawing.Printing.Margins(82, 17, 50, 50);
             this.PageHeight = 1169;
             this.PageWidth = 827;
             this.PaperKind = System.Drawing.Printing.PaperKind.A4;

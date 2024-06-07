@@ -96,7 +96,7 @@ namespace TelcobrightMediation.Reports.InvoiceReports.banglatelecom.ICX
             xrTableCellAmount.DataBindings.Add("Text", this.DataSource, "Amount", "{0:n2}");
 
             decimal subTotalAmountRev = invoiceBasicDatas.Sum(x => x.Amount / 2);
-            if (invoice.BILLING_ACCOUNT_ID == 3)
+            if (invoice.BILLING_ACCOUNT_ID == 11)
             {
                 xrLabel12.Visible = true;
                 xrLabel15.Visible = true;
@@ -166,10 +166,10 @@ namespace TelcobrightMediation.Reports.InvoiceReports.banglatelecom.ICX
             #endregion
 
             #region Report Footer
-            if (invoiceMap.ContainsKey("paymentAdvice") && invoiceMap["paymentAdvice"] != null)
-            {
-                xrLabelPaymentAdvice.Text = invoiceMap["paymentAdvice"].ToString();
-            }
+            //if (invoiceMap.ContainsKey("paymentAdvice") && invoiceMap["paymentAdvice"] != null)
+            //{
+            //    xrLabelPaymentAdvice.Text = invoiceMap["paymentAdvice"].ToString();
+            //}
             if(invoiceBasicDatasMerged != null)
             {
                 TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;

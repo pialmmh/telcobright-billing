@@ -24,7 +24,8 @@ namespace TelcobrightMediation
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
             if(thisCdr.TerminatingCalledNumber.StartsWith("00") ||  
-               thisCdr.TerminatingCalledNumber.StartsWith("0013") || thisCdr.SwitchId == 11)
+               thisCdr.TerminatingCalledNumber.StartsWith("0013") ||
+               thisCdr.SwitchId == 11 || thisCdr.ServiceGroup == 5)
                 return;
             thisCdr.TerminatingCalledNumber = "0013" + thisCdr.TerminatingCalledNumber;
         }
