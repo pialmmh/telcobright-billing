@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DevExpress.Xpo;
 using Newtonsoft.Json.Linq;
 
 namespace Decoders.SigtranDecoderHelper
@@ -10,8 +9,8 @@ namespace Decoders.SigtranDecoderHelper
     {
         public static JObject GetCustomJObject(JObject thisJObject)
         {
-            JObject newJObj = new JObject();
-            List<string> parentPropsToFind = new List<string>() { "_index", "_source" };
+            //JObject newJObj = new JObject();
+            //List<string> parentPropsToFind = new List<string>() { "_index", "_source" };
             Dictionary<string, List<string>> propsToStay = new Dictionary<string, List<string>>()
             {
                 {
@@ -25,7 +24,7 @@ namespace Decoders.SigtranDecoderHelper
                         "e212.imsi"
                     }
                 },
-                {"tcap", new List<string> {"tcap.tid", "tcap.otid", "tcap.dtid"}},
+                {"tcap", new List<string> {"tcap.tid", "tcap.otid", "tcap.oid"}},
                 {"sccp", new List<string> {"sccp.called.digits", "sccp.calling.digits", "sccp.ssn"}},
                 {
                     "m3ua",
@@ -49,66 +48,68 @@ namespace Decoders.SigtranDecoderHelper
                 {"m3ua", new List<string> {"Protocol data"}},
             };
 
-            foreach (KeyValuePair<string, JToken> pair in thisJObject)
+            //foreach (var pair in thisJObject)
+            //{
+            //    string key = pair.Key;
+            //    JToken value = pair.Value;
+            //    if (parentPropsToFind.Contains(key))
+            //    {
+            //        newJObj.Add(key, value.DeepClone());
+            //    }
+            //}
+
+            //if (!(newJObj["_source"] == null || newJObj["_source"]["layers"] == null))
+            //{
+            //JObject layers = (JObject)newJObj["_source"]["layers"];
+
+            JObject layers = (JObject)thisJObject;
+
+            foreach (JProperty layer in layers.Properties().ToArray())
             {
-                string key = pair.Key;
-                JToken value = pair.Value;
-                if (parentPropsToFind.Contains(key))
+
+                string layerKey = layer.Name;
+                if (!propsToStay.ContainsKey(layerKey))
                 {
-                    newJObj.Add(key, value.DeepClone());
+                    layer.Remove();
                 }
-            }
-
-            if (!(newJObj["_source"] == null || newJObj["_source"]["layers"] == null))
-            {
-                JObject layers = (JObject)newJObj["_source"]["layers"];
-
-                foreach (JProperty layer in layers.Properties().ToArray())
+                else
                 {
+                    JObject layerValue = (JObject)layer.Value;
+                    RemoveUnwantedProps(layerValue, propsToStay[layerKey]);
 
-                    string layerKey = layer.Name;
-                    if (!propsToStay.ContainsKey(layerKey))
+                    // New logic to rename properties
+                    if (propsToRename.ContainsKey(layerKey))
                     {
-                        layer.Remove();
+                        RenameProps(layerValue, propsToRename[layerKey]);
                     }
-                    else
+
+
+                    // Special handling for "sccp" layer
+                    if (layerKey == "sccp")
                     {
-                        JObject layerValue = (JObject)layer.Value;
-                        RemoveUnwantedProps(layerValue, propsToStay[layerKey]);
-
-                        // New logic to rename properties
-                        if (propsToRename.ContainsKey(layerKey))
+                        foreach (var prop in propsToRename["sccp"])
                         {
-                            RenameProps(layerValue, propsToRename[layerKey]);
-                        }
-
-
-                        // Special handling for "sccp" layer
-                        if (layerKey == "sccp")
-                        {
-                            foreach (string prop in propsToRename["sccp"])
+                            foreach (var innerProp in layerValue.Properties().ToList())
                             {
-                                foreach (JProperty innerProp in layerValue.Properties().ToList())
+                                if (innerProp.Name.StartsWith(prop))
                                 {
-                                    if (innerProp.Name.StartsWith(prop))
-                                    {
-                                        string newName = prop;
-                                        innerProp.Replace(new JProperty(newName, innerProp.Value));
-                                    }
+                                    string newName = prop;
+                                    innerProp.Replace(new JProperty(newName, innerProp.Value));
+                                }
 
-                                    // Recursively apply renaming to nested objects
-                                    if (innerProp.Value.Type == JTokenType.Object)
-                                    {
-                                        RenameProps((JObject)innerProp.Value, propsToRename["sccp"]);
-                                    }
+                                // Recursively apply renaming to nested objects
+                                if (innerProp.Value.Type == JTokenType.Object)
+                                {
+                                    RenameProps((JObject)innerProp.Value, propsToRename["sccp"]);
                                 }
                             }
                         }
-
                     }
+
                 }
             }
-            return newJObj;
+            //}
+            return thisJObject;
         }
 
         static void RemoveUnwantedProps(JObject jObject, List<string> propertiesToKeep)

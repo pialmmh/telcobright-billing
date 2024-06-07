@@ -275,10 +275,10 @@ namespace Decoders
                 string[] record = Enumerable.Repeat((string)null, 104).ToArray();
 
                 // gms layer
-                GsmMap gsmMapLayer = packet.Source.Layers.GsmMap;
+                GsmMap gsmMapLayer = packet.GsmMap;
                 if (gsmMapLayer == null) return;
 
-                Frame frameLayer = packet.Source.Layers.Frame;
+                Frame frameLayer = packet.Frame;
                 string dateTime = ParseAndFormatTimestamp(frameLayer?.FrameTimeUtc.ToString());
                 record[Fn.StartTime] = dateTime;
                 record[Fn.AnswerTime] = dateTime;
@@ -290,12 +290,12 @@ namespace Decoders
                 //record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
 
                 // sctp layer
-                Sctp sctpLayer = packet.Source.Layers.Sctp;
+                Sctp sctpLayer = packet.Sctp;
                 record[Fn.IncomingRoute] = sctpLayer?.SrcPort.ToString();
                 record[Fn.OutgoingRoute] = sctpLayer?.DstPort.ToString();
 
                 // m3ua layer
-                M3ua m3UaLayer = packet.Source.Layers.M3Ua;
+                M3ua m3UaLayer = packet.M3Ua;
                 Mtp3Equivalents mtp3Equ = m3UaLayer.ProtocolData.Mtp3Equivalents;
                 string opc = mtp3Equ?.Opc.ToString();
 
@@ -311,13 +311,13 @@ namespace Decoders
                 record[Fn.IdCall] = mtp3Equ?.Ni.ToString();
                 record[Fn.Sequencenumber] = mtp3Equ?.Sls.ToString();
 
-                Sccp sccpLayer = packet.Source.Layers.Sccp;
+                Sccp sccpLayer = packet.Sccp;
                 record[Fn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CallingDigits?.ToString();
                 record[Fn.OriginatingCalledNumber] = sccpLayer?.CalledPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
                 //record[Fn.Duration2] = sccpLayer?.CalledPartyAddress.Ssn.ToString();
 
                 // tcap layer
-                Tcap tcapLayer = packet.Source.Layers.Tcap;
+                Tcap tcapLayer = packet.Tcap;
 
                 var transid = tcapLayer.BeginElement?.Tid == null ? tcapLayer.EndElement?.Tid : tcapLayer.BeginElement.Tid;
                 if (transid == null)
@@ -337,7 +337,7 @@ namespace Decoders
                 record[Fn.OutMgwId] = transid?.ToString();
 
                 // gsm sms
-                GsmSms gsmSmsLayer = packet.Source.Layers.GsmSms;
+                GsmSms gsmSmsLayer = packet.GsmSms;
                 record[Fn.AdditionalMetaData] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
 
                 ComponentTree componentTree = gsmMapLayer.ComponentTree;

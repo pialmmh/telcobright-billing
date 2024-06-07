@@ -9,30 +9,8 @@ using Newtonsoft.Json;
 
 namespace Decoders
 {
-    public class Ip
-    {
-        [JsonProperty("ip.src")]
-        public string SrcIp { get; set; }
-
-        [JsonProperty("ip.dst")]
-        public string DstIp { get; set; }
-    }
+    
     public class SigtranPacket
-    {
-        [JsonProperty("_index")]
-        public string Index { get; set; }
-
-        [JsonProperty("_source")]
-        public Source Source { get; set; }
-    }
-
-    public class Source
-    {
-        [JsonProperty("layers")]
-        public Layers Layers { get; set; }
-    }
-
-    public class Layers
     {
         [JsonProperty("frame")]
         public Frame Frame { get; set; }
@@ -54,7 +32,15 @@ namespace Decoders
 
         [JsonProperty("gsm_sms")]
         public GsmSms GsmSms { get; set; }
+
+        //[JsonProperty("_index")]
+        //public string Index { get; set; }
+
+        //[JsonProperty("_source")]
+        //public Source Source { get; set; }
     }
+
+    
 
     public class Frame
     {
@@ -258,4 +244,41 @@ namespace Decoders
         [JsonProperty("gsm_sms.sms_text")]
         public string SmsText { get; set; }
     }
+    //public class Ip
+    //{
+    //    [JsonProperty("ip.src")]
+    //    public string SrcIp { get; set; }
+
+    //    [JsonProperty("ip.dst")]
+    //    public string DstIp { get; set; }
+    //}
+    //public class Source
+    //{
+    //    [JsonProperty("layers")]
+    //    public Layers Layers { get; set; }
+    //}
+
+    //public class Layers
+    //{
+    //    [JsonProperty("frame")]
+    //    public Frame Frame { get; set; }
+
+    //    [JsonProperty("sctp")]
+    //    public Sctp Sctp { get; set; }
+
+    //    [JsonProperty("m3ua")]
+    //    public M3ua M3Ua { get; set; }
+
+    //    [JsonProperty("sccp")]
+    //    public Sccp Sccp { get; set; }
+
+    //    [JsonProperty("tcap")]
+    //    public Tcap Tcap { get; set; }
+
+    //    [JsonProperty("gsm_map")]
+    //    public GsmMap GsmMap { get; set; }
+
+    //    [JsonProperty("gsm_sms")]
+    //    public GsmSms GsmSms { get; set; }
+    //}
 }
