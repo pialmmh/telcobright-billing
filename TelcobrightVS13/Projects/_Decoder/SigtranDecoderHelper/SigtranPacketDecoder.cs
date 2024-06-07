@@ -108,7 +108,8 @@ namespace Decoders
             {"1:44",SmsType.InvokeMtForwardSm},
             {"2:44",SmsType.ReturnResultLastMtForwardSm},
             {"1:45",SmsType.InvokeSendRoutingInfoForSm},
-            {"2:45",SmsType.ReturnResultLastSendRoutingInfoForSm}
+            {"2:45",SmsType.ReturnResultLastSendRoutingInfoForSm},
+            {"1:63",SmsType.InvokeInformServiceCenter}
         };
         public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
@@ -378,6 +379,13 @@ namespace Decoders
                     record[Fn.TerminatingCallingNumber] = callerNumber;
                     record[Fn.Redirectingnumber] = imsi;
                     record[Fn.Duration3] = "4";
+                }
+                if (systemCodes == SmsType.InvokeInformServiceCenter)
+                {
+                    // e164.msisdn => terminating caller number, imsi => redirect number
+                    record[Fn.TerminatingCallingNumber] = callerNumber;
+                    record[Fn.Redirectingnumber] = imsi;
+                    record[Fn.Duration3] = "6";
                 }
 
                 string[] gtPair =

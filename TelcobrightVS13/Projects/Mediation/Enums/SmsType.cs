@@ -8,5 +8,6 @@ namespace TelcobrightMediation
         InvokeMtForwardSm = 3,
         ReturnResultLastMtForwardSm = 4,
         ReturnError = 5,
+        InvokeInformServiceCenter = 6,
     }
 }
