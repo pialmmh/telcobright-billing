@@ -116,9 +116,9 @@ namespace Decoders
             this.ansPrefixes = ansPrefixes;
         }
 
-        StringBuilder DecodePacket()
+
+        List<JObject> DecodePacket()
         {
-            StringBuilder data = new StringBuilder();
             Process senderProcess = new Process();
             senderProcess.StartInfo.FileName = TSharkExe;
             senderProcess.StartInfo.Arguments = PcapFileName;
@@ -127,46 +127,20 @@ namespace Decoders
             senderProcess.StartInfo.CreateNoWindow = true;
             senderProcess.Start();
             senderProcess.WaitForExit();
-            data = ReadFromMemoryMappedFile();
-            return data;
-        }
-
-        StringBuilder ReadFromMemoryMappedFile()
-        {
-            StringBuilder output = new StringBuilder();
-            const int chunkSize = 200 * 1024 * 1024; // 1 MB chunk size (adjust as needed)
-            using (MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open, null))
-            {
-                using (MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor())
-                {
-                    // Get the length of the memory-mapped file
-                    long fileSize = new FileInfo(filePath).Length;
-
-                    byte[] buffer = new byte[chunkSize];
-                    for (long offset = 0; offset < fileSize; offset += chunkSize)
-                    {
-                        int bytesToRead = (int)Math.Min(chunkSize, fileSize - offset);
-                        accessor.ReadArray(offset, buffer, 0, bytesToRead);
-                        output.Append(Encoding.UTF8.GetString(buffer, 0, bytesToRead));
-                    }
-                    mmf.Dispose();
-                }
-            }
-            return output;
+            var data = JsonStringReader.ReadJsonObjects(filePath);
+            var objectList = JsonStringReader.ParseJsonStrings(data);
+            return objectList;
         }
 
         public List<SigtranPacket> GetPackets()
         {
-            StringBuilder output = DecodePacket();
-            List<JObject> packetList = new List<JObject>();
-            if (output != null) packetList = GetNewJObjectList(output);
-
+            List<JObject> packetList = DecodePacket();
+            packetList = GetNewJObjectList(packetList);
             List<SigtranPacket> sigtranPackets =
                 packetList.Select(packet => packet.ToObject<SigtranPacket>()).ToList();
 
             return sigtranPackets;
         }
-
         private static List<KeyValuePair<string, JToken>> GetKeyValuePairs(JObject jsonObject, string parentKey = "")
         {
             List<KeyValuePair<string, JToken>> pairs = new List<KeyValuePair<string, JToken>>();
@@ -241,9 +215,8 @@ namespace Decoders
         }
 
 
-        private static List<JObject> GetNewJObjectList(StringBuilder result)
+        private static List<JObject> GetNewJObjectList(List<JObject> packets)
         {
-            List<JObject> packets = JsonStringBuilderParser.ParseJsonArray(result);
             ConcurrentBag<JObject> packetBag = new ConcurrentBag<JObject>();
 
             Parallel.ForEach(packets.Cast<JObject>(), packet =>
