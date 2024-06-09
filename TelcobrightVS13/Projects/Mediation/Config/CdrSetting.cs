@@ -51,6 +51,7 @@ namespace TelcobrightMediation
         public bool WriteCdrDiscarded { get; set; }
         public DateTime ExcludeBefore { get; set; } 
         public bool isTableDelete { get; set; }
+        public bool AllowNegativeInvoiceGeneration { get; set; } = false;
 
         public CdrSetting()
         {

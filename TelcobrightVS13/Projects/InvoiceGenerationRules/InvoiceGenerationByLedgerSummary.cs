@@ -44,10 +44,13 @@ namespace InvoiceGenerationRules
 
             decimal ledgerSummaryBilledAmount = dayWiseledgerSummaryBilledAmount.Values.Sum(c => c.billedAmount);
             decimal invoiceAmount = -1*(ledgerSummaryAmount + Convert.ToDecimal(ledgerSummaryBilledAmount));
-            if (invoiceAmount <= 0)
+            if (input.Tbc.CdrSetting.AllowNegativeInvoiceGeneration == false)
             {
-                throw new Exception("Account balance [= ledger summary+temp transaction amount] " +
-                                    " must be negative.");
+                if (invoiceAmount <= 0)
+                {
+                    throw new Exception("Account balance [= ledger summary+temp transaction amount] " +
+                                        " must be negative.");
+                }
             }
             IServiceGroup serviceGroup = null;
             int idServiceGroup = Convert.ToInt32(invoiceJsonDetail["idServiceGroup"]);

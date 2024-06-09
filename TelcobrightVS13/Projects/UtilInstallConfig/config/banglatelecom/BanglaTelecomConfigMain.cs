@@ -76,6 +76,7 @@ namespace InstallConfig
                 DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection = 1,
                 IllegalStrToRemoveFromFields = new List<string> { "`", "\"", "," },
                 UnzipCompressedFiles = false,
+                AllowNegativeInvoiceGeneration = true,
                 //IgnoreDuplicatesAfterDuplicateFiltering = true,
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
                 {
