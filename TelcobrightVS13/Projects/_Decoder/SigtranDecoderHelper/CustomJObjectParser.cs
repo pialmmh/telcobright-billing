@@ -40,12 +40,13 @@ namespace Decoders.SigtranDecoderHelper
                 },
                 {"frame", new List<string> {"frame.time_utc"}},
                 {"sctp", new List<string> {"sctp.srcport", "sctp.dstport"}},
-                {"gsm_sms", new List<string> { "gsm_sms.sms_text"}}
+                {"gsm_sms", new List<string> { "gsm_sms.sms_text" ,"e164.msisdn"}}
             };
             Dictionary<string, List<string>> propsToRename = new Dictionary<string, List<string>>()
             {
                 {"sccp", new List<string> {"Called Party address", "Calling Party address", "Global Title 0x4"}},
                 {"m3ua", new List<string> {"Protocol data"}},
+                {"gsm_sms", new List<string> {"TP-Originating-Address"}},
             };
 
             //foreach (var pair in thisJObject)
@@ -111,6 +112,7 @@ namespace Decoders.SigtranDecoderHelper
             //}
             return thisJObject;
         }
+
 
         static void RemoveUnwantedProps(JObject jObject, List<string> propertiesToKeep)
         {

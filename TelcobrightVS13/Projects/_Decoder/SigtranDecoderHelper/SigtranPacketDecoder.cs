@@ -345,11 +345,13 @@ namespace Decoders
                 }
 
                 InvokeElement componentTreeInvokeElement = gsmMapLayer?.ComponentTree?.InvokeElement;
+                ResultretresElement componentTreeReturnResultLastElement = gsmMapLayer?.ComponentTree?.ReturnResultLastElement?.ResultretresElement;
+
                 string serviceCentreAddress = componentTreeInvokeElement?.ServiceCenterAddress?.ToString();
                 string calledNumber = componentTreeInvokeElement?.MsisdnTree?.Msisdn?.ToString();
-                string callerNumber = componentTreeInvokeElement?.SmRpOaTree?.ServiceCentreAddressOaTree?.Msisdn?.ToString();
+                string callerNumber = gsmSmsLayer?.CallerNumber?.Msisdn?.ToString();
 
-                string imsi = componentTreeInvokeElement?.SmRpDaTree?.Imsi?.ToString();
+                string imsi = componentTreeInvokeElement?.ImsiTree?.Imsi?.ToString();
 
                 // imsi, A Party,B Party
                 if (systemCodes == SmsType.InvokeSendRoutingInfoForSm)
@@ -362,6 +364,7 @@ namespace Decoders
                 if (systemCodes == SmsType.ReturnResultLastSendRoutingInfoForSm)
                 {
                     //	e164.msisdn => terminating called number,imsi => redirect number
+                    imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
                     record[Fn.TerminatingCalledNumber] = calledNumber;
                     record[Fn.Redirectingnumber] = imsi;
                     record[Fn.Duration3] = "2";
@@ -395,8 +398,12 @@ namespace Decoders
                 };
                 Array.Sort(gtPair);
 
+                DateTime startTime = Convert.ToDateTime(dateTime);
+                startTime = startTime.Hour == 23 ? startTime.Date.AddDays(1) : startTime.Date;
                 string separator = "/";
-                record[Fn.UniqueBillId] = new StringBuilder(string.Join("-", gtPair))
+                record[Fn.UniqueBillId] = new StringBuilder(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote())
+                    .Append(separator)
+                    .Append(string.Join("-", gtPair))
                     .Append(separator)
                     .Append(record[Fn.Codec]).ToString();
 
