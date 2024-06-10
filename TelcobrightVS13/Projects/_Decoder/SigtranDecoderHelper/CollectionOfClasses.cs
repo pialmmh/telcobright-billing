@@ -187,9 +187,20 @@ namespace Decoders
         [JsonProperty("gsm_old.opCode_tree")]
         public OpCodeTree OpCodeTree { get; set; }
 
+        [JsonProperty("gsm_map.sm.locationInfoWithLMSI_element")]
+        public LocationInfoWithLmsiElement LocationInfoWithLmsiElement { get; set; }
+        
+
         [JsonProperty("e212.imsi")]
         public string Imsi { get; set; }
     }
+
+    public class LocationInfoWithLmsiElement
+    {
+        [JsonProperty("gsm_map.sm.networkNode_Number_tree")]
+        public MsisdnTree SriResCallerTree { get; set; }
+    }
+
     public class InvokeElement
     {
         [JsonProperty("gsm_old.opCode_tree")]

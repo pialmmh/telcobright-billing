@@ -366,6 +366,10 @@ namespace Decoders
                     //	e164.msisdn => terminating called number,imsi => redirect number
                     imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
                     record[Fn.TerminatingCalledNumber] = calledNumber;
+
+                    // actual caller number
+                    callerNumber = componentTreeReturnResultLastElement?.LocationInfoWithLmsiElement?.SriResCallerTree?.Msisdn?.ToString();
+                    record[Fn.TerminatingCallingNumber] = callerNumber;
                     record[Fn.Redirectingnumber] = imsi;
                     record[Fn.Duration3] = "2";
                 }
@@ -391,10 +395,16 @@ namespace Decoders
                     record[Fn.Duration3] = "6";
                 }
 
+                string outPartnerId = getPartneridByGtPrefix(record[Fn.OriginatingCalledNumber]).ToString();
+                string inPartnerId = getPartneridByGtPrefix(record[Fn.OriginatingCallingNumber]).ToString();
+
+                record[Fn.OutPartnerId] = outPartnerId;
+                record[Fn.InPartnerId] = inPartnerId;
+
                 string[] gtPair =
                 {
-                    ExtractGtPrefix(record[Fn.OriginatingCalledNumber]).ToString(),
-                    ExtractGtPrefix(record[Fn.OriginatingCallingNumber]).ToString()
+                    outPartnerId,
+                    inPartnerId
                 };
                 Array.Sort(gtPair);
 
@@ -416,7 +426,7 @@ namespace Decoders
             return records.ToList();
         }
 
-        private int ExtractGtPrefix(string gt)
+        private int getPartneridByGtPrefix(string gt)
         {
             partnerprefix value;
             if (gt.Length >= 7 && ansPrefixes.TryGetValue(gt.Substring(0, 7), out value))
