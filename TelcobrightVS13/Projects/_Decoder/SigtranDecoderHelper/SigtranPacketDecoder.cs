@@ -254,19 +254,19 @@ namespace Decoders
 
                 Frame frameLayer = packet.Frame;
                 string dateTime = ParseAndFormatTimestamp(frameLayer?.FrameTimeUtc.ToString());
-                record[Fn.StartTime] = dateTime;
-                record[Fn.AnswerTime] = dateTime;
+                record[Sn.StartTime] = dateTime;
+                record[Sn.AnswerTime] = dateTime;
 
-                record[Fn.Duration1] = "60";
-                record[Fn.DurationSec] = "60";
+                record[Sn.Duration1] = "60";
+                record[Sn.DurationSec] = "60";
 
-                //record[Fn.Originatingip] = packet.Ip?.SrcIp?.ToString();
-                //record[Fn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
+                //record[Sn.Originatingip] = packet.Ip?.SrcIp?.ToString();
+                //record[Sn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
 
                 // sctp layer
                 Sctp sctpLayer = packet.Sctp;
-                record[Fn.IncomingRoute] = sctpLayer?.SrcPort.ToString();
-                record[Fn.OutgoingRoute] = sctpLayer?.DstPort.ToString();
+                record[Sn.IncomingRoute] = sctpLayer?.SrcPort.ToString();
+                record[Sn.OutgoingRoute] = sctpLayer?.DstPort.ToString();
 
                 // m3ua layer
                 M3ua m3UaLayer = packet.M3Ua;
@@ -278,17 +278,17 @@ namespace Decoders
                 if (!isOpcContained)
                     return;
 
-                record[Fn.Opc] = opc;
-                record[Fn.Dpc] = mtp3Equ?.Dpc.ToString();
-                record[Fn.ReleaseDirection] = m3UaLayer?.RoutingContext.ToString();
-                record[Fn.Connectednumbertype] = m3UaLayer.ProtocolData?.ProtocolDataSi.ToString();
-                record[Fn.IdCall] = mtp3Equ?.Ni.ToString();
-                record[Fn.Sequencenumber] = mtp3Equ?.Sls.ToString();
+                record[Sn.Opc] = opc;
+                record[Sn.Dpc] = mtp3Equ?.Dpc.ToString();
+                record[Sn.ReleaseDirection] = m3UaLayer?.RoutingContext?.RoutingContextValue.ToString();
+                record[Sn.Connectednumbertype] = m3UaLayer.ProtocolData?.ProtocolDataSi.ToString();
+                record[Sn.IdCall] = mtp3Equ?.Ni.ToString();
+                record[Sn.Sequencenumber] = mtp3Equ?.Sls.ToString();
 
                 Sccp sccpLayer = packet.Sccp;
-                record[Fn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CallingDigits?.ToString();
-                record[Fn.OriginatingCalledNumber] = sccpLayer?.CalledPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
-                //record[Fn.Duration2] = sccpLayer?.CalledPartyAddress.Ssn.ToString();
+                record[Sn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CallingDigits?.ToString();
+                record[Sn.OriginatingCalledNumber] = sccpLayer?.CalledPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
+                //record[Sn.Duration2] = sccpLayer?.CalledPartyAddress.Ssn.ToString();
 
                 // tcap layer
                 Tcap tcapLayer = packet.Tcap;
@@ -298,21 +298,21 @@ namespace Decoders
                 {
                     transid = tcapLayer.ContinueElement?.Tid;
                 }
-                record[Fn.Codec] = transid?.ToString();
+                record[Sn.Codec] = transid?.ToString();
 
                 transid = tcapLayer.BeginElement?.Otid == null
                     ? tcapLayer.EndElement?.Otid
                     : tcapLayer.BeginElement.Otid;
-                record[Fn.InMgwId] = transid?.ToString();
+                record[Sn.InMgwId] = transid?.ToString();
 
                 transid = tcapLayer.BeginElement?.SourceTransactionId?.Dtid == null
                     ? tcapLayer.EndElement?.DestinationTransactionId?.Dtid
                     : tcapLayer.BeginElement.Otid;
-                record[Fn.OutMgwId] = transid?.ToString();
+                record[Sn.OutMgwId] = transid?.ToString();
 
                 // gsm sms
                 GsmSms gsmSmsLayer = packet.GsmSms;
-                record[Fn.AdditionalMetaData] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
+                record[Sn.AdditionalMetaData] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
 
                 ComponentTree componentTree = gsmMapLayer.ComponentTree;
                 string localValue = componentTree?.InvokeElement?.OpCodeTree?.LocalValue ??
@@ -325,7 +325,7 @@ namespace Decoders
                 // excluding reportSM-DeliveryStatus
                 if (localValue == "47") return;
 
-                record[Fn.Duration4] = localValue;
+                record[Sn.OptionalCode] = localValue;
 
                 //gsm_map.old.Component
                 string smsSystemcodes = gsmMapLayer.OldComponent?.ToString();
@@ -341,7 +341,7 @@ namespace Decoders
                 // Sms Type ReturnError
                 if (smsSystemcodes == "3" && systemCodes == SmsType.None)
                 {
-                    record[Fn.Duration3] = "5";
+                    record[Sn.SmsType] = "5";
                 }
 
                 InvokeElement componentTreeInvokeElement = gsmMapLayer?.ComponentTree?.InvokeElement;
@@ -357,49 +357,49 @@ namespace Decoders
                 if (systemCodes == SmsType.InvokeSendRoutingInfoForSm)
                 {
                     // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
-                    record[Fn.TerminatingCalledNumber] = calledNumber;
-                    record[Fn.Redirectingnumber] = serviceCentreAddress;
-                    record[Fn.Duration3] = "1";
+                    record[Sn.TerminatingCalledNumber] = calledNumber;
+                    record[Sn.Imsi] = serviceCentreAddress;
+                    record[Sn.SmsType] = "1";
                 }
                 if (systemCodes == SmsType.ReturnResultLastSendRoutingInfoForSm)
                 {
                     //	e164.msisdn => terminating called number,imsi => redirect number
                     imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
-                    record[Fn.TerminatingCalledNumber] = calledNumber;
+                    record[Sn.TerminatingCalledNumber] = calledNumber;
 
                     // actual caller number
                     callerNumber = componentTreeReturnResultLastElement?.LocationInfoWithLmsiElement?.SriResCallerTree?.Msisdn?.ToString();
-                    record[Fn.TerminatingCallingNumber] = callerNumber;
-                    record[Fn.Redirectingnumber] = imsi;
-                    record[Fn.Duration3] = "2";
+                    record[Sn.TerminatingCallingNumber] = callerNumber;
+                    record[Sn.Imsi] = imsi;
+                    record[Sn.SmsType] = "2";
                 }
                 if (systemCodes == SmsType.InvokeMtForwardSm)
                 {
                     // e164.msisdn => terminating caller number	,imsi => redirectnumber
-                    record[Fn.TerminatingCallingNumber] = callerNumber;
-                    record[Fn.Redirectingnumber] = imsi;
-                    record[Fn.Duration3] = "3";
+                    record[Sn.TerminatingCallingNumber] = callerNumber;
+                    record[Sn.Imsi] = imsi;
+                    record[Sn.SmsType] = "3";
                 }
                 if (systemCodes == SmsType.ReturnResultLastMtForwardSm)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
-                    record[Fn.TerminatingCallingNumber] = callerNumber;
-                    record[Fn.Redirectingnumber] = imsi;
-                    record[Fn.Duration3] = "4";
+                    record[Sn.TerminatingCallingNumber] = callerNumber;
+                    record[Sn.Imsi] = imsi;
+                    record[Sn.SmsType] = "4";
                 }
                 if (systemCodes == SmsType.InvokeInformServiceCenter)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
-                    record[Fn.TerminatingCallingNumber] = callerNumber;
-                    record[Fn.Redirectingnumber] = imsi;
-                    record[Fn.Duration3] = "6";
+                    record[Sn.TerminatingCallingNumber] = callerNumber;
+                    record[Sn.Imsi] = imsi;
+                    record[Sn.SmsType] = "6";
                 }
 
-                string outPartnerId = getPartneridByGtPrefix(record[Fn.OriginatingCalledNumber]).ToString();
-                string inPartnerId = getPartneridByGtPrefix(record[Fn.OriginatingCallingNumber]).ToString();
+                string outPartnerId = getPartneridByGtPrefix(record[Sn.OriginatingCalledNumber]).ToString();
+                string inPartnerId = getPartneridByGtPrefix(record[Sn.OriginatingCallingNumber]).ToString();
 
-                record[Fn.OutPartnerId] = outPartnerId;
-                record[Fn.InPartnerId] = inPartnerId;
+                record[Sn.OutPartnerId] = outPartnerId;
+                record[Sn.InPartnerId] = inPartnerId;
 
                 string[] gtPair =
                 {
@@ -411,14 +411,14 @@ namespace Decoders
                 DateTime startTime = Convert.ToDateTime(dateTime);
                 startTime = startTime.Hour == 23 ? startTime.Date.AddDays(1) : startTime.Date;
                 string separator = "/";
-                record[Fn.UniqueBillId] = new StringBuilder(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote())
+                record[Sn.UniqueBillId] = new StringBuilder(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote())
                     .Append(separator)
                     .Append(string.Join("-", gtPair))
                     .Append(separator)
-                    .Append(record[Fn.Codec]).ToString();
+                    .Append(record[Sn.Codec]).ToString();
 
-                record[Fn.Validflag] = "1";
-                record[Fn.Partialflag] = "1";
+                record[Sn.Validflag] = "1";
+                record[Sn.Partialflag] = "1";
 
                 records.Add(record);
             });
