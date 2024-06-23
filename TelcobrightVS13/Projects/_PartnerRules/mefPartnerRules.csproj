@@ -105,6 +105,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ANSInByPrefixSmsHub.cs" />
+    <Compile Include="ANSOutByPrefixSmsHub.cs" />
     <Compile Include="PrtOutByIpOrPointCode.cs" />
     <Compile Include="PrtInByIpOrPointCode.cs" />
     <Compile Include="ANSOutByPrefix.cs" />
