@@ -440,6 +440,8 @@
     <Compile Include="generators\RouteType.cs" />
     <Compile Include="generators\TableWisePartitionManagementInfo.cs" />
     <Compile Include="UtilMain.cs" />
+    <Compile Include="util\CommonValidationRulesGenerator\CommonMdrValRulesGen.cs" />
+    <Compile Include="util\CommonValidationRulesGenerator\InconsistentMdrValRulesGen.cs" />
     <Compile Include="util\CommonValidationRulesGenerator\InconsistentCdrValRulesGen.cs" />
     <Compile Include="util\CommonValidationRulesGenerator\CommonCdrValRulesGen.cs" />
     <Compile Include="generators\telcoBilling\TelcoBillingMenu.cs" />
