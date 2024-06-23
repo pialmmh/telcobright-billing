@@ -48,6 +48,13 @@ namespace TelcobrightMediation
 
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
+            //sms processing
+            if(cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useSmsHubProcessing)
+            {
+                //thisCdr.ServiceGroup = 1; //Domestic in ICX
+                thisCdr.ServiceGroup = 0; //Domestic in ICX
+                return;
+            }
             //Domestic call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);

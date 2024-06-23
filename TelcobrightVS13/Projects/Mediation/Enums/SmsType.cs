@@ -3,11 +3,11 @@ namespace TelcobrightMediation
     public enum SmsType
     {
         None=0,
-        InvokeSendRoutingInfoForSm = 1,
-        ReturnResultLastSendRoutingInfoForSm = 2,
-        InvokeMtForwardSm = 3,
-        ReturnResultLastMtForwardSm = 4,
+        Sri = 1,
+        SriResp = 2,
+        Mt = 3,
+        MtResp = 4,
         ReturnError = 5,
-        InvokeInformServiceCenter = 6,
+        InformServiceCenter = 6,
     }
 }

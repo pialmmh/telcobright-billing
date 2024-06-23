@@ -11,7 +11,7 @@ namespace MediationModel
         public const int Originatingip = 6;
         public const int Opc = 7;
         public const int OriginatingCIC = 8;
-        public const int OriginatingCalledNumber = 9;
+        public const int OriginatingCalledNumber = Fn.OriginatingCalledNumber;
         public const int TerminatingCalledNumber = 10;
         public const int OriginatingCallingNumber = 11;
         public const int TerminatingCallingNumber = 12;
@@ -82,7 +82,7 @@ namespace MediationModel
         public const int MediationComplete = 77;
         public const int Codec = 78;
         public const int Connectednumbertype = 79;
-        public const int Imsi = 80;
+        public const int Imsi = Fn.Redirectingnumber;
         public const int Callforwardorroamingtype = 81;
         public const int OtherDate = 82;
         public const int SummaryMetaTotal = 83;
@@ -97,11 +97,11 @@ namespace MediationModel
         public const int FinalRecord = 92;
         public const int Duration1 = 93;
         public const int Duration2 = 94;
-        public const int SmsType = 95;
-        public const int OptionalCode = 96;
+        public const int SmsType = Fn.Duration3;
+        public const int OptionalCode = Fn.Duration4;
         public const int PreviousPeriodCdr = 97;
         public const int UniqueBillId = 98;
-        public const int AdditionalMetaData = 99;
+        public const int Message = Fn.AdditionalMetaData;
         public const int Category = 100;
         public const int Subcategory = 101;
         public const int ChangedByJobId = 102;

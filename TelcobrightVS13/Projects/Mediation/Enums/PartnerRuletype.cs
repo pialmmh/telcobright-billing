@@ -8,5 +8,7 @@ namespace TelcobrightMediation
         public const int OutAnsByPrefix = 4;
         public const int InPartnerByIPAddressOrPointCode = 5;
         public const int OutPartnerByIPAddressOrPointCode = 6;
+        public const int InAnsByPrefixSmsHub = 10;
+        public const int OutAnsByPrefixSmsHub = 11;
     }
 }

@@ -308,6 +308,15 @@ namespace TelcobrightMediation
 
         private void ResetMediationStatus(cdr cdr)
         {
+            if (MediationContext.CdrSetting.useSmsHubProcessing)
+            {
+                cdr.ErrorCode = ""; //set error flag empty by default to prevent calls going to cdr table...
+                cdr.MediationComplete = 0;
+                cdr.ChargeableMetaTotal = null;
+                cdr.SummaryMetaTotal = null;
+                cdr.TransactionMetaTotal = null;
+                return;
+            }
             cdr.ErrorCode = ""; //set error flag empty by default to prevent calls going to cdr table...
             cdr.MediationComplete = 0;
             cdr.AdditionalMetaData = null;
@@ -456,6 +465,31 @@ namespace TelcobrightMediation
                     {
                         failedCallsCount = nonPartialCdrs.Count(c => c.ChargingStatus == 0);
                         nonPartialCdrs = nonPartialCdrs.Where(c => c.ChargingStatus == 1).ToList();
+                        if(this.Tbc.CdrSetting.useSmsHubProcessing)
+                        {
+                            nonPartialCdrs.ForEach(c =>
+                            {
+                                c.SummaryMetaTotal = 1;
+                                c.InPartnerCost = 1;
+                                c.OutPartnerCost = 1;
+                                c.TransactionMetaTotal = 1;
+                                c.ChargeableMetaTotal = 1;
+                                c.CostAnsIn = 1;
+                                c.CostIcxIn = 1;
+                                c.CustomerRate = 1;
+                                c.IgwRevenueIn = 1;
+                                c.RevenueAnsOut = 1;
+                                c.RevenueIcxOut = 1;
+                                c.RevenueIgwOut = 1;
+                                c.SupplierRate = 1;
+                                c.UsdRateY = 1;
+                                c.XAmount = 1;
+                                c.YAmount = 1;
+                                c.ZAmount = 1;
+                            }
+                            );
+
+                        }
                         writtenSuccessfulCount = WriteCdr(nonPartialCdrs);
                         writtenNonPartialCdrCount = writtenSuccessfulCount + failedCallsCount;
                                                     //although not written, but need to match validations
