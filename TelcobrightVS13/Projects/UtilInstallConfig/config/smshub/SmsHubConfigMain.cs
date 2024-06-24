@@ -66,9 +66,9 @@ namespace InstallConfig
 
             CdrSetting tempCdrSetting = new CdrSetting();//helps with getting some values initialized in constructors
             CommonCdrValRulesGen commonCdrValRulesGen =
-                new CommonCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+                new CommonMdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             InconsistentCdrValRulesGen inconsistentCdrValRulesGen =
-                new InconsistentCdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
+                new InconsistentMdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             this.Tbc.CdrSetting = new CdrSetting
             {
                 EmptyFileAllowed = true,
@@ -85,6 +85,7 @@ namespace InstallConfig
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                useSmsHubProcessing = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>()
@@ -96,6 +97,8 @@ namespace InstallConfig
                         MinRowCountToStartBatchCdrProcessing = 100000,
                         MaxNumberOfFilesInPreDecodedDirectory = 500,
                         CreateJobRecursively = true,
+                        AggregationStyle = "telcobridge",
+                        //AggregationStyle = null,
                         EventPreprocessingRules = new List<EventPreprocessingRule>()
                         {
                             new CdrPredecoder()
@@ -118,7 +121,7 @@ namespace InstallConfig
                     idMediationRule= 2,
                     SwitchName= "Dialogic",
                     CDRPrefix= "mdr",
-                    FileExtension= ".pcap",
+                    FileExtension= ".gz",
                     Description= null,
                     SourceFileLocations= this.vaultPrimary.Name,
                     BackupFileLocations= null,//vaultCAS
@@ -142,6 +145,7 @@ namespace InstallConfig
                     BatchToDecodeRatio= 3,
                     PrependLocationNumberToFileName= 0,
                     UseIdCallAsBillId = 0,
+                    FilterDuplicateCdr = 1
                 },
                
             };
