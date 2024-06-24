@@ -146,7 +146,7 @@ namespace TelcobrightMediation
                           ENGINE= innodb DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ";
         }
 
-        public string getCreateTableSqlForPartialEvent(object data)
+        public virtual string getCreateTableSqlForPartialEvent(object data)
         {
             return $@"CREATE TABLE if not exists <{this.PartialTablePrefix}> (
                   SwitchId varchar(100)  NOT NULL,

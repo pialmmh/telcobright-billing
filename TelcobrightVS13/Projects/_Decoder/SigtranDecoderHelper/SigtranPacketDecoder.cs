@@ -105,11 +105,11 @@ namespace Decoders
 
         private readonly Dictionary<string, SmsType> causeCodes = new Dictionary<string, SmsType>
         {
-            {"1:44",SmsType.InvokeMtForwardSm},
-            {"2:44",SmsType.ReturnResultLastMtForwardSm},
-            {"1:45",SmsType.InvokeSendRoutingInfoForSm},
-            {"2:45",SmsType.ReturnResultLastSendRoutingInfoForSm},
-            {"1:63",SmsType.InvokeInformServiceCenter}
+            {"1:44",SmsType.Mt},
+            {"2:44",SmsType.MtResp},
+            {"1:45",SmsType.Sri},
+            {"2:45",SmsType.SriResp},
+            {"1:63",SmsType.InformServiceCenter}
         };
         public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
@@ -312,7 +312,7 @@ namespace Decoders
 
                 // gsm sms
                 GsmSms gsmSmsLayer = packet.GsmSms;
-                record[Sn.AdditionalMetaData] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
+                record[Sn.Message] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
 
                 ComponentTree componentTree = gsmMapLayer.ComponentTree;
                 string localValue = componentTree?.InvokeElement?.OpCodeTree?.LocalValue ??
@@ -354,14 +354,14 @@ namespace Decoders
                 string imsi = componentTreeInvokeElement?.ImsiTree?.Imsi?.ToString();
 
                 // imsi, A Party,B Party
-                if (systemCodes == SmsType.InvokeSendRoutingInfoForSm)
+                if (systemCodes == SmsType.Sri)
                 {
                     // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
                     record[Sn.TerminatingCalledNumber] = calledNumber;
                     record[Sn.Imsi] = serviceCentreAddress;
                     record[Sn.SmsType] = "1";
                 }
-                if (systemCodes == SmsType.ReturnResultLastSendRoutingInfoForSm)
+                if (systemCodes == SmsType.SriResp)
                 {
                     //	e164.msisdn => terminating called number,imsi => redirect number
                     imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
@@ -373,21 +373,21 @@ namespace Decoders
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "2";
                 }
-                if (systemCodes == SmsType.InvokeMtForwardSm)
+                if (systemCodes == SmsType.Mt)
                 {
                     // e164.msisdn => terminating caller number	,imsi => redirectnumber
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "3";
                 }
-                if (systemCodes == SmsType.ReturnResultLastMtForwardSm)
+                if (systemCodes == SmsType.MtResp)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "4";
                 }
-                if (systemCodes == SmsType.InvokeInformServiceCenter)
+                if (systemCodes == SmsType.InformServiceCenter)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
                     record[Sn.TerminatingCallingNumber] = callerNumber;
@@ -411,7 +411,19 @@ namespace Decoders
                 DateTime startTime = Convert.ToDateTime(dateTime);
                 startTime = startTime.Hour == 23 ? startTime.Date.AddDays(1) : startTime.Date;
                 string separator = "/";
+
+                string syscode ="5";
+                if (localValue == "44" || smsSystemcodes == "3")
+                {
+                    syscode = "3";
+                }
+                if (localValue == "45")
+                {
+                    syscode = "1";
+                }
                 record[Sn.UniqueBillId] = new StringBuilder(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote())
+                    .Append(separator)
+                    .Append(syscode)
                     .Append(separator)
                     .Append(string.Join("-", gtPair))
                     .Append(separator)
@@ -419,6 +431,10 @@ namespace Decoders
 
                 record[Sn.Validflag] = "1";
                 record[Sn.Partialflag] = "1";
+                record[Sn.Category] = "1";
+                record[Sn.Subcategory] = "1";
+                record[Sn.ChargingStatus] = "0";
+                record[Sn.ServiceGroup] = "1";
 
                 records.Add(record);
             });
