@@ -1,0 +1,193 @@
+﻿<%@ Master Language="C#" AutoEventWireup="True" CodeBehind="Site2.master.cs" Inherits="Site2Master" EnableViewState="true" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+    <title></title>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Styles2.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+    <style type="text/css">
+        .style1
+        {
+            color: #FFFFFF;
+        }
+    </style>
+
+        
+
+</head>
+<body>
+    <form id="mainform" runat="server">
+    
+    <div class="page">
+        
+            <div class="header" id="mygradient2">
+             
+            <div class="title">
+                <h1>
+                    <span style="width:300px; color:#dd7917"> 
+                        <a href="default.aspx" style="text-decoration:none;">
+                            <%--<asp:Image ID="Image1" AlternateText="Logo" runat="server" Width="150" Height="30" ImageUrl="" />--%>
+                           <span style="margin-top:-5px;color:Maroon"> Telcobright </span>
+                        </a>
+                        <span style="padding-left:20px;">
+                            <%--BANGLA TEL LIMITED--%>
+                            <%--DBL Telecom--%>
+                            <%--Purple Telecom--%>
+                        </span>
+                    </span> 
+                </h1>
+                
+            </div>
+
+            <div class="loginDisplay">
+                <div style="float:left; padding-top:20px; font-weight:bold; color:White"> 
+                
+                    <span style="padding-left:80px;width:100px;">
+                        <asp:Label ID="lblScreenTitle" runat="server" Text=""></asp:Label>
+                    </span>
+
+                </div>
+                <div style="float:left;padding-left:350px;">
+                   <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
+                    <AnonymousTemplate>
+                         <%--<a href="~/Default.aspx" ID="HeadLoginStatus"  runat="server" style="color: #FF9900">[Home]</a> --%>
+                    </AnonymousTemplate>
+                    <LoggedInTemplate>
+                        Welcome <span class="bold"><asp:LoginName ID="HeadLoginName" runat="server" /></span>!
+                        [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out" 
+                         LogoutPageUrl="~/Account/Login.aspx" onloggingout="HeadLoginStatus_LoggingOut"/> ]
+                    </LoggedInTemplate>
+                </asp:LoginView>
+                   
+                </div>
+            </div>
+          </div>  
+       
+        <div  id="navigation" style="margin-top:20px;padding-left:150px;">
+           <%-- <ul>
+                <li style="display:inline; padding: 0px 20px;"><asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/reports/RecentCalls.aspx" ForeColor="#8B4500">Recent Calls</asp:HyperLink></li>
+                <li style="display:inline;padding: 0px 20px;"><asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/reports/Summary RecentCalls.aspx" ForeColor="#8B4500">Calls in Specific Period</asp:HyperLink></li>
+                <li style="display:inline;padding: 0px 20px;"><asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/reports/InternationalIn.aspx" ForeColor="#8B4500">International Incoming</asp:HyperLink></li>
+                <li style="display:inline;padding: 0px 20px;"><asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/reports/InternationalOut.aspx" ForeColor="#8B4500">International Outgoing</asp:HyperLink></li>
+            </ul>--%>
+        </div>
+    
+        <div style="width:95%; margin:10px auto;">
+  
+<div id="leftContent" style="visibility:hidden;margin-left:4px;background-color:#F7F6F3;margin-top:3px;border-right-style:ridge;border-top-style:none;border-bottom-style:ridge">
+
+<div id="TreeView" style="left:-10px;position:relative;">
+
+<div style="padding-left:5px;"><a href="~/Default.aspx" ID="HeadLoginStatus"  runat="server" style="color: #FF9900">[Home]</a></div>
+<br />
+<asp:TreeView ID="TreeView1" Runat="server" ImageSet="Arrows" NodeWrap="True" Visible="false"
+        OnSelectedNodeChanged ="TreeView1_OnItemSelected" OnTreeNodeExpanded="OnExpand" OnTreeNodeCollapsed="OnCollapse">
+    <HoverNodeStyle Font-Underline="True" ForeColor="#5555DD"  />
+  <Nodes>
+    <asp:TreeNode Value="Configuration" Expanded="True" Text="Configuration"  SelectAction="None">
+      <asp:TreeNode Value="Partners" Text="Partners"  NavigateUrl="~/config/Partner.aspx" />
+      <asp:TreeNode Value="Route Import" Text="Route Import"  NavigateUrl="~/config/RouteImport.aspx" />
+      <asp:TreeNode Value="Rate Plan" Text="Rate Plan"  NavigateUrl="~/config/rateplan.aspx" />
+      <asp:TreeNode Value="Rate Plan Assignment" Text="Rate Plan Assignment"  NavigateUrl="~/config/rateassignment.aspx" />
+      <asp:TreeNode Value="Rates" Text="Rates"  NavigateUrl="~/config/rates.aspx" />
+      <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR"  NavigateUrl="~/config/lcr.aspx" />
+      <asp:TreeNode Value="View Routes" Text="View Routes"  NavigateUrl="~/config/ViewRoutes.aspx" />
+      
+     
+      
+    </asp:TreeNode>
+
+    <asp:TreeNode Value="Reports" Expanded="True" Text="Reports" SelectAction="None">
+            <asp:TreeNode Value="Intl. Incoming" Expanded="True" Text="Intl. Incoming" SelectAction="None">
+              <asp:TreeNode Value="Traffic" Text="Traffic" SelectAction="Select" NavigateUrl="~/reports/InternationalIn.aspx"> </asp:TreeNode>
+              <asp:TreeNode Value="Route Wise Traffic" Text="Route Wise Traffic" SelectAction="Select" NavigateUrl="~/reports/RouteInternationalIn.aspx"> </asp:TreeNode>
+              <asp:TreeNode Value="Cause Codes" Text="Cause Codes" NavigateUrl="~/reports/CauseInternationalIn.aspx"> </asp:TreeNode>
+              <asp:TreeNode Value="Cause Codes (by Route)" Text="Cause Codes (by Route)" NavigateUrl="~/reports/CauseRouteInternationalIn.aspx"> </asp:TreeNode>
+            </asp:TreeNode>
+
+            <asp:TreeNode Value="Intl. Outgoing" Expanded="True" Text="Intl. Outgoing" SelectAction="None">
+              <asp:TreeNode Value="Traffic" Text="Traffic" NavigateUrl="~/reports/InternationalOut.aspx" > </asp:TreeNode>
+              <asp:TreeNode Value="Cause Codes" Text="Cause Codes" NavigateUrl="~/reports/CauseInternationalOut.aspx"> </asp:TreeNode>
+            </asp:TreeNode>
+
+    <asp:TreeNode Value="Route Utilization" Expanded="True" Text="Route Utilization"  SelectAction="None">
+                <asp:TreeNode Value="Ingress-Egress" Text="Ingress-Egress" NavigateUrl="~/reports/RouteUtilization.aspx" > </asp:TreeNode>
+                <asp:TreeNode Value="Aggregate" Text="Aggregate" NavigateUrl="~/reports/RouteUtilizationAgg.aspx" > </asp:TreeNode>
+    </asp:TreeNode>
+
+
+      
+
+        </asp:TreeNode>
+
+
+    <asp:TreeNode Value="Mediation" Expanded="True" Text="Mediation" SelectAction="None">
+      
+      <asp:TreeNode Value="Jobs" Text="Jobs" NavigateUrl="~/reports/Mediation.aspx" />
+      <asp:TreeNode Value="Error Calls" Text="Error Calls" NavigateUrl="~/reports/CdrError.aspx" > </asp:TreeNode>
+      <asp:TreeNode Value="Mediation Errors" Text="Mediation Errors" NavigateUrl="~/reports/MediationError.aspx" > </asp:TreeNode>
+      
+      <asp:TreeNode Value="Create Batch Job" Text="Create Batch Job" NavigateUrl="~/config/CreateBatchjob.aspx" />
+      <%--<asp:TreeNode Value="View Batch Job" Text="View Batch Job" NavigateUrl="~/reports/MediationBatch.aspx" />--%>
+
+    </asp:TreeNode>
+
+    
+
+    <asp:TreeNode Value="Settings" Expanded="False" Text="Settings"  SelectAction="None">
+      <asp:TreeNode Value="Operator Settings" Text="Operator Settings"  NavigateUrl="~/Settings/OperatorSettings.aspx" />
+      <asp:TreeNode Value="Switch Settings" Text="Switch Settings"  NavigateUrl="~/Settings/switchsettings.aspx" />
+      <asp:TreeNode Value="ANS KPI" Text="ANS KPI"  NavigateUrl="~/Settings/kpians.aspx" />
+      <asp:TreeNode Value="Country Codes & KPI" Text="Country Codes & KPI"  NavigateUrl="~/Settings/country.aspx" />
+      <asp:TreeNode Value="XYZ Prefix & KPI" Text="XYZ Prefix & KPI"  NavigateUrl="~/Settings/xyzprefix.aspx" />
+      <asp:TreeNode Value="XYZ Prefix Set" Text="XYZ Prefix Set"  NavigateUrl="~/Settings/xyzprefixset.aspx" />
+      <asp:TreeNode Value="Cause Codes" Text="Cause Codes"  NavigateUrl="~/Settings/CauseCode.aspx" />
+      <asp:TreeNode Value="Manage Users" Text="Manage Users (Admin Only)"  NavigateUrl="~/AccountAdmin/Register.aspx" />
+      
+      
+    </asp:TreeNode>
+
+    <asp:TreeNode Value="Report Templates" Expanded="True" Text="Report Templates" SelectAction="None">
+      <%--<asp:TreeNode Value="CDR Files" Text="CDR Files" NavigateUrl="~/reports/MediationProcess.aspx" />
+      <asp:TreeNode Value="History" Text="History" NavigateUrl="~/reports/MediationHistory.aspx" />--%>
+    </asp:TreeNode>
+
+  </Nodes>
+    <NodeStyle Font-Size="8pt" ForeColor="Black" 
+        HorizontalPadding="5px" NodeSpacing="0px" VerticalPadding="0px" 
+        Font-Names="Verdana" />
+    <ParentNodeStyle Font-Bold="False" />
+    <SelectedNodeStyle Font-Underline="True" HorizontalPadding="0px" 
+        VerticalPadding="0px" ForeColor="#5555DD" />
+</asp:TreeView>
+
+</div>
+
+
+
+           
+</div>
+
+            <div id="mainContent" style="position:relative;float:left;"> 
+              <div style="padding-right:50px;padding-top:100px;">
+                <asp:ContentPlaceHolder id="MainContent" runat="server"> 
+                </asp:ContentPlaceHolder>
+               </div>
+        </div> 
+        </div>
+        <div id="footerContent" style="padding-left:500px;text-align:left;">  
+  <p>
+ Copyright © 2015 Telcobright<br />
+All Rights Reserved</p>
+  </div>
+
+ </div>
+
+  
+ 
+ 
+    </form>
+</body>
+</html>

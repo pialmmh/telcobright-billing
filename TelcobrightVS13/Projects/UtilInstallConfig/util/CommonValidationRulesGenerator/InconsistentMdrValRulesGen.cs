@@ -28,7 +28,7 @@ namespace InstallConfig._CommonValidation
                 new StrIncomingRouteNotEmpty(),
                 
                 new StrOriginatingCalledNumberNotEmpty(),
-                new StrOriginatingCallingNumberNotEmpty(),
+                //new StrOriginatingCallingNumberNotEmpty(),
                 new StrDurationSecGtEq0(),
                 new StrStartTimeIsValidAndWithinLimit()
                 {
