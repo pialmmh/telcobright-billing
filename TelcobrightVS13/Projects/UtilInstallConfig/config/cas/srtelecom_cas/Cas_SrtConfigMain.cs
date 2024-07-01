@@ -55,6 +55,7 @@ namespace InstallConfig
             }
             this.Tbc.CdrSetting.NeWiseAdditionalSettings = neWiseAdditionalSettings;
             this.Tbc.CdrSetting.isTableDelete = true;
+            this.Tbc.CdrSetting.UnzipCompressedFiles = false;
             this.PrepareProductAndServiceConfiguration();
             this.Tbc.DatabaseSetting = this.GetDatabaseConfigs();
             this.Tbc.ApplicationServersConfig = this.GetServerConfigs();
