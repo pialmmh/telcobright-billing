@@ -177,6 +177,10 @@
       <Project>{ff350c55-2852-406c-930b-ae2938cceb91}</Project>
       <Name>TelcobrightInfra</Name>
     </ProjectReference>
+    <ProjectReference Include="..\_ImsiResolver\ImsiResolver.csproj">
+      <Project>{01073E9D-A776-462E-8B6D-118B3A3C2B41}</Project>
+      <Name>ImsiResolver</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
