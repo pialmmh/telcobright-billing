@@ -98,6 +98,9 @@ namespace Decoders
 
     public class Sccp
     {
+        [JsonProperty("sccp.return_cause")]
+        public string ReturnCause { get; set; }
+
         [JsonProperty("Called Party address")]
         public PartyAddress CalledPartyAddress { get; set; }
 

@@ -56,13 +56,18 @@ namespace Decoders
             List<string[]> tempRows = null;
 
             // only for sri smstype
-            if ((sriReqInstance.Any() && sriResInstance.Any()))
+            if ((sriReqInstance.Any() && sriResInstance.Any()) ||
+                (sriReqInstance.Any() && unknownInstance.Any())
+                )
             {
                 aggregationType = SmsType.Sri;
                 tempRows = sriReqInstance;
             } 
 
-            if ((mtReqInstance.Any() && mtResInstance.Any()))
+            if (
+                (mtReqInstance.Any() && mtResInstance.Any()) ||
+                (mtReqInstance.Any() && unknownInstance.Any())
+                )
             {
                 aggregationType = SmsType.Mt;
                 tempRows = mtReqInstance;
@@ -74,7 +79,7 @@ namespace Decoders
             }
 
 
-            bool aggregationComplete = false;
+           bool aggregationComplete = false;
             
             if (tempRows == null || !tempRows.Any())
             {
@@ -87,22 +92,53 @@ namespace Decoders
             //main aggregation
             if (aggregationType == SmsType.Sri)
             {
-                aggregatedRow[Sn.Imsi] = sriResInstance.Last()[Sn.Imsi];
-                aggregatedRow[Sn.Endtime] = sriResInstance.Last()[Sn.StartTime];
+                if (sriReqInstance.Any() && unknownInstance.Any() && !sriResInstance.Any())
+                {
+                    aggregatedRow[Sn.Imsi] = unknownInstance.Last()[Sn.Imsi];
+                    aggregatedRow[Sn.Endtime] = unknownInstance.Last()[Sn.StartTime];
+                    aggregatedRow[Sn.AggregationInfo] = unknownInstance.Last()[Sn.Filename]
+                                                        + ","
+                                                        + unknownInstance.Last()[Sn.PacketFrameTime];
+                }
+                else
+                {
+                    aggregatedRow[Sn.Imsi] = sriResInstance.Last()[Sn.Imsi];
+                    aggregatedRow[Sn.Endtime] = sriResInstance.Last()[Sn.StartTime];
+                    aggregatedRow[Sn.AggregationInfo] = sriResInstance.Last()[Sn.Filename]
+                                                        + ","
+                                                        + sriResInstance.Last()[Sn.PacketFrameTime];
+                }
                 aggregatedRow[Sn.ChargingStatus] = "1";
                 aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
             }
 
             if (aggregationType == SmsType.Mt)
             {
+                if (mtReqInstance.Any() && unknownInstance.Any() && !mtResInstance.Any())
+                {
+                    aggregatedRow[Sn.Endtime] = unknownInstance.Last()[Sn.StartTime];
+                    aggregatedRow[Sn.AggregationInfo] = unknownInstance.Last()[Sn.Filename]
+                                                        + ","
+                                                        + unknownInstance.Last()[Sn.PacketFrameTime];
+                }
+                else
+                {
+                    aggregatedRow[Sn.Endtime] = mtResInstance.Last()[Sn.StartTime];
+                    aggregatedRow[Sn.AggregationInfo] = mtResInstance.Last()[Sn.Filename]
+                                                        + ","
+                                                        + mtResInstance.Last()[Sn.PacketFrameTime];
+                }
+
                 aggregatedRow[Sn.ChargingStatus] = "1";
-                aggregatedRow[Sn.Endtime] = mtResInstance.Last()[Sn.StartTime];
                 aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
             }
 
             if (aggregationType == SmsType.ReturnError)
             {
                 aggregatedRow[Sn.Endtime] = retErrInstance.Last()[Sn.StartTime];
+                aggregatedRow[Sn.AggregationInfo] = retErrInstance.Last()[Sn.Filename]
+                                                    + ","
+                                                    + retErrInstance.Last()[Sn.PacketFrameTime];
                 aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
             }
 

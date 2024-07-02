@@ -239,6 +239,13 @@ namespace Decoders
             return parsedDate.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
+        string ParseAndFormatTimestampWtihMs(string timestamp)
+        {
+            timestamp = timestamp.Substring(0, timestamp.Length - 4);
+            DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime.AddHours(6);
+            return parsedDate.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
+        }
+
 
         public List<string[]> CdrRecords(List<SigtranPacket> packets)
         {
@@ -250,10 +257,15 @@ namespace Decoders
 
                 // gms layer
                 GsmMap gsmMapLayer = packet.GsmMap;
-                if (gsmMapLayer == null) return;
+
+                if (gsmMapLayer == null)
+                    return;
 
                 Frame frameLayer = packet.Frame;
-                string dateTime = ParseAndFormatTimestamp(frameLayer?.FrameTimeUtc.ToString());
+                string frameTime = frameLayer?.FrameTimeUtc.ToString();
+                string dateTime = ParseAndFormatTimestamp(frameTime);
+
+                record[Sn.PacketFrameTime] = ParseAndFormatTimestampWtihMs(frameTime);
                 record[Sn.StartTime] = dateTime;
                 record[Sn.AnswerTime] = dateTime;
 
@@ -323,7 +335,12 @@ namespace Decoders
                     // throw new Exception("OpCode tree local can not be null");
                 }
                 // excluding reportSM-DeliveryStatus
-                if (localValue == "47") return;
+                if (localValue == "47")
+                     return;
+
+                // exluding Udts
+                if (sccpLayer?.ReturnCause != null)
+                    return;
 
                 record[Sn.OptionalCode] = localValue;
 
@@ -412,19 +429,19 @@ namespace Decoders
                 startTime = startTime.Hour == 23 ? startTime.Date.AddDays(1) : startTime.Date;
                 string separator = "/";
 
-                string syscode ="5";
-                if (localValue == "44" || smsSystemcodes == "3")
-                {
-                    syscode = "3";
-                }
-                if (localValue == "45")
-                {
-                    syscode = "1";
-                }
+                //string syscode ="5";
+                //if (localValue == "44" || smsSystemcodes == "3")
+                //{
+                //    syscode = "3";
+                //}
+                //if (localValue == "45")
+                //{
+                //    syscode = "1";
+                //}
                 record[Sn.UniqueBillId] = new StringBuilder(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote())
                     .Append(separator)
-                    .Append(syscode)
-                    .Append(separator)
+                    //.Append(syscode)
+                    //.Append(separator)
                     .Append(string.Join("-", gtPair))
                     .Append(separator)
                     .Append(record[Sn.Codec]).ToString();

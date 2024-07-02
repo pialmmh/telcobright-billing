@@ -25,7 +25,7 @@ namespace Decoders.SigtranDecoderHelper
                     }
                 },
                 {"tcap", new List<string> {"tcap.tid", "tcap.otid", "tcap.oid"}},
-                {"sccp", new List<string> {"sccp.called.digits", "sccp.calling.digits", "sccp.ssn"}},
+                {"sccp", new List<string> { "sccp.return_cause", "sccp.called.digits", "sccp.calling.digits", "sccp.ssn"}},
                 {
                     "m3ua",
                     new List<string>
