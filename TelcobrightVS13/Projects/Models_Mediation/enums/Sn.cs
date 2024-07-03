@@ -63,11 +63,11 @@ namespace MediationModel
         public const int OutRoamingOpId = 58;
         public const int CalledpartyNOA = 59;
         public const int CallingPartyNOA = 60;
-        public const int AdditionalSystemCodes = 61;
+        public const int PacketFrameTime = Fn.AdditionalSystemCodes;
         public const int AdditionalPartyNumber = 62;
         public const int ResellerIds = 63;
         public const int ZAmount = 64;
-        public const int PreviousRoutes = 65;
+        public const int AggregationInfo = Fn.PreviousRoutes;
         public const int E1Id = 66;
         public const int Mediaip1 = 67;
         public const int Mediaip2 = 68;
