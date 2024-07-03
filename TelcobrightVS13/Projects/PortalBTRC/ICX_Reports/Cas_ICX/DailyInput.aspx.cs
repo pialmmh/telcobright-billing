@@ -317,7 +317,7 @@ namespace PortalApp.ICX_Reports.Cas_ICX
 			
 		                        left join
 		
-		                        (select tup_starttime tup_starttime1, sum(duration1)/60 intOut
+		                        (select tup_starttime tup_starttime1, sum(roundedduration)/60 intOut
 			                        from sum_voice_day_02 
 			                        where tup_starttime >= '{date1}' and tup_starttime < '{date2}' 
 			                        group by tup_starttime1
