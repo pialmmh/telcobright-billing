@@ -267,26 +267,14 @@ namespace Decoders.SigtranDecoderHelper
 
         static string ReplaceCurlyBracesInGsmSmsText(string chunk)
         {
-            string substring = "gsm_sms.sms_text";
-            int indexOfSubstring = chunk.IndexOf(substring);
-            if(indexOfSubstring == -1) return chunk; ;
-            int indexOfColon = chunk.IndexOf(':', indexOfSubstring + substring.Length);
-            int startIndex = indexOfColon + 3;
-            int endIndex = chunk.LastIndexOf("\"")-1;
-
-            if (startIndex >= 0 && endIndex < chunk.Length && startIndex <= endIndex)
+            string pattern = "\"gsm_sms\\.sms_text\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"";
+            return Regex.Replace(chunk, pattern, match =>
             {
-                // Create a substring from startIndex to endIndex inclusive
-                string substringToReplace = chunk.Substring(startIndex, endIndex - startIndex + 1);
+                string text = match.Groups[1].Value;
 
-                // Replace { and } within the substring
-                substringToReplace = substringToReplace.Replace("{", "STARTING_CURLY_BRACE").Replace("}", "ENDING_CURLY_BRACE");
-
-                // Construct the new message with the replaced substring
-                string newChunk = chunk.Substring(0, startIndex) + substringToReplace + chunk.Substring(endIndex + 1);
-                return newChunk;
-            }
-            return chunk;
+                text = text.Replace("{", "OPENING_CURLY_BRACES").Replace("}", "ENDING_CURLY_BRACES");
+                return $"\"gsm_sms.sms_text\": \"{text}\"";
+            });
         }
     }
 }
