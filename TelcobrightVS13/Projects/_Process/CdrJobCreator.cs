@@ -112,6 +112,10 @@ namespace Process
                             DateTime currentTime = DateTime.Now;
                             return (currentTime - f.CreationTime).TotalSeconds > minDurationToSkip;
                         }).ToList();
+                        fileInfos = fileInfos.Where(f =>
+                        {
+                            return !f.FullName.EndsWith(".predecoded");
+                        }).ToList();
 
                         Console.WriteLine(
                             $"Found {fileInfos.Count} cdr files in vault, excluding duplicates...");
