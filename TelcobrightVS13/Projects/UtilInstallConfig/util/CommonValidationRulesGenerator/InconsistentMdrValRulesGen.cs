@@ -25,7 +25,7 @@ namespace InstallConfig._CommonValidation
             {
                 new StrUniqueBillidNotEmpty(),
                 //new StrSeqNumGreaterThanZero(),
-                new StrIncomingRouteNotEmpty(),
+                //new StrIncomingRouteNotEmpty(),
                 
                 new StrOriginatingCalledNumberNotEmpty(),
                 //new StrOriginatingCallingNumberNotEmpty(),

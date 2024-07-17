@@ -20,71 +20,6 @@ using TelcobrightMediation;
 
 namespace Decoders
 {
-    static class NativeMethods
-    {
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr LoadLibrary(string dllToLoad);
-
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
-
-        [DllImport("kernel32.dll")]
-        public static extern bool FreeLibrary(IntPtr hModule);
-    }
-
-    public class JsonStringBuilderParser
-    {
-        public static List<JObject> ParseJsonArray(StringBuilder stringBuilder)
-        {
-            using (var jsonReader = new JsonTextReader(new StringBuilderReader(stringBuilder)))
-            {
-                jsonReader.SupportMultipleContent = true;
-                var serializer = new JsonSerializer();
-                var list = new List<JObject>();
-
-                while (jsonReader.Read())
-                {
-                    if (jsonReader.TokenType == JsonToken.StartObject)
-                    {
-                        JObject obj = serializer.Deserialize<JObject>(jsonReader);
-                        list.Add(obj);
-                    }
-                }
-
-                return list;
-            }
-        }
-
-        // Custom StringReader implementation for StringBuilder
-        private class StringBuilderReader : TextReader
-        {
-            private StringBuilder _stringBuilder;
-            private int _position;
-
-            public StringBuilderReader(StringBuilder stringBuilder)
-            {
-                _stringBuilder = stringBuilder;
-                _position = 0;
-            }
-
-            public override int Read()
-            {
-                if (_position >= _stringBuilder.Length)
-                    return -1;
-                else
-                    return _stringBuilder[_position++];
-            }
-
-            public override int Peek()
-            {
-                if (_position >= _stringBuilder.Length)
-                    return -1;
-                else
-                    return _stringBuilder[_position];
-            }
-        }
-    }
-
     class SigtranPacketDecoder
     {
         private string PcapFileName { get; set; }
@@ -118,120 +53,36 @@ namespace Decoders
         }
 
 
-        List<JObject> DecodePacket()
+        public List<SigtranPacket> DecodePackets()
         {
             Process senderProcess = new Process();
             senderProcess.StartInfo.FileName = TSharkExe;
-            senderProcess.StartInfo.Arguments = PcapFileName;
+            senderProcess.StartInfo.Arguments = this.PcapFileName;
             senderProcess.StartInfo.UseShellExecute = false;
             //senderProcess.StartInfo.RedirectStandardOutput = true;
             senderProcess.StartInfo.CreateNoWindow = true;
             senderProcess.Start();
             senderProcess.WaitForExit();
-            var data = JsonStringReader.ReadJsonObjects(filePath);
-            var objectList = JsonStringReader.ParseJsonStrings(data);
-            return objectList;
+            List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(this.filePath);
+            return data;
         }
 
-        public List<SigtranPacket> GetPackets()
-        {
-            List<JObject> packetList = DecodePacket();
-            packetList = GetNewJObjectList(packetList);
-            List<SigtranPacket> sigtranPackets =
-                packetList.Select(packet => packet.ToObject<SigtranPacket>()).ToList();
-
-            return sigtranPackets;
-        }
-        private static List<KeyValuePair<string, JToken>> GetKeyValuePairs(JObject jsonObject, string parentKey = "")
-        {
-            List<KeyValuePair<string, JToken>> pairs = new List<KeyValuePair<string, JToken>>();
-            foreach (var property in jsonObject.Properties())
-            {
-                string key = property.Name;
-                JToken value = property.Value;
-                bool isJbject = value is JObject;
-                if (isJbject)
-                {
-                    var nestedObject = (JObject)value;
-                    if (DoesKeyMatchProperty(key))
-                    {
-                        parentKey = key;
-                    }
-                    pairs.AddRange(GetKeyValuePairs(nestedObject, parentKey));
-                }
-                else
-                {
-                    if (parentKey != "")
-                    {
-                        pairs.Add(new KeyValuePair<string, JToken>(parentKey + "," + key, value));
-                    }
-                    else
-                    {
-                        pairs.Add(new KeyValuePair<string, JToken>(key, value));
-                    }
-                }
-            }
-            return pairs;
-        }
-
-        public static bool DoesKeyMatchProperty(string key)
-        {
-            var properties = typeof(SigtranPacket).GetProperties();
-
-            foreach (var property in properties)
-            {
-                var attribute = property.GetCustomAttributes(typeof(JsonPropertyAttribute), true)
-                                       .FirstOrDefault() as JsonPropertyAttribute;
-
-                if (attribute != null && attribute.PropertyName == key)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        static JObject GetNewJObject(List<KeyValuePair<string, JToken>> keyValuePairs)
-        {
-            JObject packet = new JObject();
-            foreach (var pair in keyValuePairs)
-            {
-                string[] keys = pair.Key.Split(',');
-                string parentKey = keys[0];
-                if (keys.Length > 1)
-                {
-                    if (packet[parentKey] == null)
-                    {
-                        packet[parentKey] = new JObject();
-                    }
-                    packet[parentKey][keys[1]] = pair.Value;
-                }
-                else
-                {
-                    packet[parentKey] = pair.Value;
-                }
-            }
-            return packet;
-        }
+        //List<JObject> DecodePackets()
+        //{
+        //    Process senderProcess = new Process();
+        //    senderProcess.StartInfo.FileName = TSharkExe;
+        //    senderProcess.StartInfo.Arguments = PcapFileName;                                                                                                                                                                                                                                                                                                                                                                                                                                     
+        //    senderProcess.StartInfo.UseShellExecute = false;
+        //    senderProcess.StartInfo.RedirectStandardOutput = true;
+        //    senderProcess.StartInfo.CreateNoWindow = true;
+        //    senderProcess.Start();
+        //    senderProcess.WaitForExit();
+        //    var data = JsonStringReader.ReadJsonObjects(filePath);
+        //    var objectList = JsonStringReader.ParseJsonStrings(data);
+        //    return objectList;
+        //}
 
 
-        private static List<JObject> GetNewJObjectList(List<JObject> packets)
-        {
-            ConcurrentBag<JObject> packetBag = new ConcurrentBag<JObject>();
-
-            Parallel.ForEach(packets.Cast<JObject>(), packet =>
-            {
-                packetBag.Add(CustomJObjectParser.GetCustomJObject(packet));
-            });
-
-            //Parallel.ForEach(packets.Cast<JObject>(), packet =>
-            //{
-            //    packetBag.Add(GetNewJObject(GetKeyValuePairs(packet)));
-            //});
-
-            return packetBag.ToList();
-        }
         string ParseAndFormatTimestamp(string timestamp)
         {
             timestamp = timestamp.Substring(0, timestamp.Length - 4);
@@ -276,26 +127,27 @@ namespace Decoders
                 //record[Sn.TerminatingIp] = packet.Ip?.DstIp?.ToString();
 
                 // sctp layer
-                Sctp sctpLayer = packet.Sctp;
-                record[Sn.IncomingRoute] = sctpLayer?.SrcPort.ToString();
-                record[Sn.OutgoingRoute] = sctpLayer?.DstPort.ToString();
+                //Sctp sctpLayer = packet.Sctp;
+                //record[Sn.IncomingRoute] = sctpLayer?.SrcPort.ToString();
+                //record[Sn.OutgoingRoute] = sctpLayer?.DstPort.ToString();
 
-                // m3ua layer
+                //m3ua layer
                 M3ua m3UaLayer = packet.M3Ua;
                 Mtp3Equivalents mtp3Equ = m3UaLayer.ProtocolData.Mtp3Equivalents;
                 string opc = mtp3Equ?.Opc.ToString();
 
-                bool isOpcContained = this.opcList.Any(x => opc != null && opc.Contains(x));
+                //bool isOpcContained = this.opcList.Any(x => opc != null && opc.Contains(x));
 
-                if (!isOpcContained)
-                    return;
+                //if (!isOpcContained)
+                //    return;
 
                 record[Sn.Opc] = opc;
                 record[Sn.Dpc] = mtp3Equ?.Dpc.ToString();
-                record[Sn.ReleaseDirection] = m3UaLayer?.RoutingContext?.RoutingContextValue.ToString();
-                record[Sn.Connectednumbertype] = m3UaLayer.ProtocolData?.ProtocolDataSi.ToString();
-                record[Sn.IdCall] = mtp3Equ?.Ni.ToString();
-                record[Sn.Sequencenumber] = mtp3Equ?.Sls.ToString();
+                //record[Sn.ReleaseDirection] = m3UaLayer?.RoutingContext?.RoutingContextValue.ToString();
+                //record[Sn.Connectednumbertype] = m3UaLayer.ProtocolData?.ProtocolDataSi.ToString();
+                //record[Sn.IdCall] = mtp3Equ?.Ni.ToString();
+                //record[Sn.Sequencenumber] = mtp3Equ?.Sls.ToString();
+                record[Sn.Sequencenumber] = "0";
 
                 Sccp sccpLayer = packet.Sccp;
                 record[Sn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CallingDigits?.ToString();
@@ -324,39 +176,39 @@ namespace Decoders
 
                 // gsm sms
                 GsmSms gsmSmsLayer = packet.GsmSms;
-                record[Sn.Message] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
+                //record[Sn.Message] = gsmSmsLayer?.TpUserData?.SmsText?.ToString().EncodeToBase64();
 
                 ComponentTree componentTree = gsmMapLayer.ComponentTree;
-                string localValue = componentTree?.InvokeElement?.OpCodeTree?.LocalValue ??
+                string smsTypeIdentifier = componentTree?.InvokeElement?.OpCodeTree?.LocalValue ??
                                     componentTree?.ReturnResultLastElement?.ResultretresElement?.OpCodeTree?.LocalValue;
 
-                if (localValue == null)
+                if (smsTypeIdentifier == null)
                 {
                     // throw new Exception("OpCode tree local can not be null");
                 }
                 // excluding reportSM-DeliveryStatus
-                if (localValue == "47")
+                if (smsTypeIdentifier == "47")
                      return;
 
                 // exluding Udts
                 if (sccpLayer?.ReturnCause != null)
                     return;
 
-                record[Sn.OptionalCode] = localValue;
+                record[Sn.OptionalCode] = smsTypeIdentifier;
 
                 //gsm_map.old.Component
-                string smsSystemcodes = gsmMapLayer.OldComponent?.ToString();
+                string reqResIdentifier = gsmMapLayer.OldComponent?.ToString();
 
-                string tempSystemCodes = new StringBuilder(smsSystemcodes)
+                string tempSystemCodes = new StringBuilder(reqResIdentifier)
                     .Append(":")
-                    .Append(localValue).ToString();
+                    .Append(smsTypeIdentifier).ToString();
 
                 // combination of gsm_map.old.Component and gsm_old.localValue
                 SmsType systemCodes = SmsType.None;
                 systemCodes = this.causeCodes.TryGetValue(tempSystemCodes, out systemCodes) ? systemCodes : SmsType.None;
 
                 // Sms Type ReturnError
-                if (smsSystemcodes == "3" && systemCodes == SmsType.None)
+                if (reqResIdentifier == "3" && systemCodes == SmsType.None)
                 {
                     record[Sn.SmsType] = "5";
                 }
@@ -370,7 +222,7 @@ namespace Decoders
 
                 string imsi = componentTreeInvokeElement?.ImsiTree?.Imsi?.ToString();
 
-                // imsi, A Party,B Party
+               // imsi, A Party,B Party
                 if (systemCodes == SmsType.Sri)
                 {
                     // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
@@ -410,6 +262,29 @@ namespace Decoders
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "6";
+                }
+                // unkonwn instances
+                if ((record[Sn.SmsType] == null || record[Sn.SmsType] == "") && reqResIdentifier == "2")
+                {
+                    if ((bool)!componentTreeReturnResultLastElement?.Imsi.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        // sri response
+                        imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
+                        record[Sn.TerminatingCalledNumber] = calledNumber;
+
+                        // actual caller number
+                        callerNumber = componentTreeReturnResultLastElement?.LocationInfoWithLmsiElement?.SriResCallerTree?.Msisdn?.ToString();
+                        record[Sn.TerminatingCallingNumber] = callerNumber;
+                        record[Sn.Imsi] = imsi;
+                        record[Sn.SmsType] = "2";
+                    }
+                    else
+                    {
+                        // mt response 
+                        record[Sn.TerminatingCallingNumber] = callerNumber;
+                        record[Sn.Imsi] = imsi;
+                        record[Sn.SmsType] = "4";
+                    }
                 }
 
                 string outPartnerId = getPartneridByGtPrefix(record[Sn.OriginatingCalledNumber]).ToString();

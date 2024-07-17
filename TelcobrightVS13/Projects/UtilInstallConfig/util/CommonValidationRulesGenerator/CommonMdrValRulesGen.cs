@@ -28,7 +28,7 @@ namespace InstallConfig._CommonValidation
                 new UniqueBillIdNonEmpty(),
                 //new SeqNumGreaterThanZero(),
                 new PartialFlagGtEq0(),
-                new IncomingRouteNotEmpty(),
+                //new IncomingRouteNotEmpty(),
                 new OriginatingCalledNumberNotEmpty(),
                 new DurationSecGtEq0(),
                 new StartTimeIsValidAndWithinLimit()

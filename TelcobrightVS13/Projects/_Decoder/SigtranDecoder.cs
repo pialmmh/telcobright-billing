@@ -43,7 +43,7 @@ namespace Decoders
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodeRows = new List<string[]>();
             SigtranPacketDecoder decoder = new SigtranPacketDecoder(filePath,ansPrefixes);
-            List<SigtranPacket> packets = decoder.GetPackets();
+            List<SigtranPacket> packets = decoder.DecodePackets();
             decodeRows = decoder.CdrRecords(packets);
             return decodeRows;
         }
