@@ -34,17 +34,12 @@ namespace Decoders
             return dateTime;
         }
 
-        public override List<string[]> DecodeFile(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs)
+        public virtual List<string[]> DecodeLines(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string fileName, List<string[]> lines)
         {
             this.Input = input;
-            string fileName = this.Input.FullPath;
-            string str = File.ReadAllText(fileName);
-            List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 0, "\"", ";");
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodedRows = new List<string[]>();
-            //this.Input = input;
             List<cdrfieldmappingbyswitchtype> fieldMappings = null;
-
             int receivedRowCount = 0;
             int foundRowCount = 0;
             try
@@ -62,6 +57,7 @@ namespace Decoders
                     
                     }
                     foundRowCount++;
+                    if(lineAsArr.Length==1)continue;
 
                     string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
                     if (chargingStatus != "1") continue;
@@ -154,6 +150,11 @@ namespace Decoders
             //    throw new Exception("Received Row count Does not matched with found row count!");
             //}
      }
+
+        public override List<string[]> DecodeFile(CdrCollectorInputData decoderInputData, out List<cdrinconsistent> inconsistentCdrs)
+        {
+            throw new NotImplementedException();
+        }
 
         public override string getTupleExpression(Object data)
         {
