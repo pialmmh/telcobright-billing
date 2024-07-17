@@ -125,7 +125,9 @@
     <Compile Include="HuaweiSoftx3000DecoderBntel.cs" />
     <Compile Include="HuaweiSoftx3000DecoderBtcl.cs" />
     <Compile Include="SigtranDecoder.cs" />
-    <Compile Include="SigtranDecoderHelper\CollectionOfClasses.cs" />
+    <Compile Include="SigtranDecoderHelper\JsonToSigtranPacket.cs" />
+    <Compile Include="SigtranDecoderHelper\Packet.cs" />
+    <Compile Include="SigtranDecoderHelper\SigtranPacket.cs" />
     <Compile Include="SigtranDecoderHelper\CustomJObjectParser.cs" />
     <Compile Include="SigtranDecoderHelper\JsonStringReader.cs" />
     <Compile Include="SigtranDecoderHelper\SigtranPacketDecoder.cs" />
