@@ -37,9 +37,10 @@ namespace Decoders.SigtranDecoderHelper
                 }
             }
             json = ReplaceCurlyBracesInGsmSmsText(json);
-            File.WriteAllText("telco_2.bin", json);
+
             List<string> packetStrs = ExtractPackets(json);
 
+            File.Delete(filePath);
             //List<JObject> packets_1 = packetStrs.AsParallel().Select(s => JObject.Parse(s))
             //    .ToList();
 
@@ -97,7 +98,7 @@ namespace Decoders.SigtranDecoderHelper
                         {
                             Frame = new Frame
                             {
-                                FrameTimeUtc = l.FrameTimeUtc[0]
+                                FrameTimeUtc =  l.FrameTimeUtc != null && l.FrameTimeUtc.Length > 0 ? l.FrameTimeUtc[0] : null,
                             },
                             M3Ua = new M3ua
                             {

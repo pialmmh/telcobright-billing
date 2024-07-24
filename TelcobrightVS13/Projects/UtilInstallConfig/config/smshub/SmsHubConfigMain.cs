@@ -85,6 +85,11 @@ namespace InstallConfig
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = false,
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
+                SkipSettingsForSummaryOnly = new SkipSettingsForSummaryOnly
+                {
+                    SkipChargeable = true,
+                    SkipTransaction = true,
+                },
                 useSmsHubProcessing = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
@@ -95,7 +100,7 @@ namespace InstallConfig
                         PreDecodeAsTextFile = false,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 100000,
-                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        MaxNumberOfFilesInPreDecodedDirectory = 20,
                         CreateJobRecursively = true,
                         AggregationStyle = "telcobridge",
                         //AggregationStyle = null,
@@ -103,7 +108,7 @@ namespace InstallConfig
                         {
                             new CdrPredecoder()
                             {
-                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "100"}},
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
                                 ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
                             }
                         }

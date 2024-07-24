@@ -63,7 +63,7 @@ namespace Decoders
             senderProcess.StartInfo.CreateNoWindow = true;
             senderProcess.Start();
             senderProcess.WaitForExit();
-            List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(this.filePath);
+            List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(this.PcapFileName.Replace(".pcap.gz",".json"));
             return data;
         }
 

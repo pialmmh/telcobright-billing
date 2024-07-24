@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/borak1",
+                StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/borak1",
                 User = "",
                 Pass = "",
             };
@@ -57,7 +57,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/borak2",
+                StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/borak2",
                 User = "",
                 Pass = "",
             };
@@ -68,7 +68,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/khaja1",
+                StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/khaja1",
                 User = "",
                 Pass = "",
             };
@@ -79,7 +79,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic/khaja2",
+                StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/khaja2",
                 User = "",
                 Pass = "",
             };
@@ -91,7 +91,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "C:/telcobright/Vault/Resources/cdr/dialogic",
+                StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic",
                 User = "",
                 Pass = "",
             };
@@ -146,7 +146,8 @@ namespace InstallConfig
                     PrefixForUniqueName = "",
                     RecursiveFileStore=true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
+                    CompressionType = CompressionType.None,
+                    MaxDownloadedFromFtp = 10
                 }
             };
 
@@ -191,8 +192,10 @@ namespace InstallConfig
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
                     PrefixForUniqueName = "",
+                    RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
+                    CompressionType = CompressionType.None,
+                    MaxDownloadedFromFtp = 10
                 }
             };
 
@@ -236,8 +239,10 @@ namespace InstallConfig
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
                     PrefixForUniqueName = "",
+                    RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
+                    CompressionType = CompressionType.None,
+                    MaxDownloadedFromFtp = 10
                 }
             };
 
@@ -281,8 +286,10 @@ namespace InstallConfig
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
                     PrefixForUniqueName = "",
+                    RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
+                    CompressionType = CompressionType.None,
+                    MaxDownloadedFromFtp = 10
                 }
             };
 

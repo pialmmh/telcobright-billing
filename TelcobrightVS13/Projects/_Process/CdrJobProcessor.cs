@@ -261,6 +261,10 @@ namespace Process
                                             if (!mergedJobErrors.Any())
                                             {
                                                 UpdateJobWithErrorInfo(cmd, job, e);
+                                                if (cdrSetting.useSmsHubProcessing)
+                                                {
+                                                    UpdateFileCopyJobStatusToReDownload(cmd, job);
+                                                }
                                             }
                                             else
                                             {
@@ -408,6 +412,19 @@ namespace Process
                               Environment.NewLine + (e.InnerException?.ToString().Replace("'", "") ?? "")
                               + "' " + " where id=" + jobid + ";commit;";
             cmd.ExecuteNonQuery();
+        }
+        private static void UpdateFileCopyJobStatusToReDownload(DbCommand cmd, job telcobrightJob)
+        {
+            string node = telcobrightJob.JobName.Split('/')[0];
+            string syncPairName = node + ":Vault-";
+            node = node + "/";
+
+            string fileCopyJobname = telcobrightJob.JobName.Replace(node, syncPairName);
+
+            cmd.CommandText = $" update job set status=6,CompletionTime=null where idjobdefinition=6 and status=1 and jobname='" +
+            fileCopyJobname +"';commit;";
+            cmd.ExecuteNonQuery();
+
         }
 
         bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext)
