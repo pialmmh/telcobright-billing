@@ -43,6 +43,14 @@ namespace Process
                 schedulerContext, operatorName);
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("syncPair")];
+            
+            List<FileInfo> fileInfos = new List<FileInfo>();
+            new DirectoryLister().ListLocalFileRecursive(syncPair.DstSyncLocation.FileLocation.StartingPath, fileInfos);
+            if (fileInfos.Count > syncPair.DstSettings.MaxDownloadedFromFtp)
+            {
+                return ;
+            }
+
             if (syncPair.SkipCopyingToDestination == true) return;
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
             using (PartnerEntities context = new PartnerEntities(entityConStr))

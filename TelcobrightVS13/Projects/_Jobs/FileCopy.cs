@@ -64,14 +64,6 @@ namespace Jobs
             SyncPair syncPair = input.Tbc.DirectorySettings.SyncPairs[paramFileCopy.SyncPairName];
             SyncLocation srcLocation = syncPair.SrcSyncLocation;
             SyncLocation dstLocation = syncPair.DstSyncLocation;
-            
-            List<FileInfo> fileInfos= new List<FileInfo>();
-            new DirectoryLister().ListLocalFileRecursive(dstLocation.FileLocation.StartingPath, fileInfos);
-            if (fileInfos.Count > syncPair.DstSettings.MaxDownloadedFromFtp)
-            {
-                return JobCompletionStatus.Incomplete;
-            }
-
             SyncSettingsSource syncSettingSrc = syncPair.SrcSettings;
             SyncSettingsDest syncSettingDst = syncPair.DstSettings;
             CompressionType compType = syncPair.DstSettings.CompressionType;
