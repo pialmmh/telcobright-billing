@@ -104,7 +104,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MdrPredecoder.cs" />
     <Compile Include="CdrPredecoder.cs" />
+    <Compile Include="PredecoderOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

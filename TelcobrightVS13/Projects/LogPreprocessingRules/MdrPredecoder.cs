@@ -29,7 +29,7 @@ using TelcobrightMediation.Mediation.Cdr;
 
 namespace LogPreProcessor
 {
-    class ThreadSafeCdrPredecoder
+    class ThreadSafeMdrPredecoder
     {
         public CdrJobInputData CdrJobInputData { get; set; }
         public PartnerEntities PartnerEntitiesNewInstance { get; set; }
@@ -37,7 +37,7 @@ namespace LogPreProcessor
         public string PredecodedFileName { get; set; }
         public string PredecodedDirName { get; set; }
 
-        public ThreadSafeCdrPredecoder(CdrJobInputData cdrJobInputData, PartnerEntities partnerEntitiesNewInstance, ITelcobrightJob newCdrFileJobNewInstance, string predecodedFileName, string predecodedDirName)
+        public ThreadSafeMdrPredecoder(CdrJobInputData cdrJobInputData, PartnerEntities partnerEntitiesNewInstance, ITelcobrightJob newCdrFileJobNewInstance, string predecodedFileName, string predecodedDirName)
         {
             CdrJobInputData = cdrJobInputData;
             PartnerEntitiesNewInstance = partnerEntitiesNewInstance;
@@ -62,7 +62,7 @@ namespace LogPreProcessor
                     (NewCdrPreProcessor)this.NewCdrFileJobNewInstance.PreprocessJob(preProcessorInput); //EXECUTE preDecoding
                 long originalCdrFileSize = newCdrPreProcessor.OriginalCdrFileSize;
                 List<string[]> txtRows = newCdrPreProcessor.TxtCdrRows;
-
+                //output.DateRange
                 List<string[]> cdrInconsistents = newCdrPreProcessor.OriginalCdrinconsistents
                     .Select(c => CdrConversionUtil.ConvertCdrinconsistentToTxtRow(c, this.CdrJobInputData.MediationContext.TotalFieldTelcobright)).ToList();
                 txtRows.AddRange(cdrInconsistents);
@@ -70,6 +70,34 @@ namespace LogPreProcessor
                     txtRows.Select(row => string.Join(",",
                             row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray()))
                         .ToList();
+
+                Dictionary<string, List<string[]>> multipleFileDictionary = new Dictionary<string, List<string[]>>();
+
+
+                for (int i = 1; i <= 500; i++)
+                {
+                    multipleFileDictionary.Add(this.PredecodedFileName + i, txtRows);            
+                }
+                List<string[]> multipleFileList = new List<string[]>();
+
+                foreach (var m in multipleFileDictionary)
+                {
+                    multipleFileList.AddRange(m.Value);
+                }
+                IEnumerable<IGrouping<string, string[]>> groupedData =  multipleFileList.GroupBy(r => r[Sn.UniqueBillId]);
+                int df = 0;
+
+                foreach (var group in groupedData)
+                {
+                    //Console.WriteLine($"Key: {group.Key}");
+                    df++;
+                    foreach (var values in group)
+                    {
+                        //Console.WriteLine($"  Values: {string.Join(", ", values.Select(v => string.Join(", ", v)))}");
+                    }
+                }
+                Console.WriteLine(df);
+
                 File.WriteAllLines(this.PredecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
                 FileInfo predecodedFileInfo = new FileInfo(this.PredecodedFileName);
                 //if (originalCdrFileSize > 0)
@@ -89,11 +117,34 @@ namespace LogPreProcessor
                 output.WrittenFileSize = predecodedFileInfo.Length;
                 output.FailedJob = null;
                 output.ExceptionMessage = "";
+
+                DateTime maxDateTime = DateTime.MinValue;
+                DateTime minDateTime = DateTime.MaxValue;
+                List<DateTime> dates = txtRows.AsParallel().Select(r => r[Sn.StartTime].ConvertToDateTimeFromMySqlFormat()).ToList();
+                foreach (var date in dates)
+                {
+                    if (date > maxDateTime)
+                    {
+                        maxDateTime = date;
+                    }
+                    if (date < minDateTime)
+                    {
+                        minDateTime = date;
+                    }
+                }
+
+                output.DateRange = new DateRange(minDateTime, maxDateTime);
+
                 this.PartnerEntitiesNewInstance.Database.Connection.Close();
                 return output;
             }
             catch (Exception e)
             {
+                if (e.ToString().Contains("Could not get exclusive lock on file before decoding"))
+                {
+                    UpdateFileCopyJobStatusToReDownload(this.PartnerEntitiesNewInstance.Database.Connection.CreateCommand(),this.CdrJobInputData.Job);
+                }
+                this.PartnerEntitiesNewInstance.Database.Connection.CreateCommand();
                 this.PartnerEntitiesNewInstance.Database.Connection.Close();
                 Console.WriteLine(e);
                 output.FailedJob = this.CdrJobInputData.Job;
@@ -102,10 +153,23 @@ namespace LogPreProcessor
                 return output;
             }
         }
+        private void UpdateFileCopyJobStatusToReDownload(DbCommand cmd, job telcobrightJob)
+        {
+            string node = telcobrightJob.JobName.Split('/')[0];
+            string syncPairName = node + ":Vault-";
+            node = node + "/";
+
+            string fileCopyJobname = telcobrightJob.JobName.Replace(node, syncPairName);
+
+            cmd.CommandText = $" update job set status=6,CompletionTime=null where idjobdefinition=6 and status=1 and jobname='" +
+                              fileCopyJobname + "';commit;";
+            cmd.ExecuteNonQuery();
+
+        }
     }
 
     [Export("LogPreprocessor", typeof(EventPreprocessingRule))]
-    public class CdrPredecoder : EventPreprocessingRule
+    public class MdrPredecoder : EventPreprocessingRule
     {
         public override string ToString()
         {
@@ -168,7 +232,7 @@ namespace LogPreProcessor
                 var enumerable = segment as job[] ?? segment.ToArray();
                 var successResult = new BlockingCollection<PredecoderOutput>();
                 var failedResults = new BlockingCollection<PredecoderOutput>();
-                List<ThreadSafeCdrPredecoder> threadSafePredecoders =
+                List<ThreadSafeMdrPredecoder> threadSafePredecoders =
                     prepareThreadSafePreDecoders(mediationContext, thisSwitch, tbc, context, newCdrFileJob, enumerable);
 
                 //no need for try catch, handled within preDecodeFile();
@@ -217,7 +281,7 @@ namespace LogPreProcessor
                 }
             }
         }
-
+       
         private void updateFailedJobs(ne thisSwitch, PartnerEntities context, DbCommand cmd, BlockingCollection<PredecoderOutput> failedResults,
             TelcobrightConfig tbc)
         {
@@ -268,7 +332,7 @@ namespace LogPreProcessor
             {
                 try
                 {
-                    cmd.CommandText = $" update job set status=2, Error=null where id={result.SuccessfulJob.id}";
+                    cmd.CommandText = $" update job set status=2, Error=null,JobState ='{result.DateRange.ToString()}' where id={result.SuccessfulJob.id}";
                     cmd.ExecuteNonQuery();
                 }
                 catch (Exception e)
@@ -304,23 +368,23 @@ namespace LogPreProcessor
                 context.Database.Connection.Open();
         }
 
-        private List<ThreadSafeCdrPredecoder> prepareThreadSafePreDecoders(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob, job[] enumerable)
+        private List<ThreadSafeMdrPredecoder> prepareThreadSafePreDecoders(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, PartnerEntities context, ITelcobrightJob newCdrFileJob, job[] enumerable)
         {
-            List<ThreadSafeCdrPredecoder> threadSafePredecoders = new List<ThreadSafeCdrPredecoder>();
+            List<ThreadSafeMdrPredecoder> threadSafePredecoders = new List<ThreadSafeMdrPredecoder>();
             foreach (var job in enumerable)
             {
-                ThreadSafeCdrPredecoder ThreadSafeCdrPredecoder = preparePreDecoderInput(mediationContext, thisSwitch,
+                ThreadSafeMdrPredecoder threadSafeMdrPredecoder = preparePreDecoderInput(mediationContext, thisSwitch,
                     tbc, context,
                     newCdrFileJob, job);
-                if (!Directory.Exists(ThreadSafeCdrPredecoder.PredecodedDirName))
-                    Directory.CreateDirectory(ThreadSafeCdrPredecoder.PredecodedDirName);
-                threadSafePredecoders.Add(ThreadSafeCdrPredecoder);
+                if (!Directory.Exists(threadSafeMdrPredecoder.PredecodedDirName))
+                    Directory.CreateDirectory(threadSafeMdrPredecoder.PredecodedDirName);
+                threadSafePredecoders.Add(threadSafeMdrPredecoder);
             }
 
             return threadSafePredecoders;
         }
 
-        private ThreadSafeCdrPredecoder preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, 
+        private ThreadSafeMdrPredecoder preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, 
             PartnerEntities context, ITelcobrightJob newCdrFileJob, job job)
         {
             var cdrJobInputData = new CdrJobInputData(mediationContext, context, thisSwitch, job);
@@ -334,7 +398,7 @@ namespace LogPreProcessor
                 out predecodedFileName);
             if (!Directory.Exists(predecodedDirName))
                 Directory.CreateDirectory(predecodedDirName);
-            ThreadSafeCdrPredecoder ThreadSafeCdrPredecoder = new ThreadSafeCdrPredecoder
+            ThreadSafeMdrPredecoder threadSafeMdrPredecoder = new ThreadSafeMdrPredecoder
             (
                 cdrJobInputData,
                 partnerEntitiesNewInstance,
@@ -342,7 +406,7 @@ namespace LogPreProcessor
                 predecodedFileName,
                 predecodedDirName
             );
-            return ThreadSafeCdrPredecoder;
+            return threadSafeMdrPredecoder;
         }
 
         private static void cleanUpAlreadyFinishedButRemainingPredecodedFiles(ne thisSwitch, TelcobrightConfig tbc,
