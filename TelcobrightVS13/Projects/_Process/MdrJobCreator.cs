@@ -56,47 +56,6 @@ namespace Process
                         string vaultPath = fileLocation.StartingPath;
                         DirectoryLister dirlister = new DirectoryLister();
 
-
-                        //DirectoryInfo tempDir = new DirectoryInfo(Path.Combine(vaultPath, "temp"));
-
-                        //if (cdrSetting.useCasStyleProcessing)
-                        //{
-                        //    if (Directory.Exists(tempDir.FullName) == false)
-                        //    {
-                        //        Directory.CreateDirectory(tempDir.FullName);
-                        //    }
-                        //    new CompressedFileHelperForVault(new List<string>()).MoveToOriginalPath(tempDir);
-
-                        //    VaultFileMover vaultFileMover = new VaultFileMover(new List<string> { thisSwitch.CDRPrefix }, thisSwitch.FileExtension, vaultPath);
-                        //    // vaultFileMover.moveFiles(vaultPath, vaultFileMover.AllFileInfos);
-                        //}
-
-
-                        //if (cdrSetting.UnzipCompressedFiles == true)
-                        //{
-                        //    List<string> extensions = new List<string> { ".zip", ".gz", ".tar.Z", ".rar", "7z", ".tgz" };
-                        //    List<FileInfo> zipFiles = dirlister.ListLocalDirectoryZipfileNonRecursive(vaultPath, extensions);
-
-                        //    if (zipFiles.Count > 0)
-                        //    {
-                        //        Console.WriteLine($"Found {zipFiles.Count} zip files. Unzipping ...");
-                        //        foreach (FileInfo compressedFile in zipFiles)
-                        //        {
-                        //            if (new FileAndPathHelperMutable().IsFileLockedOrBeingWritten(compressedFile))
-                        //                continue;
-
-                        //            CompressedFileHelperForVault compressedFileHelper =
-                        //                new CompressedFileHelperForVault(new List<string> { thisSwitch.FileExtension }, vaultPath, tempDir.FullName);
-                        //            compressedFileHelper.ExtractToTempDir(compressedFile.FullName, context.Database.Connection.ConnectionString);
-
-                        //            //code reaching here means extraction successful, exceptions will not hit this and file will be kept
-                        //            compressedFile
-                        //                .Delete();
-                        //            compressedFileHelper.MoveToOriginalPath(tempDir);
-                        //        }
-                        //    }
-                        //}
-
                         List<string> validFilePrefixes =
                             thisSwitch.CDRPrefix.Split(',').Select(s => s.Trim()).ToList();
 
@@ -250,10 +209,13 @@ namespace Process
                                 templist.Add(fileInfo);
                             }
                         }
+                        
+
                         fileInfos = templist;
                         //**************
-                        if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
-                            fileInfos = fileInfos.OrderByDescending(c => c.Name).ToList();
+                        fileInfos = tbc.CdrSetting.DescendingOrderWhileListingFiles == true ?
+                            fileInfos.OrderByDescending(f => f.Name).ToList() :
+                            fileInfos.OrderBy(f => f.Name).ToList();
                         foreach (FileInfo fileInfo in fileInfos)
                         {
                             if (fileSplitSetting == null ||

@@ -25,7 +25,7 @@ namespace Wintellect.PowerCollections
     /// hashes compares items to hash items into the table.  
     ///</remarks>
     [Serializable]
-    internal class Hash<T> : IEnumerable<T>, ISerializable, IDeserializationCallback
+    public class Hash<T> : IEnumerable<T>, ISerializable, IDeserializationCallback
     {
         // NOTE: If you add new member variables, you very well may need to change the serialization
         // code to serialize that member.

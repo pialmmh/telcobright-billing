@@ -34,19 +34,15 @@ namespace Decoders
         {
             this.Input = decoderInputData;
             string fileName = this.Input.FullPath;
-
-            return decodeLine(decoderInputData, out inconsistentCdrs, fileName, decoderInputData.TelcobrightJob.JobName);
-        }
-        public List<string[]> decodeLine(CdrCollectorInputData input, out List<cdrinconsistent> inconsistentCdrs, string filePath, string jobName)
-        {
-            Dictionary<string, partnerprefix> ansPrefixes = input.MediationContext.AnsPrefixes880;
+            Dictionary<string, partnerprefix> ansPrefixes = decoderInputData.MediationContext.AnsPrefixes880;
             inconsistentCdrs = new List<cdrinconsistent>();
             List<string[]> decodeRows = new List<string[]>();
-            SigtranPacketDecoder decoder = new SigtranPacketDecoder(filePath,ansPrefixes);
+            SigtranPacketDecoder decoder = new SigtranPacketDecoder(fileName, ansPrefixes);
             List<SigtranPacket> packets = decoder.DecodePackets();
             decodeRows = decoder.CdrRecords(packets);
             return decodeRows;
         }
+       
 
         public override string getTupleExpression(Object data)
         {
@@ -81,7 +77,438 @@ namespace Decoders
 
         public override EventAggregationResult Aggregate(object data)
         {
+
             return SmsHubAggregationHelper.Aggregate((NewAndOldEventsWrapper<string[]>)data);
+        }
+
+        public override List<NewAndOldEventsWrapper<string[]>> PreAggregateL1(object data, 
+            out List<string[]> failedPreAggCandidates)
+        {
+            NewCdrPreProcessor preProcessor = (NewCdrPreProcessor) data;
+            List<NewAndOldEventsWrapper<string[]>> preAggCandidates =
+                separatePreAggVsFailedCandidatesL1(preProcessor.TxtCdrRows,out failedPreAggCandidates);//main preAgg
+            return preAggCandidates;
+        }
+
+        public override List<NewAndOldEventsWrapper<string[]>> PreAggregateL2(object data,
+            out List<NewAndOldEventsWrapper<string[]>> failedPreAggWrappers)
+        {
+            NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper = (NewAndOldEventsWrapper<string[]>)data;
+            List<NewAndOldEventsWrapper<string[]>> preAggCandidates =
+                separatePreAggVsFailedCandidatesL2(newAndOldEventsWrapper, out failedPreAggWrappers);//main preAgg
+            return  preAggCandidates;
+        }
+
+        private List<NewAndOldEventsWrapper<string[]>> separatePreAggVsFailedCandidatesL1(List<string[]> txtCdrRows, 
+            out List<string[]> failedRows)
+        {
+            Dictionary<string, List<string[]>> billIdWiseRows = txtCdrRows
+                .GroupBy(r => r[Fn.UniqueBillId])
+                .ToDictionary(g => g.Key, g => g.ToList());
+            List<NewAndOldEventsWrapper<string[]>> preAggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
+            failedRows = new List<string[]>();
+            foreach (KeyValuePair<string, List<string[]>> rows in billIdWiseRows)
+            {
+                NewAndOldEventsWrapper<string[]> row = new NewAndOldEventsWrapper<string[]>
+                {
+                    UniqueBillId = rows.Key,
+                    NewUnAggInstances = rows.Value
+                };
+                //EventAggregationResult 
+                List<string[]> failedPreAggCandidates;
+               
+                List<NewAndOldEventsWrapper<string[]>> aggCandidatesForThisBillId = UngroupReqResL1(row, out failedPreAggCandidates);
+                if (rows.Value.Count != aggCandidatesForThisBillId.Count * 2 + failedPreAggCandidates.Count)
+                {
+                    //UngroupReqRes(row, out failedPreAggCandidates);
+                    throw new Exception("ungroupedReqRes must be equal with rows count");
+                }
+                preAggCandidates.AddRange(aggCandidatesForThisBillId);
+                failedRows.AddRange(failedPreAggCandidates);
+                //preAggregationResults.Add(rows.Key, aggregationResult);
+            }
+            return preAggCandidates;
+        }
+
+        private List<NewAndOldEventsWrapper<string[]>> separatePreAggVsFailedCandidatesL2(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper,
+            out List<NewAndOldEventsWrapper<string[]>> failedWrappers)
+        {
+            //Dictionary<string, List<string[]>> billIdWiseRows = txtCdrRows
+            //    .GroupBy(r => r[Fn.UniqueBillId])
+            //    .ToDictionary(g => g.Key, g => g.ToList());
+            List<NewAndOldEventsWrapper<string[]>> preAggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
+            failedWrappers = new List<NewAndOldEventsWrapper<string[]>>();
+            //EventAggregationResult 
+            List<NewAndOldEventsWrapper<string[]>> failedPreAggCandidates;
+
+            List<NewAndOldEventsWrapper<string[]>> aggCandidatesForThisBillId =
+                UngroupReqResL2(newAndOldEventsWrapper, out failedPreAggCandidates);
+            //if (newAndOldEventsWrapper.Count != aggCandidatesForThisBillId.Count * 2 + failedPreAggCandidates
+            //        .SelectMany(n => n.NewUnAggInstances)
+            //        .Count() + failedPreAggCandidates
+            //        .SelectMany(n => n.OldUnAggInstances)
+            //        .Count())
+            //{
+            //    //UngroupReqRes(row, out failedPreAggCandidates);
+            //    throw new Exception("rows count must be equal with temp");
+            //}
+            preAggCandidates.AddRange(aggCandidatesForThisBillId);
+            failedWrappers.AddRange(failedPreAggCandidates);
+            //preAggregationResults.Add(rows.Key, aggregationResult);
+            return preAggCandidates;
+        }
+
+        public static List<NewAndOldEventsWrapper<string[]>> UngroupReqResL1(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper,
+            out List<string[]> failedRows)
+        {
+            List<NewAndOldEventsWrapper<string[]>> aggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
+            failedRows = new List<string[]>();
+            List<string[]> newUnAggInstances = newAndOldEventsWrapper.NewUnAggInstances
+                .OrderBy(row => row[Sn.StartTime])
+                .ToList();
+            List<string[]> oldUnAggInstances = newAndOldEventsWrapper.OldUnAggInstances
+                .OrderBy(row => row[Sn.StartTime])
+                .ToList();
+            List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
+                .OrderBy(row => row[Sn.StartTime]).ToList();
+
+            List<string[]> mtReqs = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "3")
+                .ToList();
+            List<string[]> mtResps = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "4")
+                .ToList();
+
+            List<string[]> sriReqs = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "1")
+                .ToList();
+            List<string[]> sriResps = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "2")
+                .ToList();
+            List<NewAndOldEventsWrapper<string[]>> failedToAggregate;
+
+
+            var mtWrappers = MatchCandidatesL1(out failedToAggregate, mtReqs, mtResps);
+            aggCandidates.AddRange(mtWrappers);
+            failedRows.AddRange(failedToAggregate.SelectMany(wr=>wr.NewUnAggInstances));
+
+            var sriWrappers = MatchCandidatesL1(out failedToAggregate, sriReqs, sriResps);
+            aggCandidates.AddRange(sriWrappers);
+            failedRows.AddRange(failedToAggregate.SelectMany(wr => wr.NewUnAggInstances));
+
+            if (!failedRows.Any() && !aggCandidates.Any())
+            {
+                //failedRows.AddRange(failedToAggregate.SelectMany(wr => wr.NewUnAggInstances));
+                failedRows.AddRange(newUnAggInstances);
+            }
+
+            //if (oldUnAggInstances.Any())
+            //{
+            //    SeperatingOldAndNewInstances(failedRows, oldUnAggInstances);
+            //    SeperatingOldAndNewInstances(aggCandidates, oldUnAggInstances);
+            //}
+
+            return aggCandidates;
+        }
+        public static List<NewAndOldEventsWrapper<string[]>> UngroupReqResL2(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper, 
+            out List<NewAndOldEventsWrapper<string[]>> cdrsCouldNotBeAggregated)
+        {
+            //true=new, false=old
+
+            Dictionary<string, bool> idCallWiseNewAndOldFlagsForRow=
+                    mapIdCallWiseNewAndOldFlagsForRows(newAndOldEventsWrapper);
+            Action<NewAndOldEventsWrapper<string[]>> repositionOldAndNew = wr =>
+            {
+                wr.OldUnAggInstances = wr.NewUnAggInstances
+                    .Where(r => idCallWiseNewAndOldFlagsForRow[r[Sn.IdCall]] == false).ToList();
+                wr.NewUnAggInstances = wr.NewUnAggInstances
+                    .Where(r => idCallWiseNewAndOldFlagsForRow[r[Sn.IdCall]] == true).ToList();
+            };
+            List<NewAndOldEventsWrapper<string[]>> aggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
+            cdrsCouldNotBeAggregated = new List<NewAndOldEventsWrapper<string[]>>();
+
+            List<string[]> newUnAggInstances = newAndOldEventsWrapper.NewUnAggInstances
+                .OrderBy(row => row[Sn.StartTime])
+                .ToList();
+            List<string[]> oldUnAggInstances = newAndOldEventsWrapper.OldUnAggInstances
+                .OrderBy(row => row[Sn.StartTime])
+                .ToList();
+            List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
+                .OrderBy(row => row[Sn.StartTime]).ToList();
+            // temp code 
+            //if (newUnAggInstances.Any() && oldUnAggInstances.Any())
+            //{
+            //    List<NewAndOldEventsWrapper<string[]>> tempAgg = new List<NewAndOldEventsWrapper<string[]>>();
+            //    List<string[]> mtRq = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "3")
+            //        .ToList();
+            //    List<string[]> mtRes = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "4")
+            //        .ToList();
+            //    if (mtRq.Any() && mtRes.Any())
+            //    {
+            //        Console.WriteLine("cornar case");
+            //        List<NewAndOldEventsWrapper<string[]>> tmpFailed;
+            //        var tmpMtSuccessWrappers = MatchCandidatesL2(out tmpFailed, mtRq, mtRes);
+            //        tmpMtSuccessWrappers.ForEach(wr => repositionOldAndNew(wr));
+            //        //mtsucc
+            //        tempAgg.AddRange(tmpMtSuccessWrappers);
+            //    }
+            //}
+
+            List<string[]> mtReqs = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "3")
+                .ToList();
+            List<string[]> mtResps = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "4")
+                .ToList();
+
+            List<string[]> sriReqs = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "1")
+                .ToList();
+            List<string[]> sriResps = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "2")
+                .ToList();
+            List<NewAndOldEventsWrapper<string[]>> failedToAggregate;
+
+            
+            var mtSuccessWrappers = MatchCandidatesL2(out failedToAggregate, mtReqs, mtResps);
+            mtSuccessWrappers.ForEach(wr=>repositionOldAndNew(wr));
+            //mtsucc
+            aggCandidates.AddRange(mtSuccessWrappers);
+            cdrsCouldNotBeAggregated.AddRange(failedToAggregate);
+
+            var sriSuccessWrappers = MatchCandidatesL2(out failedToAggregate, sriReqs, sriResps);
+            sriSuccessWrappers.ForEach(wr => repositionOldAndNew(wr));
+
+            aggCandidates.AddRange(sriSuccessWrappers);
+            cdrsCouldNotBeAggregated.AddRange(failedToAggregate);
+
+            if (!cdrsCouldNotBeAggregated.Any() && !aggCandidates.Any())
+            {
+                cdrsCouldNotBeAggregated.Add(newAndOldEventsWrapper);
+                cdrsCouldNotBeAggregated.ForEach(wr => repositionOldAndNew(wr));
+            }
+            cdrsCouldNotBeAggregated.ForEach(wr => repositionOldAndNew(wr));
+            //if (oldUnAggInstances.Any())
+            //{
+            //    SeperatingOldAndNewInstances(cdrsCouldNotBeAggregated, oldUnAggInstances);
+            //    SeperatingOldAndNewInstances(aggCandidates, oldUnAggInstances);
+            //}
+
+            return aggCandidates;
+        }
+
+        private static Dictionary<string, bool> mapIdCallWiseNewAndOldFlagsForRows(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper)
+        {
+            Dictionary<string, bool> idCallWiseNewAndOldFlagsForRow = new Dictionary<string, bool>();
+            foreach (var row in newAndOldEventsWrapper.NewUnAggInstances)
+            {
+                idCallWiseNewAndOldFlagsForRow.Add(row[Fn.IdCall], true);
+            }
+            foreach (var row in newAndOldEventsWrapper.OldUnAggInstances)
+            {
+                idCallWiseNewAndOldFlagsForRow.Add(row[Fn.IdCall], false);
+            }
+            return idCallWiseNewAndOldFlagsForRow;
+        }
+
+        private static void SeperatingOldAndNewInstances(List<NewAndOldEventsWrapper<string[]>> candidates, List<string[]> oldUnAggInstances)
+        {
+            foreach (var aggCandidate in candidates)
+            {
+
+                foreach (var oldUnAggInstance in oldUnAggInstances)
+                {
+                    // Find records in NewUnAggInstances that match the UniqueBillId of the oldUnAggInstance
+                    var temp = aggCandidate.NewUnAggInstances
+                        .Where(i => i[Sn.UniqueBillId] == oldUnAggInstance[Sn.UniqueBillId])
+                        .ToList();
+
+                    // Move matching records to OldUnAggInstances
+                    foreach (var record in temp)
+                    {
+                        aggCandidate.OldUnAggInstances.Add(record);
+                        aggCandidate.NewUnAggInstances.Remove(record);
+                    }
+                }
+            }
+        }
+
+        private static List<NewAndOldEventsWrapper<string[]>> MatchCandidatesL1(out List<NewAndOldEventsWrapper<string[]>> cdrsCouldNotBeAggregated,
+            List<string[]> requests, List<string[]> responses)
+        {
+            List<NewAndOldEventsWrapper<string[]>> aggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
+            cdrsCouldNotBeAggregated = new List<NewAndOldEventsWrapper<string[]>>();
+            int respIndexForSearch = 0;
+            if (requests.Count < responses.Count)
+            {
+                if (requests.Count == 0)
+                {
+                    NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                    {
+                        UniqueBillId = responses[0][Sn.UniqueBillId],
+                        NewUnAggInstances = responses,
+                    };
+
+                    cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                }
+            }
+            //if (requests.Count < responses.Count && requests.Count>0)
+            //{
+            //    Console.WriteLine("My Test");
+            //}
+            for (int reqIndex = 0; reqIndex < requests.Count; reqIndex++)
+            {
+                bool unAggReqFlag = false;
+                int respIndex = respIndexForSearch;
+                string[] req = requests[reqIndex];
+
+                while (respIndex < responses.Count)
+                {
+                    DateTime reqDateTime = Convert.ToDateTime(req[Sn.StartTime]);
+                    string[] resp = responses[respIndex];
+                    DateTime respDateTime = Convert.ToDateTime(resp[Sn.StartTime]);
+                    if (respDateTime > reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
+                    {
+                        unAggReqFlag = true;
+                        string newBillId = new StringBuilder(req[Sn.UniqueBillId]).Append("_").Append(reqIndex.ToString())
+                            .ToString();
+                        req[Sn.UniqueBillId] = newBillId;
+                        resp[Sn.UniqueBillId] = newBillId;
+                        NewAndOldEventsWrapper<string[]> tmpAggCandidate = new NewAndOldEventsWrapper<string[]>
+                        {
+                            UniqueBillId = newBillId,
+                            NewUnAggInstances = new List<string[]> { req, resp }
+                        };
+                        aggCandidates.Add(tmpAggCandidate);
+
+                        respIndexForSearch = respIndex + 1;
+                        break;
+                    }
+                    else
+                    {
+                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                        {
+                            UniqueBillId = resp[Sn.UniqueBillId],
+                            NewUnAggInstances =   new List<string[]> { resp }
+                        };
+                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                        respIndexForSearch = respIndex + 1;
+                    }
+                    respIndex++;
+                }
+                if (reqIndex == requests.Count-1)
+                {
+                    for (respIndex = respIndexForSearch; respIndex < responses.Count; respIndex++)
+                    {
+
+                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                        {
+                            UniqueBillId = responses[respIndex][Sn.UniqueBillId],
+                            NewUnAggInstances = new List<string[]> { responses[respIndex] }
+                        };
+                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                        respIndexForSearch = respIndex + 1;
+                    }
+                }
+                if (!unAggReqFlag)
+                {
+                    NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                    {
+                        UniqueBillId = req[Sn.UniqueBillId],
+                        NewUnAggInstances = new List<string[]> {req}
+                    };
+                    cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                }
+            }
+            return aggCandidates;
+        }
+
+        private static List<NewAndOldEventsWrapper<string[]>> MatchCandidatesL2(
+            out List<NewAndOldEventsWrapper<string[]>> cdrsCouldNotBeAggregated,
+            List<string[]> requests, List<string[]> responses)
+        {
+            List<NewAndOldEventsWrapper<string[]>> aggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
+            cdrsCouldNotBeAggregated = new List<NewAndOldEventsWrapper<string[]>>();
+            int respIndexForSearch = 0;
+            if (requests.Count < responses.Count)
+            {
+                if (requests.Count == 0)
+                {
+
+                    foreach (var response in responses)
+                    {
+                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                        {
+                            UniqueBillId = response[Sn.UniqueBillId],
+                            NewUnAggInstances = new List<string[]> {response},
+                        };
+                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                    }
+
+                    
+                }
+            }
+            //if (requests.Count < responses.Count && requests.Count>0)
+            //{
+            //    Console.WriteLine("My Test");
+            //}
+            for (int reqIndex = 0; reqIndex < requests.Count; reqIndex++)
+            {
+                bool unAggReqFlag = false;
+                int respIndex = respIndexForSearch;
+                string[] req = requests[reqIndex];
+
+                while (respIndex < responses.Count)
+                {
+                    DateTime reqDateTime = Convert.ToDateTime(req[Sn.StartTime]);
+                    string[] resp = responses[respIndex];
+                    DateTime respDateTime = Convert.ToDateTime(resp[Sn.StartTime]);
+                    if (respDateTime > reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
+                    {
+                        unAggReqFlag = true;
+                        string newBillId = new StringBuilder(req[Sn.UniqueBillId]).Append("_2").Append(reqIndex.ToString())
+                            .ToString();
+                        req[Sn.UniqueBillId] = newBillId;
+                        resp[Sn.UniqueBillId] = newBillId;
+                        NewAndOldEventsWrapper<string[]> tmpAggCandidate = new NewAndOldEventsWrapper<string[]>
+                        {
+                            UniqueBillId = newBillId,
+                            NewUnAggInstances = new List<string[]> { req, resp }
+                        };
+                        aggCandidates.Add(tmpAggCandidate);
+
+                        respIndexForSearch = respIndex + 1;
+                        break;
+                    }
+                    else
+                    {
+                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                        {
+                            UniqueBillId = resp[Sn.UniqueBillId],
+                            NewUnAggInstances = new List<string[]> { resp }
+                        };
+                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                        respIndexForSearch = respIndex + 1;
+                    }
+                    respIndex++;
+                }
+                if (reqIndex == requests.Count - 1)
+                {
+                    for (respIndex = respIndexForSearch; respIndex < responses.Count; respIndex++)
+                    {
+
+                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                        {
+                            UniqueBillId = responses[respIndex][Sn.UniqueBillId],
+                            NewUnAggInstances = new List<string[]> { responses[respIndex] }
+                        };
+                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                        respIndexForSearch = respIndex + 1;
+                    }
+                }
+                if (!unAggReqFlag)
+                {
+                    NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                    {
+                        UniqueBillId = req[Sn.UniqueBillId],
+                        NewUnAggInstances = new List<string[]> { req }
+                    };
+                    cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                }
+            }
+            return aggCandidates;
         }
 
         public override string getCreateTableSqlForPartialEvent(object data)

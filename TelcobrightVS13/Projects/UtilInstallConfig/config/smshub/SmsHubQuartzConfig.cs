@@ -22,6 +22,8 @@ namespace InstallConfig
         {
             this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
             this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.Telcobrightpartner.databasename));
+            this.DaemonConfigurations.AddRange(GetDownloadMarkerInstances(this.Tbc.Telcobrightpartner.databasename));
+            this.DaemonConfigurations.AddRange(GetCdrPreProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.databasename));
             this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
@@ -96,6 +98,30 @@ namespace InstallConfig
             };
             return fileListerInstances;
         }
+
+        private List<QuartzTbDaemonConfig> GetDownloadMarkerInstances(string operatorName)
+        {
+            //don't use foreach, do it manually for flixibility e.g. different repeating interval
+            List<QuartzTbDaemonConfig> downloadMarkerInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
+                    identity: "DownloadMarker " + " [" + operatorName + "]",
+                    group: operatorName,
+                    cronExpression: "/30 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "114"},
+                        {"operatorName", operatorName},
+                        { "maxMarkingForDownlaod","100"}
+                    }),
+
+            };
+            return downloadMarkerInstances;
+        }
+
         private List<QuartzTbDaemonConfig> GetFileCopierInstances(string operatorName)
         {
             //don't use foreach, do it manually for flixibility e.g. different repeating interval
@@ -159,6 +185,27 @@ namespace InstallConfig
             };
             return fileCopierInstances;
         }
+
+        private static List<QuartzTbDaemonConfig> GetCdrPreProcessorInstances(string operatorName)
+        {
+            var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()
+            {
+                new QuartzTbDaemonConfig(
+                    operatorName: operatorName,
+                    identity: "CdrPreProcessor" + " [" + operatorName+"]",
+                    @group: operatorName,
+                    fireOnceIfMissFired: false,
+                    cronExpression: "/5 * * ? * *",
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "120"},
+                        {"operatorName", operatorName}
+                    }
+                )
+            };
+            return telcobrightProcessInstances;
+        }
+
         private List<QuartzTbDaemonConfig> GetLogFileJobCreatorInstances(string operatorName)
         {
             var telcobrightProcessInstances = new List<QuartzTbDaemonConfig>()

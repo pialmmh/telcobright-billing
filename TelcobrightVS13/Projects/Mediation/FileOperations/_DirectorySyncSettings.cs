@@ -269,6 +269,7 @@ namespace TelcobrightFileOperations
         public string SecondaryDirectory { get; set; }
         public bool MoveFilesToSecondaryAfterCopy { get; set; }
         public bool Recursive { get; set; }
+        public bool OnlyDownloadMarkedFile { get; set; }
         public int DurationSecToSkipVeryNewPossiblyIncompleteFiles { get; set; } = 40;
     }
     public enum DateWiseSubDirCreationType
@@ -343,7 +344,7 @@ namespace TelcobrightFileOperations
         public string PrefixForUniqueName { get; set; }
         public bool Overwrite { get; set; }
         public bool RecursiveFileStore { get; set; }
-        public int MaxDownloadedFromFtp { get; set; }
+        public int MaxDownloadFromFtp { get; set; }
         public SpringExpression ExpDestFileName { get; set; }
         public SyncSettingsDstSubDirectoryRule SubDirRule { get; set; }
 

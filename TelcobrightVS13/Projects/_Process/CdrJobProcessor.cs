@@ -485,27 +485,55 @@ namespace Process
             int jobStatusToFetch = preDecodeAsTextFile == true
                 ? 2 //status 2=prepared
                 : 7; //status 7=downloaded
-            if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
+            int fileNameLengthFromRightWhileSorting = tbc.CdrSetting.FileNameLengthFromRightWhileSorting;
+
+            if (fileNameLengthFromRightWhileSorting > 0)//true for sms hub
             {
-                jobs = contextTb.jobs
-                    .Where(c => c.CompletionTime == null
-                                && c.idNE == thisSwitch.idSwitch
-                                && c.Status == jobStatusToFetch && c.idjobdefinition == 1) //downloaded & new cdr
-                    .Include(c => c.ne.enumcdrformat)
-                    .Include(c => c.ne.telcobrightpartner)
-                    .OrderByDescending(c => c.JobName)
-                    .Take(Convert.ToInt32(decodingSpan)).ToList();
+                if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == true)
+                {
+                    jobs = contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == jobStatusToFetch && c.idjobdefinition == 1) //downloaded & new cdr
+                        .OrderByDescending(job => job.JobName.Substring(job.JobName.Length - fileNameLengthFromRightWhileSorting))
+                        .Take(Convert.ToInt32(decodingSpan))
+                        .ToList();
+                }
+                else if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == false)
+                {
+                    jobs= contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == jobStatusToFetch && c.idjobdefinition == 1) //downloaded & new cdr
+                        .OrderBy(job => job.JobName.Substring(job.JobName.Length - fileNameLengthFromRightWhileSorting))
+                        .Take(Convert.ToInt32(decodingSpan))
+                        .ToList();
+                }
             }
             else
             {
-                jobs = contextTb.jobs
-                    .Where(c => c.CompletionTime == null
-                                && c.idNE == thisSwitch.idSwitch
-                                && c.Status == jobStatusToFetch && c.idjobdefinition == 1) //downloaded & new cdr
-                    .Include(c => c.ne.enumcdrformat)
-                    .Include(c => c.ne.telcobrightpartner)
-                    .OrderBy(c => c.JobName)
-                    .Take(Convert.ToInt32(decodingSpan)).ToList();
+                if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
+                {
+                    jobs = contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == jobStatusToFetch && c.idjobdefinition == 1) //downloaded & new cdr
+                        .Include(c => c.ne.enumcdrformat)
+                        .Include(c => c.ne.telcobrightpartner)
+                        .OrderByDescending(c => c.JobName)
+                        .Take(Convert.ToInt32(decodingSpan)).ToList();
+                }
+                else
+                {
+                    jobs = contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == jobStatusToFetch && c.idjobdefinition == 1) //downloaded & new cdr
+                        .Include(c => c.ne.enumcdrformat)
+                        .Include(c => c.ne.telcobrightpartner)
+                        .OrderBy(c => c.JobName)
+                        .Take(Convert.ToInt32(decodingSpan)).ToList();
+                }
             }
             return jobs;
         }

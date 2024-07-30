@@ -224,6 +224,7 @@
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrInconsistentValidator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\NewAndOldEventsWrapper.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\SmsHubStyleAggregator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\TelcobridgeStyleAggregator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\DuplicaterEventFilter.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
@@ -273,7 +274,7 @@
     <Compile Include="Config\TelcobrightConfig.cs" />
     <Compile Include="Config\TelecomOperatortype.cs" />
     <Compile Include="Config\TypeNameSerializationBinder.cs" />
-    <Compile Include="Enums\SmsType.cs" />
+    <Compile Include="Enums\MsuType.cs" />
     <Compile Include="FileOperations\RecursiveVaultFileMover.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
     <Compile Include="FileOperations\Unzipper.cs" />

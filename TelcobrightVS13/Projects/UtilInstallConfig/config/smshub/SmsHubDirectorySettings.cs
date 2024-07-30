@@ -127,11 +127,11 @@ namespace InstallConfig
                         IgnoreZeroLenghFile = 1,
                         FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
                     },
-                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
@@ -147,7 +147,7 @@ namespace InstallConfig
                     RecursiveFileStore=true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 10
                 }
             };
 
@@ -180,6 +180,7 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
@@ -195,7 +196,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 10
                 }
             };
 
@@ -227,6 +228,7 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
@@ -242,7 +244,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 10
                 }
             };
 
@@ -274,6 +276,7 @@ namespace InstallConfig
                 SrcSettings = new SyncSettingsSource()
                 {
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
@@ -289,7 +292,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 10
                 }
             };
 

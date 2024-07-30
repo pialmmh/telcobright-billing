@@ -146,29 +146,59 @@ namespace Process
         public List<job> GetNewCdrJobs(TelcobrightConfig tbc, PartnerEntities contextTb, ne thisSwitch, int maxNumberOfFilesToPreDecode)
         {
             List<job> jobs = null;
-            if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
+            int fileNameLengthFromRightWhileSorting = tbc.CdrSetting.FileNameLengthFromRightWhileSorting;
+
+            if (fileNameLengthFromRightWhileSorting > 0)//true for sms hub
             {
-                jobs = contextTb.jobs
-                    .Where(c => c.CompletionTime == null
-                                && c.idNE == thisSwitch.idSwitch
-                                && c.Status == 7 && c.idjobdefinition == 1
-                                && c.JobState != "paused") //downloaded & new cdr
-                    .Include(c => c.ne.enumcdrformat)
-                    .Include(c => c.ne.telcobrightpartner)
-                    .OrderByDescending(c => c.JobName)
-                    .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
+                if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == true)
+                {
+                    jobs = contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == 7 && c.idjobdefinition == 1
+                                    && c.JobState != "paused") //downloaded & new cdr
+                        .OrderByDescending(job => job.JobName.Substring(job.JobName.Length - fileNameLengthFromRightWhileSorting))
+                        .Take(maxNumberOfFilesToPreDecode)
+                        .ToList();
+                }
+                else if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == false)
+                {
+                    jobs = jobs = contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == 7 && c.idjobdefinition == 1
+                                    && c.JobState != "paused") //downloaded & new cdr
+                        .OrderBy(job => job.JobName.Substring(job.JobName.Length - fileNameLengthFromRightWhileSorting))
+                        .Take(maxNumberOfFilesToPreDecode)
+                        .ToList();
+                }
             }
             else
             {
-                jobs = contextTb.jobs
-                    .Where(c => c.CompletionTime == null
-                                && c.idNE == thisSwitch.idSwitch
-                                && c.Status == 7 && c.idjobdefinition == 1
-                                && c.JobState != "paused") //downloaded & new cdr
-                    .Include(c => c.ne.enumcdrformat)
-                    .Include(c => c.ne.telcobrightpartner)
-                    .OrderBy(c => c.JobName)
-                    .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
+                if (tbc.CdrSetting.DescendingOrderWhileProcessingListedFiles == true)
+                {
+                    jobs = contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == 7 && c.idjobdefinition == 1
+                                    && c.JobState != "paused") //downloaded & new cdr
+                        .Include(c => c.ne.enumcdrformat)
+                        .Include(c => c.ne.telcobrightpartner)
+                        .OrderByDescending(c => c.JobName)
+                        .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
+                }
+                else
+                {
+                    jobs = contextTb.jobs
+                        .Where(c => c.CompletionTime == null
+                                    && c.idNE == thisSwitch.idSwitch
+                                    && c.Status == 7 && c.idjobdefinition == 1
+                                    && c.JobState != "paused") //downloaded & new cdr
+                        .Include(c => c.ne.enumcdrformat)
+                        .Include(c => c.ne.telcobrightpartner)
+                        .OrderBy(c => c.JobName)
+                        .Take(Convert.ToInt32(maxNumberOfFilesToPreDecode)).ToList();
+                }
             }
             return jobs;
         }

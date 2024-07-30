@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LibraryExtensions;
 using MediationModel;
 using TelcobrightMediation;
+using TelcobrightMediation.Cdr.Collection.PreProcessors;
 
 namespace TelcobrightMediation
 {
@@ -122,6 +123,15 @@ namespace TelcobrightMediation
         }
 
         public virtual EventAggregationResult Aggregate(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual List<NewAndOldEventsWrapper<string[]>> PreAggregateL1(object data, out List<string[]> unaggregatedRows)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual List<NewAndOldEventsWrapper<string[]>> PreAggregateL2(object data, out List<NewAndOldEventsWrapper<string[]>> unaggregatedWrappers)
         {
             throw new NotImplementedException();
         }

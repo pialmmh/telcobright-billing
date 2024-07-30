@@ -1,6 +1,6 @@
 namespace TelcobrightMediation
 {
-    public enum SmsType
+    public enum MsuType
     {
         None=0,
         Sri = 1,

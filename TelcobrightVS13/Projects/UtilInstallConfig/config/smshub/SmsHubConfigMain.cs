@@ -77,6 +77,8 @@ namespace InstallConfig
                 PartialCdrFlagIndicators = new List<string>() { },//{"1", "2", "3"},
                 DescendingOrderWhileListingFiles = false,
                 DescendingOrderWhileProcessingListedFiles = false,
+                DescendingOrderWhileListingFilesByFileNameOnly = false,
+                FileNameLengthFromRightWhileSorting = 27,
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
@@ -96,24 +98,31 @@ namespace InstallConfig
                 NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>()
                 {
                     { 1, new NeAdditionalSetting {//dialogic
-                        ProcessMultipleCdrFilesInBatch = false,
-                        PreDecodeAsTextFile = false,
+                        ProcessMultipleCdrFilesInBatch = true,
+                        PreDecodeAsTextFile = true,
                         MaxConcurrentFilesForParallelPreDecoding = 10,
-                        MinRowCountToStartBatchCdrProcessing = 100000,
-                        MaxNumberOfFilesInPreDecodedDirectory = 20,
+                        MinRowCountToStartBatchCdrProcessing = 1000000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 10,
                         CreateJobRecursively = true,
                         AggregationStyle = "telcobridge",
+                        PerformPreaggregation = true,
                         //AggregationStyle = null,
                         EventPreprocessingRules = new List<EventPreprocessingRule>()
                         {
-                            new CdrPredecoder()
+                            //new CdrPredecoder()
+                            //{
+                            //    RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
+                            //    ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            //},
+                            new MdrPredecoder()
                             {
                                 RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
                                 ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
                             }
                         }
                     }}
-                }
+                },
+                WriteFailedCallsToDb = false,
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()

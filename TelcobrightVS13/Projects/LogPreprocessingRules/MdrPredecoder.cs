@@ -71,32 +71,32 @@ namespace LogPreProcessor
                             row.Select(field => new StringBuilder("`").Append(field).Append("`").ToString()).ToArray()))
                         .ToList();
 
-                Dictionary<string, List<string[]>> multipleFileDictionary = new Dictionary<string, List<string[]>>();
+                //Dictionary<string, List<string[]>> multipleFileDictionary = new Dictionary<string, List<string[]>>();
 
 
-                for (int i = 1; i <= 500; i++)
-                {
-                    multipleFileDictionary.Add(this.PredecodedFileName + i, txtRows);            
-                }
-                List<string[]> multipleFileList = new List<string[]>();
+                //for (int i = 1; i <= 500; i++)
+                //{
+                //    multipleFileDictionary.Add(this.PredecodedFileName + i, txtRows);            
+                //}
+                //List<string[]> multipleFileList = new List<string[]>();
 
-                foreach (var m in multipleFileDictionary)
-                {
-                    multipleFileList.AddRange(m.Value);
-                }
-                IEnumerable<IGrouping<string, string[]>> groupedData =  multipleFileList.GroupBy(r => r[Sn.UniqueBillId]);
-                int df = 0;
+                //foreach (var m in multipleFileDictionary)
+                //{
+                //    multipleFileList.AddRange(m.Value);
+                //}
+                //IEnumerable<IGrouping<string, string[]>> groupedData =  multipleFileList.GroupBy(r => r[Sn.UniqueBillId]);
+                //int df = 0;
 
-                foreach (var group in groupedData)
-                {
-                    //Console.WriteLine($"Key: {group.Key}");
-                    df++;
-                    foreach (var values in group)
-                    {
-                        //Console.WriteLine($"  Values: {string.Join(", ", values.Select(v => string.Join(", ", v)))}");
-                    }
-                }
-                Console.WriteLine(df);
+                //foreach (var group in groupedData)
+                //{
+                //    //Console.WriteLine($"Key: {group.Key}");
+                //    df++;
+                //    foreach (var values in group)
+                //    {
+                //        //Console.WriteLine($"  Values: {string.Join(", ", values.Select(v => string.Join(", ", v)))}");
+                //    }
+                //}
+                //Console.WriteLine(df);
 
                 File.WriteAllLines(this.PredecodedFileName, rowsAsCsvLinesFieldsEnclosedWithBacktick);
                 FileInfo predecodedFileInfo = new FileInfo(this.PredecodedFileName);
@@ -112,7 +112,7 @@ namespace LogPreProcessor
                 //            throw new Exception("Predecoded File size cannot be zero.");
                 //    }
                 //}
-                
+
                 output.SuccessfulJob = this.CdrJobInputData.Job;
                 output.WrittenFileSize = predecodedFileInfo.Length;
                 output.FailedJob = null;
@@ -142,7 +142,7 @@ namespace LogPreProcessor
             {
                 if (e.ToString().Contains("Could not get exclusive lock on file before decoding"))
                 {
-                    UpdateFileCopyJobStatusToReDownload(this.PartnerEntitiesNewInstance.Database.Connection.CreateCommand(),this.CdrJobInputData.Job);
+                    UpdateFileCopyJobStatusToReDownload(this.PartnerEntitiesNewInstance.Database.Connection.CreateCommand(), this.CdrJobInputData.Job);
                 }
                 this.PartnerEntitiesNewInstance.Database.Connection.CreateCommand();
                 this.PartnerEntitiesNewInstance.Database.Connection.Close();
@@ -184,8 +184,8 @@ namespace LogPreProcessor
         private readonly object locker = new object();
         public void PrepareRule()
         {
-            Dictionary<string, object> dataAsDic = (Dictionary<string, object>) this.RuleConfigData;
-            string val=(string) dataAsDic["maxParallelFileForPreDecode"];
+            Dictionary<string, object> dataAsDic = (Dictionary<string, object>)this.RuleConfigData;
+            string val = (string)dataAsDic["maxParallelFileForPreDecode"];
             this.maxParallelFileSizeForDecode = Convert.ToInt32(val);
             this.IsPrepared = true;
         }
@@ -206,7 +206,7 @@ namespace LogPreProcessor
             context.Database.Connection.Close();
             context.Database.Connection.Open();
             NeAdditionalSetting neAdditionalSetting = (NeAdditionalSetting)dataAsDic["neAdditionalSetting"];
-            if (neAdditionalSetting==null)
+            if (neAdditionalSetting == null)
                 throw new Exception("NeAdditionalSettings cannot be null while predecoding cdrs.");
             if (neAdditionalSetting.PreDecodeAsTextFile == false)
                 return;
@@ -262,11 +262,11 @@ namespace LogPreProcessor
 
 
                 if (successResult.Any()) updateSuccessfulJobs(thisSwitch, context, cmd, successResult);
-                if(failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
+                if (failedResults.Any()) updateFailedJobs(thisSwitch, context, cmd, failedResults, tbc);
             });
         }
 
-        
+
 
         private void validateIfCdrJob(List<job> newCdrFileJobs)
         {
@@ -281,7 +281,7 @@ namespace LogPreProcessor
                 }
             }
         }
-       
+
         private void updateFailedJobs(ne thisSwitch, PartnerEntities context, DbCommand cmd, BlockingCollection<PredecoderOutput> failedResults,
             TelcobrightConfig tbc)
         {
@@ -313,7 +313,7 @@ namespace LogPreProcessor
                     ErrorWriter.WriteError(exception, "Cdr-Predecoder", null, "NE:" + thisSwitch.idSwitch, "", context);
                     continue;
                 }
-                
+
             }
             cmd.Connection.Close();
         }
@@ -324,9 +324,12 @@ namespace LogPreProcessor
             //can't write to db in parallel, reader busy error occurs
             //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
             //no need for commit or rollback too.
-            if (cmd.Connection.State != ConnectionState.Open)
-                cmd.Connection.Open();
+            //if (cmd.Connection.State != ConnectionState.Open)
+            //    cmd.Connection.Open();
             cmd.CommandText = $" set autocommit=0;";
+            if (cmd.Connection.State == ConnectionState.Open)
+                    cmd.Connection.Close();
+            cmd.Connection.Open();
             cmd.ExecuteNonQuery();
             foreach (var result in successfullPreDecodedJobs)
             {
@@ -342,7 +345,7 @@ namespace LogPreProcessor
                     var exception = new Exception(
                             $@"Couldn't update status while predecoding {result.SuccessfulJob.JobName} jobs for ne: {thisSwitch.SwitchName}
                                --{e.Message} ");
-                    ErrorWriter.WriteError(exception, "Cdr-Predecoder", null, "NE:" + thisSwitch.idSwitch,"", context);
+                    ErrorWriter.WriteError(exception, "Cdr-Predecoder", null, "NE:" + thisSwitch.idSwitch, "", context);
                     continue; //with next switch
                 }
             }
@@ -384,7 +387,7 @@ namespace LogPreProcessor
             return threadSafePredecoders;
         }
 
-        private ThreadSafeMdrPredecoder preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc, 
+        private ThreadSafeMdrPredecoder preparePreDecoderInput(MediationContext mediationContext, ne thisSwitch, TelcobrightConfig tbc,
             PartnerEntities context, ITelcobrightJob newCdrFileJob, job job)
         {
             var cdrJobInputData = new CdrJobInputData(mediationContext, context, thisSwitch, job);
@@ -434,11 +437,11 @@ namespace LogPreProcessor
             Dictionary<string, FileInfo> existingPredecodedfilesSet =  //key=full file name, value = only file name without .predecoded extension
                 Directory.GetFiles(preDecodedDirName, "*.predecoded")
                 .Select(f => new
-                    {
-                        Filename = Path.GetFileNameWithoutExtension(Path.GetFileName(f)),
-                        FileInfo = new FileInfo(f)
-                    }).ToDictionary(a => a.Filename, a => a.FileInfo);
-            if (existingPredecodedfilesSet.Any()==false)
+                {
+                    Filename = Path.GetFileNameWithoutExtension(Path.GetFileName(f)),
+                    FileInfo = new FileInfo(f)
+                }).ToDictionary(a => a.Filename, a => a.FileInfo);
+            if (existingPredecodedfilesSet.Any() == false)
             {
                 return;
             }
@@ -490,7 +493,7 @@ namespace LogPreProcessor
             return noOfExistingPreDecodedfiles;
         }
 
-        
+
         private static void getPathNamesForPreDecoding(job thisJob, ne thisSwitch, TelcobrightConfig tbc, out string predecodedDirName, out string predecodedFileName)
         {
             string fileLocationName = thisSwitch.SourceFileLocations;
@@ -500,7 +503,7 @@ namespace LogPreProcessor
             FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
             predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar +
                                        "predecoded";
-            if(!Directory.Exists(predecodedDirName))
+            if (!Directory.Exists(predecodedDirName))
             {
                 Directory.CreateDirectory(predecodedDirName);
             }

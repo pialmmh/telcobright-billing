@@ -14,152 +14,116 @@ namespace Decoders
     {
         public static EventAggregationResult Aggregate(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper)
         {
-
-            SmsType aggregationType = SmsType.None;
-
+            //MsuType aggregationType = MsuType.None;
             List<string[]> newUnAggInstances = newAndOldEventsWrapper.NewUnAggInstances;
             List<string[]> oldUnAggInstances = newAndOldEventsWrapper.OldUnAggInstances;
+
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Sn.StartTime]).ToList();
-            //if (newUnAggInstances.Count > 2 || oldUnAggInstances.Count > 2 || allUnaggregatedInstances.Count > 2)
-            //    throw new Exception("allUnaggregatedInstances better than 2 rows  cannot be aggregated.");
-              
+            if (newUnAggInstances.Count > 2 || oldUnAggInstances.Count > 2 || allUnaggregatedInstances.Count > 2)
+                throw new Exception("allUnaggregatedInstances > 2 rows  cannot be aggregated.");
+
             var groupedByBillId = allUnaggregatedInstances.GroupBy(row => row[Sn.UniqueBillId]).ToDictionary(g => g.Key);
-            //if (groupedByBillId.Count > 1)
-            //    throw new Exception("Rows with multiple bill ids cannot be aggregated.");
+            if (groupedByBillId.Count > 1)
+                throw new Exception("Rows with multiple bill ids cannot be aggregated.");
             string uniqueBillId = groupedByBillId.Keys.First();
             List<string[]> newRowsToBeDiscardedAfterAggregation = new List<string[]>();
             List<string[]> oldRowsToBeDiscardedAfterAggregation = new List<string[]>();
-
-
-            //Dictionary<DateTime, List<string[]>> startimeWiseRows = allUnaggregatedInstances
-            //    .GroupBy(r => Convert.ToDateTime(r[Sn.StartTime]))
-            //    .ToDictionary(g => g.Key, g => g.ToList());
-        
-
-            List<string[]> sriReqInstance = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "1")
-                .ToList();
-            List<string[]> sriResInstance = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "2")
-                .ToList();
-
-            List<string[]> mtReqInstance = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "3")
-                .ToList();
-            List<string[]> mtResInstance = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "4")
-                .ToList();
-
-            List<string[]> retErrInstance = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "5")
-                .ToList();
-
-            List<string[]> unknownInstance = allUnaggregatedInstances.Where(r => r[Sn.SmsType] ==null || r[Sn.SmsType] == "")
-                .ToList();
-
-            List<string[]> tempRows = null;
-
-            // only for sri smstype
-            if ((sriReqInstance.Any() && sriResInstance.Any()) ||
-                (sriReqInstance.Any() && unknownInstance.Any())
-                )
+            var aggregationComplete = false;
+            string[] aggregatedRow = allUnaggregatedInstances.First();
+            if (allUnaggregatedInstances.Count == 2)//agg success
             {
-                aggregationType = SmsType.Sri;
-                tempRows = sriReqInstance;
-            } 
-
-            if (
-                (mtReqInstance.Any() && mtResInstance.Any()) ||
-                (mtReqInstance.Any() && unknownInstance.Any())
-                )
-            {
-                aggregationType = SmsType.Mt;
-                tempRows = mtReqInstance;
+                var smsType = aggregatedRow[Sn.SmsType];
+                if (smsType == "3")
+                {
+                    aggregatedRow[Sn.Endtime] = allUnaggregatedInstances.Last()[Sn.StartTime];
+                    aggregatedRow[Sn.AggregationInfo] = allUnaggregatedInstances.Last()[Sn.Filename]
+                                                        + ","
+                                                        + allUnaggregatedInstances.Last()[Sn.PacketFrameTime];
+                    aggregatedRow[Sn.ChargingStatus] = "1";
+                    //aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
+                    aggregatedRow[Sn.Partialflag] = "0";
+                }
+                else if (smsType == "1")
+                {
+                    aggregatedRow[Sn.Imsi] = allUnaggregatedInstances.Last()[Sn.Imsi];
+                    aggregatedRow[Sn.Endtime] = allUnaggregatedInstances.Last()[Sn.StartTime];
+                    aggregatedRow[Sn.AggregationInfo] = allUnaggregatedInstances.Last()[Sn.Filename]
+                                                        + ","
+                                                        + allUnaggregatedInstances.Last()[Sn.PacketFrameTime];
+                    aggregatedRow[Sn.ChargingStatus] = "1";
+                    //aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
+                    aggregatedRow[Sn.Partialflag] = "0";
+                }
+                else
+                {
+                    throw new Exception("Unsupported sigtran message type for aggregation.");
+                }
             }
-            if ((mtReqInstance.Any() && retErrInstance.Any()))
-            {
-                aggregationType = SmsType.ReturnError;
-                tempRows = mtReqInstance;
-            }
-
-
-           bool aggregationComplete = false;
-            
-            if (tempRows == null || !tempRows.Any())
+            else if (allUnaggregatedInstances.Count == 1)// failedagg
             {
                 return createResultForAggregationNotPossible(uniqueBillId, allUnaggregatedInstances,
                     newUnAggInstances, oldUnAggInstances);
             }
+            else
+            {
+                throw new Exception("Instance count must be 1 or 2.");
+            }
 
-            string[] aggregatedRow = tempRows.Last();
-
+            //if (tempRows == null || !tempRows.Any())
+            //{
+            //    return createResultForAggregationNotPossible(uniqueBillId, allUnaggregatedInstances,
+            //        newUnAggInstances, oldUnAggInstances);
+            //}
             //main aggregation
-            if (aggregationType == SmsType.Sri)
-            {
-                if (sriReqInstance.Any() && unknownInstance.Any() && !sriResInstance.Any())
-                {
-                    aggregatedRow[Sn.Imsi] = unknownInstance.Last()[Sn.Imsi];
-                    aggregatedRow[Sn.Endtime] = unknownInstance.Last()[Sn.StartTime];
-                    aggregatedRow[Sn.AggregationInfo] = unknownInstance.Last()[Sn.Filename]
-                                                        + ","
-                                                        + unknownInstance.Last()[Sn.PacketFrameTime];
-                }
-                else
-                {
-                    aggregatedRow[Sn.Imsi] = sriResInstance.Last()[Sn.Imsi];
-                    aggregatedRow[Sn.Endtime] = sriResInstance.Last()[Sn.StartTime];
-                    aggregatedRow[Sn.AggregationInfo] = sriResInstance.Last()[Sn.Filename]
-                                                        + ","
-                                                        + sriResInstance.Last()[Sn.PacketFrameTime];
-                }
-                aggregatedRow[Sn.ChargingStatus] = "1";
-                aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
-            }
 
-            if (aggregationType == SmsType.Mt)
-            {
-                if (mtReqInstance.Any() && unknownInstance.Any() && !mtResInstance.Any())
-                {
-                    aggregatedRow[Sn.Endtime] = unknownInstance.Last()[Sn.StartTime];
-                    aggregatedRow[Sn.AggregationInfo] = unknownInstance.Last()[Sn.Filename]
-                                                        + ","
-                                                        + unknownInstance.Last()[Sn.PacketFrameTime];
-                }
-                else
-                {
-                    aggregatedRow[Sn.Endtime] = mtResInstance.Last()[Sn.StartTime];
-                    aggregatedRow[Sn.AggregationInfo] = mtResInstance.Last()[Sn.Filename]
-                                                        + ","
-                                                        + mtResInstance.Last()[Sn.PacketFrameTime];
-                }
+            //if (aggregationType == MsuType.Sri)
+            //{
+            //    aggregationComplete = AggregateSri(sris, sriResps, unknownInstances, aggregatedRow);
+            //}
 
-                aggregatedRow[Sn.ChargingStatus] = "1";
-                aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
-            }
+            //if (aggregationType == MsuType.Mt)
+            //{
+            //    aggregationComplete = AggregateMt(mts, mtResps, unknownInstances, aggregatedRow);
+            //}
 
-            if (aggregationType == SmsType.ReturnError)
-            {
-                aggregatedRow[Sn.Endtime] = retErrInstance.Last()[Sn.StartTime];
-                aggregatedRow[Sn.AggregationInfo] = retErrInstance.Last()[Sn.Filename]
-                                                    + ","
-                                                    + retErrInstance.Last()[Sn.PacketFrameTime];
-                aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
-            }
+            //if (aggregationType == MsuType.ReturnError)
+            //{
+            //    aggregatedRow[Sn.Endtime] = retErrInstances.Last()[Sn.StartTime];
+            //    aggregatedRow[Sn.AggregationInfo] = retErrInstances.Last()[Sn.Filename]
+            //                                        + ","
+            //                                        + retErrInstances.Last()[Sn.PacketFrameTime];
+            //    aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
+            //}
 
-            if (aggregationComplete)
-            {
-                aggregatedRow[Sn.Partialflag] = "0";
-                foreach (string[] row in newUnAggInstances)
+            //if (aggregationComplete)
+            //{
+                //foreach (string[] row in newUnAggInstances)
+                //{
+                //    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
+                //    {
+                //        newRowsToBeDiscardedAfterAggregation.Add(row);
+                //    }
+                //}
+                newRowsToBeDiscardedAfterAggregation.Add(newUnAggInstances.Last());
+                //foreach (string[] row in oldUnAggInstances)
+                //{
+                //    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
+                //    {
+                //        oldRowsToBeDiscardedAfterAggregation.Add(row);
+                //    }
+                //}
+                if (oldUnAggInstances.Any()) oldRowsToBeDiscardedAfterAggregation.Add(oldUnAggInstances.Last());
+
+                if (!newRowsToBeDiscardedAfterAggregation.Any())
                 {
-                    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
-                    {
-                        newRowsToBeDiscardedAfterAggregation.Add(row);
-                    }
+                    Console.WriteLine("corner case");
                 }
-                foreach (string[] row in oldUnAggInstances)
+                if (aggregatedRow == null)
                 {
-                    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
-                    {
-                        oldRowsToBeDiscardedAfterAggregation.Add(row);
-                    }
+                    Console.WriteLine("corner case");
                 }
-                return new EventAggregationResult//aggregation successful
+                var result = new EventAggregationResult//aggregation successful
                 (
                     uniqueEventId: uniqueBillId,
                     allUnaggregatedInstances: allUnaggregatedInstances,
@@ -170,12 +134,58 @@ namespace Decoders
                     oldInstancesToBeDiscardedAfterAggregation: oldRowsToBeDiscardedAfterAggregation,
                     oldPartialInstancesFromDB: oldUnAggInstances
                 );
+                return result;
+            //}
+            //else
+            //{
+            //    return createResultForAggregationNotPossible(uniqueBillId, allUnaggregatedInstances, newUnAggInstances, oldUnAggInstances);
+            //}
+        }
+        private static bool AggregateMt(List<string[]> mts, List<string[]> mtResps, List<string[]> unknowns, string[] aggregatedRow)
+        {
+            if (mts.Any() && unknowns.Any() && !mtResps.Any())
+            {
+                aggregatedRow[Sn.Endtime] = unknowns.Last()[Sn.StartTime];
+                aggregatedRow[Sn.AggregationInfo] = unknowns.Last()[Sn.Filename]
+                                                    + ","
+                                                    + unknowns.Last()[Sn.PacketFrameTime];
             }
             else
             {
-                return createResultForAggregationNotPossible(uniqueBillId, allUnaggregatedInstances, newUnAggInstances, oldUnAggInstances);
+                aggregatedRow[Sn.Endtime] = mtResps.Last()[Sn.StartTime];
+                aggregatedRow[Sn.AggregationInfo] = mtResps.Last()[Sn.Filename]
+                                                    + ","
+                                                    + mtResps.Last()[Sn.PacketFrameTime];
             }
+
+            aggregatedRow[Sn.ChargingStatus] = "1";
+            bool aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
+            return aggregationComplete;
         }
+
+        private static bool AggregateSri(List<string[]> sriReqInstance, List<string[]> sriResInstance, List<string[]> unknownInstance, string[] aggregatedRow)
+        {
+            if (sriReqInstance.Any() && unknownInstance.Any() && !sriResInstance.Any())
+            {
+                aggregatedRow[Sn.Imsi] = unknownInstance.Last()[Sn.Imsi];
+                aggregatedRow[Sn.Endtime] = unknownInstance.Last()[Sn.StartTime];
+                aggregatedRow[Sn.AggregationInfo] = unknownInstance.Last()[Sn.Filename]
+                                                    + ","
+                                                    + unknownInstance.Last()[Sn.PacketFrameTime];
+            }
+            else
+            {
+                aggregatedRow[Sn.Imsi] = sriResInstance.Last()[Sn.Imsi];
+                aggregatedRow[Sn.Endtime] = sriResInstance.Last()[Sn.StartTime];
+                aggregatedRow[Sn.AggregationInfo] = sriResInstance.Last()[Sn.Filename]
+                                                    + ","
+                                                    + sriResInstance.Last()[Sn.PacketFrameTime];
+            }
+            aggregatedRow[Sn.ChargingStatus] = "1";
+            bool aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
+            return aggregationComplete;
+        }
+
         private static EventAggregationResult createResultForAggregationNotPossible(string uniqueEventId,
             List<string[]> originalUnAggregatedInstances,
             List<string[]> newUnAggInstances,

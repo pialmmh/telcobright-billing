@@ -21,6 +21,8 @@ namespace TelcobrightMediation
         public int HoursToAddAfterForSafePartialCollection { get; set; } = 1;
         public bool DescendingOrderWhileProcessingListedFiles { get; set; }
         public new bool DescendingOrderWhileListingFiles { get; set; }
+        public new bool DescendingOrderWhileListingFilesByFileNameOnly { get; set; }
+        public new int FileNameLengthFromRightWhileSorting{ get; set; }
         public List<string> IllegalStrToRemoveFromFields { get; set; }
         public DateTime NotAllowedCallDateTimeBefore { get; set; } = new DateTime(2008, 1, 1);
         public List<IValidationRule<string[]>> ValidationRulesForInconsistentCdrs { get; set; }

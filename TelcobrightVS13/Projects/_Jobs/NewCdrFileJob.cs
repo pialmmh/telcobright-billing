@@ -94,10 +94,97 @@ namespace Jobs
 
             //at this moment preProcessor has either records from a single job or merged jobs
             //duplicate cdr filter part ****************
+            var neAdditionalSetting = CollectorInput.CdrJobInputData.NeAdditionalSetting;
+
+            List<NewAndOldEventsWrapper<string[]>> allPreAggWrappers = new List<NewAndOldEventsWrapper<string[]>>();
+            List<EventAggregationResult> aggregationResults = new List<EventAggregationResult>();
+            if (neAdditionalSetting.PerformPreaggregation)
+            {
+                if (cdrSetting.DescendingOrderWhileListingFiles)
+                {
+                    throw  new Exception("DescendingOrder not supported while perform predecoding");
+                }
+                Console.WriteLine("Performing Pre Aggregating ....");
+                AbstractCdrDecoder decoder = preProcessor.Decoder;
+                List<string[]> l1FailedRows;
+                List<NewAndOldEventsWrapper<string[]>> l1AggResults =
+                    decoder.PreAggregateL1(preProcessor, out l1FailedRows);
+                foreach (var r in l1AggResults)
+                {
+                    foreach (var i in r.NewUnAggInstances)
+                    {
+                        i[Sn.Partialflag] = "-1";
+                    }
+                }
+                
+                if (preProcessor.TxtCdrRows.Count != l1FailedRows.Count + l1AggResults.Count * 2)
+                {
+                    throw new Exception("");
+                }
+                DayWiseEventCollector<string[]> dayWiseEventCollector = getEventCollector(decoder, l1FailedRows);
+                SmsHubStyleAggregator<string[]> aggregator = new SmsHubStyleAggregator<string[]>(dayWiseEventCollector);
+                List<NewAndOldEventsWrapper<string[]>> l2FailedWrappers;
+                List<NewAndOldEventsWrapper<string[]>> l2AggResults = aggregator.aggregateCdrs(out l2FailedWrappers);
+                if(!l2AggResults.TrueForAll(wr=>
+                {
+                    var b = wr.NewUnAggInstances.Count == 1 && wr.OldUnAggInstances.Count == 1;
+                    if (b == false)
+                    {
+                        ;
+                    }
+                    return b;
+                }))
+                    throw new Exception("L2 agg result must have 1 new and 1 old instance");
+                if (!l2AggResults.TrueForAll(wr => 
+                        new[]{"1","3"}.Contains(wr.OldUnAggInstances.First()[Sn.SmsType])
+                        && new[] { "2", "4" }.Contains(wr.NewUnAggInstances.First()[Sn.SmsType])))
+                    throw new Exception("New instances must be ReturnResult and Old instances must be SRI/MT FWD");
+                if(!l2FailedWrappers.TrueForAll(wr=>wr.NewUnAggInstances.Count+wr.OldUnAggInstances.Count==1))
+                    throw new Exception("Failed aggregation wrappers must contain either 1 success or failed response.");
+                allPreAggWrappers =
+                    l1AggResults.Concat(l2AggResults).Concat(l2FailedWrappers).ToList();
+                allPreAggWrappers.ForEach(paw => aggregationResults.Add(decoder.Aggregate(paw)));
+                var c = l1AggResults.SelectMany(ar => ar.NewUnAggInstances).Where(r => r[Sn.Partialflag] == "-1");
+                var successfulAggregationResults = aggregationResults.Where(ar => ar.AggregatedInstance != null)
+                    .ToList();
+                var failedAggregationResults = aggregationResults.Where(ar => ar.AggregatedInstance == null)
+                    .ToList();
+                preProcessor.FinalAggregatedInstances = successfulAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
+                preProcessor.NewRowsCouldNotBeAggregated = failedAggregationResults
+                    .SelectMany(ar => ar.NewInstancesCouldNotBeAggregated).ToList();
+                preProcessor.OldRowsCouldNotBeAggregated = failedAggregationResults
+                    .SelectMany(ar => ar.OldInstancesCouldNotBeAggregated).ToList();
+                foreach (string[] row in successfulAggregationResults
+                    .SelectMany(ar => ar.NewInstancesToBeDiscardedAfterAggregation))
+                {
+                    preProcessor.NewRowsToBeDiscardedAfterAggregation.Add(row);
+                }
+                foreach (string[] row in successfulAggregationResults
+                    .SelectMany(ar => ar.OldInstancesToBeDiscardedAfterAggregation))
+                {
+                    preProcessor.OldRowsToBeDiscardedAfterAggregation.Add(row);
+                }
+                preProcessor.OldPartialInstancesFromDB = successfulAggregationResults
+                    .SelectMany(ar => ar.OldPartialInstancesFromDB)
+                    .Concat(failedAggregationResults.SelectMany(ar => ar.OldPartialInstancesFromDB)).ToList();
+                
+                var inputCount = dayWiseEventCollector.InputEvents.Count + l1AggResults.Count + preProcessor.NewRowsToBeDiscardedAfterAggregation.Count;
+                var existingRows = dayWiseEventCollector.ExistingEventsInDb;
+                preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
+
+                if (inputCount + existingRows.Count != preProcessor.FinalAggregatedInstances.Count + preProcessor.NewRowsToBeDiscardedAfterAggregation.Count
+                    + preProcessor.OldRowsToBeDiscardedAfterAggregation.Count +
+                    +preProcessor.NewRowsCouldNotBeAggregated.Count + preProcessor.OldRowsCouldNotBeAggregated.Count)
+                {
+                    throw new Exception("Input and aggregated rows count did not match expected value");
+                }
+                //preProcessor.ValidateAggregation(this.Input.Job);
+
+            }// preAgg
 
             if (preProcessor.TxtCdrRows.Count > 0)
             {
-                if (CollectorInput.Ne.FilterDuplicateCdr == 1)
+                if (CollectorInput.Ne.FilterDuplicateCdr == 1 && !neAdditionalSetting.PerformPreaggregation)
                 {
                     Dictionary<long, CdrMergedJobError> jobsWithDupCdrsDuringMergeProcessing =
                         new Dictionary<long, CdrMergedJobError>(); //key= jobId
@@ -118,7 +205,6 @@ namespace Jobs
                 //aggregate cdr part
                 if (preProcessor.TxtCdrRows.Count > 0)
                 {
-                    var neAdditionalSetting = CollectorInput.CdrJobInputData.NeAdditionalSetting;
                     if (neAdditionalSetting != null && !neAdditionalSetting.AggregationStyle
                             .IsNullOrEmptyOrWhiteSpace()) //move it to a mef rule later
                     {
@@ -126,9 +212,9 @@ namespace Jobs
                         {
                             throw new Exception("Duplicate Filtering must be on when cdr aggregation is enabled.");
                         }
-                        if (neAdditionalSetting.AggregationStyle == "telcobridge")
+                        if (neAdditionalSetting.AggregationStyle == "telcobridge" && !neAdditionalSetting.PerformPreaggregation)
                         {
-
+                            Console.WriteLine("Aggregating ....");
                             foreach (var row in preProcessor.DecodedCdrRowsBeforeDuplicateFiltering)
                             {
                                 if (preProcessor.FinalNonDuplicateEvents.ContainsKey(row[Fn.UniqueBillId]))
@@ -143,6 +229,7 @@ namespace Jobs
                             preProcessor.NewDuplicateEvents =
                                 preProcessor.NewDuplicateEvents.Where(r =>
                                 preProcessor.ExistingUniqueEventInstancesFromDB.Contains(r[Fn.UniqueBillId])).ToList();
+
                             preProcessor = aggregateCdrs(preProcessor);
                             preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
 
@@ -204,10 +291,39 @@ namespace Jobs
             return this.HandledJobs;
         }
 
+        private DayWiseEventCollector<string[]> getEventCollector(AbstractCdrDecoder decoder, List<string[]> failedPreAggCandidates)
+        {
+            List<string[]> rowsToConsiderForAggregation = failedPreAggCandidates;
+            //List<cdrinconsistent> cdrinconsistents = preprocessor.InconsistentCdrs.ToList();
+            DbCommand cmd = this.CollectorInput.CdrJobInputData.Context.Database.Connection.CreateCommand();
+            DayWiseEventCollector<string[]> dayWiseEventCollector = new DayWiseEventCollector<string[]>
+            (uniqueEventsOnly: false,
+                collectorInput: this.CollectorInput,
+                dbCmd: cmd, decoder: decoder,
+                inputEvents: rowsToConsiderForAggregation,//decoded rows
+                sourceTablePrefix: decoder.PartialTablePrefix);
+            dayWiseEventCollector.createNonExistingTables();
+            dayWiseEventCollector.collectTupleWiseExistingEvents(decoder);
+            return dayWiseEventCollector;
+        }
+
+
         private NewCdrPreProcessor filterDuplicates(NewCdrPreProcessor preProcessor, CdrSetting cdrSetting, Dictionary<long, CdrMergedJobError> jobsWithDupCdrsDuringMergeProcessing)
         {
             Console.WriteLine("CdrJobProcessor: Filtering duplicates...");
-            preProcessor = this.filterDuplicateCdrs(preProcessor);
+            var ne = preProcessor.CdrCollectorInputData.Ne;
+            var neWiseAdditionalSettings = preProcessor.CdrSetting.NeWiseAdditionalSettings;
+            NeAdditionalSetting neAdditionalSettings = null;
+            neWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSettings);
+            if (neAdditionalSettings != null && neAdditionalSettings.PerformPreaggregation)
+            {
+                preProcessor = this.filterDuplicateCdrsDummy(preProcessor);
+                return preProcessor;
+            }
+            else
+            {
+                preProcessor = this.filterDuplicateCdrs(preProcessor);
+            }
 
             Dictionary<string, List<string[]>> billIdWiseDuplicateRows =
                 preProcessor.TxtCdrRows.GroupBy(r => r[Fn.UniqueBillId])
@@ -669,6 +785,7 @@ namespace Jobs
                 cmd.ExecuteNonQuery();
             }
         }
+        
 
         protected void WriteJobCompletionIfCollectionIsEmpty(int rawCount, job telcobrightJob, PartnerEntities context)
         {
@@ -831,6 +948,7 @@ namespace Jobs
         }
         public NewCdrPreProcessor filterDuplicateCdrs(NewCdrPreProcessor preProcessorWithCollectedRows)
         {
+
             AbstractCdrDecoder decoder = preProcessorWithCollectedRows.Decoder;
             List<string[]> decodedCdrRows = preProcessorWithCollectedRows.TxtCdrRows;
             List<string[]> decodedRowsBeforeDuplicateFiltering = new List<string[]>();
@@ -868,6 +986,41 @@ namespace Jobs
             {
                 textCdrCollectionPreProcessor.ExistingUniqueEventInstancesFromDB.Add(tuple);
             }
+            //adjust raw count due to filtering
+            int newRawCount = textCdrCollectionPreProcessor.TxtCdrRows.Count +
+                              textCdrCollectionPreProcessor.InconsistentCdrs.Count +
+                              textCdrCollectionPreProcessor.NewDuplicateEvents.Count;
+            if (newRawCount != textCdrCollectionPreProcessor.DecodedCdrRowsBeforeDuplicateFiltering.Count
+                + textCdrCollectionPreProcessor.InconsistentCdrs.Count)
+            {
+                throw new Exception("Cdr count mismatch after duplicate filtering!");
+            }
+            textCdrCollectionPreProcessor.RawCount = newRawCount;
+            return textCdrCollectionPreProcessor;
+        }
+
+        public NewCdrPreProcessor filterDuplicateCdrsDummy(NewCdrPreProcessor preProcessorWithCollectedRows)
+        {
+            AbstractCdrDecoder decoder = preProcessorWithCollectedRows.Decoder;
+            List<string[]> decodedCdrRows = preProcessorWithCollectedRows.TxtCdrRows;
+            List<string[]> decodedRowsBeforeDuplicateFiltering = new List<string[]>();
+            decodedCdrRows.ForEach(r => decodedRowsBeforeDuplicateFiltering.Add(r));
+            List<cdrinconsistent> cdrinconsistents = preProcessorWithCollectedRows.InconsistentCdrs.ToList();
+            //Dictionary<string, string[]> finalNonDuplicateEvents = decodedCdrRows.ToDictionary(r=>r[Fn.UniqueBillId]);
+
+            var textCdrCollectionPreProcessor = new NewCdrPreProcessor(
+                txtCdrRows: preProcessorWithCollectedRows.TxtCdrRows,
+                inconsistentCdrs: cdrinconsistents,
+                cdrCollectorInputData: this.CollectorInput)
+            {
+                DecodedCdrRowsBeforeDuplicateFiltering = decodedRowsBeforeDuplicateFiltering,
+                FinalNonDuplicateEvents = new Dictionary<string, string[]>(),
+                NewDuplicateEvents = new List<string[]>(),
+                DebugCdrsForDump = preProcessorWithCollectedRows.DebugCdrsForDump,
+                Decoder = decoder,
+                RowsToConsiderForAggregation = decodedCdrRows
+            };
+
             //adjust raw count due to filtering
             int newRawCount = textCdrCollectionPreProcessor.TxtCdrRows.Count +
                               textCdrCollectionPreProcessor.InconsistentCdrs.Count +

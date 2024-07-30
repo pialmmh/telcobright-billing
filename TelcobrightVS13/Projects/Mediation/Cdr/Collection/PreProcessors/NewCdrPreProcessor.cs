@@ -20,7 +20,7 @@ namespace TelcobrightMediation
         private bool PartialCdrEnabled { get; }
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
         public List<string[]> DecodedCdrRowsBeforeDuplicateFiltering { get; set; } = new List<string[]>();
-        public List<string[]> RowsToConsiderForAggregation { get; } = new List<string[]>();
+        public List<string[]> RowsToConsiderForAggregation { get; set; } = new List<string[]>();
         public List<string[]> NewRowsToBeDiscardedAfterAggregation { get; } = new List<string[]>();
         public List<string[]> OldRowsToBeDiscardedAfterAggregation { get; } = new List<string[]>();
         public List<string[]> FinalAggregatedInstances { get; set; } = new List<string[]>();

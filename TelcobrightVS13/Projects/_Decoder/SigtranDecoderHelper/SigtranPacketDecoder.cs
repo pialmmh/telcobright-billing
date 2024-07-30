@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using LibraryExtensions;
 using System.Globalization;
 using System.Net;
+using System.Runtime;
 using Decoders.SigtranDecoderHelper;
 using TelcobrightMediation;
 
@@ -38,13 +39,13 @@ namespace Decoders
             "4701"
         };
 
-        private readonly Dictionary<string, SmsType> causeCodes = new Dictionary<string, SmsType>
+        private readonly Dictionary<string, MsuType> causeCodes = new Dictionary<string, MsuType>
         {
-            {"1:44",SmsType.Mt},
-            {"2:44",SmsType.MtResp},
-            {"1:45",SmsType.Sri},
-            {"2:45",SmsType.SriResp},
-            {"1:63",SmsType.InformServiceCenter}
+            {"1:44",MsuType.Mt},
+            {"2:44",MsuType.MtResp},
+            {"1:45",MsuType.Sri},
+            {"2:45",MsuType.SriResp},
+            {"1:63",MsuType.InformServiceCenter}
         };
         public SigtranPacketDecoder(string pcapFilename, Dictionary<string, partnerprefix> ansPrefixes)
         {
@@ -63,7 +64,11 @@ namespace Decoders
             senderProcess.StartInfo.CreateNoWindow = true;
             senderProcess.Start();
             senderProcess.WaitForExit();
-            List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(this.PcapFileName.Replace(".pcap.gz",".json"));
+            var prevLatencyMode = GCSettings.LatencyMode;
+            GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+            List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(this.PcapFileName.Replace(".pcap.gz", ".json"));
+            GCSettings.LatencyMode = prevLatencyMode;
+            //List<SigtranPacket> data = new List<SigtranPacket>();
             return data;
         }
 
@@ -100,17 +105,26 @@ namespace Decoders
 
         public List<string[]> CdrRecords(List<SigtranPacket> packets)
         {
-            ConcurrentBag<string[]> records = new ConcurrentBag<string[]>();
-
-            Parallel.ForEach(packets, packet =>
+            List<string[]> records = new List<string[]>(packets.Count);
+            for (int i = 0; i < packets.Count; i++)
             {
-                string[] record = Enumerable.Repeat((string)null, 104).ToArray();
+                records.Add(null); // Add an empty array to the list
+            }
+
+            //Parallel.For(0,packets.Count, index =>
+            for (int index = 0; index < packets.Count; index++)
+            {
+                var packet = packets[index];
+                //string[] record = Enumerable.Repeat((string)null, 104).ToArray();
+                string[] record = new string[104];
 
                 // gms layer
                 GsmMap gsmMapLayer = packet.GsmMap;
 
                 if (gsmMapLayer == null)
-                    return;
+                {
+                    continue;
+                }
 
                 Frame frameLayer = packet.Frame;
                 string frameTime = frameLayer?.FrameTimeUtc.ToString();
@@ -186,13 +200,13 @@ namespace Decoders
                 {
                     // throw new Exception("OpCode tree local can not be null");
                 }
-                // excluding reportSM-DeliveryStatus
-                if (smsTypeIdentifier == "47")
-                     return;
+                // excluding reportSM-DeliveryStatus and mo-forwardSM 
+                if (smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && smsTypeIdentifier != "")
+                     continue;
 
                 // exluding Udts
                 if (sccpLayer?.ReturnCause != null)
-                    return;
+                    continue;
 
                 record[Sn.OptionalCode] = smsTypeIdentifier;
 
@@ -204,13 +218,14 @@ namespace Decoders
                     .Append(smsTypeIdentifier).ToString();
 
                 // combination of gsm_map.old.Component and gsm_old.localValue
-                SmsType systemCodes = SmsType.None;
-                systemCodes = this.causeCodes.TryGetValue(tempSystemCodes, out systemCodes) ? systemCodes : SmsType.None;
+                MsuType systemCodes = MsuType.None;
+                systemCodes = this.causeCodes.TryGetValue(tempSystemCodes, out systemCodes) ? systemCodes : MsuType.None;
 
                 // Sms Type ReturnError
-                if (reqResIdentifier == "3" && systemCodes == SmsType.None)
+                if (reqResIdentifier == "3" && systemCodes == MsuType.None)
                 {
-                    record[Sn.SmsType] = "5";
+                    //record[Sn.SmsType] = "5";
+                    continue;
                 }
 
                 InvokeElement componentTreeInvokeElement = gsmMapLayer?.ComponentTree?.InvokeElement;
@@ -223,15 +238,18 @@ namespace Decoders
                 string imsi = componentTreeInvokeElement?.ImsiTree?.Imsi?.ToString();
 
                // imsi, A Party,B Party
-                if (systemCodes == SmsType.Sri)
+                if (systemCodes == MsuType.Sri)
                 {
+                    continue;
                     // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
                     record[Sn.TerminatingCalledNumber] = calledNumber;
                     record[Sn.Imsi] = serviceCentreAddress;
                     record[Sn.SmsType] = "1";
+
                 }
-                if (systemCodes == SmsType.SriResp)
+                if (systemCodes == MsuType.SriResp)
                 {
+                    continue;
                     //	e164.msisdn => terminating called number,imsi => redirect number
                     imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
                     record[Sn.TerminatingCalledNumber] = calledNumber;
@@ -242,32 +260,34 @@ namespace Decoders
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "2";
                 }
-                if (systemCodes == SmsType.Mt)
+                if (systemCodes == MsuType.Mt)
                 {
                     // e164.msisdn => terminating caller number	,imsi => redirectnumber
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "3";
                 }
-                if (systemCodes == SmsType.MtResp)
+                if (systemCodes == MsuType.MtResp)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "4";
                 }
-                if (systemCodes == SmsType.InformServiceCenter)
+                if (systemCodes == MsuType.InformServiceCenter)
                 {
                     // e164.msisdn => terminating caller number, imsi => redirect number
-                    record[Sn.TerminatingCallingNumber] = callerNumber;
-                    record[Sn.Imsi] = imsi;
-                    record[Sn.SmsType] = "6";
+                    //record[Sn.TerminatingCallingNumber] = callerNumber;
+                    //record[Sn.Imsi] = imsi;
+                    //record[Sn.SmsType] = "6";
+                    continue;
                 }
                 // unkonwn instances
                 if ((record[Sn.SmsType] == null || record[Sn.SmsType] == "") && reqResIdentifier == "2")
                 {
                     if ((bool)!componentTreeReturnResultLastElement?.Imsi.IsNullOrEmptyOrWhiteSpace())
                     {
+                        continue;
                         // sri response
                         imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
                         record[Sn.TerminatingCalledNumber] = calledNumber;
@@ -278,13 +298,14 @@ namespace Decoders
                         record[Sn.Imsi] = imsi;
                         record[Sn.SmsType] = "2";
                     }
-                    else
-                    {
-                        // mt response 
+                    // mt response 
+                    //else
+                    //{
                         record[Sn.TerminatingCallingNumber] = callerNumber;
                         record[Sn.Imsi] = imsi;
                         record[Sn.SmsType] = "4";
-                    }
+                    //}
+                    
                 }
 
                 string outPartnerId = getPartneridByGtPrefix(record[Sn.OriginatingCalledNumber]).ToString();
@@ -295,10 +316,9 @@ namespace Decoders
 
                 string[] gtPair =
                 {
-                    outPartnerId,
-                    inPartnerId
+                    reqResIdentifier == "2"? outPartnerId :inPartnerId,
+                    reqResIdentifier == "2"? inPartnerId :outPartnerId
                 };
-                Array.Sort(gtPair);
 
                 DateTime startTime = Convert.ToDateTime(dateTime);
                 startTime = startTime.Hour == 23 ? startTime.Date.AddDays(1) : startTime.Date;
@@ -313,6 +333,7 @@ namespace Decoders
                 //{
                 //    syscode = "1";
                 //}
+
                 record[Sn.UniqueBillId] = new StringBuilder(startTime.ToMySqlFormatDateOnlyWithoutTimeAndQuote())
                     .Append(separator)
                     //.Append(syscode)
@@ -328,10 +349,11 @@ namespace Decoders
                 record[Sn.ChargingStatus] = "0";
                 record[Sn.ServiceGroup] = "1";
 
-                records.Add(record);
-            });
+                //records.Add(record);
+                records[index]= record;
+            }
 
-            return records.ToList();
+            return records.Where(r=>r!=null).ToList();
         }
 
         private int getPartneridByGtPrefix(string gt)
