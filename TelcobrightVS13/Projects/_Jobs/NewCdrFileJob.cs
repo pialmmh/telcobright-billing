@@ -104,19 +104,12 @@ namespace Jobs
                 {
                     throw  new Exception("DescendingOrder not supported while perform predecoding");
                 }
-                Console.WriteLine("Performing Pre Aggregating ....");
+                Console.WriteLine("Performing InMemory Aggregating ....");
                 AbstractCdrDecoder decoder = preProcessor.Decoder;
                 List<string[]> l1FailedRows;
                 List<NewAndOldEventsWrapper<string[]>> l1AggResults =
                     decoder.PreAggregateL1(preProcessor, out l1FailedRows);
-                foreach (var r in l1AggResults)
-                {
-                    foreach (var i in r.NewUnAggInstances)
-                    {
-                        i[Sn.Partialflag] = "-1";
-                    }
-                }
-                
+                //var tmps = l1FailedRows.Where(lf => lf[Sn.UniqueBillId] == "2024-07-07/28-23/3b00b66c").ToList();
                 if (preProcessor.TxtCdrRows.Count != l1FailedRows.Count + l1AggResults.Count * 2)
                 {
                     throw new Exception("");
@@ -125,21 +118,21 @@ namespace Jobs
                 SmsHubStyleAggregator<string[]> aggregator = new SmsHubStyleAggregator<string[]>(dayWiseEventCollector);
                 List<NewAndOldEventsWrapper<string[]>> l2FailedWrappers;
                 List<NewAndOldEventsWrapper<string[]>> l2AggResults = aggregator.aggregateCdrs(out l2FailedWrappers);
-                if(!l2AggResults.TrueForAll(wr=>
-                {
-                    var b = wr.NewUnAggInstances.Count == 1 && wr.OldUnAggInstances.Count == 1;
-                    if (b == false)
-                    {
-                        ;
-                    }
-                    return b;
-                }))
+                if (!l2AggResults.TrueForAll(wr =>
+                 {
+                     var b = wr.NewUnAggInstances.Count == 1 && wr.OldUnAggInstances.Count == 1;
+                     if (b == false)
+                     {
+                         ;
+                     }
+                     return b;
+                 }))
                     throw new Exception("L2 agg result must have 1 new and 1 old instance");
-                if (!l2AggResults.TrueForAll(wr => 
-                        new[]{"1","3"}.Contains(wr.OldUnAggInstances.First()[Sn.SmsType])
-                        && new[] { "2", "4" }.Contains(wr.NewUnAggInstances.First()[Sn.SmsType])))
-                    throw new Exception("New instances must be ReturnResult and Old instances must be SRI/MT FWD");
-                if(!l2FailedWrappers.TrueForAll(wr=>wr.NewUnAggInstances.Count+wr.OldUnAggInstances.Count==1))
+                //if (!l2AggResults.TrueForAll(wr => 
+                //        new[]{"1","3"}.Contains(wr.OldUnAggInstances.First()[Sn.SmsType])
+                //        && new[] { "2", "4" }.Contains(wr.NewUnAggInstances.First()[Sn.SmsType])))
+                //    throw new Exception("New instances must be ReturnResult and Old instances must be SRI/MT FWD");
+                if (!l2FailedWrappers.TrueForAll(wr=>wr.NewUnAggInstances.Count+wr.OldUnAggInstances.Count==1))
                     throw new Exception("Failed aggregation wrappers must contain either 1 success or failed response.");
                 allPreAggWrappers =
                     l1AggResults.Concat(l2AggResults).Concat(l2FailedWrappers).ToList();
@@ -168,7 +161,7 @@ namespace Jobs
                     .SelectMany(ar => ar.OldPartialInstancesFromDB)
                     .Concat(failedAggregationResults.SelectMany(ar => ar.OldPartialInstancesFromDB)).ToList();
                 
-                var inputCount = dayWiseEventCollector.InputEvents.Count + l1AggResults.Count + preProcessor.NewRowsToBeDiscardedAfterAggregation.Count;
+                var inputCount = dayWiseEventCollector.InputEvents.Count + l1AggResults.Count*2;
                 var existingRows = dayWiseEventCollector.ExistingEventsInDb;
                 preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
 

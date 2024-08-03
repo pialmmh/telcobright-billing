@@ -103,6 +103,7 @@ namespace InstallConfig
                         MaxConcurrentFilesForParallelPreDecoding = 10,
                         MinRowCountToStartBatchCdrProcessing = 1000000,
                         MaxNumberOfFilesInPreDecodedDirectory = 10,
+                        PrefetchPredecoderBatchSize = 0,
                         CreateJobRecursively = true,
                         AggregationStyle = "telcobridge",
                         PerformPreaggregation = true,

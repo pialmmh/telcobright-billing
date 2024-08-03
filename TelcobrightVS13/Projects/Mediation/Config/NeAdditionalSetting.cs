@@ -16,6 +16,7 @@ namespace TelcobrightMediation
         public bool PerformPreaggregation { get; set; }
         public bool DumpAllInstancesToDebugCdrTable { get; set; }
         public bool CreateJobRecursively { get; set; }
+        public int PrefetchPredecoderBatchSize { get; set; } = 0;
 
         public List<EventPreprocessingRule> EventPreprocessingRules { get; set; }= new List<EventPreprocessingRule>();
 

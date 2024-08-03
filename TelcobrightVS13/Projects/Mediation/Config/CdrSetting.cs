@@ -55,7 +55,6 @@ namespace TelcobrightMediation
         public DateTime ExcludeBefore { get; set; } 
         public bool isTableDelete { get; set; }
         public bool AllowNegativeInvoiceGeneration { get; set; } = false;
-
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

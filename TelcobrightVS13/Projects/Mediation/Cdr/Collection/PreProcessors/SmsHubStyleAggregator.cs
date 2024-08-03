@@ -35,11 +35,18 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
         {
             Dictionary<string, NewAndOldEventsWrapper<T>> billIdWiseNewAndOldWrappers = mergeAndGroupNewAndOldEvents();
             var wrappers = billIdWiseNewAndOldWrappers.Values;
+            List<string[]> rowsToAggregate = wrappers.SelectMany(wr => wr.NewUnAggInstances.Select(s => s as string[]))
+                .ToList();
+            //.Concat(wrappers.SelectMany(wr => wr.NewUnAggInstances.Select(s => s as string[]))).ToList();
+            //var tmps = rowsToAggregate.Where(lf => lf[Sn.UniqueBillId] == "2024-07-07/28-23/3b00b66c").ToList();
             //List<string[]> rowsToAggregate = wrappers.SelectMany(wr => wr.OldUnAggInstances.Select(s => s as string[]))
             //    .ToList()
             //    .Concat(wrappers.SelectMany(wr => wr.NewUnAggInstances.Select(s => s as string[]))).ToList();
             failedList =new List<NewAndOldEventsWrapper<string[]>>();
             //NewCdrPreProcessor preProcessor = new NewCdrPreProcessor(rowsToAggregate, new List<cdrinconsistent>(),
+            //List<string[]> rowsToAggregates = wrappers.SelectMany(wr => wr.OldUnAggInstances.Select(s => s as string[]))
+            //    .ToList()
+            //    .Concat(wrappers.SelectMany(wr => wr.NewUnAggInstances.Select(s => s as string[]))).ToList();
             //    this.CollectorInput);
             //preProcessor.Decoder = this.Decoder;
             List<NewAndOldEventsWrapper<string[]>> unGroupedNewAndOldEventsWrappers = new List<NewAndOldEventsWrapper<string[]>>();
@@ -76,6 +83,10 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
             foreach (var kv in billIdWiseOldInstances)
             {
                 var billId = kv.Key;
+                if (billId == "2024-07-07/28-23/3b00b66c")
+                {
+                    ;
+                }
                 List<T> oldUnAggInstances = kv.Value;
                 NewAndOldEventsWrapper<T> targetWrapper = null;
                 newAndOldInstanceWrappers.TryGetValue(billId, out targetWrapper);

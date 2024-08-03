@@ -10,7 +10,7 @@ using QuartzTelcobright;
 using TelcobrightFileOperations;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
-
+using MySql.Data.MySqlClient;
 //not system namespace, telcobright's namespace
 
 namespace Process
@@ -50,6 +50,7 @@ namespace Process
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                 schedulerContext, operatorName);
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
+            string conStr = ConnectionManager.GetConnectionStringByOperator(operatorName);
             PartnerEntities context = new PartnerEntities(entityConStr);
 
             try
@@ -91,19 +92,35 @@ namespace Process
                     and creationtime < NOW() - INTERVAL 10 MINUTE
                     order by right(jobname,27) limit 0,{max}").ToList();
                 }
-
-                jobnamesNeedToMark.ForEach(i => context
-                    .Database
-                    .ExecuteSqlCommand(
-                        $@"update job set status=4
+                if (!jobnamesNeedToMark.Any())return;
+                
+                string updateSql = $@"update job set status=4
                     where idjobdefinition=6 
-                    and status=6 and id={i}"));
+                    and status=6 and id in 
+                    ({string.Join(",",jobnamesNeedToMark.Select(j => j))})";
+
+                using (MySqlConnection con = new MySqlConnection(conStr))
+                {
+                    con.Open();
+                    using (MySqlCommand cmd= new MySqlCommand(updateSql,con))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    con.Close();
+                }
+
+                //jobnamesNeedToMark.ForEach(i => context
+                //    .Database
+                //    .ExecuteSqlCommand(
+                //        $@"update job set status=4
+                //    where idjobdefinition=6 
+                //    and status=6 and id={i}"));
 
             }
             catch (Exception e1)
             {
                 Console.WriteLine(e1);
-                ErrorWriter.WriteError(e1, "FileLister", null, "", operatorName, context);
+                ErrorWriter.WriteError(e1, "Download Marker", null, "", operatorName, context);
             }
         }
 

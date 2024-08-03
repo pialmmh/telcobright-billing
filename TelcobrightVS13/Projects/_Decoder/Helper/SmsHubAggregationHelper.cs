@@ -15,18 +15,24 @@ namespace Decoders
         public static EventAggregationResult Aggregate(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper)
         {
             //MsuType aggregationType = MsuType.None;
+
             List<string[]> newUnAggInstances = newAndOldEventsWrapper.NewUnAggInstances;
             List<string[]> oldUnAggInstances = newAndOldEventsWrapper.OldUnAggInstances;
 
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Sn.StartTime]).ToList();
-            if (newUnAggInstances.Count > 2 || oldUnAggInstances.Count > 2 || allUnaggregatedInstances.Count > 2)
+            if (newUnAggInstances.Count > 2 || oldUnAggInstances.Count > 1 || allUnaggregatedInstances.Count > 2)
                 throw new Exception("allUnaggregatedInstances > 2 rows  cannot be aggregated.");
 
             var groupedByBillId = allUnaggregatedInstances.GroupBy(row => row[Sn.UniqueBillId]).ToDictionary(g => g.Key);
             if (groupedByBillId.Count > 1)
                 throw new Exception("Rows with multiple bill ids cannot be aggregated.");
             string uniqueBillId = groupedByBillId.Keys.First();
+
+            if (uniqueBillId.Contains("2024-07-07/28-23/3b00b66c"))
+            {
+                ;
+            }
             List<string[]> newRowsToBeDiscardedAfterAggregation = new List<string[]>();
             List<string[]> oldRowsToBeDiscardedAfterAggregation = new List<string[]>();
             var aggregationComplete = false;
@@ -96,34 +102,57 @@ namespace Decoders
             //    aggregationComplete = !aggregatedRow[Sn.Imsi].IsNullOrEmptyOrWhiteSpace();
             //}
 
+
+            var expectedType = new[] { "2", "4" };
+
+            var response = allUnaggregatedInstances.Last();
+
+            if (expectedType.Contains(response[Sn.SmsType]))
+            {
+                if (newUnAggInstances.Any(n => n[Sn.IdCall] == response[Sn.IdCall]))
+                {
+                    newRowsToBeDiscardedAfterAggregation.Add(response);
+                }
+                else
+                {
+                    if (oldUnAggInstances.All(o => o[Sn.IdCall] != response[Sn.IdCall]))
+                    {
+                        throw new Exception("Partial instances must belong either new or old list");
+                    }
+                    oldRowsToBeDiscardedAfterAggregation.Add(response);
+                }
+            }
+            else
+                throw new Exception("Second partial instance should be of response type.");
+            //i++;
             //if (aggregationComplete)
             //{
-                //foreach (string[] row in newUnAggInstances)
-                //{
-                //    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
-                //    {
-                //        newRowsToBeDiscardedAfterAggregation.Add(row);
-                //    }
-                //}
-                newRowsToBeDiscardedAfterAggregation.Add(newUnAggInstances.Last());
-                //foreach (string[] row in oldUnAggInstances)
-                //{
-                //    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
-                //    {
-                //        oldRowsToBeDiscardedAfterAggregation.Add(row);
-                //    }
-                //}
-                if (oldUnAggInstances.Any()) oldRowsToBeDiscardedAfterAggregation.Add(oldUnAggInstances.Last());
+            //foreach (string[] row in newUnAggInstances)
+            //{
+            //    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
+            //    {
+            //        newRowsToBeDiscardedAfterAggregation.Add(row);
+            //    }
+            //}
+            //newRowsToBeDiscardedAfterAggregation.Add(newUnAggInstances.Last());
+            //foreach (string[] row in oldUnAggInstances)
+            //{
+            //    if (row[Sn.IdCall] != aggregatedRow[Sn.IdCall])
+            //    {
+            //        oldRowsToBeDiscardedAfterAggregation.Add(row);
+            //    }
+            //}
+            //if (oldUnAggInstances.Any()) oldRowsToBeDiscardedAfterAggregation.Add(oldUnAggInstances.Last());
 
-                if (!newRowsToBeDiscardedAfterAggregation.Any())
-                {
-                    Console.WriteLine("corner case");
-                }
-                if (aggregatedRow == null)
-                {
-                    Console.WriteLine("corner case");
-                }
-                var result = new EventAggregationResult//aggregation successful
+            //if (!newRowsToBeDiscardedAfterAggregation.Any())
+            //{
+            //    Console.WriteLine("corner case");
+            //}
+            //if (aggregatedRow == null)
+            //{
+            //    Console.WriteLine("corner case");
+            //}
+            var result = new EventAggregationResult//aggregation successful
                 (
                     uniqueEventId: uniqueBillId,
                     allUnaggregatedInstances: allUnaggregatedInstances,
@@ -134,7 +163,7 @@ namespace Decoders
                     oldInstancesToBeDiscardedAfterAggregation: oldRowsToBeDiscardedAfterAggregation,
                     oldPartialInstancesFromDB: oldUnAggInstances
                 );
-                return result;
+            return result;
             //}
             //else
             //{

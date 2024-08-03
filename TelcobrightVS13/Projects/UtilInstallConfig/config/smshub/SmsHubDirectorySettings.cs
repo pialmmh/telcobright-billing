@@ -32,7 +32,7 @@ namespace InstallConfig
         {
 
 
-            DirectorySettings directorySetting = new DirectorySettings("c:/telcobright", "");
+            DirectorySettings directorySetting = new DirectorySettings("D:/telcobright", "");
             tbc.DirectorySettings = directorySetting;
 
 
@@ -147,7 +147,7 @@ namespace InstallConfig
                     RecursiveFileStore=true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 
@@ -196,7 +196,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 
@@ -244,7 +244,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 
@@ -292,7 +292,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 

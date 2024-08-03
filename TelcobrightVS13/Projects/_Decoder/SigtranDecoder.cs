@@ -114,13 +114,17 @@ namespace Decoders
                     UniqueBillId = rows.Key,
                     NewUnAggInstances = rows.Value
                 };
+                //if (rows.Key == "2024-07-07/28-23/3c0022bc")
+                //{
+                //    ;
+                //}
                 //EventAggregationResult 
                 List<string[]> failedPreAggCandidates;
                
                 List<NewAndOldEventsWrapper<string[]>> aggCandidatesForThisBillId = UngroupReqResL1(row, out failedPreAggCandidates);
                 if (rows.Value.Count != aggCandidatesForThisBillId.Count * 2 + failedPreAggCandidates.Count)
                 {
-                    //UngroupReqRes(row, out failedPreAggCandidates);
+                    UngroupReqResL1(row, out failedPreAggCandidates);
                     throw new Exception("ungroupedReqRes must be equal with rows count");
                 }
                 preAggCandidates.AddRange(aggCandidatesForThisBillId);
@@ -171,7 +175,10 @@ namespace Decoders
                 .ToList();
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Sn.StartTime]).ToList();
-
+            //if (allUnaggregatedInstances.Where(r => r[Sn.UniqueBillId] == "2024-07-07/28-23/3c0022bc").ToList().Count > 1)
+            //{
+            //    Console.WriteLine("my test again");
+            //}
             List<string[]> mtReqs = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "3")
                 .ToList();
             List<string[]> mtResps = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "4")
@@ -203,6 +210,10 @@ namespace Decoders
             //    SeperatingOldAndNewInstances(failedRows, oldUnAggInstances);
             //    SeperatingOldAndNewInstances(aggCandidates, oldUnAggInstances);
             //}
+            if (aggCandidates.Count * 2 + failedRows.Count != allUnaggregatedInstances.Count)
+            {
+                throw new Exception("Testing if something is wrong here.");
+            }
 
             return aggCandidates;
         }
@@ -231,6 +242,12 @@ namespace Decoders
                 .ToList();
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Sn.StartTime]).ToList();
+            //tmp code
+            if (allUnaggregatedInstances.Where(row => row[Sn.UniqueBillId] == "2024-07-07/28-23/3b00b66c").ToList()
+                    .Count > 1)
+            {
+                ;
+            }
             // temp code 
             //if (newUnAggInstances.Any() && oldUnAggInstances.Any())
             //{
@@ -285,7 +302,17 @@ namespace Decoders
             //    SeperatingOldAndNewInstances(cdrsCouldNotBeAggregated, oldUnAggInstances);
             //    SeperatingOldAndNewInstances(aggCandidates, oldUnAggInstances);
             //}
-
+            foreach (var aggCandidate in aggCandidates)
+            {
+                if (!(aggCandidate.NewUnAggInstances.Count == 1 && aggCandidate.OldUnAggInstances.Count == 1))
+                {
+                    ;
+                }
+            }
+            if (aggCandidates.Count * 2 + cdrsCouldNotBeAggregated.Count != allUnaggregatedInstances.Count)
+            {
+                throw new Exception("Testing if something is wrong here.");
+            }
             return aggCandidates;
         }
 
@@ -303,65 +330,48 @@ namespace Decoders
             return idCallWiseNewAndOldFlagsForRow;
         }
 
-        private static void SeperatingOldAndNewInstances(List<NewAndOldEventsWrapper<string[]>> candidates, List<string[]> oldUnAggInstances)
-        {
-            foreach (var aggCandidate in candidates)
-            {
-
-                foreach (var oldUnAggInstance in oldUnAggInstances)
-                {
-                    // Find records in NewUnAggInstances that match the UniqueBillId of the oldUnAggInstance
-                    var temp = aggCandidate.NewUnAggInstances
-                        .Where(i => i[Sn.UniqueBillId] == oldUnAggInstance[Sn.UniqueBillId])
-                        .ToList();
-
-                    // Move matching records to OldUnAggInstances
-                    foreach (var record in temp)
-                    {
-                        aggCandidate.OldUnAggInstances.Add(record);
-                        aggCandidate.NewUnAggInstances.Remove(record);
-                    }
-                }
-            }
-        }
-
+      
         private static List<NewAndOldEventsWrapper<string[]>> MatchCandidatesL1(out List<NewAndOldEventsWrapper<string[]>> cdrsCouldNotBeAggregated,
             List<string[]> requests, List<string[]> responses)
         {
+            if (requests.Count == 1 && responses.Count == 4)
+            {
+                ;
+            }
+            //if (requests.Where(r => r[Sn.UniqueBillId] == "2024-07-07/28-23/3c0022bc").ToList().Count > 1)
+            //{
+            //    Console.WriteLine("my test again");
+            //}
             List<NewAndOldEventsWrapper<string[]>> aggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
             cdrsCouldNotBeAggregated = new List<NewAndOldEventsWrapper<string[]>>();
-            int respIndexForSearch = 0;
-            if (requests.Count < responses.Count)
-            {
-                if (requests.Count == 0)
-                {
-                    NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
-                    {
-                        UniqueBillId = responses[0][Sn.UniqueBillId],
-                        NewUnAggInstances = responses,
-                    };
+            //if (requests.Count == 0)
+            //{
+            //    NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+            //    {
+            //        UniqueBillId = responses[0][Sn.UniqueBillId],
+            //        NewUnAggInstances = responses,
+            //    };
 
-                    cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
-                }
-            }
+            //    cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+            //}
             //if (requests.Count < responses.Count && requests.Count>0)
             //{
             //    Console.WriteLine("My Test");
             //}
+
+
+            // here only aggregated candidates will be listed
             for (int reqIndex = 0; reqIndex < requests.Count; reqIndex++)
             {
-                bool unAggReqFlag = false;
-                int respIndex = respIndexForSearch;
                 string[] req = requests[reqIndex];
 
-                while (respIndex < responses.Count)
+                foreach (string[] resp in responses)
                 {
+                    if (resp[Sn.UniqueBillId].Contains('_')) continue;
                     DateTime reqDateTime = Convert.ToDateTime(req[Sn.StartTime]);
-                    string[] resp = responses[respIndex];
                     DateTime respDateTime = Convert.ToDateTime(resp[Sn.StartTime]);
                     if (respDateTime > reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
                     {
-                        unAggReqFlag = true;
                         string newBillId = new StringBuilder(req[Sn.UniqueBillId]).Append("_").Append(reqIndex.ToString())
                             .ToString();
                         req[Sn.UniqueBillId] = newBillId;
@@ -372,92 +382,63 @@ namespace Decoders
                             NewUnAggInstances = new List<string[]> { req, resp }
                         };
                         aggCandidates.Add(tmpAggCandidate);
-
-                        respIndexForSearch = respIndex + 1;
                         break;
                     }
-                    else
-                    {
-                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
-                        {
-                            UniqueBillId = resp[Sn.UniqueBillId],
-                            NewUnAggInstances =   new List<string[]> { resp }
-                        };
-                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
-                        respIndexForSearch = respIndex + 1;
-                    }
-                    respIndex++;
                 }
-                if (reqIndex == requests.Count-1)
-                {
-                    for (respIndex = respIndexForSearch; respIndex < responses.Count; respIndex++)
-                    {
+            }
 
-                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
-                        {
-                            UniqueBillId = responses[respIndex][Sn.UniqueBillId],
-                            NewUnAggInstances = new List<string[]> { responses[respIndex] }
-                        };
-                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
-                        respIndexForSearch = respIndex + 1;
-                    }
-                }
-                if (!unAggReqFlag)
+            foreach (var request in requests)
+            {
+                if (!request[Sn.UniqueBillId].Contains('_'))
                 {
                     NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
                     {
-                        UniqueBillId = req[Sn.UniqueBillId],
-                        NewUnAggInstances = new List<string[]> {req}
+                        UniqueBillId = request[Sn.UniqueBillId],
+                        NewUnAggInstances = new List<string[]> { request }
                     };
                     cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
                 }
             }
+
+            foreach (var response in responses)
+            {
+                if (!response[Sn.UniqueBillId].Contains('_'))
+                {
+                    NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                    {
+                        UniqueBillId = response[Sn.UniqueBillId],
+                        NewUnAggInstances = new List<string[]> { response }
+                    };
+                    cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                }
+            }
+            if (aggCandidates.Count * 2 + cdrsCouldNotBeAggregated.Count != requests.Count + responses.Count)
+            {
+                throw new Exception("Testing if something is wrong here-1.");
+            }
             return aggCandidates;
         }
 
-        private static List<NewAndOldEventsWrapper<string[]>> MatchCandidatesL2(
-            out List<NewAndOldEventsWrapper<string[]>> cdrsCouldNotBeAggregated,
+
+
+        private static List<NewAndOldEventsWrapper<string[]>> MatchCandidatesL2(out List<NewAndOldEventsWrapper<string[]>> cdrsCouldNotBeAggregated,
             List<string[]> requests, List<string[]> responses)
         {
             List<NewAndOldEventsWrapper<string[]>> aggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
             cdrsCouldNotBeAggregated = new List<NewAndOldEventsWrapper<string[]>>();
-            int respIndexForSearch = 0;
-            if (requests.Count < responses.Count)
-            {
-                if (requests.Count == 0)
-                {
 
-                    foreach (var response in responses)
-                    {
-                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
-                        {
-                            UniqueBillId = response[Sn.UniqueBillId],
-                            NewUnAggInstances = new List<string[]> {response},
-                        };
-                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
-                    }
-
-                    
-                }
-            }
-            //if (requests.Count < responses.Count && requests.Count>0)
-            //{
-            //    Console.WriteLine("My Test");
-            //}
+            // here only aggregated candidates will be listed
             for (int reqIndex = 0; reqIndex < requests.Count; reqIndex++)
             {
-                bool unAggReqFlag = false;
-                int respIndex = respIndexForSearch;
                 string[] req = requests[reqIndex];
 
-                while (respIndex < responses.Count)
+                foreach (string[] resp in responses)
                 {
+                    if (resp[Sn.UniqueBillId].Contains("_2")) continue;
                     DateTime reqDateTime = Convert.ToDateTime(req[Sn.StartTime]);
-                    string[] resp = responses[respIndex];
                     DateTime respDateTime = Convert.ToDateTime(resp[Sn.StartTime]);
                     if (respDateTime > reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
                     {
-                        unAggReqFlag = true;
                         string newBillId = new StringBuilder(req[Sn.UniqueBillId]).Append("_2").Append(reqIndex.ToString())
                             .ToString();
                         req[Sn.UniqueBillId] = newBillId;
@@ -468,45 +449,40 @@ namespace Decoders
                             NewUnAggInstances = new List<string[]> { req, resp }
                         };
                         aggCandidates.Add(tmpAggCandidate);
-
-                        respIndexForSearch = respIndex + 1;
                         break;
                     }
-                    else
-                    {
-                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
-                        {
-                            UniqueBillId = resp[Sn.UniqueBillId],
-                            NewUnAggInstances = new List<string[]> { resp }
-                        };
-                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
-                        respIndexForSearch = respIndex + 1;
-                    }
-                    respIndex++;
                 }
-                if (reqIndex == requests.Count - 1)
-                {
-                    for (respIndex = respIndexForSearch; respIndex < responses.Count; respIndex++)
-                    {
+            }
 
-                        NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
-                        {
-                            UniqueBillId = responses[respIndex][Sn.UniqueBillId],
-                            NewUnAggInstances = new List<string[]> { responses[respIndex] }
-                        };
-                        cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
-                        respIndexForSearch = respIndex + 1;
-                    }
-                }
-                if (!unAggReqFlag)
+            foreach (var request in requests)
+            {
+                if (!request[Sn.UniqueBillId].Contains("_2"))
                 {
                     NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
                     {
-                        UniqueBillId = req[Sn.UniqueBillId],
-                        NewUnAggInstances = new List<string[]> { req }
+                        UniqueBillId = request[Sn.UniqueBillId],
+                        NewUnAggInstances = new List<string[]> { request }
                     };
                     cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
                 }
+            }
+
+            foreach (var response in responses)
+            {
+                if (!response[Sn.UniqueBillId].Contains("_2"))
+                {
+                    NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
+                    {
+                        UniqueBillId = response[Sn.UniqueBillId],
+                        NewUnAggInstances = new List<string[]> { response }
+                    };
+                    cdrsCouldNotBeAggregated.Add(tmpNonAggCandidate);
+                }
+            }
+
+            if (aggCandidates.Count*2 + cdrsCouldNotBeAggregated.Count != requests.Count + responses.Count)
+            {
+                throw new Exception("Testing if something is wrong here-2.");
             }
             return aggCandidates;
         }

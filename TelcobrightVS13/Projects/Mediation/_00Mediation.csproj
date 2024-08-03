@@ -218,6 +218,7 @@
     <Compile Include="Cdr\CdrMergedJobError.cs" />
     <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
     <Compile Include="Cdr\Collection\Collector\DayWiseEventCollector.cs" />
+    <Compile Include="Cdr\Collection\Collector\MinuteWiseEventData.cs" />
     <Compile Include="Cdr\Collection\Collector\HourlyEventData.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrAndInConsistentWrapper.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErrorPreProcessor.cs" />
