@@ -385,8 +385,8 @@
                     DataFormatString="{0:#,0.#0}"
                     HeaderText="Supplier Duration"
                     SortExpression="supplierduration"></asp:BoundField>
-                <asp:BoundField DataField="asr" DataFormatString="{0:#,0.#0}" HeaderText="ASR" SortExpression="asr" />
-                <asp:BoundField DataField="acd" DataFormatString="{0:#,0.#0}" HeaderText="ACD" SortExpression="acd" />
+                <asp:BoundField DataField="ASR" DataFormatString="{0:#,0.#0}" HeaderText="ASR" SortExpression="asr" />
+                <asp:BoundField DataField="ACD" DataFormatString="{0:#,0.#0}" HeaderText="ACD" SortExpression="acd" />
                 <asp:BoundField DataField="pdd" DataFormatString="{0:#,0.#0}" HeaderText="PDD" SortExpression="pdd" />
                 <asp:BoundField DataField="ccr" DataFormatString="{0:#,0.#0}" HeaderText="CCR" SortExpression="ccr" />
                 <asp:BoundField DataField="ConectbyCC"

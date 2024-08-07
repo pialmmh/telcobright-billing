@@ -168,10 +168,12 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
+            GridView1.Columns[18].Visible = true;
             GridView1.Columns[19].Visible = true;
         }
         else
         {
+            GridView1.Columns[18].Visible = false;
             GridView1.Columns[19].Visible = false;
         }
         //make profit invisible, it's useless
@@ -358,7 +360,7 @@ public partial class DefaultRptDomesticWithLtfsIcx : System.Web.UI.Page
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
             DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
-            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "DomesticWithLTFS_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }
     }

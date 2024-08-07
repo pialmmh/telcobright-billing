@@ -138,10 +138,9 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
                     }
                     record.partnerName = partnerName;
                     record.inNoOfCalls = row.Field<Decimal>("innoofcalls");
-                    //record.inNoOfCalls = Convert.ToDecimal(row["innoofcalls"]);
                     record.incomingMinutes = row.Field<Decimal>("incomingMinutes");
-                    record.outNoOfCalls = row.Field<Decimal>("outnoofcalls");
-                    record.outgoingMinutes = row.Field<Decimal>("outgoingMinutes");
+                    record.outNoOfCalls = row.Field<Decimal?>("outnoofcalls");
+                    record.outgoingMinutes = row.Field<Decimal?>("outgoingMinutes");
                     records.Add(record);
                 }
             }
@@ -216,7 +215,7 @@ on i.partnerid=o.partnerid;";
         string intlIn_1_Sql =
  $@"select tup_outpartnerid as partnerid,sum(duration1)/60 as minutes 
 from sum_voice_day_03
-where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
+where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}' and tup_outpartnerid!=0
 group by tup_outpartnerid;";
 
         DataSet ds = getBtrcReport(connection, intlIn_1_Sql);
@@ -231,7 +230,7 @@ group by tup_outpartnerid;";
         string intlIn_2_Sql =
 $@"select tup_inpartnerid as partnerid,sum(duration1)/60 as minutes 
 from sum_voice_day_03
-where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}'
+where tup_starttime >= '{txtDate.Text}' and tup_starttime < '{txtDate1.Text}' and tup_inpartnerid!=0
 group by tup_inpartnerid;";
 
         DataSet ds = getBtrcReport(connection, intlIn_2_Sql);
