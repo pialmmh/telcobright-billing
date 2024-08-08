@@ -18,7 +18,7 @@ namespace InstallConfig
 
             MySqlCluster MySqlCluster = new MySqlCluster
             {
-                Master = new MySqlServer("04MnhSrtel")
+                Master = new MySqlServer("04MnhSrtelGetco")
                 {
                     MySqlVersion = MySqlVersion.MySql57,
                     BindAddressForAutomation = new BindAddress
@@ -56,6 +56,12 @@ namespace InstallConfig
                                         MySqlPermissionType.execute,
                                         MySqlPermissionType.@select
                                     }, "srtelecom_cas"),
+                                new MySqlPermission(
+                                    new List<MySqlPermissionType>
+                                    {
+                                        MySqlPermissionType.execute,
+                                        MySqlPermissionType.@select
+                                    }, "getco_cas"),
                                 new MySqlPermission(
                                     new List<MySqlPermissionType>
                                     {

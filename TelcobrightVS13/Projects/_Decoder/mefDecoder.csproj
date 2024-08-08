@@ -100,7 +100,7 @@
   <ItemGroup>
     <Compile Include="CataleyaCsvDecoderBanIcxNoFailedTEST.cs" />
     <Compile Include="CataleyaCsvDecoderBantelTEST.cs" />
-    <Compile Include="CataleyaCsvDecoderGaziNoFailedGip.cs" />
+    <Compile Include="CataleyaCsvDecoderGaziNoFailedGzip.cs" />
     <Compile Include="CataleyaCsvDecoderGaziNoFailedV2.cs" />
     <Compile Include="CataleyaCsvDecoderMnhNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderSoftexNoFailed.cs" />

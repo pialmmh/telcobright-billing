@@ -35,7 +35,8 @@ namespace InstallConfig
             {"sheba_cas","172.16.1.28"},
             {"teleexchange_cas","172.16.1.28"},
             {"newgenerationtelecom_cas","172.16.1.28"},
-            {"smshub","localhost"}
+            {"smshub","localhost"},
+            {"getco_cas","172.16.1.24"}
         };
         public DeploymentEnvironment DeploymentEnvironment { get; }
         public CasDockerDbHelper(DeploymentEnvironment deploymentEnvironment)

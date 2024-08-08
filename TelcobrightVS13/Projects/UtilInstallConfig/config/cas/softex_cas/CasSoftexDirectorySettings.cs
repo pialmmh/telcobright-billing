@@ -34,7 +34,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = @"F:/telcobright/vault/resources/cdr/softex/tdm",
+                StartingPath = @"D:/telcobright/vault/resources/cdr/softex/tdm",
                 User = "",
                 Pass = "",
             };
@@ -46,7 +46,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = @"F:/telcobright/vault/resources/cdr/softex/ip",
+                StartingPath = @"D:/telcobright/vault/resources/cdr/softex/ip",
                 User = "",
                 Pass = "",
             };

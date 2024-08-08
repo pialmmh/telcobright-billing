@@ -138,7 +138,7 @@
     <Compile Include="config\cas\_helper\mysqlClusters\07CasJibonParaPurple.cs" />
     <Compile Include="config\cas\_helper\mysqlClusters\06CasBTCLImam.cs" />
     <Compile Include="config\cas\_helper\mysqlClusters\05CasBanIcxCross.cs" />
-    <Compile Include="config\cas\_helper\mysqlClusters\04CasMnhSrtel.cs" />
+    <Compile Include="config\cas\_helper\mysqlClusters\04CasMnhSrtelGetco.cs" />
     <Compile Include="config\cas\_helper\mysqlClusters\03CasMotherTelePlusVoice.cs" />
     <Compile Include="config\cas\_helper\mysqlClusters\02CasGaziSummitRing.cs" />
     <Compile Include="config\cas\_helper\mysqlClusters\01CasAgniBanglatelBantel.cs" />

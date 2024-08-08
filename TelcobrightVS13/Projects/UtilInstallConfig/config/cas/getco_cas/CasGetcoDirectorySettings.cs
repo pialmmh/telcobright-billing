@@ -34,25 +34,25 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/getco/tdm",
+                StartingPath = "D:/telcobright/vault/resources/cdr/getco/tdm",
                 User = "",
                 Pass = "",
             };
 
-            FileLocation vaultReve= new FileLocation()
+            FileLocation vaultCataleya= new FileLocation()
             {
-                Name = "Vault.REVE",//this is refered in ne table, name MUST start with "Vault"
+                Name = "Vault.Cataleya",//this is refered in ne table, name MUST start with "Vault"
                 LocationType = "vault",//locationtype always lowercase
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/getco/ip",
+                StartingPath = "D:/telcobright/vault/resources/cdr/getco/ip",
                 User = "",
                 Pass = "",
             };
 
             this.Tbc.DirectorySettings.FileLocations.Add(vaultHuawei.Name, vaultHuawei);
-            this.Tbc.DirectorySettings.FileLocations.Add(vaultReve.Name, vaultReve);
+            this.Tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
            
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()

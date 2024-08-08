@@ -38,7 +38,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/ip",
+                StartingPath = "D:/telcobright/vault/resources/cdr/crossworld/ip",
                 User = "",
                 Pass = "",
             };
@@ -49,7 +49,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/tdm",
+                StartingPath = "D:/telcobright/vault/resources/cdr/crossworld/tdm",
                 User = "",
                 Pass = "",
             };
@@ -60,7 +60,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/tdm1/CTG",
+                StartingPath = "D:/telcobright/vault/resources/cdr/crossworld/tdm1/CTG",
                 User = "",
                 Pass = "",
             };
@@ -73,7 +73,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/crossworld/tdm1/KHL",
+                StartingPath = "D:/telcobright/vault/resources/cdr/crossworld/tdm1/KHL",
                 User = "",
                 Pass = "",
             };

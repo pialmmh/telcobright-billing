@@ -191,7 +191,8 @@ namespace InstallConfig
                     {"summit@telcobright.com", "summit_cas"},
                     {"teleexchange@telcobright.com", "teleexchange_cas"},
                     {"teleplusnewyork@telcobright.com", "teleplusnewyork_cas"},
-                    {"voicetel@telcobright.com", "voicetel_cas"}
+                    {"voicetel@telcobright.com", "voicetel_cas"},
+                    {"getco@telcobright.com", "getco_cas"}
                 },
                 instances = new List<InstanceConfig>
                 {
@@ -314,6 +315,11 @@ namespace InstallConfig
                     {
                         Name = "mmcommunications_cas",
                         SchedulerPortNo = 594
+                    },
+                    new InstanceConfig
+                    {
+                        Name = "getco_cas",
+                        SchedulerPortNo = 595
                     }
                 },
             };
@@ -321,7 +327,7 @@ namespace InstallConfig
             mySqlClusters.Add("AgniBanglatelBantel", AllDeploymenProfiles.getAgniBanglatelBantel());
             mySqlClusters.Add("NewSoftShebaTeleex",getNewSoftShebaTeleex());
             mySqlClusters.Add("MotherTelePlusVoice",getMotherTelePlusVoice());
-            mySqlClusters.Add("MnhSrtel",getMnhSrtel());
+            mySqlClusters.Add("MnhSrtelGetco",getMnhSrtel());
             mySqlClusters.Add("JibonParaPurple",getJibonParaPurple());
             mySqlClusters.Add("GaziSummitRing",getGaziSummitRing());
             mySqlClusters.Add("BanIcxCross",getBanIcxCross());
