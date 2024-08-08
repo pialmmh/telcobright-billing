@@ -186,6 +186,10 @@ namespace Decoders
                     {
                         textCdr[Fn.AnswerTime] = textCdr[Fn.StartTime];
                     }
+                    if (chargingStatus == "0" && textCdr[Fn.Endtime] == null)
+                    {
+                        textCdr[Fn.Endtime] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
                     string customUniqueBillId = this.getTupleExpression(new Dictionary<string, object>()
                     {

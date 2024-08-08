@@ -165,10 +165,12 @@ public partial class DefaultRptIntlInIcx : System.Web.UI.Page
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
+            GridView1.Columns[18].Visible = true;
             GridView1.Columns[19].Visible = true;
         }
         else
         {
+            GridView1.Columns[18].Visible = false;
             GridView1.Columns[19].Visible = false;
         }
         //make profit invisible, it's useless

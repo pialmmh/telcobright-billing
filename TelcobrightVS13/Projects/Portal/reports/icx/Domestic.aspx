@@ -656,7 +656,7 @@
                             SortExpression="profit" />
 
 
-                        <asp:BoundField DataField="ASR"
+                        <asp:BoundField DataField="ASR" Visible="true"
                             DataFormatString="{0:F2}"
                             HeaderText="ASR"
                             SortExpression="ASR" />

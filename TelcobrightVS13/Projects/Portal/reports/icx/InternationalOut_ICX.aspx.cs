@@ -54,8 +54,8 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
                                 CheckBoxIntlPartner.Checked==true?"tup_outpartnerid":string.Empty,
                                 CheckBoxShowByAns.Checked==true?"tup_sourceID":string.Empty,
                                 CheckBoxShowByIgw.Checked==true?"tup_inpartnerid":string.Empty,
-                                CheckBoxShowByCustomerRate.Checked==true?"tup_customerrate":string.Empty,
-                                "tup_customercurrency",
+                                //CheckBoxShowByCustomerRate.Checked==true?"tup_customerrate":string.Empty,
+                                //"tup_customercurrency",
                                 CheckBoxViewIncomingRoute.Checked==true?"tup_incomingroute":string.Empty,
                                 CheckBoxViewOutgoingRoute.Checked==true?"tup_outgoingroute":string.Empty,
                             },
@@ -161,6 +161,7 @@ public partial class DefaultRptIntlOutIcx : System.Web.UI.Page
         GridView1.Columns[GetColumnIndexByName(GridView1, "International Partner")].Visible = CheckBoxIntlPartner.Checked;
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         GridView1.Columns[16].Visible = CheckBoxShowPerformance.Checked;
+        GridView1.Columns[15].Visible = CheckBoxShowPerformance.Checked;
 
         if (CheckBoxShowCost.Checked == true)
         {

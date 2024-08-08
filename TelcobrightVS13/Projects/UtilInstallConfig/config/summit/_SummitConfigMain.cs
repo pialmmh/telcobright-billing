@@ -12,6 +12,7 @@ using TelcobrightMediation.Config;
 using FlexValidation;
 using InstallConfig._CommonValidation;
 using InstallConfig._generator;
+using LogPreProcessor;
 using MediationModel;
 using TelcobrightInfra;
 using TelcobrightMediation.Accounting;
@@ -75,7 +76,41 @@ namespace InstallConfig
                 AutoCorrectBillIdsWithPrevChargeableIssue = true,
                 AutoCorrectDuplicateBillIdBeforeErrorProcess = true,
                 ExceptionalCdrPreProcessingData = new Dictionary<string, Dictionary<string, string>>(),
-                BatchSizeWhenPreparingLargeSqlJob = 100000
+                NeWiseAdditionalSettings = new Dictionary<int, NeAdditionalSetting>
+                {
+                    { 9, new NeAdditionalSetting {//for huawei
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 30,
+                        MinRowCountToStartBatchCdrProcessing = 70000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }},
+                    { 10, new NeAdditionalSetting {//cataleya
+                        ProcessMultipleCdrFilesInBatch = false,
+                        PreDecodeAsTextFile = false,
+                        MaxConcurrentFilesForParallelPreDecoding = 10,
+                        MinRowCountToStartBatchCdrProcessing = 100000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 500,
+                        EventPreprocessingRules = new List<EventPreprocessingRule>()
+                        {
+                            new CdrPredecoder()
+                            {
+                                RuleConfigData = new Dictionary<string,object>() { { "maxParallelFileForPreDecode", "10"}},
+                                ProcessCollectionOnly = true//does not accept single event, only list of events e.g. multiple new cdr jobs
+                            }
+                        }
+                    }}
+                },
+                BatchSizeWhenPreparingLargeSqlJob = 100000,
+                WriteFailedCallsToDb = false
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
@@ -91,7 +126,7 @@ namespace InstallConfig
                     FileExtension = ".DAT",
                     Description = null,
                     SourceFileLocations = this.vaultPrimary.Name,
-                    BackupFileLocations = this.reveCAS.Name + "," + this.SummitFtpForTdm.Name,
+                    BackupFileLocations = this.tdmCAS.Name + "," + this.SummitFtpForTdm.Name,
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,
                     TransactionSizeForCDRLoading = 1500,
@@ -117,7 +152,7 @@ namespace InstallConfig
                 {
                     idSwitch = 10,
                     idCustomer = this.Tbc.Telcobrightpartner.idCustomer,
-                    idcdrformat = 35,
+                    idcdrformat = 3500,
                     idMediationRule = 2,
                     SwitchName = "Dialogic",
                     CDRPrefix = "sdr",
@@ -145,7 +180,8 @@ namespace InstallConfig
                     BatchToDecodeRatio = 3,
                     PrependLocationNumberToFileName = 0,
                     UseIdCallAsBillId = 1,
-                    AllowEmptyFile = 1
+                    AllowEmptyFile = 1,
+                  
                 }
             };
 

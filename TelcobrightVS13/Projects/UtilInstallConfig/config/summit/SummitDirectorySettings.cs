@@ -21,7 +21,7 @@ namespace InstallConfig
         private FileLocation vaultPrimary;
         private FileLocation vaultDialogic;
         private SyncPair zte_Vault;
-        private SyncPair reveCAS;
+        //private SyncPair reveCAS;
         private SyncPair ipCAS;
         private SyncPair tdmCAS;
         private SyncPair SummitFtpForIp;
@@ -72,11 +72,11 @@ namespace InstallConfig
                 OsType = "linux",
                 UseActiveModeForFTP = true,
                 PathSeparator = "/",
-                StartingPath = "/home/zxss10_bsvr/data/bfile/bill/delete",
+                StartingPath = "/home/zxss10_bsvr/data/bfile/bill",
                 ServerIp = "10.33.34.12",
                 User = "icxreve",
                 Pass = "icxreve123",
-                //ExcludeBefore = new DateTime(2015, 6, 26, 0, 0, 0),
+                ExcludeBefore = new DateTime(2024, 7, 1, 0, 0, 0),
                 IgnoreZeroLenghFile = 1,
                 FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
             };
@@ -120,18 +120,18 @@ namespace InstallConfig
                 IgnoreZeroLenghFile = 1
             };
 
-            FileLocation cas_reve = new FileLocation()//raw cdr archive
-            {
-                Name = "cas",
-                LocationType = "ftp",
-                OsType = "windows",
-                PathSeparator = @"/",//backslash didn't work with winscp
-                StartingPath = @"/",
-                ServerIp = "192.168.100.185", //server = "172.16.16.242",
-                User = "adnvertx",
-                Pass = "vtxicx296#",
-                IgnoreZeroLenghFile = 1
-            };
+            //FileLocation cas_reve = new FileLocation()//raw cdr archive
+            //{
+            //    Name = "cas",
+            //    LocationType = "ftp",
+            //    OsType = "windows",
+            //    PathSeparator = @"/",//backslash didn't work with winscp
+            //    StartingPath = @"/",
+            //    ServerIp = "192.168.100.185", //server = "172.16.16.242",
+            //    User = "adnvertx",
+            //    Pass = "vtxicx296#",
+            //    IgnoreZeroLenghFile = 1
+            //};
 
             FileLocation summitFtpForTdm = new FileLocation()//raw cdr archive
             {
@@ -163,7 +163,7 @@ namespace InstallConfig
             tbc.DirectorySettings.FileLocations.Add(vaultDialogic.Name, vaultDialogic);
             tbc.DirectorySettings.FileLocations.Add(zte.Name, zte);
             tbc.DirectorySettings.FileLocations.Add(fileArchive1.Name, fileArchive1);
-            tbc.DirectorySettings.FileLocations.Add(cas_reve.Name, cas_reve);
+            //tbc.DirectorySettings.FileLocations.Add(cas_reve.Name, cas_reve);
             tbc.DirectorySettings.FileLocations.Add(cas_ip.Name, cas_ip);
             tbc.DirectorySettings.FileLocations.Add(cas_tdm.Name, cas_tdm);
 
@@ -194,35 +194,36 @@ namespace InstallConfig
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
+                    CompressionType = CompressionType.None,
+                    MaxDownloadedFromFtp = 100000
                 }
             };
 
             //sync pair Vault_S3:FileArchive1
-            this.reveCAS = new SyncPair("zte:cas")
-            {
-                SkipCopyingToDestination = false,
-                SkipSourceFileListing = true,
-                SrcSyncLocation = new SyncLocation()
-                {
-                    FileLocation = vaultPrimary
-                },
-                DstSyncLocation = new SyncLocation()
-                {
-                    FileLocation = cas_reve
-                },
-                SrcSettings = new SyncSettingsSource()
-                {
-                    SecondaryDirectory = "downloaded",
-                    ExpFileNameFilter = null,
-                },
-                DstSettings = new SyncSettingsDest()
-                {
-                    FileExtensionForSafeCopyWithTempFile = ".tmp",
-                    Overwrite = true,
-                    CompressionType = CompressionType.None,
-                }
-            };
+            //this.reveCAS = new SyncPair("zte:cas")
+            //{
+            //    SkipCopyingToDestination = false,
+            //    SkipSourceFileListing = true,
+            //    SrcSyncLocation = new SyncLocation()
+            //    {
+            //        FileLocation = vaultPrimary
+            //    },
+            //    DstSyncLocation = new SyncLocation()
+            //    {
+            //        FileLocation = cas_reve
+            //    },
+            //    SrcSettings = new SyncSettingsSource()
+            //    {
+            //        SecondaryDirectory = "downloaded",
+            //        ExpFileNameFilter = null,
+            //    },
+            //    DstSettings = new SyncSettingsDest()
+            //    {
+            //        FileExtensionForSafeCopyWithTempFile = ".tmp",
+            //        Overwrite = true,
+            //        CompressionType = CompressionType.None,
+            //    }
+            //};
 
 
             this.ipCAS = new SyncPair("ip:cas")
@@ -328,7 +329,7 @@ namespace InstallConfig
 
             //add sync pairs to directory config
             directorySetting.SyncPairs.Add(zte_Vault.Name, zte_Vault);
-            directorySetting.SyncPairs.Add(reveCAS.Name, reveCAS);
+            //directorySetting.SyncPairs.Add(reveCAS.Name, reveCAS);
             directorySetting.SyncPairs.Add(ipCAS.Name, ipCAS);
             directorySetting.SyncPairs.Add(tdmCAS.Name, tdmCAS);
             directorySetting.SyncPairs.Add(SummitFtpForTdm.Name, SummitFtpForTdm);
@@ -337,7 +338,7 @@ namespace InstallConfig
             //add archive locations to CdrSettings
             this.Tbc.CdrSetting.BackupSyncPairNames = new List<string>()
             {
-                reveCAS.Name,
+                //reveCAS.Name,
                 ipCAS.Name,
                 tdmCAS.Name,
                 SummitFtpForTdm.Name,

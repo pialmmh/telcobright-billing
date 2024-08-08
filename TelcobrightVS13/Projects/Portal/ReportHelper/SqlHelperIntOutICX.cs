@@ -68,7 +68,7 @@ namespace PortalApp.ReportHelper
                 sum(roundedduration)/60 AS roundedduration, 
                 sum(duration2)/60 AS duration1,
                 sum(duration3)/60 AS duration3,
-                ((SUM(Successfulcalls)*100)/SUM(totalcalls)) AS ASR, 
+                ((SUM(successfulcalls)*100)/SUM(totalcalls)) AS ASR, 
 		        ((SUM(actualDuration)/60)/SUM(Successfulcalls)) AS ACD,
 		        (SUM(pdd)/SUM(Successfulcalls))AS PDD ,
 		        100*(SUM(connectedCalls)/SUM(totalcalls)) AS CCR,
@@ -86,10 +86,10 @@ namespace PortalApp.ReportHelper
 	            FROM {TableName}
                 WHERE tup_starttime>='{StartDate}'
                 AND tup_starttime<'{EndDate}'
-                AND duration3>0
+                #AND duration3>0
                 {GetWhereClauseAdditional()}
                 {GetGroupBy()}
-                having sum(roundedDuration)>0
+                #having sum(roundedDuration)>0
             ) x
             LEFT JOIN partner cr
             ON x.tup_sourceID = cr.idpartner

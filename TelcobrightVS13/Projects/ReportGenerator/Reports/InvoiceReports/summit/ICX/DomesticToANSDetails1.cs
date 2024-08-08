@@ -122,6 +122,10 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
 
                 SubBand2.Visible = false;
                 SubBand3.Visible = false;
+                SubBand4.Visible = false;
+                SubBand5.Visible = false;
+                SubBand6.Visible = false;
+                SubBand7.Visible = false;
             }
 
             else if (invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 4)
@@ -159,10 +163,46 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
                 xrTableCell43.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "GrandTotalAmount", "{0:n2}");
                 SubBand2.Visible = true;
                 SubBand3.Visible = false;
+                SubBand4.Visible = false;
+                SubBand5.Visible = false;
+                SubBand6.Visible = false;
+                SubBand7.Visible = false;
             }
 
             else if(invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 5)
             {
+                //xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Reference");
+                xrTableCell24.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "InPartnerName");
+                xrTableCell25.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalCalls", "{0:n0}");
+                xrTableCell26.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalMinutes", "{0:n2}");
+                xrTableCell27.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Rate", "{0:##0.######}");
+                xrTableCell28.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Amount", "{0:n2}");
+                xrTableCell29.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Reference");
+                xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "InPartnerName");
+                xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalCalls", "{0:n0}");
+                xrTableCell19.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalMinutes", "{0:n2}");
+                xrTableCell20.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Rate", "{0:##0.######}");
+                xrTableCell21.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Amount", "{0:n2}");
+                xrTableCell22.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Reference");
+                xrTableCell31.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "InPartnerName");
+                xrTableCell32.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalCalls", "{0:n0}");
+                xrTableCell33.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalMinutes", "{0:n2}");
+                xrTableCell34.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Rate", "{0:##0.######}");
+                xrTableCell35.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Amount", "{0:n2}");
+                xrTableCell36.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Reference");
+                xrTableCell38.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "InPartnerName");
+                xrTableCell39.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalCalls", "{0:n0}");
+                xrTableCell40.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalMinutes", "{0:n2}");
+                xrTableCell41.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Rate", "{0:##0.######}");
+                xrTableCell42.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Amount", "{0:n2}");
+                xrTableCell43.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "GrandTotalAmount", "{0:n2}");
+
                 //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
                 xrTableCell83.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "InPartnerName");
                 xrTableCell84.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalCalls", "{0:n0}");
@@ -172,6 +212,288 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
                 xrTableCell88.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "GrandTotalAmount", "{0:n2}");
                 SubBand2.Visible = true;
                 SubBand3.Visible = true;
+                SubBand4.Visible = false;
+                SubBand5.Visible = false;
+                SubBand6.Visible = false;
+                SubBand7.Visible = false;
+            }
+
+            else if (invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 6)
+            {
+                //xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Reference");
+                xrTableCell24.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "InPartnerName");
+                xrTableCell25.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalCalls", "{0:n0}");
+                xrTableCell26.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalMinutes", "{0:n2}");
+                xrTableCell27.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Rate", "{0:##0.######}");
+                xrTableCell28.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Amount", "{0:n2}");
+                xrTableCell29.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Reference");
+                xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "InPartnerName");
+                xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalCalls", "{0:n0}");
+                xrTableCell19.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalMinutes", "{0:n2}");
+                xrTableCell20.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Rate", "{0:##0.######}");
+                xrTableCell21.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Amount", "{0:n2}");
+                xrTableCell22.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Reference");
+                xrTableCell31.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "InPartnerName");
+                xrTableCell32.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalCalls", "{0:n0}");
+                xrTableCell33.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalMinutes", "{0:n2}");
+                xrTableCell34.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Rate", "{0:##0.######}");
+                xrTableCell35.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Amount", "{0:n2}");
+                xrTableCell36.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Reference");
+                xrTableCell38.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "InPartnerName");
+                xrTableCell39.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalCalls", "{0:n0}");
+                xrTableCell40.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalMinutes", "{0:n2}");
+                xrTableCell41.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Rate", "{0:##0.######}");
+                xrTableCell42.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Amount", "{0:n2}");
+                xrTableCell43.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell83.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "InPartnerName");
+                xrTableCell84.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalCalls", "{0:n0}");
+                xrTableCell85.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalMinutes", "{0:n2}");
+                xrTableCell86.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Rate", "{0:##0.######}");
+                xrTableCell87.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Amount", "{0:n2}");
+                xrTableCell88.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell9.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "InPartnerName");
+                xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalCalls", "{0:n0}");
+                xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalMinutes", "{0:n2}");
+                xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Rate", "{0:##0.######}");
+                xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Amount", "{0:n2}");
+                xrTableCell44.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "GrandTotalAmount", "{0:n2}");
+                SubBand2.Visible = true;
+                SubBand3.Visible = true;
+                SubBand4.Visible = true;
+                SubBand5.Visible = false;
+                SubBand6.Visible = false;
+                SubBand7.Visible = false;
+            }
+
+            else if (invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 7)
+            {
+                //xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Reference");
+                xrTableCell24.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "InPartnerName");
+                xrTableCell25.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalCalls", "{0:n0}");
+                xrTableCell26.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalMinutes", "{0:n2}");
+                xrTableCell27.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Rate", "{0:##0.######}");
+                xrTableCell28.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Amount", "{0:n2}");
+                xrTableCell29.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Reference");
+                xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "InPartnerName");
+                xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalCalls", "{0:n0}");
+                xrTableCell19.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalMinutes", "{0:n2}");
+                xrTableCell20.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Rate", "{0:##0.######}");
+                xrTableCell21.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Amount", "{0:n2}");
+                xrTableCell22.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Reference");
+                xrTableCell31.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "InPartnerName");
+                xrTableCell32.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalCalls", "{0:n0}");
+                xrTableCell33.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalMinutes", "{0:n2}");
+                xrTableCell34.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Rate", "{0:##0.######}");
+                xrTableCell35.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Amount", "{0:n2}");
+                xrTableCell36.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Reference");
+                xrTableCell38.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "InPartnerName");
+                xrTableCell39.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalCalls", "{0:n0}");
+                xrTableCell40.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalMinutes", "{0:n2}");
+                xrTableCell41.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Rate", "{0:##0.######}");
+                xrTableCell42.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Amount", "{0:n2}");
+                xrTableCell43.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell83.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "InPartnerName");
+                xrTableCell84.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalCalls", "{0:n0}");
+                xrTableCell85.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalMinutes", "{0:n2}");
+                xrTableCell86.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Rate", "{0:##0.######}");
+                xrTableCell87.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Amount", "{0:n2}");
+                xrTableCell88.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell9.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "InPartnerName");
+                xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalCalls", "{0:n0}");
+                xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalMinutes", "{0:n2}");
+                xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Rate", "{0:##0.######}");
+                xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Amount", "{0:n2}");
+                xrTableCell44.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell45.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "InPartnerName");
+                xrTableCell46.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "TotalCalls", "{0:n0}");
+                xrTableCell47.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "TotalMinutes", "{0:n2}");
+                xrTableCell50.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "Rate", "{0:##0.######}");
+                xrTableCell51.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "Amount", "{0:n2}");
+                xrTableCell52.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "GrandTotalAmount", "{0:n2}");
+                SubBand2.Visible = true;
+                SubBand3.Visible = true;
+                SubBand4.Visible = true;
+                SubBand5.Visible = true;
+                SubBand6.Visible = false;
+                SubBand7.Visible = false;
+            }
+
+            else if (invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 8)
+            {
+                //xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Reference");
+                xrTableCell24.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "InPartnerName");
+                xrTableCell25.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalCalls", "{0:n0}");
+                xrTableCell26.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalMinutes", "{0:n2}");
+                xrTableCell27.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Rate", "{0:##0.######}");
+                xrTableCell28.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Amount", "{0:n2}");
+                xrTableCell29.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Reference");
+                xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "InPartnerName");
+                xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalCalls", "{0:n0}");
+                xrTableCell19.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalMinutes", "{0:n2}");
+                xrTableCell20.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Rate", "{0:##0.######}");
+                xrTableCell21.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Amount", "{0:n2}");
+                xrTableCell22.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Reference");
+                xrTableCell31.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "InPartnerName");
+                xrTableCell32.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalCalls", "{0:n0}");
+                xrTableCell33.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalMinutes", "{0:n2}");
+                xrTableCell34.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Rate", "{0:##0.######}");
+                xrTableCell35.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Amount", "{0:n2}");
+                xrTableCell36.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Reference");
+                xrTableCell38.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "InPartnerName");
+                xrTableCell39.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalCalls", "{0:n0}");
+                xrTableCell40.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalMinutes", "{0:n2}");
+                xrTableCell41.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Rate", "{0:##0.######}");
+                xrTableCell42.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Amount", "{0:n2}");
+                xrTableCell43.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell83.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "InPartnerName");
+                xrTableCell84.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalCalls", "{0:n0}");
+                xrTableCell85.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalMinutes", "{0:n2}");
+                xrTableCell86.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Rate", "{0:##0.######}");
+                xrTableCell87.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Amount", "{0:n2}");
+                xrTableCell88.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell9.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "InPartnerName");
+                xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalCalls", "{0:n0}");
+                xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalMinutes", "{0:n2}");
+                xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Rate", "{0:##0.######}");
+                xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Amount", "{0:n2}");
+                xrTableCell44.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell45.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "InPartnerName");
+                xrTableCell46.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "TotalCalls", "{0:n0}");
+                xrTableCell47.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "TotalMinutes", "{0:n2}");
+                xrTableCell50.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "Rate", "{0:##0.######}");
+                xrTableCell51.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "Amount", "{0:n2}");
+                xrTableCell52.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "GrandTotalAmount", "{0:n2}");
+
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell53.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "InPartnerName");
+                xrTableCell54.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "TotalCalls", "{0:n0}");
+                xrTableCell55.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "TotalMinutes", "{0:n2}");
+                xrTableCell56.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "Rate", "{0:##0.######}");
+                xrTableCell57.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "Amount", "{0:n2}");
+                xrTableCell58.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "GrandTotalAmount", "{0:n2}");
+                SubBand2.Visible = true;
+                SubBand3.Visible = true;
+                SubBand4.Visible = true;
+                SubBand5.Visible = true;
+                SubBand6.Visible = true;
+                SubBand7.Visible = false;
+            }
+
+            else if (invoiceBasicDatasMerged != null && invoiceBasicDatasMerged.Count == 9)
+            {
+                //xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Reference");
+                xrTableCell24.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "InPartnerName");
+                xrTableCell25.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalCalls", "{0:n0}");
+                xrTableCell26.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "TotalMinutes", "{0:n2}");
+                xrTableCell27.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Rate", "{0:##0.######}");
+                xrTableCell28.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "Amount", "{0:n2}");
+                xrTableCell29.DataBindings.Add("Text", invoiceBasicDatasMerged[0], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Reference");
+                xrTableCell17.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "InPartnerName");
+                xrTableCell18.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalCalls", "{0:n0}");
+                xrTableCell19.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "TotalMinutes", "{0:n2}");
+                xrTableCell20.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Rate", "{0:##0.######}");
+                xrTableCell21.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "Amount", "{0:n2}");
+                xrTableCell22.DataBindings.Add("Text", invoiceBasicDatasMerged[1], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Reference");
+                xrTableCell31.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "InPartnerName");
+                xrTableCell32.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalCalls", "{0:n0}");
+                xrTableCell33.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "TotalMinutes", "{0:n2}");
+                xrTableCell34.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Rate", "{0:##0.######}");
+                xrTableCell35.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "Amount", "{0:n2}");
+                xrTableCell36.DataBindings.Add("Text", invoiceBasicDatasMerged[2], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Reference");
+                xrTableCell38.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "InPartnerName");
+                xrTableCell39.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalCalls", "{0:n0}");
+                xrTableCell40.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "TotalMinutes", "{0:n2}");
+                xrTableCell41.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Rate", "{0:##0.######}");
+                xrTableCell42.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "Amount", "{0:n2}");
+                xrTableCell43.DataBindings.Add("Text", invoiceBasicDatasMerged[3], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell83.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "InPartnerName");
+                xrTableCell84.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalCalls", "{0:n0}");
+                xrTableCell85.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "TotalMinutes", "{0:n2}");
+                xrTableCell86.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Rate", "{0:##0.######}");
+                xrTableCell87.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Amount", "{0:n2}");
+                xrTableCell88.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell9.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "InPartnerName");
+                xrTableCell16.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalCalls", "{0:n0}");
+                xrTableCell23.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "TotalMinutes", "{0:n2}");
+                xrTableCell30.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Rate", "{0:##0.######}");
+                xrTableCell37.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "Amount", "{0:n2}");
+                xrTableCell44.DataBindings.Add("Text", invoiceBasicDatasMerged[5], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell45.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "InPartnerName");
+                xrTableCell46.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "TotalCalls", "{0:n0}");
+                xrTableCell47.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "TotalMinutes", "{0:n2}");
+                xrTableCell50.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "Rate", "{0:##0.######}");
+                xrTableCell51.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "Amount", "{0:n2}");
+                xrTableCell52.DataBindings.Add("Text", invoiceBasicDatasMerged[6], "GrandTotalAmount", "{0:n2}");
+
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell53.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "InPartnerName");
+                xrTableCell54.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "TotalCalls", "{0:n0}");
+                xrTableCell55.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "TotalMinutes", "{0:n2}");
+                xrTableCell56.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "Rate", "{0:##0.######}");
+                xrTableCell57.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "Amount", "{0:n2}");
+                xrTableCell58.DataBindings.Add("Text", invoiceBasicDatasMerged[7], "GrandTotalAmount", "{0:n2}");
+
+                //xrTableCell82.DataBindings.Add("Text", invoiceBasicDatasMerged[4], "Reference");
+                xrTableCell59.DataBindings.Add("Text", invoiceBasicDatasMerged[8], "InPartnerName");
+                xrTableCell60.DataBindings.Add("Text", invoiceBasicDatasMerged[8], "TotalCalls", "{0:n0}");
+                xrTableCell61.DataBindings.Add("Text", invoiceBasicDatasMerged[8], "TotalMinutes", "{0:n2}");
+                xrTableCell62.DataBindings.Add("Text", invoiceBasicDatasMerged[8], "Rate", "{0:##0.######}");
+                xrTableCell63.DataBindings.Add("Text", invoiceBasicDatasMerged[8], "Amount", "{0:n2}");
+                xrTableCell64.DataBindings.Add("Text", invoiceBasicDatasMerged[8], "GrandTotalAmount", "{0:n2}");
+                SubBand2.Visible = true;
+                SubBand3.Visible = true;
+                SubBand4.Visible = true;
+                SubBand5.Visible = true;
+                SubBand6.Visible = true;
+                SubBand7.Visible = true;
             }
 
             if (invoiceBasicDatasMerged != null)
@@ -198,6 +520,22 @@ namespace TelcobrightMediation.Reports.InvoiceReports.summit.ICX
             if (invoiceBasicDatasMerged == null)
             {
                 SubBand4.Visible = false;
+            }
+            if (invoiceBasicDatasMerged == null)
+            {
+                SubBand5.Visible = false;
+            }
+            if (invoiceBasicDatasMerged == null)
+            {
+                SubBand6.Visible = false;
+            }
+            if (invoiceBasicDatasMerged == null)
+            {
+                SubBand7.Visible = false;
+            }
+            if (invoiceBasicDatasMerged == null)
+            {
+                SubBand8.Visible = false;
             }
 
 
