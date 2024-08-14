@@ -7,6 +7,7 @@ using Quartz;
 using QuartzTelcobright;
 using TelcobrightMediation.Config;
 using System.Net;
+using MySql.Data.MySqlClient;
 
 
 namespace Process
@@ -33,12 +34,33 @@ namespace Process
                 schedulerContext, operatorName);
             string entityConStr = ConnectionManager.GetEntityConnectionStringByOperator(operatorName, tbc);
             PartnerEntities context = new PartnerEntities(entityConStr);
+            String connectionString = context.Database.Connection.ConnectionString;
 
-            string lastProcessedCdrTime = context.jobs
-                .Where(j => j.idjobdefinition == 1 && j.Status == 1)
-                .OrderByDescending(j => j.CompletionTime)
-                .Select(j => j.CompletionTime)
-                .FirstOrDefault()?.ToString();
+            //string lastProcessedCdrTime = context.jobs
+            //    .Where(j => j.idjobdefinition == 1 && j.Status == 1)
+            //    .OrderByDescending(j => j.CompletionTime)
+            //    .Select(j => j.CompletionTime)
+            //    .FirstOrDefault()?.ToString();
+
+            string lastProcessedCdrTime = "";
+
+            string query = @"
+                SELECT CompletionTime
+                FROM job
+                WHERE idjobdefinition = 1 AND Status = 1
+                ORDER BY CompletionTime DESC
+                LIMIT 1;";
+
+            using (MySqlConnection con = new MySqlConnection(connectionString))
+            {
+                con.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, con))
+                {
+                    var result = cmd.ExecuteScalar();
+                    lastProcessedCdrTime = result?.ToString();
+                }
+                con.Close();
+            }
 
             bool stoppedSinceOneHour = !((DateTime.Now - Convert.ToDateTime(lastProcessedCdrTime)).TotalMinutes < 60);
 

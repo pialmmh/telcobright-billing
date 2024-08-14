@@ -84,6 +84,11 @@
          <asp:ListItem Value="sum_voice_hr_">Hourly Summary</asp:ListItem>
         
      </asp:DropDownList>
+     View by Switch:
+     <asp:CheckBox ID="ViewBySwitchForIgw" runat="server" AutoPostBack="True"
+                   OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+     <asp:DropDownList ID="DropDownListShowBySwitchForIgw" runat="server" Visible="true" Enabled="True">
+     </asp:DropDownList>
 
 
     <asp:Button ID="submit" runat="server" Text="Show Report" onclick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');"/> 

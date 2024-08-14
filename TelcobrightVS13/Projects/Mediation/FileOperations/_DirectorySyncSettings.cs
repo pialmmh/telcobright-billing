@@ -343,7 +343,7 @@ namespace TelcobrightFileOperations
         public string PrefixForUniqueName { get; set; }
         public bool Overwrite { get; set; }
         public bool RecursiveFileStore { get; set; }
-        public int MaxDownloadedFromFtp { get; set; }
+        public int MaxDownloadedFromFtp { get; set; } = 100000;
         public SpringExpression ExpDestFileName { get; set; }
         public SyncSettingsDstSubDirectoryRule SubDirRule { get; set; }
 

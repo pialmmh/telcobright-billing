@@ -69,11 +69,11 @@ namespace TelcobrightMediation.Reports.InvoiceReports.mirtelecom.IGW
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             xrLabelAmountInwords.Text = textInfo.ToTitleCase(CurrencyHelper.NumberToWords(Convert.ToDouble(subTotalAmount)));
 
-            xrLabelPaymentAdvice.Text = "Account Name: Mir Telecom Ltd.\r\n" +
-                "A / C No. 3555161002013(USD)\r\n" +
-                "Bank Name:  PUBALI BANK LIMITED, Principal Branch\r\n" +
-                "Bank Address:  26, Dilkusha C/A, Dhaka, Bangladesh\r\n" +
-                "SWIFT code: PUBABDDH";
+            //xrLabelPaymentAdvice.Text = "Account Name: Mir Telecom Ltd.\r\n" +
+            //    "A / C No. 3555161002013(USD)\r\n" +
+            //    "Bank Name:  PUBALI BANK LIMITED, Principal Branch\r\n" +
+            //    "Bank Address:  26, Dilkusha C/A, Dhaka, Bangladesh\r\n" +
+            //    "SWIFT code: PUBABDDH";
 
             xrLabelAddress.Text = " Mir Telecom Group Corporate House, House-4, Road-21, Dhaka -1212, Bangladesh\r\n" +
                 "Phone:+880-2-9354812,+88029354821,Fax:+88029354793,Email: billing@mirtelecom-bd.com\r\n" +

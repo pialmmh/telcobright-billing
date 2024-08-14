@@ -12,12 +12,14 @@ using MediationModel;
 using LibraryExtensions;
 using PortalApp.ReportHelper;
 using PortalApp._portalHelper;
+using TelcobrightMediation;
 
 public partial class DefaultRptIntlIn : System.Web.UI.Page
 {
     private int _mShowByCountry=0;
     private int _mShowByAns = 0;
     DataTable _dt;
+    public TelcobrightConfig tbc;
     private string GetQuery()
     {
 
@@ -54,6 +56,8 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
                             },
                          new List<string>()
                             {
+
+                                ViewBySwitchForIgw.Checked==true? DropDownListShowBySwitchForIgw.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitchForIgw.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxPartner.Checked==true?DropDownListPartner.SelectedIndex>0?" tup_inpartnerid="+DropDownListPartner.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByAns.Checked==true?DropDownListAns.SelectedIndex>0?" tup_destinationId="+DropDownListAns.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByIgw.Checked==true?DropDownListIgw.SelectedIndex>0?" tup_outpartnerid="+DropDownListIgw.SelectedValue:string.Empty:string.Empty
@@ -361,7 +365,15 @@ public partial class DefaultRptIntlIn : System.Web.UI.Page
         }
     }
 
-    
+
+    protected void CheckBoxShowBySwitch_CheckedChanged(object sender, EventArgs e)
+    {
+        if (ViewBySwitchForIgw.Checked == true)
+        {
+            DropDownListShowBySwitchForIgw.Enabled = true;
+        }
+        else DropDownListShowBySwitchForIgw.Enabled = false;
+    }
 
 
 
