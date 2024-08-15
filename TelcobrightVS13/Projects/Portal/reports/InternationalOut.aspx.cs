@@ -60,6 +60,7 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                       
                          new List<string>()
                             {
+                                ViewBySwitchForIgw.Checked==true?DropDownListShowBySwitchForIgw.SelectedIndex>0?"tup_switchid="+DropDownListShowBySwitchForIgw.SelectedItem.Value:string.Empty:string.Empty,
                                 CheckBoxShowByCountry.Checked==true?DropDownListCountry.SelectedIndex>0?" tup_countryorareacode="+DropDownListCountry.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxShowByDestination.Checked==true?DropDownPrefix.SelectedIndex>0?"tup_matchedprefixcustomer="+DropDownPrefix.SelectedValue:string.Empty:string.Empty,
                                 CheckBoxIntlPartner.Checked==true?DropDownListIntlCarier.SelectedIndex>0?" tup_outpartnerid="+DropDownListIntlCarier.SelectedValue:string.Empty:string.Empty,
@@ -501,6 +502,14 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
                     DropDownListIntlCarier.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                 }
 
+                List<ne> nes = contex.nes.ToList();
+                DropDownListShowBySwitchForIgw.Items.Clear();
+                DropDownListShowBySwitchForIgw.Items.Add(new ListItem(" [All]", "-1"));
+                foreach (ne ns in nes.OrderBy(x => x.SwitchName))
+                {
+                    DropDownListShowBySwitchForIgw.Items.Add(new ListItem(ns.SwitchName, ns.idSwitch.ToString()));
+                }
+
             }
             #region Comment protion for table name change
             //using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -800,6 +809,14 @@ public partial class DefaultRptIntlOut : System.Web.UI.Page
         }
     }
 
+    protected void CheckBoxShowBySwitch_CheckedChanged(object sender, EventArgs e)
+    {
+        if (ViewBySwitchForIgw.Checked == true)
+        {
+            DropDownListShowBySwitchForIgw.Enabled = true;
+        }
+        else DropDownListShowBySwitchForIgw.Enabled = false;
+    }
 
     protected void CheckBoxShowByPartner_CheckedChanged(object sender, EventArgs e)
     {

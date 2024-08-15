@@ -75,7 +75,6 @@
             this.PageFooter = new DevExpress.XtraReports.UI.PageFooterBand();
             this.xrPageInfo1 = new DevExpress.XtraReports.UI.XRPageInfo();
             this.ReportFooter = new DevExpress.XtraReports.UI.ReportFooterBand();
-            this.xrLabel13 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel11 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel15 = new DevExpress.XtraReports.UI.XRLabel();
@@ -544,7 +543,7 @@
             this.xrTableCell12.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
             this.xrTableCell12.StylePriority.UsePadding = false;
             this.xrTableCell12.StylePriority.UseTextAlignment = false;
-            this.xrTableCell12.Text = "X - Y Amount\r\nBDT";
+            this.xrTableCell12.Text = "Z Amount (X - Y) \r\nBDT";
             this.xrTableCell12.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell12.Weight = 0.371389243912784D;
             // 
@@ -554,7 +553,7 @@
             this.xrTableCell6.Padding = new DevExpress.XtraPrinting.PaddingInfo(0, 2, 0, 0, 100F);
             this.xrTableCell6.StylePriority.UsePadding = false;
             this.xrTableCell6.StylePriority.UseTextAlignment = false;
-            this.xrTableCell6.Text = "Amount";
+            this.xrTableCell6.Text = "Total Amount(BDT)";
             this.xrTableCell6.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             this.xrTableCell6.Weight = 0.371389621709458D;
             // 
@@ -578,7 +577,7 @@
             // ReportFooter
             // 
             this.ReportFooter.Controls.AddRange(new DevExpress.XtraReports.UI.XRControl[] {
-            this.xrLabel13,
+            this.xrLabel1,
             this.xrLabel11,
             this.xrLabel3,
             this.xrLabel15,
@@ -588,24 +587,9 @@
             this.xrLabelAmountInwords,
             this.xrLabel4,
             this.xrLine2,
-            this.xrTable3,
-            this.xrLabel1});
+            this.xrTable3});
             this.ReportFooter.HeightF = 350.9226F;
             this.ReportFooter.Name = "ReportFooter";
-            // 
-            // xrLabel13
-            // 
-            this.xrLabel13.Borders = DevExpress.XtraPrinting.BorderSide.Top;
-            this.xrLabel13.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel13.LocationFloat = new DevExpress.Utils.PointFloat(260F, 317.92F);
-            this.xrLabel13.Name = "xrLabel13";
-            this.xrLabel13.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel13.SizeF = new System.Drawing.SizeF(260F, 23.00003F);
-            this.xrLabel13.StylePriority.UseBorders = false;
-            this.xrLabel13.StylePriority.UseFont = false;
-            this.xrLabel13.StylePriority.UseTextAlignment = false;
-            this.xrLabel13.Text = "Authorized Signatory (Acc. and Fin.)";
-            this.xrLabel13.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // xrLabel11
             // 
@@ -614,7 +598,7 @@
             this.xrLabel11.Name = "xrLabel11";
             this.xrLabel11.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel11.SizeF = new System.Drawing.SizeF(727F, 23F);
-            this.xrLabel11.Text = "** All applicable VAT is payable by the ANS";
+            this.xrLabel11.Text = "** All applicable VAT is payable by the IOS\r\n";
             // 
             // xrLabel3
             // 
@@ -623,7 +607,7 @@
             this.xrLabel3.Name = "xrLabel3";
             this.xrLabel3.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabel3.SizeF = new System.Drawing.SizeF(727F, 23F);
-            this.xrLabel3.Text = "Amount Payable by Crossed Cheque in favor of \"Mir Telecom Limited\"";
+            this.xrLabel3.Text = "Account Payee Cheque or Pay Order in favor of \"Mir Telecom Limited\"";
             // 
             // xrLabel15
             // 
@@ -652,7 +636,7 @@
             this.xrLabelConversionRate.Name = "xrLabelConversionRate";
             this.xrLabelConversionRate.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
             this.xrLabelConversionRate.SizeF = new System.Drawing.SizeF(598.2499F, 22.99998F);
-            this.xrLabelConversionRate.Text = "Account Name: Bangla Tel Ltd.";
+            this.xrLabelConversionRate.Text = "Account Name: Mir Telecom Ltd.";
             // 
             // xrLabel12
             // 
@@ -834,16 +818,14 @@
             // 
             // xrLabel1
             // 
-            this.xrLabel1.Borders = DevExpress.XtraPrinting.BorderSide.Top;
             this.xrLabel1.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 317.92F);
+            this.xrLabel1.LocationFloat = new DevExpress.Utils.PointFloat(0F, 202F);
             this.xrLabel1.Name = "xrLabel1";
             this.xrLabel1.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel1.SizeF = new System.Drawing.SizeF(210F, 23.00003F);
-            this.xrLabel1.StylePriority.UseBorders = false;
+            this.xrLabel1.SizeF = new System.Drawing.SizeF(727F, 23F);
             this.xrLabel1.StylePriority.UseFont = false;
             this.xrLabel1.StylePriority.UseTextAlignment = false;
-            this.xrLabel1.Text = "Authorized Signatory (Billing)";
+            this.xrLabel1.Text = "\"This Is An Electronic Invoice & No Signature Required\"";
             this.xrLabel1.TextAlignment = DevExpress.XtraPrinting.TextAlignment.MiddleCenter;
             // 
             // InternationalOutgoingToIOS
@@ -923,7 +905,6 @@
         private DevExpress.XtraReports.UI.XRTableRow xrTableRow6;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell10;
         private DevExpress.XtraReports.UI.XRTableCell xrTableCellAmountDueforPayment;
-        private DevExpress.XtraReports.UI.XRLabel xrLabel1;
         private DevExpress.XtraReports.UI.XRLabel xrLabelAmountInwords;
         private DevExpress.XtraReports.UI.XRLabel xrLabel4;
         private DevExpress.XtraReports.UI.XRLine xrLine2;
@@ -938,6 +919,6 @@
         private DevExpress.XtraReports.UI.XRTableCell xrTableCell12;
         private DevExpress.XtraReports.UI.XRLabel xrLabel11;
         private DevExpress.XtraReports.UI.XRLabel xrLabel3;
-        private DevExpress.XtraReports.UI.XRLabel xrLabel13;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel1;
     }
 }

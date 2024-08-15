@@ -189,7 +189,7 @@ namespace InstallConfig
                     operatorName: operatorName,
                     identity: "Sms Sender" + " [" + operatorName+"]",
                     group: operatorName,
-                    cronExpression: "/30 * * ? * *",
+                    cronExpression: "0 */30 * ? * *",
                     fireOnceIfMissFired: false,
                     jobDataMap: new Dictionary<string, string>()
                     {

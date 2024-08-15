@@ -111,6 +111,13 @@
                         DropDownListIgw.Items.Add(new ListItem(p.PartnerName, p.idPartner.ToString()));
                     }
 
+                    List<ne> nes = contex.nes.ToList();
+                    DropDownListShowBySwitchForIgw.Items.Clear();
+                    DropDownListShowBySwitchForIgw.Items.Add(new ListItem(" [All]", "-1"));
+                    foreach (ne ns in nes.OrderBy(x => x.SwitchName)){
+                        DropDownListShowBySwitchForIgw.Items.Add(new ListItem(ns.SwitchName, ns.idSwitch.ToString()));
+                    }
+
                 }
 
 
@@ -335,6 +342,13 @@
          <asp:ListItem Value="sum_voice_hr_">Hourly Summary</asp:ListItem>
         
      </asp:DropDownList>
+        
+        View by Switch:
+        <asp:CheckBox ID="ViewBySwitchForIgw" runat="server" AutoPostBack="True"
+                      OnCheckedChanged="CheckBoxShowBySwitch_CheckedChanged" Checked="False" />
+                       
+        <asp:DropDownList ID="DropDownListShowBySwitchForIgw" runat="server" Visible="true" Enabled="True">
+        </asp:DropDownList>
 
 
         <asp:Button ID="submit" runat="server" Text="Show Report" OnClick="submit_Click" OnClientClick="SethidValueSubmitClickFlag('true');" />

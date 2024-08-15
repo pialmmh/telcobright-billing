@@ -117,7 +117,8 @@ namespace InstallConfig
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
+                    CompressionType = CompressionType.None,
+                    MaxDownloadedFromFtp = 100000
                 }
             };
 
@@ -148,7 +149,8 @@ namespace InstallConfig
                     FileExtensionForSafeCopyWithTempFile = ".tmp",//make sure when copying to vault always .tmp ext used
                     Overwrite = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
-                    CompressionType = CompressionType.None
+                    CompressionType = CompressionType.None,
+                    MaxDownloadedFromFtp = 100000
                 }
             };
 
