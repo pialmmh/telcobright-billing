@@ -81,8 +81,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "104"},
                         {"operatorName", operatorName},
-                        {"syncPair", this.reveCAS.Name}
-                    }),
+                     }),
 
                 new QuartzTbDaemonConfig
                 (

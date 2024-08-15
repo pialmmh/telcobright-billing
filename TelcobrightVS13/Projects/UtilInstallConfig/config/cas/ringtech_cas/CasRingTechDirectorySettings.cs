@@ -38,7 +38,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/ringTech/tdm",
+                StartingPath = "D:/telcobright/vault/resources/cdr/ringTech/tdm",
                 User = "",
                 Pass = "",
             };
@@ -50,7 +50,7 @@ namespace InstallConfig
                 OsType = "windows",
                 PathSeparator = @"\",
                 ServerIp = "",
-                StartingPath = "F:/telcobright/vault/resources/cdr/ringTech/ip",
+                StartingPath = "D:/telcobright/vault/resources/cdr/ringTech/ip",
                 User = "",
                 Pass = "",
             };
