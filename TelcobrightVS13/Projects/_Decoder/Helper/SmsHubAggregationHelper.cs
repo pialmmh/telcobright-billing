@@ -12,6 +12,7 @@ namespace Decoders
 {
     public static class SmsHubAggregationHelper
     {
+        static string[] responseTypes = new[] { "2", "4" };
         public static EventAggregationResult Aggregate(NewAndOldEventsWrapper<string[]> newAndOldEventsWrapper)
         {
             //MsuType aggregationType = MsuType.None;
@@ -21,7 +22,10 @@ namespace Decoders
 
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Sn.StartTime]).ToList();
-            if (newUnAggInstances.Count > 2 || oldUnAggInstances.Count > 1 || allUnaggregatedInstances.Count > 2)
+            //if (newUnAggInstances.Count > 2 || oldUnAggInstances.Count > 1 || allUnaggregatedInstances.Count > 2)
+            //    throw new Exception("allUnaggregatedInstances > 2 rows  cannot be aggregated.");
+
+            if (newUnAggInstances.Count > 2 || allUnaggregatedInstances.Count > 2)
                 throw new Exception("allUnaggregatedInstances > 2 rows  cannot be aggregated.");
 
             var groupedByBillId = allUnaggregatedInstances.GroupBy(row => row[Sn.UniqueBillId]).ToDictionary(g => g.Key);
@@ -29,10 +33,6 @@ namespace Decoders
                 throw new Exception("Rows with multiple bill ids cannot be aggregated.");
             string uniqueBillId = groupedByBillId.Keys.First();
 
-            if (uniqueBillId.Contains("2024-07-07/28-23/3b00b66c"))
-            {
-                ;
-            }
             List<string[]> newRowsToBeDiscardedAfterAggregation = new List<string[]>();
             List<string[]> oldRowsToBeDiscardedAfterAggregation = new List<string[]>();
             var aggregationComplete = false;
@@ -103,11 +103,11 @@ namespace Decoders
             //}
 
 
-            var expectedType = new[] { "2", "4" };
+            
 
             var response = allUnaggregatedInstances.Last();
 
-            if (expectedType.Contains(response[Sn.SmsType]))
+            if (responseTypes.Contains(response[Sn.SmsType]))
             {
                 if (newUnAggInstances.Any(n => n[Sn.IdCall] == response[Sn.IdCall]))
                 {

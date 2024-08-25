@@ -23,8 +23,8 @@ namespace Decoders
     }
     public class Layers
     {
-        [JsonProperty("frame.time_utc")]
-        public string[] FrameTimeUtc { get; set; }
+        [JsonProperty("frame.time")]
+        public string[] FrameTime { get; set; }
 
         [JsonProperty("sccp.return_cause")]
         public string[] ReturnCause { get; set; }
@@ -78,7 +78,7 @@ namespace Decoders
             {
                 newLayers.Add(new Layers
                 {
-                    FrameTimeUtc = l.FrameTimeUtc,
+                    FrameTime = l.FrameTime,
                     ReturnCause = l.ReturnCause,
                     Opc = l.Opc,
                     Dpc = l.Dpc,

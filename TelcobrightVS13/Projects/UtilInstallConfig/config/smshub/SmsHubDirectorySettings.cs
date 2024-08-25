@@ -49,6 +49,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/borak1",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
             FileLocation vaultBorak2 = new FileLocation()
             {
@@ -60,6 +61,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/borak2",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
             FileLocation vaultKhaja1 = new FileLocation()
             {
@@ -71,6 +73,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/khaja1",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
             FileLocation vaultKhaja2 = new FileLocation()
             {
@@ -82,6 +85,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/khaja2",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
 
             this.vaultPrimary = new FileLocation()
@@ -130,6 +134,9 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary=SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -137,7 +144,8 @@ namespace InstallConfig
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -179,6 +187,9 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary = SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -186,7 +197,8 @@ namespace InstallConfig
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -227,6 +239,9 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary = SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -234,7 +249,8 @@ namespace InstallConfig
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                               and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -275,6 +291,9 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary = SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -282,7 +301,8 @@ namespace InstallConfig
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {

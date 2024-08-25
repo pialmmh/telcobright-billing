@@ -45,7 +45,12 @@ namespace Jobs
             throw new NotImplementedException();
         }
 
-        public object PostprocessJob(object data)
+        public object PostprocessJobBeforeCommit(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJobAfterCommit(object data)
         {
             throw new NotImplementedException();
         }

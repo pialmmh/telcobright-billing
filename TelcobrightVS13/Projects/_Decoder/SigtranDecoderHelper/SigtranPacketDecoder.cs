@@ -56,21 +56,62 @@ namespace Decoders
 
         public List<SigtranPacket> DecodePackets()
         {
-            Process senderProcess = new Process();
-            senderProcess.StartInfo.FileName = TSharkExe;
-            senderProcess.StartInfo.Arguments = this.PcapFileName;
-            senderProcess.StartInfo.UseShellExecute = false;
-            //senderProcess.StartInfo.RedirectStandardOutput = true;
-            senderProcess.StartInfo.CreateNoWindow = true;
-            senderProcess.Start();
-            senderProcess.WaitForExit();
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = $"{TSharkExe}",
+                Arguments = $"-r {PcapFileName} -Tjson -eframe.time " +
+                            "-esccp.return_cause -emtp3.opc -emtp3.dpc -esccp.called.digits " +
+                            "-esccp.calling.digits -etcap.tid -egsm_map.old.Component -ee212.imsi " +
+                            "-egsm_old.localValue -ee164.msisdn -egsm_sms.sms_text -egsm_map.sm.serviceCentreAddress " +
+                            "-egsm_map.sm.msisdn -Y((gsm_map)&&(mtp3.opc==4699||mtp3.opc==4700||mtp3.opc==4701||mtp3.opc==4702))",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            string output, error;
+            int exitCode;
+            using (var process = new Process { StartInfo = processStartInfo })
+            {
+                process.Start();
+
+                // Read the output directly into a variable
+                output = process.StandardOutput.ReadToEnd();
+                error = process.StandardError.ReadToEnd();
+
+                process.WaitForExit();
+                exitCode = process.ExitCode;
+            }
             var prevLatencyMode = GCSettings.LatencyMode;
             GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
-            List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(this.PcapFileName.Replace(".pcap.gz", ".json"));
+            List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(output);
             GCSettings.LatencyMode = prevLatencyMode;
-            //List<SigtranPacket> data = new List<SigtranPacket>();
             return data;
+
+            //var prevLatencyMode = GCSettings.LatencyMode;
+            //GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+            //List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(output);
+            //GCSettings.LatencyMode = prevLatencyMode;
         }
+
+
+        //public List<SigtranPacket> DecodePackets()
+        //{
+        //    Process senderProcess = new Process();
+        //    senderProcess.StartInfo.FileName = TSharkExe;
+        //    senderProcess.StartInfo.Arguments = this.PcapFileName;
+        //    senderProcess.StartInfo.UseShellExecute = false;
+        //    //senderProcess.StartInfo.RedirectStandardOutput = true;
+        //    senderProcess.StartInfo.CreateNoWindow = true;
+        //    senderProcess.Start();
+        //    senderProcess.WaitForExit();
+        //    var prevLatencyMode = GCSettings.LatencyMode;
+        //    GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+        //    List<SigtranPacket> data = JsonToSigtranPacket.ConvertJsonToSigtranPacket(this.PcapFileName.Replace(".pcap.gz", ".json"));
+        //    GCSettings.LatencyMode = prevLatencyMode;
+        //    //List<SigtranPacket> data = new List<SigtranPacket>();
+        //    return data;
+        //}
 
         //List<JObject> DecodePackets()
         //{
@@ -90,15 +131,19 @@ namespace Decoders
 
         string ParseAndFormatTimestamp(string timestamp)
         {
-            timestamp = timestamp.Substring(0, timestamp.Length - 4);
-            DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime.AddHours(6);
+            timestamp = timestamp.Substring(0, timestamp.Length - 25);
+            DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime;
+            //timestamp = timestamp.Substring(0, timestamp.Length - 4);
+            //DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime.AddHours(6);
             return parsedDate.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         string ParseAndFormatTimestampWtihMs(string timestamp)
         {
-            timestamp = timestamp.Substring(0, timestamp.Length - 4);
-            DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime.AddHours(6);
+            timestamp = timestamp.Substring(0, timestamp.Length - 25);
+            DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime;
+            //timestamp = timestamp.Substring(0, timestamp.Length - 4);
+            //DateTime parsedDate = DateTimeOffset.Parse(timestamp).DateTime.AddHours(6);
             return parsedDate.ToString("yyyy-MM-dd HH:mm:ss.fffffff");
         }
 
@@ -127,7 +172,7 @@ namespace Decoders
                 }
 
                 Frame frameLayer = packet.Frame;
-                string frameTime = frameLayer?.FrameTimeUtc.ToString();
+                string frameTime = frameLayer?.FrameTime.ToString();
                 string dateTime = ParseAndFormatTimestamp(frameTime);
 
                 record[Sn.PacketFrameTime] = ParseAndFormatTimestampWtihMs(frameTime);
@@ -202,8 +247,11 @@ namespace Decoders
                 }
                 // excluding reportSM-DeliveryStatus and mo-forwardSM 
                 if (smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && smsTypeIdentifier != "")
-                     continue;
+                    continue;
 
+
+                if (smsTypeIdentifier == "45")
+                    continue;
                 // exluding Udts
                 if (sccpLayer?.ReturnCause != null)
                     continue;
@@ -237,7 +285,7 @@ namespace Decoders
 
                 string imsi = componentTreeInvokeElement?.ImsiTree?.Imsi?.ToString();
 
-               // imsi, A Party,B Party
+                // imsi, A Party,B Party
                 if (systemCodes == MsuType.Sri)
                 {
                     continue;
@@ -301,11 +349,11 @@ namespace Decoders
                     // mt response 
                     //else
                     //{
-                        record[Sn.TerminatingCallingNumber] = callerNumber;
-                        record[Sn.Imsi] = imsi;
-                        record[Sn.SmsType] = "4";
+                    record[Sn.TerminatingCallingNumber] = callerNumber;
+                    record[Sn.Imsi] = imsi;
+                    record[Sn.SmsType] = "4";
                     //}
-                    
+
                 }
 
                 string outPartnerId = getPartneridByGtPrefix(record[Sn.OriginatingCalledNumber]).ToString();
@@ -350,10 +398,10 @@ namespace Decoders
                 record[Sn.ServiceGroup] = "1";
 
                 //records.Add(record);
-                records[index]= record;
+                records[index] = record;
             }
 
-            return records.Where(r=>r!=null).ToList();
+            return records.Where(r => r != null).ToList();
         }
 
         private int getPartneridByGtPrefix(string gt)

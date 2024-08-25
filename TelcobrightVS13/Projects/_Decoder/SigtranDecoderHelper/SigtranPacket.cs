@@ -44,8 +44,8 @@ namespace Decoders
 
     public class Frame
     {
-        [JsonProperty("frame.time_utc")]
-        public string FrameTimeUtc { get; set; }
+        [JsonProperty("frame.time")]
+        public string FrameTime { get; set; }
     }
 
     public class Sctp

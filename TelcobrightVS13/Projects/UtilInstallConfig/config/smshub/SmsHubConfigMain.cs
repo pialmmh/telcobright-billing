@@ -82,7 +82,7 @@ namespace InstallConfig
                 ValidationRulesForCommonMediationCheck = commonCdrValRulesGen.GetRules(),
                 ValidationRulesForInconsistentCdrs = inconsistentCdrValRulesGen.GetRules(),
                 ServiceGroupConfigurations = this.GetServiceGroupConfigurations(),
-                DisableCdrPostProcessingJobCreationForAutomation = false,
+                DisableCdrPostProcessingJobCreationForAutomation = true,//used for smshub
                 BatchSizeForCdrJobCreationCheckingExistence = 10000,
                 DisableParallelMediation = false,
                 AutoCorrectDuplicateBillId = false,
@@ -124,6 +124,7 @@ namespace InstallConfig
                     }}
                 },
                 WriteFailedCallsToDb = false,
+                MoveCdrToDriveAfterProcessing = "F:"
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()

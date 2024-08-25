@@ -32,7 +32,8 @@ namespace Jobs
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
         public override string ToString() => this.RuleName;
         public virtual int Id => 1;
-        public List<job> HandledJobs;//required for deleting pre-decoded files in post processing, list when merged jobs.
+        private List<FileInfo> FilesToDeleteAfterJobCompletion= new List<FileInfo>();
+        private CdrJobOutput HandledJobsOutput= new CdrJobOutput();//required for deleting pre-decoded files in post processing, list when merged jobs.
         public bool PreDecodingStageOnly { get; private set; }
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
@@ -75,15 +76,19 @@ namespace Jobs
             CdrSetting cdrSetting = this.Input.CdrSetting;
             if (this.Input.IsBatchJob == false) //not batch job
             {
-                this.HandledJobs = new List<job> { this.Input.Job };
+                //if (this.HandledJobsOutput.Jobs == null)
+                //{
+                //    this.HandledJobsOutput.Jobs = new List<job>();
+                //}
+                this.HandledJobsOutput.Jobs.Add(this.Input.Job);
                 preProcessor = DecodeNewCdrFile(preDecodingStage: false);
                 initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
             }
             else //batch or merged job
             {
                 Dictionary<long, NewCdrWrappedJobForMerge> mergedJobsDic = getMergedJobs();
-                this.HandledJobs = new List<job>();
-                this.HandledJobs.AddRange(
+                this.HandledJobsOutput.Jobs = new List<job>();
+                this.HandledJobsOutput.Jobs.AddRange(
                     mergedJobsDic.Values.Select(wrappedJob => wrappedJob.Job));
                 NewCdrWrappedJobForMerge head = mergedJobsDic.First().Value;
                 List<NewCdrWrappedJobForMerge> tail = mergedJobsDic.Skip(1).Select(kv => kv.Value).ToList();
@@ -104,7 +109,7 @@ namespace Jobs
                 {
                     throw  new Exception("DescendingOrder not supported while perform predecoding");
                 }
-                Console.WriteLine("Performing InMemory Aggregating ....");
+                Console.WriteLine("Performing InMemory Aggregation ....");
                 AbstractCdrDecoder decoder = preProcessor.Decoder;
                 List<string[]> l1FailedRows;
                 List<NewAndOldEventsWrapper<string[]>> l1AggResults =
@@ -114,20 +119,22 @@ namespace Jobs
                 {
                     throw new Exception("");
                 }
+                Console.WriteLine("Performing L2 Aggregation ....");
+
                 DayWiseEventCollector<string[]> dayWiseEventCollector = getEventCollector(decoder, l1FailedRows);
                 SmsHubStyleAggregator<string[]> aggregator = new SmsHubStyleAggregator<string[]>(dayWiseEventCollector);
                 List<NewAndOldEventsWrapper<string[]>> l2FailedWrappers;
                 List<NewAndOldEventsWrapper<string[]>> l2AggResults = aggregator.aggregateCdrs(out l2FailedWrappers);
-                if (!l2AggResults.TrueForAll(wr =>
-                 {
-                     var b = wr.NewUnAggInstances.Count == 1 && wr.OldUnAggInstances.Count == 1;
-                     if (b == false)
-                     {
-                         ;
-                     }
-                     return b;
-                 }))
-                    throw new Exception("L2 agg result must have 1 new and 1 old instance");
+                //if (!l2AggResults.TrueForAll(wr =>
+                // {
+                //     var b = wr.NewUnAggInstances.Count == 1 && wr.OldUnAggInstances.Count == 1;
+                //     if (b == false)
+                //     {
+                //         ;
+                //     }
+                //     return b;
+                // }))
+                //    throw new Exception("L2 agg result must have 1 new and 1 old instance");
                 //if (!l2AggResults.TrueForAll(wr => 
                 //        new[]{"1","3"}.Contains(wr.OldUnAggInstances.First()[Sn.SmsType])
                 //        && new[] { "2", "4" }.Contains(wr.NewUnAggInstances.First()[Sn.SmsType])))
@@ -281,7 +288,8 @@ namespace Jobs
             {
                 FinalizeMergedJobs(cdrJob);
             }
-            return this.HandledJobs;
+            this.HandledJobsOutput.FilesToCleanUp = this.FilesToDeleteAfterJobCompletion;
+            return this.HandledJobsOutput;
         }
 
         private DayWiseEventCollector<string[]> getEventCollector(AbstractCdrDecoder decoder, List<string[]> failedPreAggCandidates)
@@ -348,7 +356,7 @@ namespace Jobs
                             var mergedJobError = new CdrMergedJobError
                             {
                                 Filename = r[Fn.Filename],
-                                Job = this.HandledJobs.First(j => j.JobName == r[Fn.Filename]),
+                                Job = this.HandledJobsOutput.Jobs.First(j => j.JobName == r[Fn.Filename]),
                                 UniqueBillid = uniqueBillId,
                                 Starttime = r[Fn.StartTime],
                                 Answertime = r[Fn.AnswerTime],
@@ -444,6 +452,11 @@ namespace Jobs
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
                 DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc,
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+                if (this.Input.MediationContext.Tbc.CdrSetting.MoveCdrToDriveAfterProcessing.Trim()!="")
+                {
+                    MoveCdrAfterProcessing(this.Input.Context, this.Input.MediationContext.Tbc,
+                        cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+                }
             }
         }
 
@@ -483,7 +496,11 @@ namespace Jobs
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
                 DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc,
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
-
+                if (this.Input.MediationContext.Tbc.CdrSetting.MoveCdrToDriveAfterProcessing.Trim() != "")
+                {
+                    MoveCdrAfterProcessing(this.Input.Context, this.Input.MediationContext.Tbc,
+                        cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
+                }
             }
         }
 
@@ -521,16 +538,41 @@ namespace Jobs
             {
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, telcobrightJob);
             }
+            DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc,
+                telcobrightJob);
+            if (this.Input.MediationContext.Tbc.CdrSetting.MoveCdrToDriveAfterProcessing.Trim() != "")
+            {
+                MoveCdrAfterProcessing(this.Input.Context, this.Input.MediationContext.Tbc,
+                    telcobrightJob);
+            }
         }
 
-        public object PostprocessJob(object data)
+        public object PostprocessJobBeforeCommit(object data)
         {
-            List<job> handledJobs = (List<job>)data;
+            List<job> handledJobs = ((CdrJobOutput) data).Jobs;
             foreach (var job in handledJobs)
             {
                 DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc, job);
+                if (this.Input.MediationContext.Tbc.CdrSetting.MoveCdrToDriveAfterProcessing.Trim() != "")
+                {
+                    MoveCdrAfterProcessing(this.Input.Context, this.Input.MediationContext.Tbc,job);
+                }
             }
             return handledJobs;
+        }
+
+        public object PostprocessJobAfterCommit(object data)
+        {
+            var retVal = (CdrJobOutput)data; //EXECUTE
+
+            foreach (var fileToDelete in retVal.FilesToCleanUp)
+            {
+                if (File.Exists(fileToDelete.FullName))
+                {
+                    File.Delete(fileToDelete.FullName);
+                }
+            }
+            return retVal;
         }
 
         public ITelcobrightJob createNewNonSingletonInstance()
@@ -818,7 +860,40 @@ namespace Jobs
             string predecodedDirName = newCdrFileInfo.DirectoryName + Path.DirectorySeparatorChar + "predecoded";
             string preDecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name + ".predecoded";
             if (File.Exists(preDecodedFileName))
-                File.Delete(preDecodedFileName);
+                this.FilesToDeleteAfterJobCompletion.Add(new FileInfo(preDecodedFileName));
+        }
+
+        protected void MoveCdrAfterProcessing(PartnerEntities context, TelcobrightConfig tbc, job cdrJob)
+        {
+            string fileLocationName = this.CollectorInput.Ne.SourceFileLocations;
+            FileLocation fileLocation = this.CollectorInput.Tbc.DirectorySettings.FileLocations[fileLocationName];
+            string newCdrFileName = fileLocation.GetOsNormalizedPath(fileLocation.StartingPath)
+                                    + Path.DirectorySeparatorChar + cdrJob.JobName;
+            FileInfo newCdrFileInfo = new FileInfo(newCdrFileName);
+            string driveToMove = tbc.CdrSetting.MoveCdrToDriveAfterProcessing;
+            if (Directory.Exists(driveToMove) == false)
+                Directory.CreateDirectory(driveToMove);
+            //string preDecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name + ".predecoded";
+            string targetFileName = driveToMove + newCdrFileInfo.FullName.Split(':')[1];
+            string targetDirPath = driveToMove + newCdrFileInfo.DirectoryName.Split(':')[1];
+            if (Directory.Exists(targetDirPath)==false)
+            {
+                Directory.CreateDirectory(targetDirPath);
+            }
+            if (File.Exists(targetFileName))
+            {
+                File.Delete(targetFileName);
+            }
+            File.Copy(newCdrFileInfo.FullName,targetFileName);
+            FileInfo copiedFileInfo= new FileInfo(targetFileName);
+            if (newCdrFileInfo.Length == copiedFileInfo.Length)
+            {
+                this.FilesToDeleteAfterJobCompletion.Add(newCdrFileInfo);
+            }
+            else
+            {
+                throw new Exception("Couldn't move cdr file after processing, file size didn't match after move.");
+            }
         }
 
         private static void createJobsForSplitCase(PartnerEntities context, TelcobrightConfig tbc, job cdrJob,
