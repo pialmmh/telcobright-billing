@@ -689,7 +689,7 @@
 			the 'V' bit is enabled).
 		-->
 		<typedefn type-name="OctetStringOrUTF8" type-parent="OctetString"/>
-		<!-- A Wireshark extension to be able to use
+		<!-- A Wireshark extension to be able to use 
 			BASE_SHOW_ASCII_PRINTABLE 0x00010000 show byte array as ASCII if it's all printable characters
 		-->
 		<!-- ************************************************************** -->
@@ -1127,7 +1127,7 @@
 			<type type-name="UTF8String"/>
 		</avp>
 		<avp name="Framed-Pool" code="88" mandatory="must" may-encrypt="yes" protected="may" vendor-bit="mustnot">
-			<type type-name="UTF8String"/>
+			<type type-name="OctetString"/>
 		</avp>
 		<avp name="CUI" code="89" mandatory="must" may-encrypt="yes" protected="may" vendor-bit="mustnot">
 			<type type-name="UTF8String"/>
@@ -2892,7 +2892,7 @@
 		668	Redirect-Address-SIP-URI	[RFC8506]
 		669	QoS-Final-Unit-Indication	[RFC8506]
 		670	OC-Maximum-Rate	[RFC8582]
-		671-16777215	Unassigned
+		671-16777215	Unassigned	
 		-->
 
 		<!-- **************************************************************************** -->
@@ -4019,37 +4019,20 @@
 		</avp>
 		<avp name="RAT-Type" code="1032" mandatory="mustnot" may-encrypt="yes" protected="may" vendor-bit="must" vendor-id="TGPP">
 			<type type-name="Enumerated" />
-			<enum name="WLAN"						code="0"/>
-			<enum name="VIRTUAL"					code="1"/>
-			<enum name="TRUSTED-N3GA"				code="2"/>
-			<enum name="WIRELINE"					code="3"/>
-			<enum name="WIRELINE-CABLE"				code="4"/>
-			<enum name="WIRELINE-BBF"				code="5"/>
-			<enum name="UTRAN"						code="1000"/>
-			<enum name="GERAN"						code="1001"/>
-			<enum name="GAN"						code="1002"/>
-			<enum name="HSPA_EVOLUTION"				code="1003"/>
-			<enum name="EUTRAN"						code="1004"/>
-			<enum name="EUTRAN-NB-IoT"				code="1005"/>
-			<enum name="NG-RAN"						code="1006"/>
-			<enum name="LTE-M"						code="1007"/>
-			<enum name="NR-U"						code="1008"/>
-			<enum name="EUTRAN(LEO)"				code="1011"/>
-			<enum name="EUTRAN(MEO)"				code="1012"/>
-			<enum name="EUTRAN(GEO)"				code="1013"/>
-			<enum name="EUTRAN(OTHERSAT)"			code="1014"/>
-			<enum name="EUTRAN-NB-IoT(LEO)"			code="1021"/>
-			<enum name="EUTRAN-NB-IoT(MEO)"			code="1022"/>
-			<enum name="EUTRAN-NB-IoT(GEO)"			code="1023"/>
-			<enum name="EUTRAN-NB-IoT(OTHERSAT)"	code="1024"/>
-			<enum name="LTE-M(LEO)"					code="1031"/>
-			<enum name="LTE-M(MEO)"					code="1032"/>
-			<enum name="LTE-M(GEO)"					code="1033"/>
-			<enum name="LTE-M(OTHERSAT)"			code="1034"/>
-			<enum name="CDMA2000_1X"				code="2000"/>
-			<enum name="HRPD"						code="2001"/>
-			<enum name="UMB"						code="2002"/>
-			<enum name="EHRPD"						code="2003"/>
+			<enum name="WLAN"		code="0"/>
+			<enum name="VIRTUAL"		code="1"/>
+			<enum name="UTRAN"		code="1000"/>
+			<enum name="GERAN"		code="1001"/>
+			<enum name="GAN"		code="1002"/>
+			<enum name="HSPA_EVOLUTION"	code="1003"/>
+			<enum name="EUTRAN"		code="1004"/>
+			<enum name="EUTRAN-NB-IoT"	code="1005"/>
+			<enum name="NG-RAN"	code="1006"/>
+			<enum name="LTE-M"	code="1007"/>
+			<enum name="CDMA2000_1X"	code="2000"/>
+			<enum name="HRPD"		code="2001"/>
+			<enum name="UMB"		code="2002"/>
+			<enum name="EHRPD"		code="2003"/>
 		</avp>
 		<avp name="Event-Report-Indication" code="1033" mandatory="mustnot" may-encrypt="yes" protected="may" vendor-bit="must" vendor-id="TGPP">
 			<grouped>
@@ -7990,10 +7973,8 @@
 		<avp name="AESE-Communication-Pattern" code="3113" mandatory="must" vendor-bit="must" may-encrypt="no" vendor-id="TGPP">
 			<grouped>
 				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
 				<gavp name="SCEF-ID"/>
 				<gavp name="SCEF-Reference-ID-for-Deletion"/>
-				<gavp name="SCEF-Reference-ID-for-Deletion-Ext"/>
 				<gavp name="Communication-Pattern-Set"/>
 			</grouped>
 		</avp>
@@ -8005,7 +7986,6 @@
 				<gavp name="Scheduled-Communication-Time"/>
 				<gavp name="Stationary-Indication"/>
 				<gavp name="Reference-ID-Validity-Time"/>
-				<gavp name="Battery-Indicator"/>
 			</grouped>
 		</avp>
 		<avp name="Periodic-Communication-Indicator" code="3115" mandatory="must" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
@@ -8034,7 +8014,6 @@
 		<avp name="AESE-Communication-Pattern-Config-Status" code="3120" mandatory="must" vendor-bit="must" may-encrypt="no" vendor-id="TGPP">
 			<grouped>
 				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
 				<gavp name="SCEF-ID"/>
 				<gavp name="Periodic-Time"/>
 				<gavp name="AESE-Error-Report"/>
@@ -8048,11 +8027,9 @@
 		<avp name="Monitoring-Event-Configuration" code="3122" mandatory="must" vendor-bit="must" may-encrypt="no" vendor-id="TGPP">
 			<grouped>
 				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
 				<gavp name="SCEF-ID"/>
 				<gavp name="Monitoring-Type"/>
 				<gavp name="SCEF-Reference-ID-for-Deletion"/>
-				<gavp name="SCEF-Reference-ID-for-Deletion-Ext"/>
 				<gavp name="Maximum-Number-of-Reports"/>
 				<gavp name="Monitoring-Duration"/>
 				<gavp name="Charged-Party"/>
@@ -8067,10 +8044,8 @@
 		<avp name="Monitoring-Event-Report" code="3123" mandatory="must" vendor-bit="must" may-encrypt="no" vendor-id="TGPP">
 			<grouped>
 				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
 				<gavp name="SCEF-ID"/>
 				<gavp name="SCEF-Reference-ID-for-Deletion"/>
-				<gavp name="SCEF-Reference-ID-for-Deletion-Ext"/>
 				<gavp name="Visited-PLMN-Id"/>
 				<gavp name="Roaming-Information"/>
 				<gavp name="IMEI-Change"/>
@@ -8182,7 +8157,6 @@
 			<grouped>
 				<gavp name="Service-Report"/>
 				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
 				<gavp name="SCEF-ID"/>
 			</grouped>
 		</avp>
@@ -8296,34 +8270,24 @@
 		<avp name="CIA-Flags" code="3164" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
 			<type type-name="Unsigned32"/>
 		</avp>
-		<avp name="Group-Report" code="3165" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
+		<avp name="Group-Monitoring-Event-Report" code="3165" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
 			<grouped>
-				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
-				<gavp name="SCEF-ID"/>
-				<gavp name="Group-Report-Item"/>
+			<gavp name="SCEF-Reference-ID"/>
+			<gavp name="SCEF-ID"/>
+			<gavp name="Group-Monitoring-Event-Report-Item"/>
 			</grouped>
 		</avp>
-		<avp name="Group-Report-Item" code="3166" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
+		<avp name="Group-Monitoring-Event-Report-Item" code="3166" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
 			<grouped>
-				<gavp name="User-Identifier"/>
+			<gavp name="User-Identifier"/>
 				<gavp name="Visited-PLMN-Id"/>
 				<gavp name="Roaming-Information"/>
-				<gavp name="IMEI-Change"/>
 				<gavp name="Reachability-Information"/>
 				<gavp name="Maximum-UE-Availability-Time"/>
 				<gavp name="EPS-Location-Information"/>
 				<gavp name="Monitoring-Type"/>
 				<gavp name="Service-Report"/>
 				<gavp name="S6t-HSS-Cause"/>
-				<gavp name="Idle-Status-Indication"/>
-				<gavp name="Reporting-Time-Stamp"/>
-				<gavp name="Updated-Network-Configuration"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
-				<gavp name="SCEF-Reference-ID-for-Deletion-Ext"/>
-				<gavp name="Event-Handling"/>
-				<gavp name="Loss-Of-Connectivity-Reason"/>
-				<gavp name="PDN-Connectivity-Status-Report"/>
 			</grouped>
 		</avp>
 		<avp name="RIR-Flags" code="3167" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
@@ -8336,14 +8300,13 @@
 		</avp>
 		<avp name="APN-Validity-Time" code="3169" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
 			<grouped>
-				<gavp name="Granted-Validity-Time"/>
+			<gavp name="Granted-Validity-Time"/>
 				<gavp name="Service-Selection"/>
 			</grouped>
 		</avp>
 		<avp name="Suggested-Network-Configuration" code="3170" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
 			<grouped>
 				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
 				<gavp name="SCEF-ID"/>
 				<gavp name="Subscribed-Periodic-RAU-TAU-Timer"/>
 				<gavp name="Active-Time"/>
@@ -8354,7 +8317,6 @@
 		<avp name="Monitoring-Event-Report-Status" code="3171" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
 			<grouped>
 				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
 				<gavp name="SCEF-ID"/>
 				<gavp name="Result-Code"/>
 				<gavp name="Experimental-Result-Code"/>
@@ -8421,27 +8383,6 @@
 			<enum name="DUAL_TRANSMISSION_UL_WITH_SUBSEQUENT_DL" code="2"/>
 			<enum name="DUAL_TRANSMISSION_DL_WITH_SUBSEQUENT_UL" code="3"/>
 			<enum name="MULTI_TRANSMISSION" code="4"/>
-		</avp>
-		<avp name="Updated-Network-Configuration" code="3184" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
-			<grouped>
-				<gavp name="SCEF-ID"/>
-				<gavp name="SCEF-Reference-ID"/>
-				<gavp name="SCEF-Reference-ID-Ext"/>
-				<gavp name="SCEF-Reference-ID-for-Deletion"/>
-				<gavp name="SCEF-Reference-ID-for-Deletion-Ext"/>
-				<gavp name="Subscribed-Periodic-RAU-TAU-Timer"/>
-				<gavp name="Active-Time"/>
-				<gavp name="DL-Buffering-Suggested-Packet-Count"/>
-			</grouped>
-		</avp>
-		<avp name="Battery-Indicator" code="3185" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
-			<type type-name="Unsigned32"/>
-		</avp>
-		<avp name="SCEF-Reference-ID-Ext" code="3186" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
-			<type type-name="Unsigned64"/>
-		</avp>
-		<avp name="SCEF-Reference-ID-for-Deletion-Ext" code="3187" mandatory="mustnot" may-encrypt="no" vendor-bit="must" vendor-id="TGPP">
-			<type type-name="Unsigned64"/>
 		</avp>
 		<!--
 		Note: The AVP codes from 3163 to 3199 are reserved for TS 29.336

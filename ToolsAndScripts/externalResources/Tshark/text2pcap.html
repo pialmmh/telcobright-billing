@@ -28,6 +28,7 @@
 <span class="nowrap">[ <strong>-e</strong> &lt;l3pid&gt; ]</span>
 <span class="nowrap">[ <strong>-E</strong> &lt;encapsulation type&gt; ]</span>
 <span class="nowrap">[ <strong>-F</strong> &lt;file format&gt; ]</span>
+<span class="nowrap">[ <strong>-h</strong> ]</span>
 <span class="nowrap">[ <strong>-i</strong> &lt;proto&gt; ]</span>
 <span class="nowrap">[ <strong>-l</strong> &lt;typenum&gt; ]</span>
 <span class="nowrap">[ <strong>-N</strong> &lt;intf-name&gt; ]</span>
@@ -40,18 +41,11 @@
 <span class="nowrap">[ <strong>-t</strong> &lt;timefmt&gt; ]</span>
 <span class="nowrap">[ <strong>-T</strong> &lt;srcport&gt;,&lt;destport&gt; ]</span>
 <span class="nowrap">[ <strong>-u</strong> &lt;srcport&gt;,&lt;destport&gt; ]</span>
+<span class="nowrap">[ <strong>-v</strong> ]</span>
 <span class="nowrap">[ <strong>-4</strong> &lt;srcip&gt;,&lt;destip&gt; ]</span>
 <span class="nowrap">[ <strong>-6</strong> &lt;srcip&gt;,&lt;destip&gt; ]</span>
 <span class="nowrap">&lt;<em>infile</em>&gt;|-</span>
 <span class="nowrap">&lt;<em>outfile</em>&gt;|-</span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>text2pcap</strong></span>
-<span class="nowrap"><strong>-h|--help</strong></span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>text2pcap</strong></span>
-<span class="nowrap"><strong>-v|--version</strong></span></p>
 </div>
 </div>
 </div>
@@ -308,9 +302,9 @@ available output formats.  The default is the <strong>pcapng</strong> format.</p
 </div>
 </div>
 </dd>
-<dt class="hdlist1">-h|--help</dt>
+<dt class="hdlist1">-h</dt>
 <dd>
-<p>Print the version number and options and exit.</p>
+<p>Displays a help message.</p>
 </dd>
 <dt class="hdlist1">-i &lt;proto&gt;</dt>
 <dd>
@@ -500,9 +494,9 @@ Example: <em>-u1000,69</em> to make the packets look like TFTP/UDP packets.</p>
 </div>
 </div>
 </dd>
-<dt class="hdlist1">-v|--version</dt>
+<dt class="hdlist1">-v</dt>
 <dd>
-<p>Print the full version information and exit.</p>
+<p>Print the version and exit.</p>
 </dd>
 <dt class="hdlist1">-4 &lt;srcip&gt;,&lt;destip&gt;</dt>
 <dd>
@@ -559,21 +553,16 @@ For example, "warning" aborts on any "warning", "critical", or "error" messages.
 <dt class="hdlist1">--log-domains &lt;list&gt;</dt>
 <dd>
 <p>Only print messages for the specified log domains, e.g. "GUI,Epan,sshdump".
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-debug &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "debug" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-noisy &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "noisy" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
-</dd>
-<dt class="hdlist1">--log-fatal-domains &lt;list&gt;</dt>
-<dd>
-<p>Abort the program if any messages are logged for the specified log domains.
 List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-file &lt;path&gt;</dt>
@@ -597,7 +586,7 @@ List of domains must be comma-separated.</p>
 <h2 id="_notes">NOTES</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the manual page for <strong>Text2pcap</strong> 4.3.0.
+<p>This is the manual page for <strong>Text2pcap</strong> 4.0.15.
 <strong>Text2pcap</strong> is part of the <strong>Wireshark</strong> distribution.
 The latest version of <strong>Wireshark</strong> can be found at <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
 </div>

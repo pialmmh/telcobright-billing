@@ -42,7 +42,6 @@
 <span class="nowrap">[ <strong>--discard-all-secrets</strong> ]</span>
 <span class="nowrap">[ <strong>--capture-comment</strong> &lt;comment&gt; ]</span>
 <span class="nowrap">[ <strong>--discard-capture-comment</strong> ]</span>
-<span class="nowrap">[ <strong>--discard-packet-comments</strong> ]</span>
 <span class="nowrap"><em>infile</em></span>
 <span class="nowrap"><em>outfile</em></span>
 <span class="nowrap">[ <em>packet#</em>[-<em>packet#</em>] &#8230;&#8203; ]</span></p>
@@ -55,7 +54,6 @@
 <span class="nowrap">[ <strong>-V</strong> ]</span>
 <span class="nowrap">[ <strong>-I</strong> &lt;bytes to ignore&gt; ]</span>
 <span class="nowrap">[ <strong>--skip-radiotap-header</strong> ]</span>
-<span class="nowrap">[ <strong>--set-unused</strong> ]</span>
 <span class="nowrap"><em>infile</em></span>
 <span class="nowrap"><em>outfile</em></span></p>
 </div>
@@ -356,7 +354,13 @@ is the <strong>pcapng</strong> format.</p>
 </dd>
 <dt class="hdlist1">-h|--help</dt>
 <dd>
-<p>Print the version number and options and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Prints the version and options and exits.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-i  &lt;seconds per file&gt;</dt>
 <dd>
@@ -571,7 +575,13 @@ packet, you will need od(1)/<a href="text2pcap.html">text2pcap</a>(1).</p>
 </dd>
 <dt class="hdlist1">-v|--version</dt>
 <dd>
-<p>Print the full version information and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Print the version and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-V</dt>
 <dd>
@@ -651,7 +661,7 @@ additional configuration in protocol preferences.</p>
 <p>The file format is described by &lt;secrets type&gt; which can be one of:</p>
 </div>
 <div class="paragraph">
-<p><em>tls</em>  TLS Key Log as described at <a href="https://udn.realityripple.com/docs/Mozilla/Projects/NSS/Key_Log_Format" class="bare">https://udn.realityripple.com/docs/Mozilla/Projects/NSS/Key_Log_Format</a><br>
+<p><em>tls</em>  TLS Key Log as described at <a href="https://developer.mozilla.org/NSS_Key_Log_Format" class="bare">https://developer.mozilla.org/NSS_Key_Log_Format</a>
 <em>wg</em>   WireGuard Key Log, see <a href="https://gitlab.com/wireshark/wireshark/-/wikis/WireGuard#key-log-format" class="bare">https://gitlab.com/wireshark/wireshark/-/wikis/WireGuard#key-log-format</a></p>
 </div>
 <div class="paragraph">
@@ -701,30 +711,6 @@ command line.</p>
 </div>
 </div>
 </dd>
-<dt class="hdlist1">--set-unused</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Set the unused bytes (if any) to zero in SLL link type. Useful when when checking for duplicates.
-As the unused bytes can be anything. When the packet traverses the device stack
-for bonded interfaces on Linux for example.</p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">--discard-packet-comments</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Discard all packet comments from the input file when writing the output
-file. Does not discard comments added by <strong>-a</strong> in the same
-command line.</p>
-</div>
-</div>
-</div>
-</dd>
 </dl>
 </div>
 </div>
@@ -753,21 +739,16 @@ For example, "warning" aborts on any "warning", "critical", or "error" messages.
 <dt class="hdlist1">--log-domains &lt;list&gt;</dt>
 <dd>
 <p>Only print messages for the specified log domains, e.g. "GUI,Epan,sshdump".
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-debug &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "debug" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-noisy &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "noisy" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
-</dd>
-<dt class="hdlist1">--log-fatal-domains &lt;list&gt;</dt>
-<dd>
-<p>Abort the program if any messages are logged for the specified log domains.
 List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-file &lt;path&gt;</dt>
@@ -978,7 +959,7 @@ in a single pass, use any of the 8 possible methods provided below:</p>
 <h2 id="_notes">NOTES</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the manual page for <strong>Editcap</strong> 4.3.0.
+<p>This is the manual page for <strong>Editcap</strong> 4.0.15.
 <strong>Editcap</strong> is part of the <strong>Wireshark</strong> distribution.
 The latest version of <strong>Wireshark</strong> can be found at <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
 </div>

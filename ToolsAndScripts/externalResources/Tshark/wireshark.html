@@ -29,14 +29,6 @@
 <span class="nowrap">[ <strong>options</strong> ]</span>
 <span class="nowrap">[ &lt;infile&gt; ]</span></p>
 </div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>wireshark</strong></span>
-<span class="nowrap"><strong>-h|--help</strong></span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>wireshark</strong></span>
-<span class="nowrap"><strong>-v|--version</strong></span></p>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -48,7 +40,7 @@ interactively browse packet data from a live network or from a
 previously saved capture file.  <strong>Wireshark</strong>'s native capture file
 formats are <strong>pcapng</strong> format and <strong>pcap</strong> format; it can read and write
 both formats..  <strong>pcap</strong> format is also the format used by <strong>tcpdump</strong> and
-various other tools; <strong>tcpdump</strong>, when using newer versions of the
+various other tools; <strong>tcpdump</strong>, when using newer verions of the
 <strong>libpcap</strong> library, can also read some pcapng files, and, on newer
 versions of macOS, can read all pcapng files and can write them as well.</p>
 </div>
@@ -298,7 +290,7 @@ fills up, <strong>Wireshark</strong> will switch writing to the next file and so
 <div class="paragraph">
 <p>The created filenames are based on the filename given with the <strong>-w</strong> flag,
 the number of the file and on the creation date and time,
-e.g. outfile_00001_20230714120117.pcap, outfile_00002_20230714120523.pcap, &#8230;&#8203;</p>
+e.g. outfile_00001_20240714120117.pcap, outfile_00002_20240714120523.pcap, &#8230;&#8203;</p>
 </div>
 <div class="paragraph">
 <p>With the <em>files</em> option it&#8217;s also possible to form a "ring buffer".
@@ -360,9 +352,8 @@ system or interface on which you&#8217;re capturing might silently limit the
 capture buffer size to a lower value or raise it to a higher value.</p>
 </div>
 <div class="paragraph">
-<p>This is available on UNIX-compatible systems, such as Linux, macOS,
-\*BSD, Solaris, and AIX, with libpcap 1.0.0 or later, and on Windows.
-It is not available on UNIX-compatible systems with earlier versions of
+<p>This is available on UNIX systems with libpcap 1.0.0 or later and on
+Windows.  It is not available on UNIX systems with earlier versions of
 libpcap.</p>
 </div>
 <div class="paragraph">
@@ -413,18 +404,49 @@ currently only displays the first comment of a capture file.</p>
 </div>
 </div>
 </dd>
+<dt class="hdlist1">-d  &lt;layer type&gt;==&lt;selector&gt;,&lt;decode-as protocol&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Like Wireshark&#8217;s <strong>Decode As&#8230;&#8203;</strong> feature, this lets you specify how a
+layer type should be dissected.  If the layer type in question (for example,
+<strong>tcp.port</strong> or <strong>udp.port</strong> for a TCP or UDP port number) has the specified
+selector value, packets should be dissected as the specified protocol.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>-d tcp.port==8888,http</strong> will decode any traffic running over
+TCP port 8888 as HTTP.</p>
+</div>
+<div class="paragraph">
+<p>See the <a href="tshark.html">tshark</a>(1) manual page for more examples.</p>
+</div>
+</div>
+</div>
+</dd>
 <dt class="hdlist1">-D|--list-interfaces</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
 <p>Print a list of the interfaces on which <strong>Wireshark</strong> can capture, and
-exit.  For each network interface, a number and an interface name,
-possibly followed by a text description of the interface, is printed.
-The interface name or the number can be supplied to the <strong>-i</strong> flag to
-specify an interface on which to capture.  The number can be useful on
-Windows systems, where the interfaces have long names that usually
-contain a GUID.</p>
+exit.  For each network interface, a number and an
+interface name, possibly followed by a text description of the
+interface, is printed.  The interface name or the number can be supplied
+to the <strong>-i</strong> flag to specify an interface on which to capture.</p>
+</div>
+<div class="paragraph">
+<p>This can be useful on systems that don&#8217;t have a command to list them
+(UNIX systems lacking <strong>ifconfig -a</strong> or Linux systems lacking
+<strong>ip link show</strong>). The number can be useful on Windows systems, where
+the interface name might be a long name or a GUID.</p>
+</div>
+<div class="paragraph">
+<p>Note that "can capture" means that <strong>Wireshark</strong> was able to open
+that device to do a live capture; if, on your system, a program doing a
+network capture must be run from an account with special privileges (for
+example, as root), then, if <strong>Wireshark</strong> is run with the <strong>-D</strong> flag and
+is not run from such an account, it will not list any interfaces.</p>
 </div>
 </div>
 </div>
@@ -436,7 +458,47 @@ contain a GUID.</p>
 <div class="paragraph">
 <p>Specifies the X display to use.  A hostname and screen (otherhost:0.0)
 or just a screen (:0.0) can be specified.  This option is not available
-under macOS or Windows.</p>
+under Windows.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">--disable-protocol &lt;proto_name&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Disable dissection of proto_name.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">--disable-heuristic &lt;short_name&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Disable dissection of heuristic protocol.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">--enable-protocol &lt;proto_name&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Enable dissection of proto_name.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">--enable-heuristic &lt;short_name&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Enable dissection of heuristic protocol.</p>
 </div>
 </div>
 </div>
@@ -478,15 +540,33 @@ F11 key (or Ctrl + Cmd + F for macOS).</p>
 </dd>
 <dt class="hdlist1">-g  &lt;packet number&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>After reading in a capture file using the <strong>-r</strong> flag, go to the given <em>packet number</em>.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-h|--help</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Print the version number and options and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-H</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Hide the capture info dialog during live packet capture.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-i|--interface  &lt;capture interface&gt;|-</dt>
 <dd>
@@ -497,9 +577,11 @@ F11 key (or Ctrl + Cmd + F for macOS).</p>
 capture.</p>
 </div>
 <div class="paragraph">
-<p>Network interface names should match one of the names listed in "<strong>wireshark
--D</strong>" (described above); a number, as reported by "<strong>tshark -D</strong>", can also
-be used.</p>
+<p>Network interface names should match one of the names listed in
+"<strong>wireshark -D</strong>" (described above); a number, as reported by
+"<strong>wireshark -D</strong>", can also be used.  If you&#8217;re using UNIX, "<strong>netstat
+ -i</strong>", "<strong>ifconfig -a</strong>" or "<strong>ip link</strong>" might also work to list interface names,
+although not all versions of UNIX support the <strong>-a</strong> option to <strong>ifconfig</strong>.</p>
 </div>
 <div class="paragraph">
 <p>If no interface is specified, <strong>Wireshark</strong> searches the list of
@@ -554,8 +636,14 @@ this option.</p>
 </dd>
 <dt class="hdlist1">-j</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Use after <strong>-J</strong> to change the behavior when no exact match is found for
 the filter.  With this option select the first packet before.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-J  &lt;jump filter&gt;</dt>
 <dd>
@@ -585,20 +673,99 @@ doesn&#8217;t start the capture.</p>
 </div>
 </div>
 </dd>
+<dt class="hdlist1">-K  &lt;keytab&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Load kerberos crypto keys from the specified keytab file.
+This option can be used multiple times to load keys from several files.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>-K krb5.keytab</strong></p>
+</div>
+</div>
+</div>
+</dd>
 <dt class="hdlist1">-l</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Turn on automatic scrolling if the packet display is being updated
 automatically as packets arrive during a capture (as specified by the
 <strong>-S</strong> flag).</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-L|--list-data-link-types</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List the data link types supported by the interface and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--list-time-stamp-types</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List time stamp types supported for the interface. If no time stamp type can be
 set, no time stamp types are listed.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-n</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Disable network object name resolution (such as hostname, TCP and UDP port
+names), the <strong>-N</strong> flag might override this one.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-N  &lt;name resolving flags&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Turn on name resolving only for particular types of addresses and port
+numbers, with name resolving for other types of addresses and port
+numbers turned off.  This flag overrides <strong>-n</strong> if both <strong>-N</strong> and <strong>-n</strong> are
+present.  If both <strong>-N</strong> and <strong>-n</strong> flags are not present, all name resolutions
+are turned on.</p>
+</div>
+<div class="paragraph">
+<p>The argument is a string that may contain the letters:</p>
+</div>
+<div class="paragraph">
+<p><strong>m</strong> to enable MAC address resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>n</strong> to enable network address resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>N</strong> to enable using external resolvers (e.g., DNS) for network address
+resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>t</strong> to enable transport-layer port number resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>d</strong> to enable resolution from captured DNS packets</p>
+</div>
+<div class="paragraph">
+<p><strong>v</strong> to enable VLAN IDs to names resolution</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-o  &lt;preference/recent setting&gt;</dt>
 <dd>
@@ -722,40 +889,121 @@ the default snapshot length is used if provided.</p>
 </dd>
 <dt class="hdlist1">-S</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Automatically update the packet display as packets are coming in.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-t  a|ad|adoy|d|dd|e|r|u|ud|udoy</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Set the format of the packet timestamp displayed in the packet list
+window.  The format can be one of:</p>
+</div>
+<div class="paragraph">
+<p><strong>a</strong> absolute: The absolute time, as local time in your time zone,
+is the actual time the packet was captured, with no date displayed</p>
+</div>
+<div class="paragraph">
+<p><strong>ad</strong> absolute with date: The absolute date, displayed as YYYY-MM-DD,
+and time, as local time in your time zone, is the actual time and date
+the packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>adoy</strong> absolute with date using day of year: The absolute date,
+displayed as YYYY/DOY, and time, as local time in your time zone,
+is the actual time and date the packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>d</strong> delta: The delta time is the time since the previous packet was
+captured</p>
+</div>
+<div class="paragraph">
+<p><strong>dd</strong> delta_displayed: The delta_displayed time is the time since the
+previous displayed packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>e</strong> epoch: The time in seconds since epoch (Jan 1, 1970 00:00:00)</p>
+</div>
+<div class="paragraph">
+<p><strong>r</strong> relative: The relative time is the time elapsed between the first packet
+and the current packet</p>
+</div>
+<div class="paragraph">
+<p><strong>u</strong> UTC: The absolute time, as UTC, is the actual time the packet was
+captured, with no date displayed</p>
+</div>
+<div class="paragraph">
+<p><strong>ud</strong> UTC with date: The absolute date, displayed as YYYY-MM-DD,
+and time, as UTC, is the actual time and date the packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>udoy</strong> UTC with date using day of year: The absolute date, displayed
+as YYYY/DOY, and time, as UTC, is the actual time and date the packet
+was captured</p>
+</div>
+<div class="paragraph">
+<p>The default format is relative.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--temp-dir &lt;directory&gt;</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Specifies the directory into which temporary files (including capture
-files) are to be written.  The default behavior on UNIX-compatible systems,
-such as Linux, macOS, \*BSD, Solaris, and AIX, is to use the environment
-variable <em>$TMPDIR</em> if set, and the system default, typically <em>/tmp</em>, if it
-is not.  On Windows, the <em>%TEMP%</em> environment variable is used, which
-typically defaults to <em>%USERPROFILE%\AppData\Local\Temp</em>.</p>
+<p>Specifies the directory into which temporary files (including capture files)
+are to be written. The default behaviour is to use your system&#8217;s temporary
+directory (typically <em>/tmp</em> on Linux, and <em>C:\\Temp</em> on Windows).</p>
 </div>
 </div>
 </div>
 </dd>
 <dt class="hdlist1">--time-stamp-type &lt;type&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Change the interface&#8217;s timestamp method. See --list-time-stamp-types.</p>
+</div>
+</div>
+</div>
 </dd>
-<dt class="hdlist1">--update-interval  &lt;interval&gt;</dt>
+<dt class="hdlist1">-u &lt;s|hms&gt;</dt>
 <dd>
-<p>Set the length of time in milliseconds between new packet reports during
-a capture. Also sets the granularity of file duration conditions.
-The default value is 100ms.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Output format of seconds (def: s: seconds)</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-v|--version</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Print the full version information and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-w  &lt;outfile&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Set the default capture file name, or '-' for standard output.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-X &lt;eXtension options&gt;</dt>
 <dd>
@@ -810,7 +1058,13 @@ the default capture link type is used if provided.</p>
 </dd>
 <dt class="hdlist1">-Y|--display-filter  &lt;displaY filter&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Start with the given display filter.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-z  &lt;statistics&gt;</dt>
 <dd>
@@ -828,7 +1082,13 @@ in a window that updates in semi-real time.</p>
 </dd>
 <dt class="hdlist1"><strong>-z help</strong></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Display all possible values for <strong>-z</strong>.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> afp,srt[,<em>filter</em>]</dt>
 <dd>
@@ -909,11 +1169,23 @@ SRT statistics for a specific host.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> dhcp,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show DHCP (BOOTP) statistics.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> expert</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show expert information.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> fc,srt[,<em>filter</em>]</dt>
 <dd>
@@ -1119,11 +1391,23 @@ MGCP packets exchanged by the host at IP address 1.2.3.4 .</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> mtp3,msus[,&lt;filter&gt;]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show MTP3 MSU statistics.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> multicast,stat[,&lt;filter&gt;]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show UDP multicast stream statistics.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> rpc,programs</dt>
 <dd>
@@ -1274,223 +1558,20 @@ VoIP Calls.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> wlan,stat[,&lt;filter&gt;]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show IEEE 802.11 network and station statistics.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> wsp,stat[,&lt;filter&gt;]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show WSP packet counters.</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_dissection_options">DISSECTION OPTIONS</h2>
-<div class="sectionbody">
-<div id="decode_as" class="dlist">
-<dl>
-<dt class="hdlist1">-d  &lt;layer type&gt;==&lt;selector&gt;,&lt;decode-as protocol&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Like Wireshark&#8217;s <strong>Decode As&#8230;&#8203;</strong> feature, this lets you specify how a
-layer type should be dissected.  If the layer type in question (for example,
-<strong>tcp.port</strong> or <strong>udp.port</strong> for a TCP or UDP port number) has the specified
-selector value, packets should be dissected as the specified protocol.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 1. Decode As Port</div>
-<div class="content">
-<strong>-d tcp.port==8888,http</strong> will decode any traffic running over
-TCP port 8888 as HTTP.
-</div>
-</div>
-<div class="paragraph">
-<p>See the <a href="tshark.html#decode_as">tshark</a>(1) manual page for more examples.</p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">--disable-all-protocols</dt>
-<dd>
-<p>Disable dissection of all protocols.</p>
-</dd>
-<dt class="hdlist1">--disable-protocol &lt;proto_name&gt;[,&lt;proto_name&gt;,&#8230;&#8203;]</dt>
-<dd>
-<p>Disable dissection of proto_name.
-Use a proto_name of <strong>ALL</strong> to override
-your chosen profile&#8217;s default enabled protocol list and temporarily
-disable all protocols.</p>
-</dd>
-<dt class="hdlist1">--disable-heuristic &lt;short_name&gt;</dt>
-<dd>
-<p>Disable dissection of heuristic protocol.</p>
-</dd>
-<dt class="hdlist1">--enable-protocol &lt;proto_name&gt;[,&lt;proto_name&gt;,&#8230;&#8203;]</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Enable dissection of proto_name.
-Use a proto_name of <strong>ALL</strong> to override
-your chosen profile&#8217;s default disabled protocol list and temporarily
-enable all protocols which are enabled by default.</p>
-</div>
-<div class="paragraph">
-<p>If a protocol is implicated in both <strong>--disable-protocol</strong>
-and <strong>--enable-protocol</strong>, the protocol is enabled. This allows you to
-temporarily disable all protocols but a list of exceptions.
-Example: <strong>--disable-protocol ALL --enable-protocol eth,ip</strong></p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">--enable-heuristic &lt;short_name&gt;</dt>
-<dd>
-<p>Enable dissection of heuristic protocol.</p>
-</dd>
-<dt class="hdlist1">-K  &lt;keytab&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Load kerberos crypto keys from the specified keytab file.
-This option can be used multiple times to load keys from several files.</p>
-</div>
-<div class="paragraph">
-<p>Example: <strong>-K krb5.keytab</strong></p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">-n</dt>
-<dd>
-<p>Disable network object name resolution (such as hostname, TCP and UDP port
-names); the <strong>-N</strong> option might override this one.</p>
-</dd>
-<dt class="hdlist1">-N  &lt;name resolving flags&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Turn on name resolving only for particular types of addresses and port
-numbers, with name resolving for other types of addresses and port
-numbers turned off.  This option (along with <strong>-n</strong>) can be specified
-multiple times; the last value given overrides earlier ones. This option
-and <strong>-n</strong> override the options from the preferences, including preferences
-set via the <strong>-o</strong> option. If both <strong>-N</strong> and <strong>-n</strong> options are not present,
-the values from the preferences are used, which default to <strong>-N dmN</strong>.</p>
-</div>
-<div class="paragraph">
-<p>The argument is a string that may contain the letters:</p>
-</div>
-<div class="paragraph">
-<p><strong>d</strong> to enable resolution from captured DNS packets</p>
-</div>
-<div class="paragraph">
-<p><strong>g</strong> to enable IP address geolocation information lookup from configured
-MaxMind databases</p>
-</div>
-<div class="paragraph">
-<p><strong>m</strong> to enable MAC address resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>n</strong> to enable network address resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>N</strong> to enable using external resolvers (e.g., DNS) for network address
-resolution; no effect without <strong>n</strong> also enabled.</p>
-</div>
-<div class="paragraph">
-<p><strong>t</strong> to enable transport-layer port number resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>v</strong> to enable VLAN IDs to names resolution</p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">--only-protocols &lt;protocols&gt;</dt>
-<dd>
-<p>Only enable dissection of these protocols, comma separated. Disable everything else.</p>
-</dd>
-<dt class="hdlist1">-t  (a|ad|adoy|d|dd|e|r|u|ud|udoy)[.[N]]|.[N]</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Set the format of the packet timestamp displayed in the default time
-column.  The format can be one of:</p>
-</div>
-<div class="paragraph">
-<p><strong>a</strong> absolute: The absolute time, as local time in your time zone,
-is the actual time the packet was captured, with no date displayed</p>
-</div>
-<div class="paragraph">
-<p><strong>ad</strong> absolute with date: The absolute date, displayed as YYYY-MM-DD,
-and time, as local time in your time zone, is the actual time and date
-the packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>adoy</strong> absolute with date using day of year: The absolute date,
-displayed as YYYY/DOY, and time, as local time in your time zone,
-is the actual time and date the packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>d</strong> delta: The delta time is the time since the previous packet was
-captured</p>
-</div>
-<div class="paragraph">
-<p><strong>dd</strong> delta_displayed: The delta_displayed time is the time since the
-previous displayed packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>e</strong> epoch: The time in seconds since epoch (Jan 1, 1970 00:00:00)</p>
-</div>
-<div class="paragraph">
-<p><strong>r</strong> relative: The relative time is the time elapsed between the first packet
-and the current packet</p>
-</div>
-<div class="paragraph">
-<p><strong>u</strong> UTC: The absolute time, as UTC, is the actual time the packet was
-captured, with no date displayed</p>
-</div>
-<div class="paragraph">
-<p><strong>ud</strong> UTC with date: The absolute date, displayed as YYYY-MM-DD,
-and time, as UTC, is the actual time and date the packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>udoy</strong> UTC with date using day of year: The absolute date, displayed
-as YYYY/DOY, and time, as UTC, is the actual time and date the packet
-was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>.[N]</strong> Set the precision: N is the number of decimals (0 through 9).
-If using "." without N, automatically determine precision from trace.</p>
-</div>
-<div class="paragraph">
-<p>The default format is relative with precision based on capture format.</p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">-u &lt;s|hms&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Specifies how packet timestamp formats in <strong>-t</strong> which are relative times
-(i.e.  relative, delta, and delta_displayed) are displayed.  Valid choices are:</p>
-</div>
-<div class="paragraph">
-<p><strong>s</strong> for seconds</p>
-</div>
-<div class="paragraph">
-<p><strong>hms</strong> for hours, minutes, and seconds</p>
-</div>
-<div class="paragraph">
-<p>The default format is seconds.</p>
 </div>
 </div>
 </div>
@@ -1523,21 +1604,16 @@ For example, "warning" aborts on any "warning", "critical", or "error" messages.
 <dt class="hdlist1">--log-domains &lt;list&gt;</dt>
 <dd>
 <p>Only print messages for the specified log domains, e.g. "GUI,Epan,sshdump".
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-debug &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "debug" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-noisy &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "noisy" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
-</dd>
-<dt class="hdlist1">--log-fatal-domains &lt;list&gt;</dt>
-<dd>
-<p>Abort the program if any messages are logged for the specified log domains.
 List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-file &lt;path&gt;</dt>
@@ -1559,21 +1635,36 @@ List of domains must be comma-separated.</p>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Open Recent</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Merge</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Merge another capture file to the currently loaded one.  The <em>File:Merge</em>
 dialog box allows the merge "Prepended", "Chronologically" or "Appended",
 relative to the already loaded one.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Close</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Open or close a capture file.  The <em>File:Open</em> dialog box
 allows a filter to be specified; when the capture file is read, the
 filter is applied to all packets read from the file, and packets not
 matching the filter are discarded.  The <em>File:Open Recent</em> is a submenu
 and will show a list of previously opened files.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Save</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Save As</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Save the current capture, or the packets currently displayed from that
 capture, to a file.  Check boxes let you select whether to save all
 packets, or just those that have passed the current display filter and/or
@@ -1581,32 +1672,63 @@ those that are currently marked, and an option menu lets you select (from
 a list of file formats in which at particular capture, or the packets
 currently displayed from that capture, can be saved), a file format in
 which to save it.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="submenu">File Set</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">List Files</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show a dialog box that lists all files of the file set matching the currently
 loaded file.  A file set is a compound of files resulting from a capture using
 the "multiple files" / "ringbuffer" mode, recognizable by the filename pattern,
-e.g.: Filename_00001_20230714101530.pcap.</p>
+e.g.: Filename_00001_20240714101530.pcap.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="submenu">File Set</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Next File</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="submenu">File Set</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Previous File</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If the currently loaded file is part of a file set (see above), open the
 next / previous file in that set.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Export</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Export captured data into an external format.  Note: the data cannot be
 imported back into Wireshark, so be sure to keep the capture file.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Print</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Print packet data from the current capture.  You can select the range of
 packets to be printed (which packets are printed), and the output format of
 each packet (how each packet is printed).  The output format will be similar
 to the displayed values, so a summary line, the packet details view, and/or
 the hex dump of the packet can be printed.</p>
+</div>
+<div class="paragraph">
+<p>Printing options can be set with the <em>Edit:Preferences</em> menu item, or in the
+dialog box popped up by this menu item.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">File</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Quit</b></span></dt>
 <dd>
@@ -1668,17 +1790,29 @@ case insensitive.</p>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Edit</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Find Next</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Edit</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Find Previous</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Search forward / backward for a packet matching the filter from the previous
 search, starting with the currently selected packet (or the most recently
 selected packet, if no packet is selected).</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Edit</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Mark Packet (toggle)</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Mark (or unmark if currently marked) the selected packet.  The field
 "frame.marked" is set for packets that are marked, so that, for example,
 a display filters can be used to display only marked packets, and so that
 the /"Edit:Find Packet" dialog can be used to find the next or previous
 marked packet.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Edit</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Find Next Mark</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Edit</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Find Previous Mark</b></span></dt>
@@ -1725,7 +1859,7 @@ be reset at every Time Reference packet.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Edit</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Preferences</b></span></dt>
 <dd>
-<p>Set the GUI, capture, and protocol options (see /Preferences dialog below).</p>
+<p>Set the GUI, capture, printing and protocol options (see /Preferences dialog below).</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">View</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Main Toolbar</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">View</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Filter Toolbar</b></span></dt>
@@ -1792,6 +1926,9 @@ Disabling will improve performance.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">View</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Coloring Rules</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Change the foreground and background colors of the packet information in
 the list of packets, based upon display filters.  The list of display
 filters is applied to each packet sequentially.  After the first display
@@ -1799,6 +1936,9 @@ filter matches a packet, any additional display filters in the list are
 ignored.  Therefore, if you are filtering on the existence of protocols,
 you should list the higher-level protocols first, and the lower-level
 protocols last.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">How Colorization Works</dt>
 <dd>
@@ -1831,10 +1971,16 @@ expressions use exactly the same syntax as display filter expressions.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">View</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Show Packet In New Window</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Create a new window containing a packet details view and a hex dump
 window of the currently selected packet; this window will continue to
 display that packet&#8217;s details and data even if another packet is
 selected.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">View</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Reload</b></span></dt>
 <dd>
@@ -1854,6 +2000,9 @@ selected.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Go</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Go To Corresponding Packet</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If a field in the packet details pane containing a packet number is
 selected, go to the packet number specified by that field.  (This works
 only if the dissector that put that entry into the packet details put it
@@ -1861,6 +2010,9 @@ into the details as a filterable field rather than just as text.) This
 can be used, for example, to go to the packet for the request
 corresponding to a reply, or the reply corresponding to a request, if
 that packet number has been put into the packet details.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Go</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Previous Packet</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Go</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Next Packet</b></span></dt>
@@ -1876,25 +2028,42 @@ that packet number has been put into the packet details.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Capture</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Interfaces</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Shows a dialog box with all currently known interfaces and displaying the
 current network traffic amount.  Capture sessions can be started from here.
 Beware: keeping this box open results in high system load!</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Capture</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Options</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Initiate a live packet capture (see /"Capture Options Dialog"
 below).  If no filename is specified, a temporary file will be created
-to hold the capture.  Temporary files are written in the directory listed
-in <span class="menuseq"><b class="menu">Help</b>&#160;<b class="caret">&#8250;</b> <b class="submenu">About Wireshark</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Folders</b></span>. This location can be chosen with the
-command line option <strong>--temp-dir</strong>, or by setting the environment variable
-TMPDIR (on UNIX-compatible systems, such as Linux, macOS, \*BSD, Solaris,
-and AIX) or TEMP (on Windows) before starting <strong>Wireshark</strong>.</p>
+to hold the capture.  The location of the file can be chosen by setting your
+TMPDIR environment variable before starting <strong>Wireshark</strong>.  Otherwise, the
+default TMPDIR location is system-dependent, but is likely either <em>/var/tmp</em>
+or <em>/tmp</em>.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Capture</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Start</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Start a live packet capture with the previously selected options.  This won&#8217;t
 open the options dialog box, and can be convenient for repeatedly capturing
 with the same options.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Capture</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Stop</b></span></dt>
 <dd>
@@ -1902,9 +2071,15 @@ with the same options.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Capture</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Restart</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>While a live capture is running, stop it and restart with the same options
 again.  This can be convenient to remove irrelevant packets, if no valuable
 packets were captured so far.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Capture</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Capture Filters</b></span></dt>
 <dd>
@@ -1984,6 +2159,9 @@ the protocols in that list disabled.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Analyze</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Decode As</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If you have a packet selected, present a dialog allowing you to change
 which dissectors are used to decode this packet.  The dialog has one
 panel each for the link layer, network layer and transport layer
@@ -1991,12 +2169,21 @@ protocol/port numbers, and will allow each of these to be changed
 independently.  For example, if the selected packet is a TCP packet to
 port 12345, using this dialog you can instruct Wireshark to decode all
 packets to or from that TCP port as HTTP packets.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Analyze</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">User Specified Decodes</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Create a new window showing whether any protocol ID to dissector
 mappings have been changed by the user.  This window also allows the
 user to reset all decodes to their default values.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Analyze</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Follow TCP Stream</b></span></dt>
 <dd>
@@ -2047,13 +2234,22 @@ save it as text to a file.</p>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Analyze</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Conversation Filter</b></span></dt>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Statistics</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Summary</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show summary information about the capture, including elapsed time,
 packet counts, byte counts, and the like.  If a display filter is in
 effect, summary information will be shown about the capture and about
 the packets currently being displayed.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Statistics</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Protocol Hierarchy</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show the number of packets, and the number of bytes in those packets,
 for each protocol in the trace.  It organizes the protocols in the same
 hierarchy in which they were found in the trace.  Besides counting the
@@ -2062,6 +2258,9 @@ in which the protocol is the last protocol in the stack.  These
 last-protocol counts show you how many packets (and the byte count
 associated with those packets) <strong>ended</strong> in a particular protocol.  In
 the table, they are listed under "End Packets" and "End Bytes".</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">Statistics</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Conversations</b></span></dt>
 <dd>
@@ -2614,9 +2813,15 @@ default settings.</p>
 </dd>
 <dt class="hdlist1">Main Toolbar</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Some menu items are available for quick access here.  There is no way to
 customize the items in the toolbar, however the toolbar can be hidden by
 <em>View:Main Toolbar</em>.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Filter Toolbar</dt>
 <dd>
@@ -2679,10 +2884,16 @@ MAC layer address is displayed for unknown packet types.</p>
 </dd>
 <dt class="hdlist1">Packet Details Pane</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The middle pane contains a display of the details of the
 currently-selected packet.  The display shows each field and its value
 in each protocol header in the stack.  The right mouse button can be
 used to pop up a menu of operations.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Packet Bytes Pane</dt>
 <dd>
@@ -2725,6 +2936,9 @@ profile.</p>
 </dd>
 <dt class="hdlist1">Selection Bars</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The selection bar in the packet list and packet details can have either
 a "browse" or "select" behavior.  If the selection bar has a "browse"
 behavior, the arrow keys will move an outline of the selection bar,
@@ -2732,84 +2946,171 @@ allowing you to browse the rest of the list or details without changing
 the selection until you press the space bar.  If the selection bar has a
 "select" behavior, the arrow keys will move the selection bar and change
 the selection to the new item in the packet list or packet details.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Save Window Position</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If this item is selected, the position of the main Wireshark window will
 be saved when Wireshark exits, and used when Wireshark is started again.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Save Window Size</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If this item is selected, the size of the main Wireshark window will
 be saved when Wireshark exits, and used when Wireshark is started again.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Save Window Maximized state</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If this item is selected the maximize state of the main Wireshark window
 will be saved when Wireshark exists, and used when Wireshark is started again.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">File Open Dialog Behavior</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This item allows the user to select how Wireshark handles the listing
 of the "File Open" Dialog when opening trace files.  "Remember Last
 Directory" causes Wireshark to automatically position the dialog in the
 directory of the most recently opened file, even between launches of Wireshark.
 "Always Open in Directory" allows the user to define a persistent directory
 that the dialog will always default to.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Directory</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Allows the user to specify a persistent File Open directory.  Trailing
 slashes or backslashes will automatically be added.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">File Open Preview timeout</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This items allows the user to define how much time is spend reading the
 capture file to present preview data in the File Open dialog.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Open Recent maximum list entries</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The File menu supports a recent file list.  This items allows the user to
 specify how many files are kept track of in this list.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Ask for unsaved capture files</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>When closing a capture file or Wireshark itself if the file isn&#8217;t saved yet
 the user is presented the option to save the file when this item is set.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Wrap during find</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This items determines the behavior when reaching the beginning or the end
 of a capture file.  When set the search wraps around and continues, otherwise
 it stops.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Settings dialogs show a save button</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This item determines if the various dialogs sport an explicit Save button
 or that save is implicit in OK / Apply.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Web browser command</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This entry specifies the command line to launch a web browser.  It is used
 to access online content, like the Wiki and user guide.  Use '%s' to place
 the request URL in the command line.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Layout Preferences</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The <em>Layout</em> page lets you specify the general layout of the main window.
 You can choose from six different layouts and fill the three panes with the
 contents you like.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Scrollbars</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The vertical scrollbars in the three panes can be set to be either on
 the left or the right.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Alternating row colors</dt>
 <dt class="hdlist1">Hex Display</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The highlight method in the hex dump display for the selected protocol
 item can be set to use either inverse video, or bold characters.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Toolbar style</dt>
 <dt class="hdlist1">Filter toolbar placement</dt>
@@ -2849,10 +3150,16 @@ The row of buttons on the left perform the following actions:</p>
 </dd>
 <dt class="hdlist1">Color Preferences</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The <em>Colors</em> page can be used to change the color of the text
 displayed in the TCP stream window and for marked packets.  To change a color,
 simply select an attribute from the "Set:" menu and use the color selector to
 get the desired color.  The new text colors are displayed as a sample text.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Capture Preferences</dt>
 <dd>
@@ -2897,6 +3204,29 @@ whether to put the interface in promiscuous mode when capturing.</p>
 <p>The <em>Update list of packets in real time</em> check box lets you specify
 that the display should be updated as packets are seen.</p>
 </div>
+<div class="paragraph">
+<p>The <em>Automatic scrolling in live capture</em> check box lets you specify
+whether, in an "Update list of packets in real time" capture, the packet
+list pane should automatically scroll to show the most recently captured
+packets.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Printing Preferences</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>The radio buttons at the top of the <em>Printing</em> page allow you choose
+between printing packets with the <em>File:Print Packet</em> menu item as text
+or PostScript, and sending the output directly to a command or saving it
+to a file.  The <em>Command:</em> text entry box, on UNIX-compatible systems,
+is the command to send files to (usually <strong>lpr</strong>), and the <em>File:</em> entry
+box lets you enter the name of the file you wish to save to.
+Additionally, you can select the <em>File:</em> button to browse the file
+system for a particular save file.</p>
+</div>
 </div>
 </div>
 </dd>
@@ -2928,14 +3258,26 @@ requests can be set here as well.</p>
 </dd>
 <dt class="hdlist1">RTP Player Preferences</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This page allows you to select the number of channels visible in the
 RTP player window.  It determines the height of the window, more channels
 are possible and visible by means of a scroll bar.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Protocol Preferences</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>There are also pages for various protocols that Wireshark dissects,
 controlling the way Wireshark handles those protocols.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Edit Capture Filter List</dt>
 <dt class="hdlist1">Edit Display Filter List</dt>
@@ -3034,11 +3376,17 @@ dialog.</p>
 </dd>
 <dt class="hdlist1">Save</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If the list of filters being edited is the list of
 capture filters, saves the current filter list to the personal capture
 filters file, and if the list of filters being edited is the list of
 display filters, saves the current filter list to the personal display
 filters file.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Close</dt>
 <dd>
@@ -3050,11 +3398,20 @@ filters file.</p>
 </dd>
 <dt class="hdlist1">THE FILTER LIST</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Single rows may be selected by clicking.  Multiple rows may be selected
 by using the ctrl and shift keys in combination with the mouse button.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">NEW</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Adds a new filter at the bottom of the list and opens the Edit Color
 Filter dialog box.  You will have to alter the filter expression at
 least before the filter will be accepted.  The format of color filter
@@ -3062,12 +3419,21 @@ expressions is identical to that of display filters.  The new filter is
 selected, so it may immediately be moved up and down, deleted or edited.
 To avoid confusion all filters are unselected before the new filter is
 created.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">EDIT</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Opens the Edit Color Filter dialog box for the selected filter. (If this
 button is disabled you may have more than one filter selected, making it
 ambiguous which is to be edited.)</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">ENABLE</dt>
 <dd>
@@ -3083,19 +3449,31 @@ ambiguous which is to be edited.)</p>
 </dd>
 <dt class="hdlist1">EXPORT</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Allows you to choose a file in which to save the current list of color
 filters.  You may also choose to save only the selected filters.  A
 button is provided to save the filters in the global color filters file
 (you must have sufficient permissions to write this file, of course).</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">IMPORT</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Allows you to choose a file containing color filters which are then
 added to the bottom of the current list.  All the added filters are
 selected, so they may be moved to the correct position in the list as a
 group.  To avoid confusion, all filters are unselected before the new
 filters are imported.  A button is provided to load the filters from the
 global color filters file.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">CLEAR</dt>
 <dd>
@@ -3119,15 +3497,27 @@ global color filters file.</p>
 </dd>
 <dt class="hdlist1">SAVE</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Saves the current list of color filters in your personal color filters
 file.  Unless you do this they will not be used the next time you start
 Wireshark.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">CLOSE</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Closes the dialog without changing the coloration of the packets.  Note
 that changes you have made to the current list of color filters are not
 undone.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">Capture Options Dialog</dt>
 <dd>
@@ -3238,8 +3628,14 @@ should be translated to names.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">About</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Wireshark</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The <em>Wireshark</em> page lets you view general information about Wireshark,
 like the installed version, licensing information and such.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">About</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Authors</b></span></dt>
 <dd>
@@ -3247,8 +3643,14 @@ like the installed version, licensing information and such.</p>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">About</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Folders</b></span></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>The <em>Folders</em> page lets you view the directory names where Wireshark is
-searching its various configuration and other files.</p>
+searching it&#8217;s various configuration and other files.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><span class="menuseq"><b class="menu">About</b>&#160;<b class="caret">&#8250;</b> <b class="menuitem">Plugins</b></span></dt>
 <dd>
@@ -3263,11 +3665,11 @@ available on your system.</p>
 module found on your system.</p>
 </div>
 <div class="paragraph">
-<p>On Unix-compatible systems, such as Linux, macOS, \*BSD, Solaris, and
-AIX, the plugins are looked for in the following directories: the
-<em>lib/wireshark/plugins/$VERSION</em> directory under the main installation
-directory (for example, <em>/usr/local/lib/wireshark/plugins/$VERSION</em>),
-and then <em>$HOME/.wireshark/plugins</em>.</p>
+<p>On Unix-compatible systems, the plugins are looked for in the following
+directories: the <em>lib/wireshark/plugins/$VERSION</em> directory under the
+main installation directory (for example,
+<em>/usr/local/lib/wireshark/plugins/$VERSION</em>), and then
+<em>$HOME/.wireshark/plugins</em>.</p>
 </div>
 <div class="paragraph">
 <p>On Windows systems, the plugins are looked for in the following
@@ -3350,24 +3752,19 @@ gui.scrollbar_on_right: TRUE</pre>
 </div>
 <div class="paragraph">
 <p>The global preferences file is looked for in the <em>wireshark</em> directory
-under the <em>share</em> subdirectory of the main installation directory.  On
-macOS, this would typically be
-<em>/Application/Wireshark.app/Contents/Resources/share</em>; on other
-UNIX-compatible systems, such as Linux, \*BSD, Solaris, and AIX, this
-would typically be <em>/usr/share/wireshark/preferences</em> for
-system-installed packages and <em>/usr/local/share/wireshark/preferences</em>
-for locally-installed packages; on Windows, this would typically be
-<em>C:\Program Files\Wireshark\preferences</em>.</p>
+under the <em>share</em> subdirectory of the main installation directory (for
+example, <em>/usr/local/share/wireshark/preferences</em>) on UNIX-compatible
+systems, and in the main installation directory (for example,
+<em>C:\Program Files\Wireshark\preferences</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
-<p>On UNIX-compatible systems, the personal preferences file is looked for
-in <em>$XDG_CONFIG_HOME/wireshark/preferences</em>, (or, if
-<em>$XDG_CONFIG_HOME/wireshark</em> does not exist while <em>$HOME/.wireshark</em>
-does exist, <em>$HOME/.wireshark/preferences</em>); this is typically
-<em>$HOME/.config/wireshark/preferences</em>.  On Windows,
-the personal preferences file is looked for in
-<em>%APPDATA%\Wireshark\preferences</em> (or, if %APPDATA% isn&#8217;t defined,
-<em>%USERPROFILE%\Application Data\Wireshark\preferences</em>).</p>
+<p>The personal preferences file is looked for in
+<em>$XDG_CONFIG_HOME/wireshark/preferences</em>
+(or, if <em>$XDG_CONFIG_HOME/wireshark</em> does not exist while <em>$HOME/.wireshark</em>
+is present, <em>$HOME/.wireshark/preferences</em>) on
+UNIX-compatible systems and <em>%APPDATA%\Wireshark\preferences</em> (or, if
+%APPDATA% isn&#8217;t defined, <em>%USERPROFILE%\Application
+ Data\Wireshark\preferences</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
 <p>Note: Whenever the preferences are saved by using the <em>Save</em> button
@@ -3453,9 +3850,8 @@ whitespace.  The same directory as for the personal preferences file is used.</p
 </div>
 <div class="paragraph">
 <p>Capture filter name resolution is handled by libpcap on UNIX-compatible
-systems, such as Linux, macOS, \*BSD, Solaris, and AIX, and Npcap or
-WinPcap on Windows.  As such the Wireshark personal <em>hosts</em> file will
-not be consulted for capture filter name resolution.</p>
+systems and WinPcap on Windows.  As such the Wireshark personal <em>hosts</em> file
+will not be consulted for capture filter name resolution.</p>
 </div>
 </div>
 </div>
@@ -3517,9 +3913,8 @@ c0-00-ff-ff-ff-ff          TR_broadcast
 </div>
 <div class="paragraph">
 <p>The global <em>ethers</em> file is looked for in the <em>/etc</em> directory on
-UNIX-compatible systems, such as Linux, macOS, \*BSD, Solaris, and AIX,
-and in the main installation directory (for example, <em>C:\Program
-Files\Wireshark</em>) on Windows systems.</p>
+UNIX-compatible systems, and in the main installation directory (for
+example, <em>C:\Program Files\Wireshark</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
 <p>The personal <em>ethers</em> file is looked for in the same directory as the personal
@@ -3527,9 +3922,8 @@ preferences file.</p>
 </div>
 <div class="paragraph">
 <p>Capture filter name resolution is handled by libpcap on UNIX-compatible
-systems and Npcap or WinPcap on Windows.  As such the Wireshark personal
-<em>ethers</em> file will not be consulted for capture filter name
-resolution.</p>
+systems and WinPcap on Windows.  As such the Wireshark personal <em>ethers</em> file
+will not be consulted for capture filter name resolution.</p>
 </div>
 </div>
 </div>
@@ -3623,9 +4017,8 @@ c0-a8-1c-00              CEO
 </div>
 <div class="paragraph">
 <p>The global <em>ipxnets</em> file is looked for in the <em>/etc</em> directory on
-UNIX-compatible systems, such as Linux, macOS, \*BSD, Solaris, and AIX,
-and in the main installation directory (for example, <em>C:\Program
-Files\Wireshark</em>) on Windows systems.</p>
+UNIX-compatible systems, and in the main installation directory (for
+example, <em>C:\Program Files\Wireshark</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
 <p>The personal <em>ipxnets</em> file is looked for in the same directory as the
@@ -3734,7 +4127,13 @@ not merged.</p>
 </dd>
 <dt class="hdlist1">Plugins</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>See above in the description of the About:Plugins page.</p>
+</div>
+</div>
+</div>
 </dd>
 </dl>
 </div>
@@ -3750,72 +4149,84 @@ not merged.</p>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>This environment variable overrides the location of personal
-configuration files.  On UNIX-compatible systems, such as Linux, macOS,
-\*BSD, Solaris, and AIX, it defaults to <em>$XDG_CONFIG_HOME/wireshark</em>
-(or, if that directory doesn&#8217;t exist but <em>$HOME/.wireshark</em> does
-exist, <em>$HOME/.wireshark</em>); this is typically
-<em>$HOME/.config/wireshark</em>.  On Windows, it defaults to
-<em>%APPDATA%\Wireshark</em> (or, if %APPDATA% isn&#8217;t defined,
-<em>%USERPROFILE%\Application Data\Wireshark</em>).  Available since
-Wireshark 3.0.</p>
+<p>This environment variable overrides the location of personal configuration
+files. It defaults to <em>$XDG_CONFIG_HOME/wireshark</em> (or <em>$HOME/.wireshark</em> if
+the former is missing while the latter exists). On Windows,
+<em>%APPDATA%\Wireshark</em> is used instead. Available since Wireshark 3.0.</p>
 </div>
 </div>
 </div>
 </dd>
 <dt class="hdlist1">WIRESHARK_DEBUG_WMEM_OVERRIDE</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Setting this environment variable forces the wmem framework to use the
 specified allocator backend for <strong>all</strong> allocations, regardless of which
 backend is normally specified by the code. This is mainly useful to developers
 when testing or debugging. See <em>README.wmem</em> in the source distribution for
 details.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_RUN_FROM_BUILD_DIRECTORY</dt>
 <dd>
-<p>This environment variable causes the plugins and other data files to be
-loaded from the build directory (where the program was compiled) rather
-than from the standard locations.  It has no effect when the program in
-question is running with root (or setuid) permissions on UNIX-compatible
-systems, such as Linux, macOS, \*BSD, Solaris, and AIX.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>This environment variable causes the plugins and other data files to be loaded
+from the build directory (where the program was compiled) rather than from the
+standard locations.  It has no effect when the program in question is running
+with root (or setuid) permissions on *NIX.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_DATA_DIR</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable causes the various data files to be loaded from
 a directory other than the standard locations.  It has no effect when the
-program in question is running with root (or setuid) permissions on
-UNIX-compatible systems.</p>
-</dd>
-<dt class="hdlist1">WIRESHARK_EXTCAP_DIR</dt>
-<dd>
-<p>This environment variable causes the various extcap programs and scripts
-to be run from a directory other than the standard locations.  It has no
-effect when the program in question is running with root (or setuid)
-permissions on UNIX-compatible systems.</p>
-</dd>
-<dt class="hdlist1">WIRESHARK_PLUGIN_DIR</dt>
-<dd>
-<p>This environment variable causes the various plugins to be loaded from
-a directory other than the standard locations.  It has no effect when the
-program in question is running with root (or setuid) permissions on
-UNIX-compatible systems.</p>
+program in question is running with root (or setuid) permissions on *NIX.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">ERF_RECORDS_TO_CHECK</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable controls the number of ERF records checked when
 deciding if a file really is in the ERF format.  Setting this environment
 variable a number higher than the default (20) would make false positives
 less likely.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">IPFIX_RECORDS_TO_CHECK</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable controls the number of IPFIX records checked when
 deciding if a file really is in the IPFIX format.  Setting this environment
 variable a number higher than the default (20) would make false positives
 less likely.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_ABORT_ON_DISSECTOR_BUG</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If this environment variable is set, <strong>Wireshark</strong> will call abort(3)
 when a dissector bug is encountered.  abort(3) will cause the program to
 exit abnormally; if you are running <strong>Wireshark</strong> in a debugger, it
@@ -3824,9 +4235,15 @@ you are not running it in a debugger, it will, on some OSes, assuming
 your environment is configured correctly, generate a core dump file.
 This can be useful to developers attempting to troubleshoot a problem
 with a protocol dissector.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_ABORT_ON_TOO_MANY_ITEMS</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If this environment variable is set, <strong>Wireshark</strong> will call abort(3)
 if a dissector tries to add too many items to a tree (generally this
 is an indication of the dissector not breaking out of a loop soon enough).
@@ -3836,45 +4253,84 @@ inspection of the process, and, if you are not running it in a debugger,
 it will, on some OSes, assuming your environment is configured correctly,
 generate a core dump file.  This can be useful to developers attempting to
 troubleshoot a problem with a protocol dissector.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_QUIT_AFTER_CAPTURE</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Cause <strong>Wireshark</strong> to exit after the end of the capture session.  This
 doesn&#8217;t automatically start a capture; you must still use <strong>-k</strong> to do
 that.  You must also specify an autostop condition, e.g.  <strong>-c</strong> or <strong>-a
-duration:&#8230;&#8203;</strong>.  This means that you will not be able to see the results
+ duration:&#8230;&#8203;</strong>.  This means that you will not be able to see the results
 of the capture after it stops; it&#8217;s primarily useful for testing.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_LEVEL</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable controls the verbosity of diagnostic messages to
 the console. From less verbose to most verbose levels can be <code>critical</code>,
 <code>warning</code>, <code>message</code>, <code>info</code>, <code>debug</code> or <code>noisy</code>. Levels above the
 current level are also active. Levels <code>critical</code> and <code>error</code> are always
 active.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_FATAL</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Sets the fatal log level. Fatal log levels cause the program to abort.
 This level can be set to <code>Error</code>, <code>critical</code> or <code>warning</code>. <code>Error</code> is
 always fatal and is the default.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_DOMAINS</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable selects which log domains are active. The filter is
 given as a case-insensitive comma separated list. If set only the included
 domains will be enabled. The default domain is always considered to be enabled.
 Domain filter lists can be preceded by '!' to invert the sense of the match.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_DEBUG</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List of domains with <code>debug</code> log level. This sets the level of the provided
 log domains and takes precedence over the active domains filter. If preceded
 by '!' this disables the <code>debug</code> level instead.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_NOISY</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Same as above but for <code>noisy</code> log level instead.</p>
+</div>
+</div>
+</div>
 </dd>
 </dl>
 </div>
@@ -3904,7 +4360,7 @@ by '!' this disables the <code>debug</code> level instead.</p>
 <h2 id="_notes">NOTES</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the manual page for <strong>Wireshark</strong> 4.3.0.
+<p>This is the manual page for <strong>Wireshark</strong> 4.0.15.
 The latest version of <strong>Wireshark</strong> can be found at
 <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
 </div>

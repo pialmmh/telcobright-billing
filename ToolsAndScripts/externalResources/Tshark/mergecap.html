@@ -124,7 +124,13 @@ available output formats.  By default this is the <strong>pcapng</strong> format
 </dd>
 <dt class="hdlist1">-h|--help</dt>
 <dd>
-<p>Print the version number and options and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Prints the version and options and exits.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-I  &lt;IDB merge mode&gt;</dt>
 <dd>
@@ -185,16 +191,34 @@ frames were used).</p>
 </dd>
 <dt class="hdlist1">-v|--version</dt>
 <dd>
-<p>Print the full version information and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Print the version and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-V</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Causes <strong>mergecap</strong> to print a number of messages while it&#8217;s working.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-w  &lt;outfile&gt;|-</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Sets the output filename. If the name is '<strong>-</strong>', stdout will be used.
 This setting is mandatory.</p>
+</div>
+</div>
+</div>
 </dd>
 </dl>
 </div>
@@ -224,21 +248,16 @@ For example, "warning" aborts on any "warning", "critical", or "error" messages.
 <dt class="hdlist1">--log-domains &lt;list&gt;</dt>
 <dd>
 <p>Only print messages for the specified log domains, e.g. "GUI,Epan,sshdump".
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-debug &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "debug" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-noisy &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "noisy" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
-</dd>
-<dt class="hdlist1">--log-fatal-domains &lt;list&gt;</dt>
-<dd>
-<p>Abort the program if any messages are logged for the specified log domains.
 List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-file &lt;path&gt;</dt>
@@ -316,7 +335,7 @@ ahead.</p>
 &lt;sharpe[AT]ns.aus.com&gt; and Guy Harris &lt;guy[AT]alum.mit.edu&gt;.</p>
 </div>
 <div class="paragraph">
-<p>This is the manual page for <strong>Mergecap</strong> 4.3.0.
+<p>This is the manual page for <strong>Mergecap</strong> 4.0.15.
 <strong>Mergecap</strong> is part of the <strong>Wireshark</strong> distribution.
 The latest version of <strong>Wireshark</strong> can be found at <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
 </div>

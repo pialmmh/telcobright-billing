@@ -31,6 +31,7 @@
 <span class="nowrap">[ <strong>-D</strong>|<strong>--list-interfaces</strong> ]</span>
 <span class="nowrap">[ <strong>-f</strong> &lt;capture filter&gt; ]</span>
 <span class="nowrap">[ <strong>-g</strong> ]</span>
+<span class="nowrap">[ <strong>-h</strong>|<strong>--help</strong> ]</span>
 <span class="nowrap">[ <strong>-i</strong>|<strong>--interface</strong> &lt;capture interface&gt;|rpcap://&lt;host&gt;:&lt;port&gt;/&lt;capture interface&gt;|TCP@&lt;host&gt;:&lt;port&gt;|- ]</span>
 <span class="nowrap">[ <strong>-I</strong>|<strong>--monitor-mode</strong> ]</span>
 <span class="nowrap">[ <strong>-k</strong> &lt;freq&gt;,[&lt;type&gt;],[&lt;center_freq1&gt;],[&lt;center_freq2&gt;] ]</span>
@@ -47,20 +48,12 @@
 <span class="nowrap">[ <strong>-S</strong> ]</span>
 <span class="nowrap">[ <strong>-t</strong> ]</span>
 <span class="nowrap">[ <strong>--temp-dir</strong> &lt;directory&gt; ]</span>
+<span class="nowrap">[ <strong>-v</strong>|<strong>--version</strong> ]</span>
 <span class="nowrap">[ <strong>-w</strong> &lt;outfile&gt; ]</span>
 <span class="nowrap">[ <strong>-y</strong>|<strong>--linktype</strong> &lt;capture link type&gt; ]</span>
 <span class="nowrap">[ <strong>--capture-comment</strong> &lt;comment&gt; ]</span>
 <span class="nowrap">[ <strong>--list-time-stamp-types</strong> ]</span>
-<span class="nowrap">[ <strong>--time-stamp-type</strong> &lt;type&gt; ]</span>
-<span class="nowrap">[ <strong>--update-interval</strong> &lt;interval&gt; ]</span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>dumpcap</strong></span>
-<span class="nowrap"><strong>-h|--help</strong></span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>dumpcap</strong></span>
-<span class="nowrap"><strong>-v|--version</strong></span></p>
+<span class="nowrap">[ <strong>--time-stamp-type</strong> &lt;type&gt; ]</span></p>
 </div>
 </div>
 </div>
@@ -139,8 +132,8 @@ fills up, <strong>Dumpcap</strong> will switch writing to the next file and so o
 <div class="paragraph">
 <p>The created filenames are based on the filename given with the <strong>-w</strong>
 option, the number of the file and on the creation date and time, e.g.
-outfile_00001_20230714120117.pcapng,
-outfile_00002_20230714120523.pcapng, &#8230;&#8203;</p>
+outfile_00001_20240714120117.pcapng,
+outfile_00002_20240714120523.pcapng, &#8230;&#8203;</p>
 </div>
 <div class="paragraph">
 <p>With the <em>files</em> option it&#8217;s also possible to form a "ring buffer".
@@ -208,9 +201,8 @@ system or interface on which you&#8217;re capturing might silently limit the
 capture buffer size to a lower value or raise it to a higher value.</p>
 </div>
 <div class="paragraph">
-<p>This is available on UNIX-compatible systems, such as Linux, macOS,
-\*BSD, Solaris, and AIX, with libpcap 1.0.0 or later, and on Windows.
-It is not available on UNIX-compatible systems with earlier versions of
+<p>This is available on UNIX systems with libpcap 1.0.0 or later and on
+Windows.  It is not available on UNIX systems with earlier versions of
 libpcap.</p>
 </div>
 <div class="paragraph">
@@ -226,30 +218,66 @@ the default capture buffer size is used instead.</p>
 </dd>
 <dt class="hdlist1">-c  &lt;capture packet count&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Set the maximum number of packets to read when capturing live
 data. Acts the same as <strong>-a packets:</strong>&lt;capture packet count&gt;.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-C  &lt;byte limit&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Limit the amount of memory in bytes used for storing captured packets
 in memory while processing it.
 If used in combination with the <strong>-N</strong> option, both limits will apply.
 Setting this limit will enable the usage of the separate thread per interface.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-d</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Dump the code generated for the capture filter in a human-readable form,
 and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-D|--list-interfaces</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Print a list of the interfaces on which <strong>Dumpcap</strong> can capture, and
-exit.  For each network interface, a number and an interface name,
-possibly followed by a text description of the interface, is printed.
-The interface name or the number can be supplied to the <strong>-i</strong> flag to
-specify an interface on which to capture.  The number can be useful on
-Windows systems, where the interfaces have long names that usually
-contain a GUID.</p>
+exit.  For each network interface, a number and an
+interface name, possibly followed by a text description of the
+interface, is printed.  The interface name or the number can be supplied
+to the <strong>-i</strong> option to specify an interface on which to capture.</p>
+</div>
+<div class="paragraph">
+<p>This can be useful on systems that don&#8217;t have a command to list them
+(UNIX systems lacking <strong>ifconfig -a</strong> or Linux systems lacking
+<strong>ip link show</strong>). The number can be useful on Windows systems, where
+the interface name might be a long name or a GUID.</p>
+</div>
+<div class="paragraph">
+<p>Note that "can capture" means that <strong>Dumpcap</strong> was able to open
+that device to do a live capture. Depending on your system you may need to
+run dumpcap from an account with special privileges (for example, as root)
+to be able to capture network traffic.
+If "<strong>dumpcap -D</strong>" is not run from such an account, it will not list
+any interfaces.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-f  &lt;capture filter&gt;</dt>
 <dd>
@@ -270,18 +298,35 @@ the interface specified by the last <strong>-i</strong> option occurring before
 this option. If the capture filter expression is not set specifically,
 the default capture filter expression is used if provided.</p>
 </div>
+<div class="paragraph">
+<p>Pre-defined capture filter names, as shown in the GUI menu item Capture&#8594;Capture Filters,
+can be used by prefixing the argument with "predef:".
+Example: <strong>-f "predef:MyPredefinedHostOnlyFilter"</strong></p>
+</div>
 </div>
 </div>
 </dd>
 <dt class="hdlist1">-g</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This option causes the output file(s) to be created with group-read permission
 (meaning that the output file(s) can be read by other members of the calling
 user&#8217;s group).</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-h|--help</dt>
 <dd>
-<p>Print the version number and options and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Print the version and options and exits.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-i|--interface  &lt;capture interface&gt;|rpcap://&lt;host&gt;:&lt;port&gt;/&lt;capture interface&gt;|TCP@&lt;host&gt;:&lt;port&gt;|-</dt>
 <dd>
@@ -292,9 +337,11 @@ user&#8217;s group).</p>
 capture.</p>
 </div>
 <div class="paragraph">
-<p>Network interface names should match one of the names listed in "<strong>tshark
--D</strong>" (described above); a number, as reported by "<strong>dumpcap -D</strong>", can
-also be used.</p>
+<p>Network interface names should match one of the names listed in
+"<strong>dumpcap -D</strong>" (described above); a number, as reported by
+"<strong>dumpcap -D</strong>", can also be used.  If you&#8217;re using UNIX, "<strong>netstat
+ -i</strong>", "<strong>ifconfig -a</strong>" or "<strong>ip link</strong>" might also work to list interface names,
+although not all versions of UNIX support the <strong>-a</strong> option to <strong>ifconfig</strong>.</p>
 </div>
 <div class="paragraph">
 <p>If no interface is specified, <strong>Dumpcap</strong> searches the list of
@@ -324,13 +371,25 @@ interfaces, the capture file will be saved in pcapng format, even if
 </dd>
 <dt class="hdlist1">--ifdescr&gt; &lt;description&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Use <em>description</em> as the description in the capture file for the
 interface or pipe specified before it with <strong>-i</strong>.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--ifname&gt; &lt;name&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Use <em>name</em> as the name in the capture file for the interface or
 pipe specified before it with <strong>-i</strong>.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-I|--monitor-mode</dt>
 <dd>
@@ -375,37 +434,85 @@ channel, for 802.11n and 802.11ac.  The values for <em>type</em> are</p>
 </dd>
 <dt class="hdlist1">NOHT</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Used for non-802.11n/non-802.1ac channels</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">HT20</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>20 MHz channel</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">HT40-</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>40 MHz primary channel and a lower secondary channel</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">HT40+</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>40 MHz primary channel and a higher secondary channel</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">HT80</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>80 MHz channel, with <em>centerfreq1</em> as its center frequency</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">VHT80+80</dt>
 <dd>
-<p>Two 80 MHz channels combined, with <em>centerfreq1</em> and <em>centerfreq2</em> as
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>two 80 MHz channels combined, with <em>centerfreq1</em> and <em>centerfreq2</em> as
 the center frequencies of the two channels</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">VHT160</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>160 MHz channel, with <em>centerfreq1</em> as its center frequency</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-L|--list-data-link-types</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List the data link types supported by the interface and exit. The reported
 link types can be used for the <strong>-y</strong> option.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-M</dt>
 <dd>
@@ -422,7 +529,13 @@ The machine-readable output is intended to be read by <strong>Wireshark</strong>
 </dd>
 <dt class="hdlist1">-n</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Save files as pcapng. This is the default.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-N  &lt;packet limit&gt;</dt>
 <dd>
@@ -462,9 +575,15 @@ promiscuous mode.</p>
 </dd>
 <dt class="hdlist1">-P</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Save files as pcap instead of the default pcapng. In situations that require
 pcapng, such as capturing from multiple interfaces, this option will be
 overridden.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-q</dt>
 <dd>
@@ -506,34 +625,55 @@ the default snapshot length is used if provided.</p>
 </dd>
 <dt class="hdlist1">-S</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Print statistics for each interface once every second.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-t</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Use a separate thread per interface.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--temp-dir &lt;directory&gt;</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Specifies the directory into which temporary files (including capture
-files) are to be written.  The default behavior on UNIX-compatible systems,
-such as Linux, macOS, \*BSD, Solaris, and AIX, is to use the environment
-variable <em>$TMPDIR</em> if set, and the system default, typically <em>/tmp</em>, if it
-is not.  On Windows, the <em>%TEMP%</em> environment variable is used, which
-typically defaults to <em>%USERPROFILE%\AppData\Local\Temp</em>.</p>
+<p>Specifies the directory into which temporary files (including capture files)
+are to be written. The default behaviour is to use your system&#8217;s temporary
+directory (typically <em>/tmp</em> on Linux, and <em>C:\\Temp</em> on Windows).</p>
 </div>
 </div>
 </div>
 </dd>
 <dt class="hdlist1">-v|--version</dt>
 <dd>
-<p>Print the full version information and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Print the version and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-w  &lt;outfile&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Write raw packet data to <em>outfile</em>. Use "-" for stdout.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-y|--linktype  &lt;capture link type&gt;</dt>
 <dd>
@@ -575,18 +715,24 @@ currently only displays the first comment of a capture file.</p>
 </dd>
 <dt class="hdlist1">--list-time-stamp-types</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List time stamp types supported for the interface. If no time stamp type can be
 set, no time stamp types are listed.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--time-stamp-type  &lt;type&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Change the interface&#8217;s timestamp method.</p>
-</dd>
-<dt class="hdlist1">--update-interval  &lt;interval&gt;</dt>
-<dd>
-<p>Set the length of time in milliseconds between new packet reports during
-a capture. Also sets the granularity of file duration conditions.
-The default value is 100ms.</p>
+</div>
+</div>
+</div>
 </dd>
 </dl>
 </div>
@@ -616,21 +762,16 @@ For example, "warning" aborts on any "warning", "critical", or "error" messages.
 <dt class="hdlist1">--log-domains &lt;list&gt;</dt>
 <dd>
 <p>Only print messages for the specified log domains, e.g. "GUI,Epan,sshdump".
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-debug &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "debug" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-noisy &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "noisy" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
-</dd>
-<dt class="hdlist1">--log-fatal-domains &lt;list&gt;</dt>
-<dd>
-<p>Abort the program if any messages are logged for the specified log domains.
 List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-file &lt;path&gt;</dt>
@@ -663,7 +804,7 @@ or, if that doesn&#8217;t exist, <a href="https://gitlab.com/wireshark/wireshark
 <h2 id="_notes">NOTES</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the manual page for <strong>Dumpcap</strong> 4.3.0.
+<p>This is the manual page for <strong>Dumpcap</strong> 4.0.15.
 <strong>Dumpcap</strong> is part of the <strong>Wireshark</strong> distribution.
 The latest version of <strong>Wireshark</strong> can be found at <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
 </div>

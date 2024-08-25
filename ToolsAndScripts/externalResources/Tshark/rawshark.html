@@ -24,23 +24,19 @@
 <p><span class="nowrap"><strong>rawshark</strong></span>
 <span class="nowrap">[ <strong>-d</strong> &lt;encap:linktype&gt;|&lt;proto:protoname&gt; ]</span>
 <span class="nowrap">[ <strong>-F</strong> &lt;field to display&gt; ]</span>
+<span class="nowrap">[ <strong>-h</strong> ]</span>
 <span class="nowrap">[ <strong>-l</strong> ]</span>
 <span class="nowrap">[ <strong>-m</strong> &lt;bytes&gt; ]</span>
+<span class="nowrap">[ <strong>-n</strong> ]</span>
+<span class="nowrap">[ <strong>-N</strong> &lt;name resolving flags&gt; ]</span>
 <span class="nowrap">[ <strong>-o</strong> &lt;preference setting&gt; ] &#8230;&#8203;</span>
 <span class="nowrap">[ <strong>-p</strong> ]</span>
 <span class="nowrap">[ <strong>-r</strong> &lt;pipe&gt;|- ]</span>
 <span class="nowrap">[ <strong>-R</strong> &lt;read (display) filter&gt; ]</span>
 <span class="nowrap">[ <strong>-s</strong> ]</span>
 <span class="nowrap">[ <strong>-S</strong> &lt;field format&gt; ]</span>
-<span class="nowrap">[ <strong>options</strong> ]</span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>rawshark</strong></span>
-<span class="nowrap"><strong>-h|--help</strong></span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>rawshark</strong></span>
-<span class="nowrap"><strong>-v|--version</strong></span></p>
+<span class="nowrap">[ <strong>-t</strong> a|ad|adoy|d|dd|e|r|u|ud|udoy ]</span>
+<span class="nowrap">[ <strong>-v</strong> ]</span></p>
 </div>
 </div>
 </div>
@@ -192,9 +188,15 @@ flag. If you want to apply a display filter, use the <strong>-R</strong> flag.</
 </div>
 </div>
 </dd>
-<dt class="hdlist1">-h|--help</dt>
+<dt class="hdlist1">-h</dt>
 <dd>
-<p>Print the version number and options and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Print the version and options and exits.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-l</dt>
 <dd>
@@ -223,8 +225,61 @@ standard output buffer containing that data fills up.</p>
 </dd>
 <dt class="hdlist1">-m  &lt;memory limit bytes&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Limit rawshark&#8217;s memory usage to the specified number of bytes. POSIX
 (non-Windows) only.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-n</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Disable network object name resolution (such as hostname, TCP and UDP port
+names), the <strong>-N</strong> flag might override this one.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-N  &lt;name resolving flags&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Turn on name resolving only for particular types of addresses and port
+numbers, with name resolving for other types of addresses and port
+numbers turned off. This flag overrides <strong>-n</strong> if both <strong>-N</strong> and <strong>-n</strong> are
+present. If both <strong>-N</strong> and <strong>-n</strong> flags are not present, all name resolutions are
+turned on.</p>
+</div>
+<div class="paragraph">
+<p>The argument is a string that may contain the letters:</p>
+</div>
+<div class="paragraph">
+<p><strong>m</strong> to enable MAC address resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>n</strong> to enable network address resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>N</strong> to enable using external resolvers (e.g., DNS) for network address
+resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>t</strong> to enable transport-layer port number resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>d</strong> to enable resolution from captured DNS packets</p>
+</div>
+<div class="paragraph">
+<p><strong>v</strong> to enable VLAN IDs to names resolution</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-o  &lt;preference&gt;:&lt;value&gt;</dt>
 <dd>
@@ -270,22 +325,27 @@ the C runtime might trigger an exception.</p>
 </div>
 </div>
 </dd>
-<dt class="hdlist1">-R|--read-filter &lt;read (display) filter&gt;</dt>
+<dt class="hdlist1">-R  &lt;read (display) filter&gt;</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
 <p>Cause the specified filter (which uses the syntax of read/display filters,
-rather than that of capture filters) to be applied before printing the output.
-Read filters and display filters are synonymous in <strong>rawshark</strong>.</p>
+rather than that of capture filters) to be applied before printing the output.</p>
 </div>
 </div>
 </div>
 </dd>
 <dt class="hdlist1">-s</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Allows standard pcap files to be used as input, by skipping over the 24
 byte pcap file header.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-S</dt>
 <dd>
@@ -311,141 +371,13 @@ could use <strong>%D: %S (%N)</strong>.</p>
 </div>
 </div>
 </dd>
-<dt class="hdlist1">-v|--version</dt>
-<dd>
-<p>Print the full version information and exit.</p>
-</dd>
-<dt class="hdlist1">-Y|--display-filter &lt;read (display) filter&gt;</dt>
+<dt class="hdlist1">-t  a|ad|adoy|d|dd|e|r|u|ud|udoy</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Cause the specified filter (which uses the syntax of read/display filters,
-rather than that of capture filters) to be applied before printing the output.
-Read filters and display filters are synonymous in <strong>rawshark</strong>.</p>
-</div>
-</div>
-</div>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_dissection_options">DISSECTION OPTIONS</h2>
-<div class="sectionbody">
-<div class="dlist">
-<dl>
-<dt class="hdlist1">--disable-all-protocols</dt>
-<dd>
-<p>Disable dissection of all protocols.</p>
-</dd>
-<dt class="hdlist1">--disable-protocol &lt;proto_name&gt;[,&lt;proto_name&gt;,&#8230;&#8203;]</dt>
-<dd>
-<p>Disable dissection of proto_name.
-Use a proto_name of <strong>ALL</strong> to override
-your chosen profile&#8217;s default enabled protocol list and temporarily
-disable all protocols.</p>
-</dd>
-<dt class="hdlist1">--disable-heuristic &lt;short_name&gt;</dt>
-<dd>
-<p>Disable dissection of heuristic protocol.</p>
-</dd>
-<dt class="hdlist1">--enable-protocol &lt;proto_name&gt;[,&lt;proto_name&gt;,&#8230;&#8203;]</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Enable dissection of proto_name.
-Use a proto_name of <strong>ALL</strong> to override
-your chosen profile&#8217;s default disabled protocol list and temporarily
-enable all protocols which are enabled by default.</p>
-</div>
-<div class="paragraph">
-<p>If a protocol is implicated in both <strong>--disable-protocol</strong>
-and <strong>--enable-protocol</strong>, the protocol is enabled. This allows you to
-temporarily disable all protocols but a list of exceptions.
-Example: <strong>--disable-protocol ALL --enable-protocol eth,ip</strong></p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">--enable-heuristic &lt;short_name&gt;</dt>
-<dd>
-<p>Enable dissection of heuristic protocol.</p>
-</dd>
-<dt class="hdlist1">-K  &lt;keytab&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Load kerberos crypto keys from the specified keytab file.
-This option can be used multiple times to load keys from several files.</p>
-</div>
-<div class="paragraph">
-<p>Example: <strong>-K krb5.keytab</strong></p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">-n</dt>
-<dd>
-<p>Disable network object name resolution (such as hostname, TCP and UDP port
-names); the <strong>-N</strong> option might override this one.</p>
-</dd>
-<dt class="hdlist1">-N  &lt;name resolving flags&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Turn on name resolving only for particular types of addresses and port
-numbers, with name resolving for other types of addresses and port
-numbers turned off.  This option (along with <strong>-n</strong>) can be specified
-multiple times; the last value given overrides earlier ones. This option
-and <strong>-n</strong> override the options from the preferences, including preferences
-set via the <strong>-o</strong> option. If both <strong>-N</strong> and <strong>-n</strong> options are not present,
-the values from the preferences are used, which default to <strong>-N dmN</strong>.</p>
-</div>
-<div class="paragraph">
-<p>The argument is a string that may contain the letters:</p>
-</div>
-<div class="paragraph">
-<p><strong>d</strong> to enable resolution from captured DNS packets</p>
-</div>
-<div class="paragraph">
-<p><strong>g</strong> to enable IP address geolocation information lookup from configured
-MaxMind databases</p>
-</div>
-<div class="paragraph">
-<p><strong>m</strong> to enable MAC address resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>n</strong> to enable network address resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>N</strong> to enable using external resolvers (e.g., DNS) for network address
-resolution; no effect without <strong>n</strong> also enabled.</p>
-</div>
-<div class="paragraph">
-<p><strong>t</strong> to enable transport-layer port number resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>v</strong> to enable VLAN IDs to names resolution</p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">--only-protocols &lt;protocols&gt;</dt>
-<dd>
-<p>Only enable dissection of these protocols, comma separated. Disable everything else.</p>
-</dd>
-<dt class="hdlist1">-t  (a|ad|adoy|d|dd|e|r|u|ud|udoy)[.[N]]|.[N]</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Set the format of the packet timestamp displayed in the default time
-column.  The format can be one of:</p>
+<p>Set the format of the packet timestamp printed in summary lines.
+The format can be one of:</p>
 </div>
 <div class="paragraph">
 <p><strong>a</strong> absolute: The absolute time, as local time in your time zone,
@@ -490,31 +422,17 @@ as YYYY/DOY, and time, as UTC, is the actual time and date the packet
 was captured</p>
 </div>
 <div class="paragraph">
-<p><strong>.[N]</strong> Set the precision: N is the number of decimals (0 through 9).
-If using "." without N, automatically determine precision from trace.</p>
-</div>
-<div class="paragraph">
-<p>The default format is relative with precision based on capture format.</p>
+<p>The default format is relative.</p>
 </div>
 </div>
 </div>
 </dd>
-<dt class="hdlist1">-u &lt;s|hms&gt;</dt>
+<dt class="hdlist1">-v</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Specifies how packet timestamp formats in <strong>-t</strong> which are relative times
-(i.e.  relative, delta, and delta_displayed) are displayed.  Valid choices are:</p>
-</div>
-<div class="paragraph">
-<p><strong>s</strong> for seconds</p>
-</div>
-<div class="paragraph">
-<p><strong>hms</strong> for hours, minutes, and seconds</p>
-</div>
-<div class="paragraph">
-<p>The default format is seconds.</p>
+<p>Print the version and exit.</p>
 </div>
 </div>
 </div>
@@ -547,21 +465,16 @@ For example, "warning" aborts on any "warning", "critical", or "error" messages.
 <dt class="hdlist1">--log-domains &lt;list&gt;</dt>
 <dd>
 <p>Only print messages for the specified log domains, e.g. "GUI,Epan,sshdump".
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-debug &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "debug" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-noisy &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "noisy" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
-</dd>
-<dt class="hdlist1">--log-fatal-domains &lt;list&gt;</dt>
-<dd>
-<p>Abort the program if any messages are logged for the specified log domains.
 List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-file &lt;path&gt;</dt>
@@ -620,24 +533,19 @@ capture.prom_mode: TRUE</pre>
 </div>
 <div class="paragraph">
 <p>The global preferences file is looked for in the <em>wireshark</em> directory
-under the <em>share</em> subdirectory of the main installation directory.  On
-macOS, this would typically be
-<em>/Application/Wireshark.app/Contents/Resources/share</em>; on other
-UNIX-compatible systems, such as Linux, \*BSD, Solaris, and AIX, this
-would typically be <em>/usr/share/wireshark/preferences</em> for
-system-installed packages and <em>/usr/local/share/wireshark/preferences</em>
-for locally-installed packages; on Windows, this would typically be
-<em>C:\Program Files\Wireshark\preferences</em>.</p>
+under the <em>share</em> subdirectory of the main installation directory (for
+example, <em>/usr/local/share/wireshark/preferences</em>) on UNIX-compatible
+systems, and in the main installation directory (for example,
+<em>C:\Program Files\Wireshark\preferences</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
-<p>On UNIX-compatible systems, the personal preferences file is looked for
-in <em>$XDG_CONFIG_HOME/wireshark/preferences</em>, (or, if
-<em>$XDG_CONFIG_HOME/wireshark</em> does not exist while <em>$HOME/.wireshark</em>
-does exist, <em>$HOME/.wireshark/preferences</em>); this is typically
-<em>$HOME/.config/wireshark/preferences</em>.  On Windows,
-the personal preferences file is looked for in
-<em>%APPDATA%\Wireshark\preferences</em> (or, if %APPDATA% isn&#8217;t defined,
-<em>%USERPROFILE%\Application Data\Wireshark\preferences</em>).</p>
+<p>The personal preferences file is looked for in
+<em>$XDG_CONFIG_HOME/wireshark/preferences</em>
+(or, if <em>$XDG_CONFIG_HOME/wireshark</em> does not exist while <em>$HOME/.wireshark</em>
+is present, <em>$HOME/.wireshark/preferences</em>) on
+UNIX-compatible systems and <em>%APPDATA%\Wireshark\preferences</em> (or, if
+%APPDATA% isn&#8217;t defined, <em>%USERPROFILE%\Application
+ Data\Wireshark\preferences</em>) on Windows systems.</p>
 </div>
 </div>
 </div>
@@ -684,9 +592,8 @@ used.</p>
 </div>
 <div class="paragraph">
 <p>Capture filter name resolution is handled by libpcap on UNIX-compatible
-systems, such as Linux, macOS, \*BSD, Solaris, and AIX, and by Npcap or
-WinPcap on Windows.  As such the Wireshark personal <em>hosts</em> file will
-not be consulted for capture filter name resolution.</p>
+systems and Npcap or WinPcap on Windows.  As such the Wireshark personal
+<em>hosts</em> file will not be consulted for capture filter name resolution.</p>
 </div>
 </div>
 </div>
@@ -746,9 +653,8 @@ c0-00-ff-ff-ff-ff          TR_broadcast
 </div>
 <div class="paragraph">
 <p>The global <em>ethers</em> file is looked for in the <em>/etc</em> directory on
-UNIX-compatible systems, such as Linux, macOS, \*BSD, Solaris, and AIX,
-and in the main installation directory (for example, <em>C:\Program
-Files\Wireshark</em>) on Windows systems.</p>
+UNIX-compatible systems, and in the main installation directory (for
+example, <em>C:\Program Files\Wireshark</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
 <p>The personal <em>ethers</em> file is looked for in the same directory as the personal
@@ -851,9 +757,8 @@ c0-a8-1c-00              CEO
 </div>
 <div class="paragraph">
 <p>The global <em>ipxnets</em> file is looked for in the <em>/etc</em> directory on
-UNIX-compatible systems, such as Linux, macOS, \*BSD, Solaris, and AIX,
-and in the main installation directory (for example, <em>C:\Program
-Files\Wireshark</em>) on Windows systems.</p>
+UNIX-compatible systems, and in the main installation directory (for
+example, <em>C:\Program Files\Wireshark</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
 <p>The personal <em>ipxnets</em> file is looked for in the same directory as the
@@ -876,15 +781,10 @@ personal preferences file.</p>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>This environment variable overrides the location of personal
-configuration files.  On UNIX-compatible systems, such as Linux, macOS,
-\*BSD, Solaris, and AIX, it defaults to <em>$XDG_CONFIG_HOME/wireshark</em>
-(or, if that directory doesn&#8217;t exist but <em>$HOME/.wireshark</em> does
-exist, <em>$HOME/.wireshark</em>); this is typically
-<em>$HOME/.config/wireshark</em>.  On Windows, it defaults to
-<em>%APPDATA%\Wireshark</em> (or, if %APPDATA% isn&#8217;t defined,
-<em>%USERPROFILE%\Application Data\Wireshark</em>).  Available since
-Wireshark 3.0.</p>
+<p>This environment variable overrides the location of personal configuration
+files. It defaults to <em>$XDG_CONFIG_HOME/wireshark</em> (or <em>$HOME/.wireshark</em> if
+the former is missing while the latter exists). On Windows,
+<em>%APPDATA%\Wireshark</em> is used instead. Available since Wireshark 3.0.</p>
 </div>
 </div>
 </div>
@@ -908,11 +808,10 @@ details.</p>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>This environment variable causes the plugins and other data files to be
-loaded from the build directory (where the program was compiled) rather
-than from the standard locations.  It has no effect when the program in
-question is running with root (or setuid) permissions on UNIX-compatible
-systems, such as Linux, macOS, \*BSD, Solaris, and AIX.</p>
+<p>This environment variable causes the plugins and other data files to be loaded
+from the build directory (where the program was compiled) rather than from the
+standard locations.  It has no effect when the program in question is running
+with root (or setuid) permissions on *NIX.</p>
 </div>
 </div>
 </div>
@@ -924,8 +823,7 @@ systems, such as Linux, macOS, \*BSD, Solaris, and AIX.</p>
 <div class="paragraph">
 <p>This environment variable causes the various data files to be loaded from
 a directory other than the standard locations.  It has no effect when the
-program in question is running with root (or setuid) permissions on
-UNIX-compatible systems.</p>
+program in question is running with root (or setuid) permissions on *NIX.</p>
 </div>
 </div>
 </div>
@@ -1008,7 +906,7 @@ troubleshoot a problem with a protocol dissector.</p>
 <h2 id="_notes">NOTES</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the manual page for <strong>Rawshark</strong> 4.3.0.
+<p>This is the manual page for <strong>Rawshark</strong> 4.0.15.
 <strong>Rawshark</strong> is part of the <strong>Wireshark</strong> distribution.
 The latest version of <strong>Wireshark</strong> can be found at <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
 </div>
