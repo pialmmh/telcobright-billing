@@ -35,7 +35,7 @@ namespace InstallConfig
                 PortalLocalAccountNameAdministrator = portalLocalAccountNameAdministrator,
                 PortalLocalAccountPassword = portalLocalAccountPassword,
                 HomePageUrl = "~/Dashboard.aspx",
-                AlternateDisplayName = "ICX Manager",
+                AlternateDisplayName = "SMS Billing",
                 RouteTypeEnums = new Dictionary<string, int>()
                 {
                     {"Select",-1 },
@@ -250,13 +250,17 @@ namespace InstallConfig
                                 },
                                 SpringExpressionIfRole = new List<string>()
                                 {
-                                    "nodes['Configuration'].Expanded=true",
+                                    "nodes['Configuration'].Expanded=false",
                                     "nodes['Billing'].Expanded=true",
                                     "nodes['Mediation'].Expanded=true",
-                                    "nodes['Settings'].Expanded=true",
-                                    "nodes['Billing Reports'].Expanded=true",
+                                    "nodes['Settings'].Expanded=false",
+                                    "nodes['Billing Reports'].Expanded=false",
                                     "nodes['Reports/IGW'].Expanded=false",
-                                    "nodes['Reports/Transit'].Expanded=false"
+                                    "nodes['Reports/ICX'].Expanded=false",
+                                    "nodes['Reports/SMS'].Expanded=true",
+                                    "nodes['Reports/Transit'].Expanded=false",
+                                    "nodes['Reports/btrc'].Expanded=false",
+                                    "nodes['Reports/CDR'].Expanded=false"
                                 },
                                 SpringExpressionIfNotRole = new List<string>()
                                 {
@@ -293,46 +297,7 @@ namespace InstallConfig
 
                         }//list of settings by Roles
                     },
-                    { "~/reports/InternationalIn.aspx",//settings for report pages
-                        settingIntlIn
-                    },
-                    { "~/reports/InternationalOut.aspx",
-                        settingIntlOut
-                    },
-                    { "~/reports/RouteInternationalIn.aspx",
-                        settingIntlInRoute
-                    },
-                    { "~/reports/icx/InternationalIn_ICX.aspx",//settings for report pages
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/InternationalOut _ICX.aspx",
-                        settingIntlOut
-                    },
-                    { "~/reports/icx/Domestic.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/LocalTollFree.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/DailyReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/WeeklyDomesticReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/WeeklyInternationalReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/MonthlyOutgoingSummary.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/btrc/MonthlyReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/customReports/BanglalinkRoamingReport.aspx",
-                        settingIntlIn
-                    },
-                    { "~/reports/icx/customReports/BanglalinkForwardingReport.aspx",
+                    { "~/reports/sms/Domestic.aspx",
                         settingIntlIn
                     }
                 },//dictionary of page settings

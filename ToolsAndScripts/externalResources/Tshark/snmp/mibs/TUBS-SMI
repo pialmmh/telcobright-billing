@@ -1,6 +1,6 @@
 TUBS-SMI DEFINITIONS ::= BEGIN
 
--- @(#) $Id$
+-- @(#) $Id: TUBS-SMI 9396 2008-07-02 10:56:08Z strauss $
 
 IMPORTS
     MODULE-IDENTITY, OBJECT-IDENTITY, enterprises

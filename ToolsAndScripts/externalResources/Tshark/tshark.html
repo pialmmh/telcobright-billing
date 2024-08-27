@@ -32,15 +32,7 @@
 </div>
 <div class="paragraph">
 <p><span class="nowrap"><strong>tshark</strong></span>
-<span class="nowrap"><strong>-G</strong> [ &lt;report type&gt; ] [ --elastic-mapping-filter &lt;protocols&gt; ] [ <strong>-C</strong> &lt;profile&gt; ]</span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>tshark</strong></span>
-<span class="nowrap"><strong>-h|--help</strong></span></p>
-</div>
-<div class="paragraph">
-<p><span class="nowrap"><strong>tshark</strong></span>
-<span class="nowrap"><strong>-v|--version</strong></span></p>
+<span class="nowrap"><strong>-G</strong> [ &lt;report type&gt; ] [ --elastic-mapping-filter &lt;protocols&gt; ]</span></p>
 </div>
 </div>
 </div>
@@ -226,7 +218,7 @@ were written.</p>
 </div>
 <div class="paragraph">
 <p><strong>filesize</strong>:<em>value</em> Stop writing to a capture file after it reaches a size of
-<em>value</em> kB.  If this option is used together with the <strong>-b</strong> option, <strong>TShark</strong>
+<em>value</em> kB.  If this option is used together with the -b option, <strong>TShark</strong>
 will stop writing to the current capture file and switch to the next one if
 filesize is reached.  When reading a capture file, <strong>TShark</strong> will stop reading
 the file after the number of bytes read exceeds this number (the complete
@@ -268,7 +260,7 @@ fills up, <strong>TShark</strong> will switch writing to the next file and so on
 <div class="paragraph">
 <p>The created filenames are based on the filename given with the <strong>-w</strong> option,
 the number of the file and on the creation date and time,
-e.g. outfile_00001_20230714120117.pcap, outfile_00002_20230714120523.pcap, &#8230;&#8203;</p>
+e.g. outfile_00001_20240714120117.pcap, outfile_00002_20240714120523.pcap, &#8230;&#8203;</p>
 </div>
 <div class="paragraph">
 <p>With the <em>files</em> option it&#8217;s also possible to form a "ring buffer".
@@ -311,14 +303,9 @@ every hour on the hour.</p>
 packets.</p>
 </div>
 <div class="paragraph">
-<p><strong>printname</strong>:<em>filename</em> print the name of the most recently written file
-to <em>filename</em> after the file is closed. <em>filename</em> can be <code>stdout</code> or <code>-</code>
-for standard output, or <code>stderr</code> for standard error.</p>
-</div>
-<div class="paragraph">
 <p><strong>nametimenum</strong>:<em>value</em> Choose between two save filename templates.  If
 <em>value</em> is 1, make running file number part before start time part; this is
-the original and default behaviour (e.g. log_00001_20230714164426.pcap).  If
+the original and default behaviour (e.g. log_00001_20240714164426.pcap).  If
 <em>value</em> is greater than 1, make start time part before running number part
 (e.g. log_20210828164426_00001.pcap).  The latter makes alphabetical sorting
 order equal to creation time order, and keeps related multiple file sets in
@@ -345,9 +332,8 @@ system or interface on which you&#8217;re capturing might silently limit the
 capture buffer size to a lower value or raise it to a higher value.</p>
 </div>
 <div class="paragraph">
-<p>This is available on UNIX-compatible systems, such as Linux, macOS,
-\*BSD, Solaris, and AIX, with libpcap 1.0.0 or later, and on Windows.
-It is not available on UNIX-compatible systems with earlier versions of
+<p>This is available on UNIX systems with libpcap 1.0.0 or later and on
+Windows.  It is not available on UNIX systems with earlier versions of
 libpcap.</p>
 </div>
 <div class="paragraph">
@@ -385,18 +371,65 @@ may differ from <strong>-a packets:</strong>&lt;capture packet count&gt;.</p>
 </div>
 </div>
 </dd>
+<dt class="hdlist1">-d  &lt;layer type&gt;==&lt;selector&gt;,&lt;decode-as protocol&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Like Wireshark&#8217;s <strong>Decode As&#8230;&#8203;</strong> feature, this lets you specify how a
+layer type should be dissected.  If the layer type in question (for example,
+<strong>tcp.port</strong> or <strong>udp.port</strong> for a TCP or UDP port number) has the specified
+selector value, packets should be dissected as the specified protocol.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>tshark -d tcp.port==8888,http</strong> will decode any traffic running over
+TCP port 8888 as HTTP.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>tshark -d tcp.port==8888:3,http</strong> will decode any traffic running over
+TCP ports 8888, 8889 or 8890 as HTTP.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>tshark -d tcp.port==8888-8890,http</strong> will decode any traffic running
+over TCP ports 8888, 8889 or 8890 as HTTP.</p>
+</div>
+<div class="paragraph">
+<p>Using an invalid selector or protocol will print out a list of valid selectors
+and protocol names, respectively.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>tshark -d .</strong> is a quick way to get a list of valid selectors.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>tshark -d ethertype==0x0800.</strong> is a quick way to get a list of
+protocols that can be selected with an ethertype.</p>
+</div>
+</div>
+</div>
+</dd>
 <dt class="hdlist1">-D|--list-interfaces</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
 <p>Print a list of the interfaces on which <strong>TShark</strong> can capture, and
-exit.  For each network interface, a number and an interface name,
-possibly followed by a text description of the interface, is printed.
-The interface name or the number can be supplied to the <strong>-i</strong> flag to
-specify an interface on which to capture.  The number can be useful on
-Windows systems, where the interfaces have long names that usually
-contain a GUID.</p>
+exit.  For each network interface, a number and an
+interface name, possibly followed by a text description of the
+interface, is printed.  The interface name or the number can be supplied
+to the <strong>-i</strong> option to specify an interface on which to capture.</p>
+</div>
+<div class="paragraph">
+<p>This can be useful on systems that don&#8217;t have a command to list them
+(UNIX systems lacking <strong>ifconfig -a</strong> or Linux systems lacking
+<strong>ip link show</strong>). The number can be useful on Windows systems, where
+the interface name might be a long name or a GUID.</p>
+</div>
+<div class="paragraph">
+<p>Note that "can capture" means that <strong>TShark</strong> was able to open that
+device to do a live capture.  Depending on your system you may need to
+run <strong>TShark</strong> from an account with special privileges (for example, as
+root) to be able to capture network traffic.  If <strong>tshark -D</strong> is not run
+from such an account, it will not list any interfaces.</p>
 </div>
 </div>
 </div>
@@ -409,10 +442,10 @@ contain a GUID.</p>
 <p>Add a field to the list of fields to display if <strong>-T ek|fields|json|pdml</strong>
 is selected.  This option can be used multiple times on the command line.
 At least one field must be provided if the <strong>-T fields</strong> option is
-selected. Column types may be used prefixed with "_ws.col."</p>
+selected. Column names may be used prefixed with "_ws.col."</p>
 </div>
 <div class="paragraph">
-<p>Example: <strong>tshark -e frame.number -e ip.addr -e udp -e _ws.col.info</strong></p>
+<p>Example: <strong>tshark -e frame.number -e ip.addr -e udp -e _ws.col.Info</strong></p>
 </div>
 <div class="paragraph">
 <p>Fields are separated by tab characters by default.  <strong>-E</strong> controls the
@@ -467,16 +500,7 @@ option may be used.</p>
 </div>
 <div class="paragraph">
 <p><strong>quote=d|s|n</strong> Set the quote character to use to surround fields.  <strong>d</strong>
-uses double-quotes, <strong>s</strong> single-quotes, <strong>n</strong> no quotes (the default).
-If the quote character appears in a field value, it will be escaped
-by being duplicated.</p>
-</div>
-<div class="paragraph">
-<p><strong>escape=y|n</strong> If <strong>y</strong>, the whitespace control characters (tab, line feed,
-carriage return, form feed, and vertical tab) backspace, and the
-backslash will be replaced in field values by C-style escapes, e.g.
-"\n" for line feed.  If <strong>n</strong>, field value strings will be printed as-is.
-Defaults to <strong>y</strong>.</p>
+uses double-quotes, <strong>s</strong> single-quotes, <strong>n</strong> no quotes (the default).</p>
 </div>
 </div>
 </div>
@@ -506,16 +530,28 @@ Example: <strong>tshark -f "predef:MyPredefinedHostOnlyFilter"</strong></p>
 </dd>
 <dt class="hdlist1">-F  &lt;file format&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Set the file format of the output capture file written using the <strong>-w</strong>
 option.  The output written with the <strong>-w</strong> option is raw packet data, not
 text, so there is no <strong>-F</strong> option to request text output.  The option <strong>-F</strong>
 without a value will list the available formats.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-g</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This option causes the output file(s) to be created with group-read permission
 (meaning that the output file(s) can be read by other members of the calling
 user&#8217;s group).</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-G  [ &lt;report type&gt; ]</dt>
 <dd>
@@ -523,9 +559,8 @@ user&#8217;s group).</p>
 <div class="content">
 <div class="paragraph">
 <p>The <strong>-G</strong> option will cause <strong>TShark</strong> to dump one of several types of glossaries
-and then exit.  If no glossary type is specified, then the <strong>fields</strong> report
-will be generated by default; this is deprecated and a future version will
-require the report type argument.  The <strong>-G</strong> option must be the first option given.
+and then exit.  If no specific glossary type is specified, then the <strong>fields</strong>
+report will be generated by default.
 Using the report type of <strong>help</strong> lists all the current report types.</p>
 </div>
 <div class="paragraph">
@@ -594,30 +629,6 @@ Field 3
 <p><strong>defaultprefs</strong>  Dumps a default preferences file to stdout.</p>
 </div>
 <div class="paragraph">
-<p><strong>dissectors</strong>  Dumps a list of registered dissectors to stdout.  There is
-one record per line.  The fields are tab-delimited.</p>
-</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-Field 1
-</td>
-<td class="hdlist2">
-<p>dissector name</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Field 2
-</td>
-<td class="hdlist2">
-<p>dissector description</p>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
 <p><strong>dissector-tables</strong>  Dumps a list of dissector tables to stdout.  There
 is one record per line.  The fields are tab-delimited.</p>
 </div>
@@ -674,11 +685,7 @@ Field 6
 </table>
 </div>
 <div class="paragraph">
-<p><strong>elastic-mapping</strong>  Dumps the ElasticSearch mapping file to stdout. Fields
-falling in the default case (string) won&#8217;t be mapped.</p>
-</div>
-<div class="paragraph">
-<p><strong>enterprises</strong> Dumps the IANA Private Enterprise Number (PEN) table.</p>
+<p><strong>elastic-mapping</strong>  Dumps the ElasticSearch mapping file to stdout.</p>
 </div>
 <div class="paragraph">
 <p><strong>fieldcount</strong>  Dumps the number of header fields to stdout.</p>
@@ -789,32 +796,6 @@ Field 8
 </table>
 </div>
 <div class="paragraph">
-<p>An optional search prefix argument can be given to
-<strong>fields</strong>, in which case the output is limited to protocols and fields whose
-abbreviation starts with the search prefix.</p>
-</div>
-<div class="hdlist">
-<div class="title">Search Output</div>
-<table>
-<tr>
-<td class="hdlist1">
-Field 1
-</td>
-<td class="hdlist2">
-<p>protocol or field abbreviation</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Field 2
-</td>
-<td class="hdlist2">
-<p>descriptive protocol or field name</p>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
 <p><strong>folders</strong> Dumps various folders used by <strong>TShark</strong>.  This is essentially the
 same data reported in Wireshark&#8217;s About | Folders tab.
 There is one record per line.  The fields are tab-delimited.</p>
@@ -882,7 +863,7 @@ Field 1
 Field 2
 </td>
 <td class="hdlist2">
-<p>name of heuristic decoder (e.g. "ucp")</p>
+<p>name of heuristic decoder (e.g. ucp")</p>
 </td>
 </tr>
 <tr>
@@ -893,37 +874,10 @@ Field 3
 <p>heuristic enabled (e.g. "T" or "F")</p>
 </td>
 </tr>
-<tr>
-<td class="hdlist1">
-Field 4
-</td>
-<td class="hdlist2">
-<p>heuristic enabled by default (e.g. "T" or "F")</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Field 5
-</td>
-<td class="hdlist2">
-<p>heuristic short name (e.g. "ucp_tcp")</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Field 6
-</td>
-<td class="hdlist2">
-<p>heuristic display name (e.g. "UCP over TCP")</p>
-</td>
-</tr>
 </table>
 </div>
 <div class="paragraph">
 <p><strong>help</strong> Displays the available report types.</p>
-</div>
-<div class="paragraph">
-<p><strong>manuf</strong> Dumps the MAC address lookup table in <code>manuf</code> format.</p>
 </div>
 <div class="paragraph">
 <p><strong>plugins</strong> Dumps the plugins currently installed.
@@ -996,34 +950,7 @@ Field 3
 <p>protocol filter name</p>
 </td>
 </tr>
-<tr>
-<td class="hdlist1">
-Field 4
-</td>
-<td class="hdlist2">
-<p>protocol enabled (e.g. "T" or "F")</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Field 5
-</td>
-<td class="hdlist2">
-<p>protocol enabled by default (e.g. "T" or "F")</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Field 6
-</td>
-<td class="hdlist2">
-<p>protocol can toggle (e.g. "T" or "F")</p>
-</td>
-</tr>
 </table>
-</div>
-<div class="paragraph">
-<p><strong>services</strong> Dumps the TCP, UDP, and SCTP transport service (port) table.</p>
 </div>
 <div class="paragraph">
 <p><strong>values</strong> Dumps the value_strings, range_strings or true/false strings
@@ -1156,7 +1083,13 @@ Field 4
 </dd>
 <dt class="hdlist1">-h|--help</dt>
 <dd>
-<p>Print the version number and options and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Print the version and options and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-H  &lt;input hosts file&gt;</dt>
 <dd>
@@ -1182,9 +1115,11 @@ to a capture file.  Implies <strong>-W n</strong>. Can be called multiple times.
 capture.</p>
 </div>
 <div class="paragraph">
-<p>Network interface names should match one of the names listed in "<strong>tshark
--D</strong>" (described above); a number, as reported by "<strong>tshark -D</strong>", can also
-be used.</p>
+<p>Network interface names should match one of the names listed in
+"<strong>tshark -D</strong>" (described above); a number, as reported by
+"<strong>tshark -D</strong>", can also be used.  If you&#8217;re using UNIX, "<strong>netstat
+ -i</strong>", "<strong>ifconfig -a</strong>" or "<strong>ip link</strong>" might also work to list interface names,
+although not all versions of UNIX support the <strong>-a</strong> option to <strong>ifconfig</strong>.</p>
 </div>
 <div class="paragraph">
 <p>If no interface is specified, <strong>TShark</strong> searches the list of
@@ -1267,6 +1202,20 @@ Lower-level protocols must be explicitly specified in the filter.</p>
 </div>
 </div>
 </dd>
+<dt class="hdlist1">-K  &lt;keytab&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Load kerberos crypto keys from the specified keytab file.
+This option can be used multiple times to load keys from several files.</p>
+</div>
+<div class="paragraph">
+<p>Example: <strong>tshark -K krb5.keytab</strong></p>
+</div>
+</div>
+</div>
+</dd>
 <dt class="hdlist1">-l</dt>
 <dd>
 <div class="openblock">
@@ -1294,8 +1243,64 @@ standard output buffer containing that data fills up.</p>
 </dd>
 <dt class="hdlist1">-L|--list-data-link-types</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List the data link types supported by the interface and exit.  The reported
 link types can be used for the <strong>-y</strong> option.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-n</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Disable network object name resolution (such as hostname, TCP and UDP port
+names); the <strong>-N</strong> option might override this one.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-N  &lt;name resolving flags&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Turn on name resolving only for particular types of addresses and port
+numbers, with name resolving for other types of addresses and port
+numbers turned off.  This option overrides <strong>-n</strong> if both <strong>-N</strong> and <strong>-n</strong>
+are present.  This option and <strong>-n</strong> override the options from the preferences,
+including preferences set via the <strong>-o</strong> option.  If both <strong>-N</strong> and <strong>-n</strong> options
+are not present, the values from the preferences are used, which default to
+<strong>d</strong>, <strong>m</strong>, and <strong>N</strong> turned on and the other options turned off. (NB, <strong>N</strong> does
+not actually do anything without <strong>n</strong> enabled as well.)</p>
+</div>
+<div class="paragraph">
+<p>The argument is a string that may contain the letters:</p>
+</div>
+<div class="paragraph">
+<p><strong>d</strong> to enable resolution from captured DNS packets</p>
+</div>
+<div class="paragraph">
+<p><strong>m</strong> to enable MAC address resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>n</strong> to enable network address resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>N</strong> to enable using external resolvers (e.g., DNS) for network address
+resolution; no effect without <strong>n</strong> also enabled</p>
+</div>
+<div class="paragraph">
+<p><strong>t</strong> to enable transport-layer port number resolution</p>
+</div>
+<div class="paragraph">
+<p><strong>v</strong> to enable VLAN IDs to names resolution</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-o  &lt;preference&gt;:&lt;value&gt;</dt>
 <dd>
@@ -1395,8 +1400,10 @@ capture to a file, and the final message giving the count of packets
 captured.  Only true errors are displayed on the standard error.</p>
 </div>
 <div class="paragraph">
-<p>This outputs less than the <strong>-q</strong> option, so the interface name and total
-packet count and the end of a capture are not sent to stderr.</p>
+<p>only display true errors; don&#8217;t display the
+initial message indicating the.  This outputs less
+than the <strong>-q</strong> option, so the interface name and total packet
+count and the end of a capture are not sent to stderr.</p>
 </div>
 <div class="paragraph">
 <p>When reading a capture file, or when capturing and not saving to a file,
@@ -1428,12 +1435,12 @@ particular: those that can be read without seeking backwards).</p>
 <p>Cause the specified filter (which uses the syntax of read/display filters,
 rather than that of capture filters) to be applied during the first pass of
 analysis. Packets not matching the filter are not considered for future
-passes. Only makes sense with multiple passes, see <strong>-2</strong>. For regular filtering
-on single-pass dissect see <strong>-Y</strong> instead.</p>
+passes. Only makes sense with multiple passes, see -2. For regular filtering
+on single-pass dissect see -Y instead.</p>
 </div>
 <div class="paragraph">
 <p>Note that forward-looking fields such as 'response in frame #' cannot be used
-with this filter, since they will not have been calculated when this filter is
+with this filter, since they will not have been calculate when this filter is
 applied.</p>
 </div>
 </div>
@@ -1462,7 +1469,69 @@ the default snapshot length is used if provided.</p>
 </dd>
 <dt class="hdlist1">-S  &lt;separator&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Set the line separator to be printed between packets.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-t  a|ad|adoy|d|dd|e|r|u|ud|udoy</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Set the format of the packet timestamp printed in summary lines.
+The format can be one of:</p>
+</div>
+<div class="paragraph">
+<p><strong>a</strong> absolute: The absolute time, as local time in your time zone,
+is the actual time the packet was captured, with no date displayed</p>
+</div>
+<div class="paragraph">
+<p><strong>ad</strong> absolute with date: The absolute date, displayed as YYYY-MM-DD,
+and time, as local time in your time zone, is the actual time and date
+the packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>adoy</strong> absolute with date using day of year: The absolute date,
+displayed as YYYY/DOY, and time, as local time in your time zone,
+is the actual time and date the packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>d</strong> delta: The delta time is the time since the previous packet was
+captured</p>
+</div>
+<div class="paragraph">
+<p><strong>dd</strong> delta_displayed: The delta_displayed time is the time since the
+previous displayed packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>e</strong> epoch: The time in seconds since epoch (Jan 1, 1970 00:00:00)</p>
+</div>
+<div class="paragraph">
+<p><strong>r</strong> relative: The relative time is the time elapsed between the first packet
+and the current packet</p>
+</div>
+<div class="paragraph">
+<p><strong>u</strong> UTC: The absolute time, as UTC, is the actual time the packet was
+captured, with no date displayed</p>
+</div>
+<div class="paragraph">
+<p><strong>ud</strong> UTC with date: The absolute date, displayed as YYYY-MM-DD,
+and time, as UTC, is the actual time and date the packet was captured</p>
+</div>
+<div class="paragraph">
+<p><strong>udoy</strong> UTC with date using day of year: The absolute date, displayed
+as YYYY/DOY, and time, as UTC, is the actual time and date the packet
+was captured</p>
+</div>
+<div class="paragraph">
+<p>The default format is relative.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-T  ek|fields|json|jsonraw|pdml|ps|psml|tabs|text</dt>
 <dd>
@@ -1538,7 +1607,7 @@ tshark -T jsonraw -j "http tcp ip" -x -r file.pcap</pre>
 <div class="paragraph">
 <p><strong>pdml</strong> Packet Details Markup Language, an XML-based format for the
 details of a decoded packet.  This information is equivalent to the
-packet details printed with the <strong>-V</strong> option.  Using the <strong>--color</strong> option
+packet details printed with the <strong>-V</strong> option.  Using the --color option
 will add color attributes to <strong>pdml</strong> output.  These attributes are
 nonstandard.</p>
 </div>
@@ -1551,7 +1620,7 @@ depending on whether the <strong>-V</strong> option was specified.</p>
 <p><strong>psml</strong> Packet Summary Markup Language, an XML-based format for the summary
 information of a decoded packet.  This information is equivalent to the
 information shown in the one-line summary printed by default.
-Using the <strong>--color</strong> option will add color attributes to <strong>pdml</strong> output. These
+Using the --color option will add color attributes to <strong>pdml</strong> output. These
 attributes are nonstandard.</p>
 </div>
 <div class="paragraph">
@@ -1572,12 +1641,25 @@ whether the <strong>-V</strong> option was specified.  This is the default.</p>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Specifies the directory into which temporary files (including capture
-files) are to be written.  The default behavior on UNIX-compatible systems,
-such as Linux, macOS, \*BSD, Solaris, and AIX, is to use the environment
-variable <em>$TMPDIR</em> if set, and the system default, typically <em>/tmp</em>, if it
-is not.  On Windows, the <em>%TEMP%</em> environment variable is used, which
-typically defaults to <em>%USERPROFILE%\AppData\Local\Temp</em>.</p>
+<p>Specifies the directory into which temporary files (including capture files)
+are to be written. The default behaviour is to use your system&#8217;s temporary
+directory (typically <em>/tmp</em> on Linux, and <em>C:\\Temp</em> on Windows).</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">-u &lt;seconds type&gt;</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Specifies the seconds type.  Valid choices are:</p>
+</div>
+<div class="paragraph">
+<p><strong>s</strong> for seconds</p>
+</div>
+<div class="paragraph">
+<p><strong>hms</strong> for hours, minutes and seconds</p>
 </div>
 </div>
 </div>
@@ -1588,7 +1670,7 @@ typically defaults to <em>%USERPROFILE%\AppData\Local\Temp</em>.</p>
 <div class="content">
 <div class="paragraph">
 <p>PDUs export, exports PDUs from infile to outfile according to the tap
-name given. Use <strong>-Y</strong> to filter.</p>
+name given. Use -Y to filter.</p>
 </div>
 <div class="paragraph">
 <p>Enter an empty tap name "" or a tap name of ? to get a list of available
@@ -1599,11 +1681,23 @@ names.</p>
 </dd>
 <dt class="hdlist1">-v|--version</dt>
 <dd>
-<p>Print the full version information and exit.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Print the version and exit.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-V</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Cause <strong>TShark</strong> to print a view of the packet details.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">-w  &lt;outfile&gt; | -</dt>
 <dd>
@@ -1620,7 +1714,7 @@ names.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-<strong>-w</strong> provides raw packet data, not text.  If you want text output
+-w provides raw packet data, not text.  If you want text output
 you need to redirect stdout (e.g. using '&gt;'), don&#8217;t use the <strong>-w</strong>
 option for this.
 </td>
@@ -1661,8 +1755,14 @@ to <strong>pcapng</strong> as needed.</p>
 </dd>
 <dt class="hdlist1">-x</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Cause <strong>TShark</strong> to print a hex and ASCII dump of the packet data
 after printing the summary and/or details, if either are also being displayed.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--hexdump &lt;hexoption&gt;</dt>
 <dd>
@@ -1716,7 +1816,7 @@ and start of the ASCII dump text.</p>
 </dd>
 <dt class="hdlist1"><strong>help</strong></dt>
 <dd>
-<p>Display <strong>--hexdump</strong> specific help then exit.</p>
+<p>Display --hexdump specific help then exit.</p>
 </dd>
 </dl>
 </div>
@@ -1731,7 +1831,7 @@ directly do a "Save as" nor export packets from.</p>
 </div>
 <div class="paragraph">
 <p>Generate hexdump output, with only the frame data source, with delimited ASCII
-dump text, with each frame hex block preceded by a human readable timestamp that
+dump text, with each frame hex block preceeded by a human readable timestamp that
 is directly usable by the <strong>text2pcap</strong> utility:</p>
 </div>
 <div class="literalblock">
@@ -1743,7 +1843,7 @@ is directly usable by the <strong>text2pcap</strong> utility:</p>
 </div>
 <div class="paragraph">
 <p>Generate hexdump output, with only the frame data source, with no ASCII dump text,
-with each frame hex block preceded by an epoch timestamp that is directly
+with each frame hex block preceeded by an epoch timestamp that is directly
 usable by the <strong>text2pcap</strong> utility:</p>
 </div>
 <div class="literalblock">
@@ -1828,8 +1928,8 @@ packets not matching the filter nor depended upon are discarded rather
 than being printed or written.</p>
 </div>
 <div class="paragraph">
-<p>Use this instead of <strong>-R</strong> for filtering using single-pass analysis. If doing
-two-pass analysis (see <strong>-2</strong>) then only packets matching the read filter (if there
+<p>Use this instead of -R for filtering using single-pass analysis. If doing
+two-pass analysis (see -2) then only packets matching the read filter (if there
 is one) will be checked against this filter.</p>
 </div>
 </div>
@@ -1852,7 +1952,7 @@ For example,</p>
 <p>will reset session every 100000 packets.</p>
 </div>
 <div class="paragraph">
-<p>This feature does not support <strong>-2</strong> two-pass analysis</p>
+<p>This feature does not support -2 two-pass analysis</p>
 </div>
 </div>
 </div>
@@ -1891,91 +1991,187 @@ to be printed.</p>
 </dd>
 <dt class="hdlist1"><strong>-z help</strong></dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Display all possible values for <strong>-z</strong>.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> afp,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show Apple Filing Protocol service response time statistics.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ancp,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on Access Node Control Protocol message types
 and adjacency packet codes.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ansi_a,bsmap[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Count the number of ANSI A-I/F BSMAP messages of each type.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ansi_a,dtap[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Count the number of ANSI A-I/F DTAP messages of each type.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ansi_map[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Count the number of ANSI MAP messages of each type, and calculate the
 total number of bytes and average bytes of each message type.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> asap,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on Aggregate Service Access Protocol (ASAP).
 For each ASAP message type, displays the number, rate, and share among
 all ASAP message types of both packets and bytes, and the first and last
 time that it is seen.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> bacapp_instanceid,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on BACnet APDUs, collated by instance ID.
 Displayed information includes source and destination address and
 service type.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> bacapp_ip,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on BACnet APDUs, collated by source and destination
 address.  Displayed information includes service type, object ID, and
 instance ID.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> bacapp_objectid,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on BACnet APDUs, collated by object ID.
 Displayed information includes source and destination address,
 service type, and instance ID.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> bacapp_service,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on BACnet APDUs, collated by service type.
 Displayed information includes source and destination address,
 object ID, and instance ID.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> calcappprotocol,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on the Calculation Application Protocol of
 Reliable Server Pooling.  For each message type, displays the number,
 rate, and share among all message types of both packets and bytes,
 and the first and last time that it is seen.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> camel,counter[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Count the number of CAMEL messages for each opcode.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> camel,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect requests/response SRT (Service Response Time) data for CAMEL.
 Data collected is number of request messages with corresponding response
 of each CAMEL message type, along with the minimum, maximum, and average
 response time.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> collectd,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics for collectd.  The gathered statistics are the number
 of collectd packets and the total number of value segments, along with the
 host, plugin, and type of the values.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> componentstatusprotocol,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on the Calculation Status Protocol of Reliable
 Server Pooling.  For each message type, displays the number, rate
 and share among all message types of both packets and bytes, and the
 first and last time that it is seen.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> conv,<em>type</em>[,<em>filter</em>]</dt>
 <dd>
@@ -2022,11 +2218,17 @@ The table is sorted according to the total number of frames.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> credentials</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect credentials (username/passwords) from packets. The report includes
 the packet number, the protocol that had that credential, the username and
 the password. For protocols just using one single field as authentication,
 this is provided as a password and a placeholder in place of the user.
 Currently implemented protocols include FTP, HTTP, IMAP, POP, and SMTP.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> dcerpc,srt,<em>uuid</em>,<em>major</em>.<em>minor</em>[,<em>filter</em>]</dt>
 <dd>
@@ -2054,12 +2256,24 @@ SRT statistics for a specific host.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> dests,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on IPv4 destination addresses and the protocols
 and ports appearing on each address.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> dhcp,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Show DHCP (BOOTP) statistics.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> diameter,avp[,<em>cmd.code</em>,<em>field</em>,<em>field</em>,<em>&#8230;&#8203;</em>]</dt>
 <dd>
@@ -2129,16 +2343,28 @@ capture files. Exactly one text line for each diameter message with matched
 </dd>
 <dt class="hdlist1"><strong>-z</strong> diameter,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect requests/response SRT (Service Response Time) data for Diameter.
 Data collected is number of request and response pairs of each Diameter
 command code, Minimum SRT, Maximum SRT, Average SRT, and Sum SRT.
 Currently no statistics are gathered on unpaired messages.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> dns,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Create a summary of the captured DNS packets. General information are collected
 such as qtype and qclass distribution. For some data (as qname length or DNS
 payload) max, min and average values are also displayed.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> endpoints,<em>type</em>[,<em>filter</em>]</dt>
 <dd>
@@ -2185,10 +2411,16 @@ The table is sorted according to the total number of packets.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> enrp,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on Endpoint Handlespace Redundancy Protocol (ENRP).
 For each message type, displays the number, rate, and share among
 all message types of both packets and bytes, and the first and last
 time that it is seen.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> expert[<em>,error|,warn|,note|,chat|,comment</em>][,<em>filter</em>]</dt>
 <dd>
@@ -2214,30 +2446,54 @@ include the tcp protocol, with a severity of note or higher.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> f1ap,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the distribution of F1AP packets, grouped by packet types.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> f5_tmm_dist,tree[,<em>filter</em>]</dt>
 <dd>
-<p>Calculate the F5 Ethernet trailer Traffic Management Microkernel distribution.
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate the F5 Ethernet trailer Traffic Managment Microkernel distribution.
 Displayed information is the number of packets and bytes, grouped by the TMM
 slot and number, whether packets are ingress or egress, and whether there is
 a flow ID and virtual server name, a flow ID without virtual server name, or
 no flow ID, along with total for all packets with F5 trailers.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> f5_virt_dist,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate F5 Ethernet trailer Virtual Server distribution.
 Displayed information is the number of packets and bytes, grouped by the
 virtual server name if it exists, or by whether there is a flow ID or not
 if there is no virtual server name, as well as totals for all packets with
 F5 trailers.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> fc,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect requests/response SRT (Service Response Time) data for GTP.
-Data collected is the number of request/response pairs, minimum SRT,
+Data collected is the number of request/response pairs, mimimum SRT,
 maximum SRT, average SRT, and sum SRT for each value of the Type field
 (next protocol).  No statistics are gathered on unpaired messages.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> flow,<em>name</em>,<em>mode</em>[,<em>filter</em>]</dt>
 <dd>
@@ -2320,16 +2576,12 @@ in <strong>TShark</strong>, only in <strong>Wireshark</strong>.
 ebcdic EBCDIC output with dots for non-printable characters
 hex    Hexadecimal and ASCII data with offsets
 raw    Hexadecimal data
-utf-8  UTF-8 output with REPLACEMENT CHARACTERs for invalid sequences
 yaml   YAML format</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Since the output in <strong>ascii</strong>, <strong>ebcdic</strong>, or <strong>utf-8</strong> mode may contain newlines,
-each section of output is preceded by its length in bytes plus a newline.
-(Note that for <strong>utf-8</strong> this is not UTF-8 characters, and may be different
-than the length as transmitted due to the substitution of replacement
-characters for invalid sequences.)</p>
+<p>Since the output in <strong>ascii</strong> or <strong>ebcdic</strong> mode may contain newlines, the length
+of each section of output plus a newline precedes each section of output.</p>
 </div>
 <div class="paragraph">
 <p><em>filter</em> specifies the stream to be displayed. There are three formats:</p>
@@ -2467,7 +2719,7 @@ dtap_gmm   DTAP GPRS Mobility Management
 dtap_mm    DTAP Mobility Management
 dtap_rr    DTAP Radio Resource Management
 dtap_sacch SACCH Radio Resource Management
-dtap_sm    DTAP GPRS Session Management
+dtap_sm    DTAP GPRS Session Managment
 dtap_sms   DTAP Short Message Service
 dtap_ss    DTAP Supplementary Services
 dtap_tp    DTAP Special Conformance Testing Functions</pre>
@@ -2478,23 +2730,28 @@ dtap_tp    DTAP Special Conformance Testing Functions</pre>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> gsm_map,operation[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on GSM MAP. For each op code, the total number of
 invokes and results, along with the average and total bytes for invokes
 and results separately and combined is displayed.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> gtp,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect requests/response SRT (Service Response Time) data for GTP.
-Data collected is the number of calls, minimum SRT, maximum SRT, average
-SRT, and sum SRT for certain commands.  Currently no statistics are gathered
-on unpaired messages.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> gtpv2,srt[,<em>filter</em>]</dt>
-<dd>
-<p>Collect requests/response SRT (Service Response Time) data for GTP.
-Data collected is the number of calls, minimum SRT, maximum SRT, average
-SRT, and sum SRT for certain commands.  Currently no statistics are gathered
-on unpaired messages.</p>
+Data collected is the number of calls, mimimum SRT, maximum SRT, average
+SRT, and sum SRT for Echo and Create/Update/Delete PDP context commands only.
+Currently no statistics are gathered on unpaired messages.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> h225,counter[,<em>filter</em>]</dt>
 <dd>
@@ -2545,8 +2802,14 @@ ITU-T H.225 RAS packets exchanged by the host at IP address 1.2.3.4 .</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> hart_ip,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on HART-IP packets, grouping by message types and
 message IDs within types.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> hosts[,ip][,ipv4][,ipv6]</dt>
 <dd>
@@ -2567,39 +2830,81 @@ files and captured traffic. Resolution must be enabled, e.g. through the
 </dd>
 <dt class="hdlist1"><strong>-z</strong> hpfeeds,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics for HPFEEDS traffic such as publish per channel, and opcode
 distribution.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> http,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Count the HTTP response status codes and the HTTP request methods.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> http,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the HTTP packet distribution. Displayed values are the
 response status codes and request methods.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> http_req,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the HTTP requests by server. Displayed values are the
 server name and the URI path.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> http_seq,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the HTTP request sequence statistics, which correlate
 referring URIs with request URIs.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> http_srv,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the HTTP requests and responses by server. For the HTTP
 requests, displayed values are the server IP address and server
 hostname. For the HTTP responses, displayed values are the server
 IP address and status.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> http2,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the HTTP/2 packet distribution. Displayed values are the
 frame types.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> icmp,srt[,<em>filter</em>]</dt>
 <dd>
@@ -2881,122 +3186,221 @@ Time            |     Frames     |      Bytes     |     FRAMES     |     BYTES  
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ip_hosts,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on IPv4 addresses, with source and destination addresses
 all grouped together.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ip_srcdst,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on IPv4 addresses, with source and destination addresses
-separated into separate categories.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> ip_ttl,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on the time to live (TTL) values that occur for each
-IPv4 source address.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> ip6_dests,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on IPv6 destination addresses and the protocols
-and ports appearing on each address.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> ip6_hosts,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on IPv6 addresses, with source and destination addresses
-all grouped together.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> ip6_ptype,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on port types that occur on IPv6 packets.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> ip6_srcdst,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on IPv6 addresses, with source and destination addresses
-separated into separate categories.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> ip6_hop,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on the hop limits that occur for each IPv6 source address.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> isup_msg,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on ISUP messages. Displayed information is message
-types and direction (originating point code and destination point code.)</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_queue_ads_queue,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
-advertisements collated by queue name and then source addresses and port.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_queue_ads_source,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
-advertisements collated by source address and then queue and port.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_queue_queries_queue,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
-queries collated by queue name and then receiver addresses.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_queue_queries_receiver,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
-queries collated by receiver address and then queue.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_topic_ads_source,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
-advertisements collated by source address and then topic name and
-source string.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_topic_ads_topic,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
-advertisements collated by topic name and then source address and
-source string.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_topic_ads_transport,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
-advertisements collated by source string and then topic name.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_pattern,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
-queries collated by pattern and then receiver address.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_pattern_receiver,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
-queries collated by receiver address and then pattern.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_receiver,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
-queries collated by receiver address and then topic name.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_topic,tree[,<em>filter</em>]</dt>
-<dd>
-<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
-queries collated by topic name and then receiver address.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> mac-3gpp,stat[,<em>filter</em>]</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>This option will activate a counter for LTE or NR MAC messages.  You will get
+<p>Calculate statistics on IPv4 addresses, with source and destination addresses
+separated into separate categories.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> ip6_dests,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on IPv6 destination addresses and the protocols
+and ports appearing on each address.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> ip6_hosts,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on IPv6 addresses, with source and destination addresses
+all grouped together.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> ip6_ptype,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on port types that occur on IPv6 packets.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> ip6_srcdst,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on IPv6 addresses, with source and destination addresses
+separated into separate categories.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> isup_msg,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on ISUP messages. Displayed information is message
+types and direction (originating point code and destination point code.)</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_queue_ads_queue,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
+advertisements collated by queue name and then source addresses and port.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_queue_ads_source,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
+advertisements collated by source address and then queue and port.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_queue_queries_queue,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
+queries collated by queue name and then receiver addresses.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_queue_queries_receiver,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays queue
+queries collated by receiver address and then queue.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_topic_ads_source,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
+advertisements collated by source address and then topic name and
+source string.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_topic_ads_topic,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
+advertisements collated by topic name and then source address and
+source string.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_topic_ads_transport,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
+advertisements collated by source string and then topic name.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_pattern,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
+queries collated by pattern and then receiver address.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_pattern_receiver,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
+queries collated by receiver address and then pattern.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_receiver,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
+queries collated by receiver address and then topic name.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> lbmr_topic_queries_topic,tree[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statistics on LBM Topic Resolution Packets. Displays topic
+queries collated by topic name and then receiver address.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> mac-lte,stat[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>This option will activate a counter for LTE MAC messages.  You will get
 information about the maximum number of UEs/TTI, common messages and
 various counters for each UE that appears in the log.</p>
 </div>
 <div class="paragraph">
-<p>Example: <strong>tshark -z mac-3gpp,stat</strong>.</p>
+<p>Example: <strong>tshark -z mac-lte,stat</strong>.</p>
 </div>
 <div class="paragraph">
 <p>This option can be used multiple times on the command line.</p>
 </div>
 <div class="paragraph">
-<p>Example: <strong>-z "mac-3gpp,stat,mac-lte.rnti&gt;3000"</strong> will only collect stats for
-LTE UEs with an assigned RNTI whose value is more than 3000.</p>
+<p>Example: <strong>-z "mac-lte,stat,mac-lte.rnti&gt;3000"</strong> will only collect stats for
+UEs with an assigned RNTI whose value is more than 3000.</p>
 </div>
 </div>
 </div>
@@ -3047,42 +3451,65 @@ MGCP packets exchanged by the host at IP address 1.2.3.4 .</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> mtp3,msus[,<em>filter</em>]</dt>
 <dd>
-<p>Calculate statistics on MTP3 MSUs. For each combination of originating
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>Calculate statisics on MTP3 MSUs. For each combination of originating
 point code, destination point code, and service indicator, calculates
 the total number of MSUs, the total bytes, and the average bytes per MSU.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ncp,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect requests/response SRT (Service Response Time) data for Netware
 Core Protocol.  Minimum SRT, maximum SRT, average SRT, and sum SRT is
 displayed for request/response pairs, organized by group, function and
 subfunction, and verb.  No statistics are gathered on unpaired messages.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> osmux,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics for the OSmux voice/signaling multiplex protocol.
 Displays the total number of OSmux packets, and displays for each stream
 the number of packets, number of packets with the RTP market bit set,
 number of AMR frames, jitter analysis, and sequence number analysis.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> pfcp,srt[,<em>filter</em>]</dt>
-<dd>
-<p>Collect requests/response SRT (Service Response Time) data for PFCP.
-Data collected is the number of calls, minimum SRT, maximum SRT, average
-SRT, and sum SRT for certain commands.  Currently no statistics are gathered
-on unpaired messages.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> pingpongprotocol,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on the Ping Pong Protocol of Reliable
 Server Pooling.  For each message type, displays the number, rate
 and share among all message types of both packets and bytes, and the
 first and last time that it is seen.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> plen,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on packet lengths. Packets are grouped into buckets
 that grow exponentially with powers of two.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> proto,colinfo,<em>filter</em>,<em>field</em></dt>
 <dd>
@@ -3135,34 +3562,46 @@ host 1.2.3.4 use:</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ptype,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on port types that occur on IPv4 packets.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> radius,rtd[,<em>filter</em>]</dt>
-<dd>
-<p>Collect requests/response RTD (Response Time Delay) data for RADIUS.
-The data collected for each RADIUS code is the number of calls,
-Minimum RTD, Maximum RTD, Average RTD, Minimum in Frame, and Maximum in Frame,
-along with the number of Open Requests (Unresponded Requests), Discarded
-Responses (Responses without matching request) and Duplicate Messages.</p>
-</dd>
-<dt class="hdlist1"><strong>-z</strong> rlc-3gpp,stat[,<em>filter</em>]</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>This option will activate a counter for LTE or NR RLC messages.  You will get
+<p>Collect requests/response RTD (Response Time Delay) data for RAIDUS.
+The data collected for each RADIUS code is the number of calls,
+Minimum RTD, Maximum RTD, Average RTD, Minimum in Frame, and Maximum in Frame,
+along with the number of Open Requests (Unresponded Requests), Discarded
+Responses (Responses without matching request) and Duplicate Messages.</p>
+</div>
+</div>
+</div>
+</dd>
+<dt class="hdlist1"><strong>-z</strong> rlc-lte,stat[,<em>filter</em>]</dt>
+<dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>This option will activate a counter for LTE RLC messages.  You will get
 information about common messages and various counters for each UE that appears
 in the log.</p>
 </div>
 <div class="paragraph">
-<p>Example: <strong>tshark -z rlc-3gpp,stat</strong>.</p>
+<p>Example: <strong>tshark -z rlc-lte,stat</strong>.</p>
 </div>
 <div class="paragraph">
 <p>This option can be used multiple times on the command line.</p>
 </div>
 <div class="paragraph">
-<p>Example: <strong>-z "rlc-3gpp,stat,rlc-nr.ueid&gt;3000"</strong> will only collect stats for
-NR UEs with a UEId of more than 3000.</p>
+<p>Example: <strong>-z "rlc-lte,stat,rlc-lte.ueid&gt;3000"</strong> will only collect stats for
+UEs with a UEId of more than 3000.</p>
 </div>
 </div>
 </div>
@@ -3204,22 +3643,46 @@ SRT statistics for a specific file.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> rtp,streams</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect statistics for all RTP streams and calculate max. delta, max. and
 mean jitter and packet loss percentages.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> rtsp,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Count the RTSP response status codes and the RSTP request methods.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> rtsp,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the RTSP packet distribution. Displayed values are the
 response status codes and request methods.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> sametime,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate statistics on SAMETIME messages. Displayed values are the
 messages type, send type, and user status.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> scsi,srt,<em>cmdset</em>[,<em>filter</em>]</dt>
 <dd>
@@ -3250,11 +3713,17 @@ SRT statistics for a specific iscsi/ifcp/fcip host.</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> sctp,stat</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Activate a counter for SCTP chunks. In addition to the total number of
 SCTP packets, for each source and destination address and port combination
 the number of chunks of the most common types (DATA, SACK, HEARTBEAT,
 HEARTBEAT ACK, INIT, INIT ACK, COOKIE ECHO, COOKIE ACK, ABORT, and ERROR)
 are displayed.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> sip,stat[,<em>filter</em>]</dt>
 <dd>
@@ -3333,48 +3802,96 @@ SMB packets exchanged by the host at IP address 1.2.3.4 .</p>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> smb2,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect call/reply SRT (Service Response Time) data for SMB versions 2 and 3.
 The data collected for each normal command type is the number of calls,
 MinSRT, MaxSRT, AvgSRT, and SumSRT.  No data is collected on cancel or
 oplock break requests, or on unpaired commands.  Only the first response to
 a given request is used; retransmissions are not included in the calculation.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> smpp_commands,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the SMPP command distribution. Displayed values are
 command IDs for both requests and responses, and status for responses.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> snmp,srt[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Collect call/reply SRT (Service Response Time) data for SNMP. The data
 collected for each PDU type is the number of request/response pairs,
 MinSRT, MaxSRT, AvgSRT, and SumSRT.  No data is collected on unpaired
 messages.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong>  someip_messages,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Create statistic of SOME/IP messages. Messages are counted and displayed
 as Messages grouped by sender/receiver.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong>  someipsd_entries,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Create statistic of SOME/IP-SD entries. Entries are counted and displayed
 as Entries grouped by sender/receiver.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> sv</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Print out the time since the start of the capture and sample count for each
 IEC 61850 Sampled Values packet.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> ucp_messages,tree[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Calculate the message distribution of UCP packets. Displayed values are
 operation types for both operations and results, and whether results are
 positive or negative, with error codes displayed for negative results.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1"><strong>-z</strong> wsp,stat[,<em>filter</em>]</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Count the PDU types and the status codes of reply packets for WSP packets.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--capture-comment &lt;comment&gt;</dt>
 <dd>
@@ -3393,33 +3910,51 @@ currently only displays the first comment of a capture file.</p>
 </dd>
 <dt class="hdlist1">--list-time-stamp-types</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List time stamp types supported for the interface. If no time stamp type can be
 set, no time stamp types are listed.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--time-stamp-type &lt;type&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Change the interface&#8217;s timestamp method.</p>
-</dd>
-<dt class="hdlist1">--update-interval  &lt;interval&gt;</dt>
-<dd>
-<p>Set the length of time in milliseconds between new packet reports during
-a capture. Also sets the granularity of file duration conditions.
-The default value is 100ms.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--color</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Enable coloring of packets according to standard Wireshark color
 filters. On Windows colors are limited to the standard console
 character attribute colors. Other platforms require a terminal that
 handles 24-bit "true color" terminal escape sequences. See
 <a href="https://gitlab.com/wireshark/wireshark/-/wikis/ColoringRules" class="bare">https://gitlab.com/wireshark/wireshark/-/wikis/ColoringRules</a> for more information on
 configuring color filters.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--no-duplicate-keys</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If a key appears multiple times in an object, only write it a single time with
 as value a json array containing all the separate values. (Only works with
-<strong>-T json</strong>)</p>
+-T json)</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">--elastic-mapping-filter &lt;protocol&gt;,&lt;protocol&gt;,&#8230;&#8203;</dt>
 <dd>
@@ -3456,266 +3991,42 @@ before the file extension.</p>
 </div>
 </div>
 </dd>
-<dt class="hdlist1">--print-timers</dt>
-<dd>
-<p>Output JSON containing elapsed times for each pass tshark does to process a capture
-file and the sum elapsed time for all passes. The per-pass output contains the total
-elapsed time and aggregate counters for per-packet operations (dissection and filtering).</p>
-</dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_dissection_options">DISSECTION OPTIONS</h2>
-<div class="sectionbody">
-<div id="decode_as" class="dlist">
-<dl>
-<dt class="hdlist1">-d  &lt;layer type&gt;==&lt;selector&gt;,&lt;decode-as protocol&gt;</dt>
+<dt class="hdlist1">--enable-protocol &lt;proto_name&gt;</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Like Wireshark&#8217;s <strong>Decode As&#8230;&#8203;</strong> feature, this lets you specify how a
-layer type should be dissected.  If the layer type in question (for example,
-<strong>tcp.port</strong> or <strong>udp.port</strong> for a TCP or UDP port number) has the specified
-selector value, packets should be dissected as the specified protocol.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 1. Decode As Port</div>
-<div class="content">
-<strong>-d tcp.port==8888,http</strong> will decode any traffic running over
-TCP port 8888 as HTTP.
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 2. Decode As Port Range</div>
-<div class="content">
-<strong>-d tcp.port==8888-8890,http</strong> will decode any traffic running
-over TCP ports 8888, 8889 or 8890 as HTTP.
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 3. Decode As Port Range via Length</div>
-<div class="content">
-<strong>-d tcp.port==8888:3,http</strong> will decode any traffic running over
-the three TCP ports 8888, 8889 or 8890 as HTTP.
-</div>
-</div>
-<div class="paragraph">
-<p>Using an invalid selector or protocol will print out a list of valid selectors
-and protocol names, respectively.</p>
-</div>
-<div class="exampleblock">
-<div class="title">Example 4. Decode As List of Selectors</div>
-<div class="content">
-<strong>-d .</strong> is a quick way to get a list of valid selectors.
-</div>
-</div>
-<div class="exampleblock">
-<div class="title">Example 5. Decode As List of Values for a Selector</div>
-<div class="content">
-<strong>-d ethertype==0x0800,.</strong> is a quick way to get a list of protocols
-that can be selected with an ethertype.
-</div>
+<p>Enable dissection of proto_name.</p>
 </div>
 </div>
 </div>
 </dd>
-<dt class="hdlist1">--disable-all-protocols</dt>
-<dd>
-<p>Disable dissection of all protocols.</p>
-</dd>
-<dt class="hdlist1">--disable-protocol &lt;proto_name&gt;[,&lt;proto_name&gt;,&#8230;&#8203;]</dt>
-<dd>
-<p>Disable dissection of proto_name.
-Use a proto_name of <strong>ALL</strong> to override
-your chosen profile&#8217;s default enabled protocol list and temporarily
-disable all protocols.</p>
-</dd>
-<dt class="hdlist1">--disable-heuristic &lt;short_name&gt;</dt>
-<dd>
-<p>Disable dissection of heuristic protocol.</p>
-</dd>
-<dt class="hdlist1">--enable-protocol &lt;proto_name&gt;[,&lt;proto_name&gt;,&#8230;&#8203;]</dt>
+<dt class="hdlist1">--disable-protocol &lt;proto_name&gt;</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Enable dissection of proto_name.
-Use a proto_name of <strong>ALL</strong> to override
-your chosen profile&#8217;s default disabled protocol list and temporarily
-enable all protocols which are enabled by default.</p>
-</div>
-<div class="paragraph">
-<p>If a protocol is implicated in both <strong>--disable-protocol</strong>
-and <strong>--enable-protocol</strong>, the protocol is enabled. This allows you to
-temporarily disable all protocols but a list of exceptions.
-Example: <strong>--disable-protocol ALL --enable-protocol eth,ip</strong></p>
+<p>Disable dissection of proto_name.</p>
 </div>
 </div>
 </div>
 </dd>
 <dt class="hdlist1">--enable-heuristic &lt;short_name&gt;</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Enable dissection of heuristic protocol.</p>
+</div>
+</div>
+</div>
 </dd>
-<dt class="hdlist1">-K  &lt;keytab&gt;</dt>
+<dt class="hdlist1">--disable-heuristic &lt;short_name&gt;</dt>
 <dd>
 <div class="openblock">
 <div class="content">
 <div class="paragraph">
-<p>Load kerberos crypto keys from the specified keytab file.
-This option can be used multiple times to load keys from several files.</p>
-</div>
-<div class="paragraph">
-<p>Example: <strong>-K krb5.keytab</strong></p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">-n</dt>
-<dd>
-<p>Disable network object name resolution (such as hostname, TCP and UDP port
-names); the <strong>-N</strong> option might override this one.</p>
-</dd>
-<dt class="hdlist1">-N  &lt;name resolving flags&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Turn on name resolving only for particular types of addresses and port
-numbers, with name resolving for other types of addresses and port
-numbers turned off.  This option (along with <strong>-n</strong>) can be specified
-multiple times; the last value given overrides earlier ones. This option
-and <strong>-n</strong> override the options from the preferences, including preferences
-set via the <strong>-o</strong> option. If both <strong>-N</strong> and <strong>-n</strong> options are not present,
-the values from the preferences are used, which default to <strong>-N dmN</strong>.</p>
-</div>
-<div class="paragraph">
-<p>The argument is a string that may contain the letters:</p>
-</div>
-<div class="paragraph">
-<p><strong>d</strong> to enable resolution from captured DNS packets</p>
-</div>
-<div class="paragraph">
-<p><strong>g</strong> to enable IP address geolocation information lookup from configured
-MaxMind databases</p>
-</div>
-<div class="paragraph">
-<p><strong>m</strong> to enable MAC address resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>n</strong> to enable network address resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>N</strong> to enable using external resolvers (e.g., DNS) for network address
-resolution; no effect without <strong>n</strong> also enabled.</p>
-</div>
-<div class="paragraph">
-<p><strong>t</strong> to enable transport-layer port number resolution</p>
-</div>
-<div class="paragraph">
-<p><strong>v</strong> to enable VLAN IDs to names resolution</p>
-</div>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Caution</div>
-</td>
-<td class="content">
-In tshark single-pass mode, external resolution and geolocation lookup is
-performed synchronously. For live captures, which are always in single-pass
-mode, this makes it more difficult for dissection to keep up with a busy
-network, possibly leading to dropped packets.
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">--only-protocols &lt;protocols&gt;</dt>
-<dd>
-<p>Only enable dissection of these protocols, comma separated. Disable everything else.</p>
-</dd>
-<dt class="hdlist1">-t  (a|ad|adoy|d|dd|e|r|u|ud|udoy)[.[N]]|.[N]</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Set the format of the packet timestamp displayed in the default time
-column.  The format can be one of:</p>
-</div>
-<div class="paragraph">
-<p><strong>a</strong> absolute: The absolute time, as local time in your time zone,
-is the actual time the packet was captured, with no date displayed</p>
-</div>
-<div class="paragraph">
-<p><strong>ad</strong> absolute with date: The absolute date, displayed as YYYY-MM-DD,
-and time, as local time in your time zone, is the actual time and date
-the packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>adoy</strong> absolute with date using day of year: The absolute date,
-displayed as YYYY/DOY, and time, as local time in your time zone,
-is the actual time and date the packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>d</strong> delta: The delta time is the time since the previous packet was
-captured</p>
-</div>
-<div class="paragraph">
-<p><strong>dd</strong> delta_displayed: The delta_displayed time is the time since the
-previous displayed packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>e</strong> epoch: The time in seconds since epoch (Jan 1, 1970 00:00:00)</p>
-</div>
-<div class="paragraph">
-<p><strong>r</strong> relative: The relative time is the time elapsed between the first packet
-and the current packet</p>
-</div>
-<div class="paragraph">
-<p><strong>u</strong> UTC: The absolute time, as UTC, is the actual time the packet was
-captured, with no date displayed</p>
-</div>
-<div class="paragraph">
-<p><strong>ud</strong> UTC with date: The absolute date, displayed as YYYY-MM-DD,
-and time, as UTC, is the actual time and date the packet was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>udoy</strong> UTC with date using day of year: The absolute date, displayed
-as YYYY/DOY, and time, as UTC, is the actual time and date the packet
-was captured</p>
-</div>
-<div class="paragraph">
-<p><strong>.[N]</strong> Set the precision: N is the number of decimals (0 through 9).
-If using "." without N, automatically determine precision from trace.</p>
-</div>
-<div class="paragraph">
-<p>The default format is relative with precision based on capture format.</p>
-</div>
-</div>
-</div>
-</dd>
-<dt class="hdlist1">-u &lt;s|hms&gt;</dt>
-<dd>
-<div class="openblock">
-<div class="content">
-<div class="paragraph">
-<p>Specifies how packet timestamp formats in <strong>-t</strong> which are relative times
-(i.e.  relative, delta, and delta_displayed) are displayed.  Valid choices are:</p>
-</div>
-<div class="paragraph">
-<p><strong>s</strong> for seconds</p>
-</div>
-<div class="paragraph">
-<p><strong>hms</strong> for hours, minutes, and seconds</p>
-</div>
-<div class="paragraph">
-<p>The default format is seconds.</p>
+<p>Disable dissection of heuristic protocol.</p>
 </div>
 </div>
 </div>
@@ -3748,21 +4059,16 @@ For example, "warning" aborts on any "warning", "critical", or "error" messages.
 <dt class="hdlist1">--log-domains &lt;list&gt;</dt>
 <dd>
 <p>Only print messages for the specified log domains, e.g. "GUI,Epan,sshdump".
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-debug &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "debug" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
+List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-noisy &lt;list&gt;</dt>
 <dd>
 <p>Force the specified domains to log at the "noisy" level.
-List of domains must be comma-separated. Can be negated with "!" as the first character (inverts the match).</p>
-</dd>
-<dt class="hdlist1">--log-fatal-domains &lt;list&gt;</dt>
-<dd>
-<p>Abort the program if any messages are logged for the specified log domains.
 List of domains must be comma-separated.</p>
 </dd>
 <dt class="hdlist1">--log-file &lt;path&gt;</dt>
@@ -3830,24 +4136,19 @@ capture.prom_mode: TRUE</pre>
 </div>
 <div class="paragraph">
 <p>The global preferences file is looked for in the <em>wireshark</em> directory
-under the <em>share</em> subdirectory of the main installation directory.  On
-macOS, this would typically be
-<em>/Application/Wireshark.app/Contents/Resources/share</em>; on other
-UNIX-compatible systems, such as Linux, \*BSD, Solaris, and AIX, this
-would typically be <em>/usr/share/wireshark/preferences</em> for
-system-installed packages and <em>/usr/local/share/wireshark/preferences</em>
-for locally-installed packages; on Windows, this would typically be
-<em>C:\Program Files\Wireshark\preferences</em>.</p>
+under the <em>share</em> subdirectory of the main installation directory (for
+example, <em>/usr/local/share/wireshark/preferences</em>) on UNIX-compatible
+systems, and in the main installation directory (for example,
+<em>C:\Program Files\Wireshark\preferences</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
-<p>On UNIX-compatible systems, the personal preferences file is looked for
-in <em>$XDG_CONFIG_HOME/wireshark/preferences</em>, (or, if
-<em>$XDG_CONFIG_HOME/wireshark</em> does not exist while <em>$HOME/.wireshark</em>
-does exist, <em>$HOME/.wireshark/preferences</em>); this is typically
-<em>$HOME/.config/wireshark/preferences</em>.  On Windows,
-the personal preferences file is looked for in
-<em>%APPDATA%\Wireshark\preferences</em> (or, if %APPDATA% isn&#8217;t defined,
-<em>%USERPROFILE%\Application Data\Wireshark\preferences</em>).</p>
+<p>The personal preferences file is looked for in
+<em>$XDG_CONFIG_HOME/wireshark/preferences</em>
+(or, if <em>$XDG_CONFIG_HOME/wireshark</em> does not exist while <em>$HOME/.wireshark</em>
+is present, <em>$HOME/.wireshark/preferences</em>) on
+UNIX-compatible systems and <em>%APPDATA%\Wireshark\preferences</em> (or, if
+%APPDATA% isn&#8217;t defined, <em>%USERPROFILE%\Application
+ Data\Wireshark\preferences</em>) on Windows systems.</p>
 </div>
 </div>
 </div>
@@ -3894,9 +4195,8 @@ used.</p>
 </div>
 <div class="paragraph">
 <p>Capture filter name resolution is handled by libpcap on UNIX-compatible
-systems, such as Linux, macOS, \*BSD, Solaris, and AIX, and by Npcap or
-WinPcap on Windows.  As such the Wireshark personal <em>hosts</em> file will
-not be consulted for capture filter name resolution.</p>
+systems and Npcap or WinPcap on Windows.  As such the Wireshark personal
+<em>hosts</em> file will not be consulted for capture filter name resolution.</p>
 </div>
 </div>
 </div>
@@ -3956,9 +4256,8 @@ c0-00-ff-ff-ff-ff          TR_broadcast
 </div>
 <div class="paragraph">
 <p>The global <em>ethers</em> file is looked for in the <em>/etc</em> directory on
-UNIX-compatible systems, such as Linux, macOS, \*BSD, Solaris, and AIX,
-and in the main installation directory (for example, <em>C:\Program
-Files\Wireshark</em>) on Windows systems.</p>
+UNIX-compatible systems, and in the main installation directory (for
+example, <em>C:\Program Files\Wireshark</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
 <p>The personal <em>ethers</em> file is looked for in the same directory as the personal
@@ -4061,9 +4360,8 @@ c0-a8-1c-00              CEO
 </div>
 <div class="paragraph">
 <p>The global <em>ipxnets</em> file is looked for in the <em>/etc</em> directory on
-UNIX-compatible systems, such as Linux, macOS, \*BSD, Solaris, and AIX,
-and in the main installation directory (for example, <em>C:\Program
-Files\Wireshark</em>) on Windows systems.</p>
+UNIX-compatible systems, and in the main installation directory (for
+example, <em>C:\Program Files\Wireshark</em>) on Windows systems.</p>
 </div>
 <div class="paragraph">
 <p>The personal <em>ipxnets</em> file is looked for in the same directory as the
@@ -4086,10 +4384,9 @@ invalid UTF-8 character sequences. Programs reading <strong>TShark</strong> outp
 should expect UTF-8 and be prepared for invalid output.</p>
 </div>
 <div class="paragraph">
-<p>If <strong>TShark</strong> detects that it is writing to a TTY on a UNIX-compatible
-system, such as Linux, macOS, \*BSD, Solaris, and AIX, and the locale
-does not support UTF-8, output will be re-encoded to match the current
-locale.</p>
+<p>If <strong>TShark</strong> detects that it is writing to a TTY on UNIX or Linux and
+the locale does not support UTF-8, output will be re-encoded to match the
+current locale.</p>
 </div>
 <div class="paragraph">
 <p>If <strong>TShark</strong> detects that it is writing to the console on Windows,
@@ -4107,69 +4404,87 @@ and using a modern terminal application if possible.</p>
 <dl>
 <dt class="hdlist1">WIRESHARK_CONFIG_DIR</dt>
 <dd>
-<p>This environment variable overrides the location of personal
-configuration files.  On UNIX-compatible systems, such as Linux, macOS,
-\*BSD, Solaris, and AIX, it defaults to <em>$XDG_CONFIG_HOME/wireshark</em>
-(or, if that directory doesn&#8217;t exist but <em>$HOME/.wireshark</em> does
-exist, <em>$HOME/.wireshark</em>); this is typically
-<em>$HOME/.config/wireshark</em>.  On Windows, it defaults to
-<em>%APPDATA%\Wireshark</em> (or, if %APPDATA% isn&#8217;t defined,
-<em>%USERPROFILE%\Application Data\Wireshark</em>).  Available since
-Wireshark 3.0.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>This environment variable overrides the location of personal configuration
+files. It defaults to <em>$XDG_CONFIG_HOME/wireshark</em> (or <em>$HOME/.wireshark</em> if
+the former is missing while the latter exists). On Windows,
+<em>%APPDATA%\Wireshark</em> is used instead. Available since Wireshark 3.0.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_DEBUG_WMEM_OVERRIDE</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Setting this environment variable forces the wmem framework to use the
 specified allocator backend for <strong>all</strong> allocations, regardless of which
 backend is normally specified by the code. This is mainly useful to developers
 when testing or debugging. See <em>README.wmem</em> in the source distribution for
 details.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_RUN_FROM_BUILD_DIRECTORY</dt>
 <dd>
-<p>This environment variable causes the plugins and other data files to be
-loaded from the build directory (where the program was compiled) rather
-than from the standard locations.  It has no effect when the program in
-question is running with root (or setuid) permissions on UNIX-compatible
-systems, such as Linux, macOS, \*BSD, Solaris, and AIX.</p>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>This environment variable causes the plugins and other data files to be loaded
+from the build directory (where the program was compiled) rather than from the
+standard locations.  It has no effect when the program in question is running
+with root (or setuid) permissions on *NIX.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_DATA_DIR</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable causes the various data files to be loaded from
 a directory other than the standard locations.  It has no effect when the
-program in question is running with root (or setuid) permissions on
-UNIX-compatible systems.</p>
-</dd>
-<dt class="hdlist1">WIRESHARK_EXTCAP_DIR</dt>
-<dd>
-<p>This environment variable causes the various extcap programs and scripts
-to be run from a directory other than the standard locations.  It has no
-effect when the program in question is running with root (or setuid)
-permissions on UNIX-compatible systems.</p>
-</dd>
-<dt class="hdlist1">WIRESHARK_PLUGIN_DIR</dt>
-<dd>
-<p>This environment variable causes the various plugins to be loaded from
-a directory other than the standard locations.  It has no effect when the
-program in question is running with root (or setuid) permissions on
-UNIX-compatible systems.</p>
+program in question is running with root (or setuid) permissions on *NIX.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">ERF_RECORDS_TO_CHECK</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable controls the number of ERF records checked when
 deciding if a file really is in the ERF format.  Setting this environment
 variable a number higher than the default (20) would make false positives
 less likely.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">IPFIX_RECORDS_TO_CHECK</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable controls the number of IPFIX records checked when
 deciding if a file really is in the IPFIX format.  Setting this environment
 variable a number higher than the default (20) would make false positives
 less likely.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_ABORT_ON_DISSECTOR_BUG</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If this environment variable is set, <strong>TShark</strong> will call abort(3)
 when a dissector bug is encountered.  abort(3) will cause the program to
 exit abnormally; if you are running <strong>TShark</strong> in a debugger, it
@@ -4178,9 +4493,15 @@ you are not running it in a debugger, it will, on some OSes, assuming
 your environment is configured correctly, generate a core dump file.
 This can be useful to developers attempting to troubleshoot a problem
 with a protocol dissector.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_ABORT_ON_TOO_MANY_ITEMS</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>If this environment variable is set, <strong>TShark</strong> will call abort(3)
 if a dissector tries to add too many items to a tree (generally this
 is an indication of the dissector not breaking out of a loop soon enough).
@@ -4190,37 +4511,70 @@ inspection of the process, and, if you are not running it in a debugger,
 it will, on some OSes, assuming your environment is configured correctly,
 generate a core dump file.  This can be useful to developers attempting to
 troubleshoot a problem with a protocol dissector.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_LEVEL</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable controls the verbosity of diagnostic messages to
 the console. From less verbose to most verbose levels can be <code>critical</code>,
 <code>warning</code>, <code>message</code>, <code>info</code>, <code>debug</code> or <code>noisy</code>. Levels above the
 current level are also active. Levels <code>critical</code> and <code>error</code> are always
 active.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_FATAL</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Sets the fatal log level. Fatal log levels cause the program to abort.
 This level can be set to <code>Error</code>, <code>critical</code> or <code>warning</code>. <code>Error</code> is
 always fatal and is the default.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_DOMAINS</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>This environment variable selects which log domains are active. The filter is
 given as a case-insensitive comma separated list. If set only the included
 domains will be enabled. The default domain is always considered to be enabled.
 Domain filter lists can be preceded by '!' to invert the sense of the match.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_DEBUG</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>List of domains with <code>debug</code> log level. This sets the level of the provided
 log domains and takes precedence over the active domains filter. If preceded
 by '!' this disables the <code>debug</code> level instead.</p>
+</div>
+</div>
+</div>
 </dd>
 <dt class="hdlist1">WIRESHARK_LOG_NOISY</dt>
 <dd>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
 <p>Same as above but for <code>noisy</code> log level instead.</p>
+</div>
+</div>
+</div>
 </dd>
 </dl>
 </div>
@@ -4239,7 +4593,7 @@ by '!' this disables the <code>debug</code> level instead.</p>
 <h2 id="_notes">NOTES</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This is the manual page for <strong>TShark</strong> 4.3.0.
+<p>This is the manual page for <strong>TShark</strong> 4.0.15.
 <strong>TShark</strong> is part of the <strong>Wireshark</strong> distribution.
 The latest version of <strong>Wireshark</strong> can be found at <a href="https://www.wireshark.org" class="bare">https://www.wireshark.org</a>.</p>
 </div>

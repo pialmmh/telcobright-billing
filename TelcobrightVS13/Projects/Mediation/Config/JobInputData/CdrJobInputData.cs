@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,11 @@ using MySql.Data.MySqlClient;
 
 namespace TelcobrightMediation
 {
+    public class CdrJobOutput
+    {
+        public List<job> Jobs { get; set; }
+        public List<FileInfo> FilesToCleanUp { get; set; }= new List<FileInfo>();
+    }
     public class CdrJobInputData : ITelcobrightJobInput
     {
         public TelcobrightConfig Tbc => this.MediationContext.Tbc;
@@ -33,6 +39,7 @@ namespace TelcobrightMediation
             NeAdditionalSetting neAdditionalSetting = null;
             neWiseAdditionalSettings.TryGetValue(ne.idSwitch, out neAdditionalSetting);
             this.NeAdditionalSetting = neAdditionalSetting;
+
         }
     }
 }

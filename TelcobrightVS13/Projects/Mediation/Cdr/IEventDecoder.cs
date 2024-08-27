@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using MediationModel;
 using LibraryExtensions;
+using TelcobrightMediation.Cdr.Collection.PreProcessors;
+
 namespace TelcobrightMediation
 {
     public interface IEventDecoder
@@ -28,5 +30,7 @@ namespace TelcobrightMediation
         object convertDbReaderRowToObject(object data);
         IEventDecoder createNewNonSingletonInstance();
         EventAggregationResult Aggregate (object data);
+        List<NewAndOldEventsWrapper<string[]>> PreAggregateL1 (object data, out List<string[]> failedPreAggRows);
+        List<NewAndOldEventsWrapper<string[]>> PreAggregateL2 (object data, out List<NewAndOldEventsWrapper<string[]>> failedPreAggWrappers);
     }
 }

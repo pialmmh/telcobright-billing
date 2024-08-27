@@ -552,8 +552,9 @@ namespace TelcobrightMediation
                             throw new Exception("Written number of partial event count does not match collection result.");
                         }
                     }
-                    
-                    //deletedRowsFromPartialEvent = DeleteAggregatedPartialInstances(this.CollectionResult.RowsToBeDiscardedAfterAggregation);
+
+
+                    DeleteAggregatedPartialInstances(this.CollectionResult.OldRowsToBeDiscardedAfterAggregation);
                     //no need to delete parial unagg instances as they are in day wise table, later old tables should be dropped by optimizer
                     //to clean up free space
                 }

@@ -7,8 +7,10 @@ namespace TelcobrightMediation
     {
         public List<T> Events { get; }
         public DateTime HourOfTheDay { get; }
+        public DateTime Date { get; private set; }
         public HourlyEventData(List<T> events, DateTime hourOfTheDay)
         {
+            DateTime date = hourOfTheDay.Date;
             int hour = this.HourOfTheDay.Hour;
             int minute = this.HourOfTheDay.Minute;
             int second = this.HourOfTheDay.Second;

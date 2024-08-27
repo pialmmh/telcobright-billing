@@ -49,13 +49,27 @@ namespace TelcobrightFileOperations
                 return dirlister.ListRemoteDirectoryNonRecursive(session, this.FileLocation.StartingPath);
             }
         }
-        public List<RemoteFileInfoExt> GetRemoteFilesRecursive(TelcobrightConfig tbc)
+        public List<RemoteFileInfoExt> GetRemoteFilesRecursive(TelcobrightConfig tbc, SyncSettingsSource srcSettings)
         {
-            using (Session session = GetRemoteFileTransferSession(tbc))
+            int timeoutSeconds = srcSettings.FtpOrSftpTimeoutSeconds;//winscp default=15
+            if (timeoutSeconds == 15)
             {
-                DirectoryLister dirlister = new DirectoryLister();
-                return dirlister.ListRemoteDirectoryRecursive(session, this.FileLocation.StartingPath);
+                using (Session session = GetRemoteFileTransferSession(tbc))
+                {
+                    DirectoryLister dirlister = new DirectoryLister();
+                    return dirlister.ListRemoteDirectoryRecursive(session, this.FileLocation.StartingPath);
+                }
             }
+            else
+            {
+                using (Session session = GetRemoteFileTransferSession(tbc, timeoutSeconds))
+                {
+                    DirectoryLister dirlister = new DirectoryLister();
+                    return dirlister.ListRemoteDirectoryRecursive(session, this.FileLocation.StartingPath);
+                }
+            }
+
+           
         }
         public List<FileInfo> GetLocalFilesNonRecursive()
         {
@@ -132,7 +146,7 @@ namespace TelcobrightFileOperations
             }
             else if (srcSettings.Recursive == true)
             {
-                tempFilesExt = GetRemoteFilesRecursive(tbc);
+                tempFilesExt = GetRemoteFilesRecursive(tbc,srcSettings);
             }
 
             if (srcSettings.ExpFileNameFilter.Expression == "")
@@ -193,7 +207,7 @@ namespace TelcobrightFileOperations
             
             return fileNames;
         }
-        public Session GetRemoteFileTransferSession(TelcobrightConfig tbc)//deprecated, use GetRemoteFileTransferSessionOptions, below
+        public Session GetRemoteFileTransferSession(TelcobrightConfig tbc,int ftpTimeoutInSeconds=15)//deprecated, use GetRemoteFileTransferSessionOptions, below
         {
             SessionOptions sessionOptions = new SessionOptions
             {
@@ -202,6 +216,7 @@ namespace TelcobrightFileOperations
                 UserName = this.FileLocation.User,
                 Password = this.FileLocation.Pass,
                 FtpMode= this.FileLocation.UseActiveModeForFTP==true? FtpMode.Active:FtpMode.Passive,
+                TimeoutInMilliseconds = ftpTimeoutInSeconds * 1000
             };
             switch (this.FileLocation.LocationType)
             {
@@ -231,7 +246,7 @@ namespace TelcobrightFileOperations
             //tbc.resourcePool.winscpSessionPool.Add(sessionKey, fileTransferSession);
             return session;
         }
-        public SessionOptions GetRemoteFileTransferSessionOptions(TelcobrightConfig tbc)
+        public SessionOptions GetRemoteFileTransferSessionOptions(TelcobrightConfig tbc, int ftpTimeoutInSeconds=15)
         {
             SessionOptions sessionOptions = new SessionOptions
             {
@@ -240,6 +255,7 @@ namespace TelcobrightFileOperations
                 UserName = this.FileLocation.User,
                 Password = this.FileLocation.Pass,
                 FtpMode = this.FileLocation.UseActiveModeForFTP == true ? FtpMode.Active : FtpMode.Passive,
+                TimeoutInMilliseconds = ftpTimeoutInSeconds*1000
             };
             switch (this.FileLocation.LocationType)
             {
@@ -265,11 +281,15 @@ namespace TelcobrightFileOperations
     }
     public class SyncSettingsSource
     {
+        public SftpLibrary SftpLibrary { get; set; }
         public SpringExpression ExpFileNameFilter { get; set; }
         public string SecondaryDirectory { get; set; }
         public bool MoveFilesToSecondaryAfterCopy { get; set; }
         public bool Recursive { get; set; }
+        public bool OnlyDownloadMarkedFile { get; set; }
         public int DurationSecToSkipVeryNewPossiblyIncompleteFiles { get; set; } = 40;
+        public int FtpOrSftpTimeoutSeconds { get; set; } = 15;
+        public int HourToScheduleCleaningWinScpInstances { get; set; } = -1;//negative means not scheduled in any hour
     }
     public enum DateWiseSubDirCreationType
     {
@@ -343,9 +363,10 @@ namespace TelcobrightFileOperations
         public string PrefixForUniqueName { get; set; }
         public bool Overwrite { get; set; }
         public bool RecursiveFileStore { get; set; }
-        public int MaxDownloadedFromFtp { get; set; } = 100000;
+        public int MaxDownloadFromFtp { get; set; } = -1;
         public SpringExpression ExpDestFileName { get; set; }
         public SyncSettingsDstSubDirectoryRule SubDirRule { get; set; }
+        public int HourToScheduleCleaningWinScpInstances { get; set; } = -1;//negative means not scheduled in any hour
 
 
 

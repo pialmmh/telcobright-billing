@@ -120,6 +120,7 @@
     <Compile Include="AutomationHandler.cs" />
     <Compile Include="AccountingHelper.cs" />
     <Compile Include="CdrErrorJobCreator.cs" />
+    <Compile Include="DownloadMarker.cs" />
     <Compile Include="helper\RamDiskHelper.cs" />
     <Compile Include="MdrJobCreator.cs" />
     <Compile Include="EventPreProcessor.cs" />

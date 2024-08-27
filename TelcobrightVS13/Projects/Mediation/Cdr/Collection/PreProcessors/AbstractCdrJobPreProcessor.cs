@@ -16,7 +16,7 @@ namespace TelcobrightMediation.Cdr
     public abstract class AbstractCdrJobPreProcessor
     {
         public int RawCount { get; set; }
-        protected CdrCollectorInputData CdrCollectorInputData { get; }
+        public CdrCollectorInputData CdrCollectorInputData { get; }
         protected PartnerEntities Context => this.CdrCollectorInputData.CdrJobInputData.Context;
         public BlockingCollection<cdr> NonPartialCdrs { get; } = new BlockingCollection<cdr>();
 

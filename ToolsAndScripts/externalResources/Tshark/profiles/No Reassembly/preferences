@@ -76,12 +76,10 @@ lapdm.reassemble: FALSE
 laplink.desegment_laplink_over_tcp: FALSE
 ldap.desegment_ldap_messages: FALSE
 ldp.desegment_ldp_messages: FALSE
-ltp.reassemble_block: FALSE
 memcache.desegment_headers: FALSE
 memcache.desegment_pdus: FALSE
 mbrtu.desegment: FALSE
 mbtcp.desegment: FALSE
-monero.desegment: FALSE
 mq.desegment: FALSE
 mq.reassembly: FALSE
 mysql.desegment_buffers: FALSE
@@ -120,7 +118,6 @@ rtp.desegment_rtp_streams: FALSE
 rtsp.desegment_headers: FALSE
 rtsp.desegment_body: FALSE
 sametime.reassemble: FALSE
-sapni.desegment: FALSE
 sasp.desegment_sasp_messages: FALSE
 sctp.reassembly: FALSE
 scylla.desegment: FALSE
@@ -163,7 +160,6 @@ tls.desegment_ssl_application_data: FALSE
 tns.desegment_tns_messages: FALSE
 tpkt.desegment: FALSE
 transum.reassembly: FALSE
-uci.tcp.desegment: FALSE
 ucp.desegment_ucp_messages: FALSE
 udpcp.attempt_reassembly: FALSE
 ulp.desegment_ulp_messages: FALSE
@@ -178,4 +174,3 @@ xot.desegment: FALSE
 yami.desegment: FALSE
 ymsg.desegment: FALSE
 z3950.desegment_buffers: FALSE
-zabbix.desegment: FALSE

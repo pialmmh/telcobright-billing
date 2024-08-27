@@ -14,41 +14,41 @@ namespace Decoders.SigtranDecoderHelper
 {
     class JsonToSigtranPacket
     {
-        public static List<SigtranPacket> ConvertJsonToSigtranPacket(string filePath)
+        public static List<SigtranPacket> ConvertJsonToSigtranPacket(string json)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
-            string json = "";
-            using (MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open, null))
-            {
-                // Create a view accessor to access the memory-mapped file
-                using (MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor())
-                {
-                    // Determine the size of the file
-                    long fileSize = new FileInfo(filePath).Length;
+            //string json = "";
+            //using (MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open, null))
+            //{
+            //    // Create a view accessor to access the memory-mapped file
+            //    using (MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor())
+            //    {
+            //        // Determine the size of the file
+            //        long fileSize = new FileInfo(filePath).Length;
 
-                    // Allocate a buffer to hold the file's content
-                    byte[] buffer = new byte[fileSize];
+            //        // Allocate a buffer to hold the file's content
+            //        byte[] buffer = new byte[fileSize];
 
-                    // Read the file content into the buffer
-                    accessor.ReadArray(0, buffer, 0, buffer.Length);
+            //        // Read the file content into the buffer
+            //        accessor.ReadArray(0, buffer, 0, buffer.Length);
 
-                    // Convert the buffer to a string and print it
-                    json = Encoding.UTF8.GetString(buffer);
-                }
-            }
+            //        // Convert the buffer to a string and print it
+            //        json = Encoding.UTF8.GetString(buffer);
+            //    }
+            //}
             json = ReplaceCurlyBracesInGsmSmsText(json);
 
             List<string> packetStrs = ExtractPackets(json);
 
-            File.Delete(filePath);
-            //List<JObject> packets_1 = packetStrs.AsParallel().Select(s => JObject.Parse(s))
+            //File.Delete(filePath);
+            //List<JObject> packets_1 = packetStrs.Select(s => JObject.Parse(s))
             //    .ToList();
 
-            List<Packet> packets = packetStrs.AsParallel().Select(JsonConvert.DeserializeObject<Packet>)
+            List<Packet> packets = packetStrs.Select(JsonConvert.DeserializeObject<Packet>)
                 .ToList();
 
             var layers =
-                packets.AsParallel().Select(p =>
+                packets.Select(p =>
                     {
                         string[] serviceCentreAddress = p.source.layers.serviceCentreAddress;
                         if (serviceCentreAddress != null)
@@ -65,7 +65,7 @@ namespace Decoders.SigtranDecoderHelper
                         }
                         return p;
                     })
-                    .AsParallel().Select(jo => jo.source.layers);
+                    .Select(jo => jo.source.layers);
 
 
             var enumerable = layers.Select(l =>
@@ -98,7 +98,7 @@ namespace Decoders.SigtranDecoderHelper
                         {
                             Frame = new Frame
                             {
-                                FrameTimeUtc =  l.FrameTimeUtc != null && l.FrameTimeUtc.Length > 0 ? l.FrameTimeUtc[0] : null,
+                                FrameTime =  l.FrameTime != null && l.FrameTime.Length > 0 ? l.FrameTime[0] : null,
                             },
                             M3Ua = new M3ua
                             {
@@ -209,41 +209,7 @@ namespace Decoders.SigtranDecoderHelper
             });
         }
 
-        //public static List<SigtranPacket> ReadJsonObjects(string filePath)
-        //{
-        //    List<string> jsonObjects = new List<string>();
-
-        //    // Create a StringBuilder instance to build the current JSON object
-        //    bool isInsideObject = false;
-        //    int braceCount = 0;
-
-        //    const int chunkSize = 200 * 1024 * 1024; // 200 MB chunk size (adjust as needed)
-
-        //    using (MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open, null))
-        //    {
-        //        using (MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor())
-        //        {
-        //            // Get the length of the memory-mapped file
-        //            long fileSize = new FileInfo(filePath).Length;
-
-        //            byte[] buffer = new byte[chunkSize];
-        //            StringBuilder stringBuilder = new StringBuilder();
-        //            for (long offset = 0; offset < fileSize; offset += chunkSize)
-        //            {
-        //                int bytesToRead = (int)Math.Min(chunkSize, fileSize - offset);
-        //                accessor.ReadArray(offset, buffer, 0, bytesToRead);
-
-        //                // Convert the bytes read to a string and append to the StringBuilder
-        //                stringBuilder.Append(Encoding.UTF8.GetString(buffer, 0, bytesToRead));
-        //            }
-        //        }
-        //    }
-
-
-        //    List<SigtranPacket> cleanedJsonObjects = new List<SigtranPacket>();
-
-        //    return cleanedJsonObjects;
-        //}
+        
         static List<string> ExtractPackets(string json)
         {
             List<string> packets = new List<string>();

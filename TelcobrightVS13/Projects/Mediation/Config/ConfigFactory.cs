@@ -18,7 +18,7 @@ namespace TelcobrightMediation.Config
             var obj = JsonConvert.DeserializeObject<TelcobrightConfig>(json,
                 new JsonSerializerSettings
                 {
-                    TypeNameHandling = TypeNameHandling.Auto,
+                    TypeNameHandling = TypeNameHandling.Auto,5
                 });
             return (TelcobrightConfig) obj;
         }
