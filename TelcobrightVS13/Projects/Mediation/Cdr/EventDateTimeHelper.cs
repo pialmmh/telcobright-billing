@@ -27,5 +27,17 @@ namespace TelcobrightMediation
             }
             return timeFieldNo;
         }
+        public static string getTimeFieldName(CdrSetting cdrSettings, string[] row)
+        {
+            switch (cdrSettings.SummaryTimeField)
+            {
+                case SummaryTimeFieldEnum.StartTime:
+                    return "starttime";
+                case SummaryTimeFieldEnum.AnswerTime:
+                    return "answertime";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }
