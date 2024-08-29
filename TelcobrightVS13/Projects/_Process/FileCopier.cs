@@ -43,12 +43,15 @@ namespace Process
                 schedulerContext, operatorName);
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("syncPair")];
-            
-            List<FileInfo> fileInfos = new List<FileInfo>();
-            new DirectoryLister().ListLocalFileRecursive(syncPair.DstSyncLocation.FileLocation.StartingPath, fileInfos);
-            if (fileInfos.Count > syncPair.DstSettings.MaxDownloadFromFtp)
+
+            if (syncPair.DstSettings.MaxDownloadFromFtp > 0)
             {
-                return ;
+                List<FileInfo> fileInfos = new List<FileInfo>();
+                new DirectoryLister().ListLocalFileRecursive(syncPair.DstSyncLocation.FileLocation.StartingPath, fileInfos);
+                if (fileInfos.Count > syncPair.DstSettings.MaxDownloadFromFtp)
+                {
+                    return;
+                }
             }
 
             if (syncPair.SkipCopyingToDestination == true) return;

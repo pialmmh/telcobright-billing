@@ -118,7 +118,6 @@ namespace InstallConfig
                     Overwrite = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 100000
                 }
             };
 
@@ -150,7 +149,6 @@ namespace InstallConfig
                     Overwrite = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 100000
                 }
             };
 
