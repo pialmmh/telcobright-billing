@@ -206,6 +206,9 @@ namespace InstallConfig
             var portalConfigFilename = configPathHelper.GetTargetFileNameForPortal("telcobright");
             SerializeConfigAndWriteJsonFile(tbc, portalConfigFilename);
 
+            var portalIptspConfigFilename = configPathHelper.GetTargetFileNameForPortalIptsp("telcobright");
+            SerializeConfigAndWriteJsonFile(tbc, portalIptspConfigFilename);
+
             if (operatorShortName == "btrc_cas")
             {
                 //portalConfigFilename = portalConfigFilename.Replace("Portal", "BTRC");
