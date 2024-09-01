@@ -72,14 +72,14 @@ namespace Process
                 {
                     incompleteExists = context.Database.SqlQuery<job>(
                         $@"select * from job 
-                    where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
+                    where status=4 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
                     and jobparameter like '{syncPairNameAsJobNamePrefix}%' order by Error limit 0,1;").ToList().Any();
                 }
                 else
                 {
                     incompleteExists = context.Database.SqlQuery<job>(
                         $@"select * from job 
-                    where status=4 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
+                    where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
                     and jobparameter like '{syncPairNameAsJobNamePrefix}%' order by Error limit 0,1;").ToList().Any();
 
                 }

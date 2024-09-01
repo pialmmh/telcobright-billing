@@ -76,10 +76,10 @@ namespace Jobs
             CdrSetting cdrSetting = this.Input.CdrSetting;
             if (this.Input.IsBatchJob == false) //not batch job
             {
-                //if (this.HandledJobsOutput.Jobs == null)
-                //{
-                //    this.HandledJobsOutput.Jobs = new List<job>();
-                //}
+                if (this.HandledJobsOutput.Jobs == null)
+                {
+                    this.HandledJobsOutput.Jobs = new List<job>();
+                }
                 this.HandledJobsOutput.Jobs.Add(this.Input.Job);
                 preProcessor = DecodeNewCdrFile(preDecodingStage: false);
                 initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
