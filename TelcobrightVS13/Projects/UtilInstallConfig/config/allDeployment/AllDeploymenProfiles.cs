@@ -158,6 +158,19 @@ namespace InstallConfig
                                 SchedulerPortNo = 565
                             },
                         }
+                    },
+                    new Deploymentprofile
+                    {
+                        profileName = "ccl",
+                        type = DeploymentProfileType.TelcoBilling,
+                        instances = new List<InstanceConfig>
+                        {
+                            new InstanceConfig
+                            {
+                                Name = "ccl",
+                                SchedulerPortNo = 566
+                            },
+                        }
                     }
                 };
 

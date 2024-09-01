@@ -323,6 +323,14 @@
     <Compile Include="config\cas\purple_cas\CasPurpleProductAndServiceConfig.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleQuartzConfig.cs" />
     <Compile Include="config\cas\purple_cas\CasPurpleServerConfig.cs" />
+    <Compile Include="config\ccl\CCLDatabaseSettings.cs" />
+    <Compile Include="config\ccl\CCLDirectorySettings.cs" />
+    <Compile Include="config\ccl\CCLPortalSetting.cs" />
+    <Compile Include="config\ccl\CCLProductAndServiceConfig.cs" />
+    <Compile Include="config\ccl\CCLQuartzConfig.cs" />
+    <Compile Include="config\ccl\CCLServerConfig.cs" />
+    <Compile Include="config\ccl\CCLServiceGroups.cs" />
+    <Compile Include="config\ccl\_CCLConfigMain.cs" />
     <Compile Include="config\mirtelecom\MirAPPServerConfig.cs" />
     <Compile Include="config\mirtelecom\MirAutomationConfig.cs" />
     <Compile Include="config\mirtelecom\MirDatabaseSettings.cs" />
@@ -560,6 +568,8 @@
     <Folder Include="config\btel\_dbscripts\ddl\" />
     <Folder Include="config\btel\_dbscripts\seedData\" />
     <Folder Include="config\cas\_dbscripts\seedData\json\" />
+    <Folder Include="config\ccl\_dbscripts\ddl\" />
+    <Folder Include="config\ccl\_dbscripts\seedData\" />
     <Folder Include="config\jsl\_dbscripts\ddl\" />
     <Folder Include="config\jsl\_dbscripts\seedData\sql\" />
     <Folder Include="config\mirtelecom\_dbscripts\ddl\" />
@@ -652,6 +662,10 @@
     <Content Include="config\cas\purple_cas\tmplPortalAppPools.txt" />
     <Content Include="config\cas\purple_cas\tmplPortalFtpSite.txt" />
     <Content Include="config\cas\purple_cas\tmplPortalWebSite.txt" />
+    <Content Include="config\ccl\tmplPortalAppPools.txt" />
+    <Content Include="config\ccl\tmplPortalFtpSite.txt" />
+    <Content Include="config\ccl\tmplPortalWebSite.txt" />
+    <Content Include="config\ccl\_dbscripts\quartzTables.sql" />
     <Content Include="config\mirtelecom\scripts\apppools.xml" />
     <Content Include="config\mirtelecom\scripts\import_commands.txt" />
     <Content Include="config\mirtelecom\scripts\sites.txt" />
