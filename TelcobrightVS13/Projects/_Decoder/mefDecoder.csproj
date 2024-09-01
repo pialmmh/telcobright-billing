@@ -135,6 +135,7 @@
     <Compile Include="TelcobridgeDecoderTelexchange.cs" />
     <Compile Include="TelcobridgeDecoderGazi.cs" />
     <Compile Include="GNEWDecoderRingTechTEST.cs" />
+    <Compile Include="TelcobrightDecoderCcl.cs" />
     <Compile Include="WTLDecoderTeleplusTEST.cs" />
     <Compile Include="CataleyaCsvDecoderCWLNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderJslNoFailed.cs" />
