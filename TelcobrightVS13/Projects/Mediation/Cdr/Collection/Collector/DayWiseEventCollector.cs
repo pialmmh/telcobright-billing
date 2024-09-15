@@ -284,8 +284,9 @@ namespace TelcobrightMediation
             using (MySqlConnection con = new MySqlConnection(this.ConStr))
             {
                 con.Open();
-                List<string> existingTables =
-                    DaywiseTableManager.getExistingTableNames(this.DatabaseName, requiredTableNamesPerDay.Keys, con);
+                List<string> existingTables = requiredTableNamesPerDay.Any()?
+                    DaywiseTableManager.getExistingTableNames(this.DatabaseName, requiredTableNamesPerDay.Keys, con)
+                    :new List<string>();
                 List<string> newTablesToBeCreated = requiredTableNamesPerDay.Keys
                     .Where(t => existingTables.Contains(t) == false)
                     .ToList();
