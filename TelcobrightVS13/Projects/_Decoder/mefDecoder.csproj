@@ -132,6 +132,7 @@
     <Compile Include="SigtranDecoderHelper\CustomJObjectParser.cs" />
     <Compile Include="SigtranDecoderHelper\JsonStringReader.cs" />
     <Compile Include="SigtranDecoderHelper\SigtranPacketDecoder.cs" />
+    <Compile Include="TelcobridgeDecoderGaziZip.cs" />
     <Compile Include="TelcobridgeDecoderTelexchange.cs" />
     <Compile Include="TelcobridgeDecoderGazi.cs" />
     <Compile Include="GNEWDecoderRingTechTEST.cs" />

@@ -102,6 +102,11 @@ namespace Decoders
                     {
                         connectTime = parseStringToDate(connectTime).ToString("yyyy-MM-dd HH:mm:ss");
                     }
+                    string startTime = lineAsArr[24];
+                    if (!string.IsNullOrEmpty(startTime))
+                    {
+                        startTime = parseStringToDate(startTime).ToString("yyyy-MM-dd HH:mm:ss");
+                    }
 
                     //string answerTime = lineAsArr[22];//ingress_call_info_answer_ts -done
                     //if (!string.IsNullOrEmpty(answerTime))
@@ -115,7 +120,7 @@ namespace Decoders
                         endTime = parseStringToDate(endTime).ToString("yyyy-MM-dd HH:mm:ss");
                     }
 
-                    textCdr[Fn.StartTime] = connectTime;
+                    textCdr[Fn.StartTime] = startTime;
                     //textCdr[Fn.ConnectTime] = connectTime;
                     textCdr[Fn.AnswerTime] = connectTime;
                     textCdr[Fn.Endtime] = endTime.IsNullOrEmptyOrWhiteSpace()==false?endTime

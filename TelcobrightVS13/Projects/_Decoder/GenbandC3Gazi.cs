@@ -143,9 +143,9 @@ namespace Decoders
                     string[] formats = new string[] { "MddyyyyHHmmssfff", "MMddyyyyHHmmssfff" };
 
 
-                    if (!string.IsNullOrEmpty(lineAsArr[16]))
+                    if (!string.IsNullOrEmpty(lineAsArr[15]))
                     {
-                        string startTimestr = lineAsArr[16].Trim();
+                        string startTimestr = lineAsArr[15].Trim();
                         DateTime startTime = startTimestr.ConvertToDateTimeFromCustomFormats(formats);
                         textCdr[Fn.StartTime] = startTime.ToMySqlFormatWithoutQuote();
                     }
