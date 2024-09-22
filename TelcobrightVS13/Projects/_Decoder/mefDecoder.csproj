@@ -134,7 +134,7 @@
     <Compile Include="SigtranDecoderHelper\SigtranPacketDecoder.cs" />
     <Compile Include="TelcobridgeDecoderGaziZip.cs" />
     <Compile Include="TelcobridgeDecoderTelexchange.cs" />
-    <Compile Include="TelcobridgeDecoderGazi.cs" />
+    <Compile Include="TelcobridgeDecoderCrossWorld.cs" />
     <Compile Include="GNEWDecoderRingTechTEST.cs" />
     <Compile Include="WTLDecoderTeleplusTEST.cs" />
     <Compile Include="CataleyaCsvDecoderCWLNoFailed.cs" />
