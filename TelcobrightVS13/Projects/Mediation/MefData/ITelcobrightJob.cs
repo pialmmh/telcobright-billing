@@ -9,7 +9,8 @@ namespace TelcobrightMediation
         int Id { get; }
         object Execute(ITelcobrightJobInput jobInputData);
         object PreprocessJob(object data);
-        object PostprocessJob(object data);
+        object PostprocessJobBeforeCommit(object data);
+        object PostprocessJobAfterCommit(object data);
         ITelcobrightJob createNewNonSingletonInstance();
     }
 }

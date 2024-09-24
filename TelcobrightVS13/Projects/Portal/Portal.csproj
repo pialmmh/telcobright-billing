@@ -549,8 +549,8 @@
     <Content Include="reports\icx\btrc\DailyReport.aspx" />
     <Content Include="reports\icx\btrc\MonthlyOutgoingDetail.aspx" />
     <Content Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx" />
-    <Content Include="reports\icx\btrc\MonthlyRoamingReport.aspx" />
     <Content Include="reports\icx\btrc\MonthlyReport.aspx" />
+    <Content Include="reports\icx\btrc\MonthlyRoamingReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyDomesticReport.aspx" />
     <Content Include="reports\icx\btrc\WeeklyInternationalReport.aspx" />
     <Content Include="reports\icx\customReports\BanglalinkCallForwarding.aspx" />
@@ -559,12 +559,12 @@
     <Content Include="reports\icx\customReports\GrameenphoneRoaming.aspx" />
     <Content Include="reports\icx\customReports\RobiCallForwarding.aspx" />
     <Content Include="reports\icx\customReports\RobiRoaming.aspx" />
-    <Content Include="reports\icx\DomesticWithLtfs.aspx" />
-    <Content Include="reports\icx\Domestic2.aspx" />
-    <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\icx\Domestic.aspx" />
+    <Content Include="reports\icx\Domestic2.aspx" />
+    <Content Include="reports\icx\DomesticWithLtfs.aspx" />
     <Content Include="reports\icx\InternationalIn_ICX.aspx" />
     <Content Include="reports\icx\InternationalOut_ICX.aspx" />
+    <Content Include="reports\icx\LocalTollFree.aspx" />
     <Content Include="reports\InternationalIn.aspx" />
     <Content Include="reports\InternationalOut.aspx" />
     <Content Include="Mediation\Mediation.aspx" />
@@ -587,6 +587,7 @@
     <None Include="Properties\PublishProfiles\PlatinumNewPortal.pubxml" />
     <Content Include="reports\cdr.json" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="reports\sms\Domestic.aspx" />
     <Content Include="reports\transit\LocalTollFreePremium.aspx" />
     <Content Include="reports\transit\LocalTollFree.aspx" />
     <Content Include="reports\transit\AlphatechPremium.aspx" />
@@ -957,6 +958,7 @@
     <Compile Include="reports\icx\btrc\AcdReport.aspx.designer.cs">
       <DependentUpon>AcdReport.aspx</DependentUpon>
     </Compile>
+    <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
     <Compile Include="reports\icx\btrc\DailyReport.aspx.cs">
       <DependentUpon>DailyReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -964,7 +966,6 @@
     <Compile Include="reports\icx\btrc\DailyReport.aspx.designer.cs">
       <DependentUpon>DailyReport.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\icx\btrc\BtrcReportRow.cs" />
     <Compile Include="reports\icx\btrc\ExcelExporterForBtrcReport.cs" />
     <Compile Include="reports\icx\btrc\MonthlyOutgoingDetail.aspx.cs">
       <DependentUpon>MonthlyOutgoingDetail.aspx</DependentUpon>
@@ -980,19 +981,19 @@
     <Compile Include="reports\icx\btrc\MonthlyOutgoingSummary.aspx.designer.cs">
       <DependentUpon>MonthlyOutgoingSummary.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyRoamingReport.aspx.cs">
-      <DependentUpon>MonthlyRoamingReport.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\btrc\MonthlyRoamingReport.aspx.designer.cs">
-      <DependentUpon>MonthlyRoamingReport.aspx</DependentUpon>
-    </Compile>
     <Compile Include="reports\icx\btrc\MonthlyReport.aspx.cs">
       <DependentUpon>MonthlyReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="reports\icx\btrc\MonthlyReport.aspx.designer.cs">
       <DependentUpon>MonthlyReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyRoamingReport.aspx.cs">
+      <DependentUpon>MonthlyRoamingReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\btrc\MonthlyRoamingReport.aspx.designer.cs">
+      <DependentUpon>MonthlyRoamingReport.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\btrc\WeeklyDomesticReport.aspx.cs">
       <DependentUpon>WeeklyDomesticReport.aspx</DependentUpon>
@@ -1050,12 +1051,12 @@
     <Compile Include="reports\icx\customReports\RobiRoaming.aspx.designer.cs">
       <DependentUpon>RobiRoaming.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\icx\DomesticWithLtfs.aspx.cs">
-      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
+    <Compile Include="reports\icx\Domestic.aspx.cs">
+      <DependentUpon>Domestic.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="reports\icx\DomesticWithLtfs.aspx.designer.cs">
-      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
+    <Compile Include="reports\icx\Domestic.aspx.designer.cs">
+      <DependentUpon>Domestic.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\Domestic2.aspx.cs">
       <DependentUpon>Domestic2.aspx</DependentUpon>
@@ -1064,19 +1065,12 @@
     <Compile Include="reports\icx\Domestic2.aspx.designer.cs">
       <DependentUpon>Domestic2.aspx</DependentUpon>
     </Compile>
-    <Compile Include="reports\icx\LocalTollFree.aspx.cs">
-      <DependentUpon>LocalTollFree.aspx</DependentUpon>
+    <Compile Include="reports\icx\DomesticWithLtfs.aspx.cs">
+      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="reports\icx\LocalTollFree.aspx.designer.cs">
-      <DependentUpon>LocalTollFree.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="reports\icx\Domestic.aspx.cs">
-      <DependentUpon>Domestic.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="reports\icx\Domestic.aspx.designer.cs">
-      <DependentUpon>Domestic.aspx</DependentUpon>
+    <Compile Include="reports\icx\DomesticWithLtfs.aspx.designer.cs">
+      <DependentUpon>DomesticWithLtfs.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\icx\InternationalIn_ICX.aspx.cs">
       <DependentUpon>InternationalIn_ICX.aspx</DependentUpon>
@@ -1091,6 +1085,13 @@
     </Compile>
     <Compile Include="reports\icx\InternationalOut_ICX.aspx.designer.cs">
       <DependentUpon>InternationalOut_ICX.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\icx\LocalTollFree.aspx.cs">
+      <DependentUpon>LocalTollFree.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\icx\LocalTollFree.aspx.designer.cs">
+      <DependentUpon>LocalTollFree.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\IOFReport.aspx.cs">
       <DependentUpon>IOFReport.aspx</DependentUpon>
@@ -1112,6 +1113,13 @@
     </Compile>
     <Compile Include="reports\PaymentHistory.aspx.designer.cs">
       <DependentUpon>PaymentHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\sms\Domestic.aspx.cs">
+      <DependentUpon>Domestic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\sms\Domestic.aspx.designer.cs">
+      <DependentUpon>Domestic.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\transit\LocalTollFreePremium.aspx.cs">
       <DependentUpon>LocalTollFreePremium.aspx</DependentUpon>

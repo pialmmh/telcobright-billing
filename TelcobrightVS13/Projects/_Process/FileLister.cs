@@ -68,6 +68,20 @@ namespace Process
                 List<string> newFileNames = srcLocation.GetFileNamesFiltered(syncPair.SrcSettings, tbc);
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                     newFileNames = newFileNames.OrderByDescending(c => c).ToList();
+
+                int fileNameLengthFromRightWhileSorting = tbc.CdrSetting.FileNameLengthFromRightWhileSorting;
+                if (fileNameLengthFromRightWhileSorting > 0)//true for sms hub
+                {
+                    if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == true)
+                    {
+                        newFileNames = newFileNames.OrderByDescending(name => name.Right(fileNameLengthFromRightWhileSorting)).ToList();
+                    }
+                    else if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == false)
+                    {
+                        newFileNames = newFileNames.OrderBy(name => name.Right(fileNameLengthFromRightWhileSorting)).ToList();
+                    }
+                }
+              
                 if (newFileNames.Any())
                     heartbeat1.end(); //heartbit1 successful, expect at least one good heartbeat in an hour
                 {

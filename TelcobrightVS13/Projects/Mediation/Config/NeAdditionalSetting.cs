@@ -13,8 +13,10 @@ namespace TelcobrightMediation
         public int MaxNumberOfFilesInPreDecodedDirectory { get; set; } = 100;
         public int ExpectedNoOfCdrIn24Hour { get; set; }
         public string AggregationStyle { get; set; }
+        public bool PerformPreaggregation { get; set; }
         public bool DumpAllInstancesToDebugCdrTable { get; set; }
         public bool CreateJobRecursively { get; set; }
+        public int PrefetchPredecoderBatchSize { get; set; } = 0;
 
         public List<EventPreprocessingRule> EventPreprocessingRules { get; set; }= new List<EventPreprocessingRule>();
 

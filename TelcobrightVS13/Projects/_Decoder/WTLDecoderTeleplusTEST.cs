@@ -63,11 +63,11 @@ namespace Decoders
                     //string chargingStatus = lineAsArr[3] == "S" ? "1" : "0"; //done
                     //if (chargingStatus != "1") continue;
 
-                    string chargingstatus = "1";
-                    if (lineAsArr[70].Trim() == "0")
-                        chargingstatus = "0";
-                    if (chargingstatus == "0")
-                        continue;
+                    //string chargingstatus = "1";
+                    //if (lineAsArr[60].Trim() == "0")
+                    //    chargingstatus = "0";
+                    //if (chargingstatus == "0")
+                    //    continue;
 
 
 
@@ -75,27 +75,52 @@ namespace Decoders
 
                     string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
 
-
+                    string tempTerminatingCalledNumber = "";
+                    string tempTerminatingCallingNumber = "";
                     var terminatingCallingNumber = lineAsArr[8].Trim();
-                    textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber;
                     var terminatingCalledNumber = lineAsArr[27].Trim();
-                    textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber;
+                    
 
-                    if (string.IsNullOrEmpty(terminatingCalledNumber) && string.IsNullOrEmpty(terminatingCalledNumber))
+                    double duretionSec = Convert.ToDouble(lineAsArr[60].Trim());
+                    if (duretionSec<=0) continue;
+
+                    //if (string.IsNullOrEmpty(terminatingCalledNumber) && string.IsNullOrEmpty(terminatingCalledNumber))
+                    //{
+                    //    double durSec = Convert.ToDouble(lineAsArr[60].Trim());
+                    //    if (durSec > 0)
+                    //    {
+                    //        throw new ArgumentException("call duration should not greater than 0");
+                    //    }
+                    //    continue;
+                    //}
+
+                    if (string.IsNullOrEmpty(terminatingCalledNumber) && duretionSec > 0)
                     {
-                        double durSec = Convert.ToDouble(lineAsArr[70].Trim());
-                        if (durSec > 0)
-                        {
-                            throw new ArgumentException("call duration should not greater than 0");
-                        }
-                        continue;
+                        tempTerminatingCalledNumber = "01777000000";
+                        textCdr[Fn.TerminatingCallingNumber] = tempTerminatingCalledNumber;
                     }
+                    else
+                    {
+                        textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber;
+                    }
+
+
+                    if (string.IsNullOrEmpty(terminatingCallingNumber) && duretionSec > 0)
+                    {
+                        tempTerminatingCallingNumber = "01771000000";
+                        textCdr[Fn.TerminatingCallingNumber] = tempTerminatingCallingNumber;
+                    }
+                    else
+                    {
+                        textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber;
+                    }
+
 
                     string startTime = lineAsArr[1];
                     string ansTime = "";
 
-                    if (Convert.ToInt32(lineAsArr[70].Trim()) == 0)
-                        continue;
+                    //if (Convert.ToInt32(lineAsArr[60].Trim()) == 0)
+                    //    continue;
 
                     if (!string.IsNullOrEmpty(lineAsArr[1]))
                     {
@@ -149,8 +174,8 @@ namespace Decoders
                     textCdr[Fn.Filename] = fileName;
                     textCdr[Fn.Switchid] = Input.Ne.idSwitch.ToString();
 
-                    textCdr[Fn.OriginatingCallingNumber] = lineAsArr[8].Trim(); ;
-                    textCdr[Fn.OriginatingCalledNumber] = lineAsArr[27].Trim(); ;
+                    //textCdr[Fn.OriginatingCallingNumber] = lineAsArr[8].Trim(); ;
+                    //textCdr[Fn.OriginatingCalledNumber] = lineAsArr[27].Trim(); ;
 
 
 

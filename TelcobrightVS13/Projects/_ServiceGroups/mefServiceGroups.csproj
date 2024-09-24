@@ -108,6 +108,12 @@
   <ItemGroup>
     <Compile Include="CasdurationHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SgOnNetIptsp.cs" />
+    <Compile Include="SgDomOffNetIn.cs" />
+    <Compile Include="SgDomOffNetOut.cs" />
+    <Compile Include="SgIntlInIptsp.cs" />
+    <Compile Include="SgIntlOutIptsp.cs" />
+    <Compile Include="SgLtfsIptsp.cs" />
     <Compile Include="SgLtfsIcx.cs" />
     <Compile Include="SgIntlTransitVoice.cs" />
     <Compile Include="SgDomesticIcx.cs" />

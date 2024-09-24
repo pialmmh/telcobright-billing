@@ -32,7 +32,7 @@ namespace InstallConfig
         {
 
 
-            DirectorySettings directorySetting = new DirectorySettings("c:/telcobright", "");
+            DirectorySettings directorySetting = new DirectorySettings("D:/telcobright", "");
             tbc.DirectorySettings = directorySetting;
 
 
@@ -49,6 +49,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/borak1",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
             FileLocation vaultBorak2 = new FileLocation()
             {
@@ -60,6 +61,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/borak2",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
             FileLocation vaultKhaja1 = new FileLocation()
             {
@@ -71,6 +73,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/khaja1",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
             FileLocation vaultKhaja2 = new FileLocation()
             {
@@ -82,6 +85,7 @@ namespace InstallConfig
                 StartingPath = "D:/telcobright/Vault/Resources/cdr/dialogic/khaja2",
                 User = "",
                 Pass = "",
+                FtpSessionCloseAndReOpeningtervalByFleTransferCount = 100//close ftp session and reopen after each 5 files for smshub
             };
 
             this.vaultPrimary = new FileLocation()
@@ -127,17 +131,21 @@ namespace InstallConfig
                         IgnoreZeroLenghFile = 1,
                         FtpSessionCloseAndReOpeningtervalByFleTransferCount = 1000
                     },
-                    DescendingFileListByFileName = this.Tbc.CdrSetting.DescendingOrderWhileListingFiles
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary=SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -147,7 +155,7 @@ namespace InstallConfig
                     RecursiveFileStore=true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 
@@ -179,13 +187,18 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary = SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -195,7 +208,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 
@@ -226,13 +239,18 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary = SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                               and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -242,7 +260,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 
@@ -273,13 +291,18 @@ namespace InstallConfig
                 },
                 SrcSettings = new SyncSettingsSource()
                 {
+                    SftpLibrary = SftpLibrary.RenciSsh,
+                    HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
+                    FtpOrSftpTimeoutSeconds = 600,
                     SecondaryDirectory = "",
+                    OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
                     Recursive = true,
                     ExpFileNameFilter = new SpringExpression(@"Name.StartsWith('mdr')
                                                                 and
                                                                 (Name.EndsWith('.gz'))
-                                                                and Length>0")
+                                                                and Length>0
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -289,7 +312,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadedFromFtp = 10
+                    MaxDownloadFromFtp = 50
                 }
             };
 

@@ -236,78 +236,6 @@ byte fields. For example:</p>
 <p>max() and min() take any number of arguments and returns one value, respectively
 the largest/smallest. The arguments must all have the same type.</p>
 </div>
-<div class="paragraph">
-<p>There is also a set of functions to test IP addresses:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>ip_special_name(ip)       - Returns the IP special-purpose block name as a string
-ip_special_mask(ip)       - Returns the IP special-purpose block flags as a mask. The bits are:
-                                4 3 2 1 0
-                                ---------
-                                S D F G R
-                            S = Source, D = Destination, F = Forwardable, G = Globally-reachable, R = Reserved-by-protocol</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>ip_linklocal(ip)          - true if the IPv4 or IPv6 address is link-local
-ip_multicast(ip)          - true if the IPv4 or IPv6 address is multicast
-ip_rfc1918(ipv4)          - true if the IPv4 address is private-use (from the allocation in RFC 1918)
-ip_ula(ipv6)              - true if the IPv6 address is unique-local (ULA) as in RFC 4193</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_macros">Macros</h3>
-<div class="paragraph">
-<p>It is possible to define display filter macros. Macro are names that are
-replaced with the associated expression, possibly performing argument substitution.
-Macro expansions are purely textual replacements and performed recursively before compilation.
-They allow replacing long and often used expressions with easy to use names.</p>
-</div>
-<div class="paragraph">
-<p>Macros are defined using the GUI or directly in the "dmacros" configuration
-file. For example the definition</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>"addplusone" {$1 + $2 + 1}</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>creates a macro called <code>addplusone</code> that takes two arguments and expands to the given expression.
-Arguments in the replacement expression are given using the dollar sign.</p>
-</div>
-<div class="paragraph">
-<p>Macros are invoked like function but preceded with a dollar sign
-(sometimes also called a sigil):</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>$addplusone(udp.src_port, udp.dst_port)</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>results in the expression</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>{udp.src_port + udp.dst_port + 1}</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>after argument substitution. There is an older alternative notation to invoke macros:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>${addplusone: udp.src_port; udp.dst_port}</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Both forms are equivalent and can be used interchangibly as a matter of
-preference.</p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_protocol_field_types">Protocol field types</h3>
@@ -360,16 +288,16 @@ frame.len &gt; '\012'</pre>
 </div>
 <div class="paragraph">
 <p>Boolean values are either true or false.  In a display filter expression
-testing the value of a Boolean field, true is expressed as the word <code>true</code>
-(case-insensitive) or any non-zero number.  False is expressed as
-<code>false</code> (case-insensitive) or the number zero. For example, a token-ring packet&#8217;s
+testing the value of a Boolean field, true is expressed as the word "True"
+or "TRUE" (without quotes) or any non-zero number.  False is expressed as
+"False" or "FALSE" or the number zero. For example, a token-ring packet&#8217;s
 source route field is Boolean.  To find any source-routed packets, a display
 filter would be any of the following:</p>
 </div>
 <div class="literalblock">
 <div class="content">
 <pre>tr.sr == 1
-tr.sr == true
+tr.sr == True
 tr.sr == TRUE</pre>
 </div>
 </div>
@@ -379,7 +307,7 @@ tr.sr == TRUE</pre>
 <div class="literalblock">
 <div class="content">
 <pre>tr.sr == 0
-tr.sr == false
+tr.sr == False
 tr.sr == FALSE</pre>
 </div>
 </div>
@@ -535,26 +463,20 @@ month-year-time format:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The 'T' separator in ISO 8601 can be omitted. The timezone can be given
-as "Z" or an offset from UTC.</p>
-</div>
-<div class="paragraph">
-<p>When not using ISO 8601 the timezone can be given as the strings "UTC", "GMT"
-or "UT" for UTC or also given as an offset from UTC, plus some North American and Nautical/Military
-designations (<a href="https://man.netbsd.org/strptime.3">see the specification for %z in strptime(3)</a>).
-Note that arbitrary timezone names are not supported however.</p>
-</div>
-<div class="paragraph">
-<p>If the timezone is omitted then date and time values are interpreted as local time.</p>
+<p>The 'T' separator in ISO 8601 can be omitted. ISO 8601 supports timezone
+designators as UTC or an offset from UTC. Legacy formats can append the
+value "UTC" at the end to specify time in Coordinated Universal Time.
+Otherwise date and time values are interpreted as local time.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_the_slice_operator">The slice operator</h3>
 <div class="paragraph">
-<p>You can take a slice of a field if the field base type is a text string or a
-byte array (the base type of most network address fields is bytes).
-For example, you can filter on the vendor portion of an ethernet address
-(the first three bytes) like this:</p>
+<p>You can take a slice of a field if the field is a text string or a
+byte array.
+For example, you can filter on
+the vendor portion of an ethernet address (the first three bytes) like
+this:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -594,8 +516,7 @@ frame[100-199] contains "wireshark"</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Slice indexes are zero-based.
-Offsets can be negative, in which case they indicate the
+<p>Offsets can be negative, in which case they indicate the
 offset from the <strong>end</strong> of the field.  The last byte of the field is at offset
 -1, the last but one byte is at offset -2, and so on.
 Here&#8217;s how to check the last four bytes of a frame:</p>
@@ -611,30 +532,6 @@ Here&#8217;s how to check the last four bytes of a frame:</p>
 <div class="literalblock">
 <div class="content">
 <pre>frame[-4:] == 0.1.2.3</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As mentioned above the slice operator can be used on string and byte fields
-and will respectively produce string or byte slices. String slices are
-indexed on UTF-8 codepoint boundaries (i.e: internationalized characters),
-so the following comparison is true:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>"touché"[5] == "é"</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The example above generates an error because the compiler rejects constant
-expressions but is otherwise syntactically correct and exemplifies the
-behaviour of string slices.</p>
-</div>
-<div class="paragraph">
-<p>To obtain a byte slice of the same string the raw (@) operator can be used:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>@"touché"[5-6] == c3:a9</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -680,34 +577,6 @@ For example, in a packet that contains two IPv4 headers, the outer (first) sourc
 <div class="paragraph">
 <p>means layers number 2, 3 or 4 inclusive. The hash symbol is required to
 distinguish a layer range from a slice.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_the_at_operator">The at operator</h3>
-<div class="paragraph">
-<p>By prefixing the field name with an at sign (@) the comparison is done against
-the raw packet data for the field.</p>
-</div>
-<div class="paragraph">
-<p>A character string must be decoded from a source encoding during dissection.
-If there are decoding errors the resulting string will usually contain
-replacement characters:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>browser.comment == "string is &#xFFFD;&#xFFFD;&#xFFFD;&#xFFFD;"</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The at operator allows testing the raw undecoded data:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>@browser.comment == 73:74:72:69:6e:67:20:69:73:20:aa:aa:aa:aa</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The syntactical rules for a bytes field type apply to the second example.</p>
 </div>
 </div>
 <div class="sect2">
@@ -805,7 +674,7 @@ following bitwise operator is supported:</p>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>bitand, bitwise_and, &amp;	Bitwise AND</pre>
+<pre>bitwise_and, &amp;	Bitwise AND</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -857,15 +726,6 @@ have the same number of bytes as the slice itself, as in:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Arithmetic operations can be performed on numeric types. Numeric types are
-integers, floating point numbers and date and time values.</p>
-</div>
-<div class="paragraph">
-<p>Date and time values can only be multiplied by integers or floating point
-numbers (i.e: scalars) and furthermore the scalar multiplier must appear on
-the right-hand side of the arithmetic operation.</p>
-</div>
-<div class="paragraph">
 <p>For example it is possible to filter for UDP destination ports greater or
 equal by one to the source port with the expression:</p>
 </div>
@@ -895,7 +755,7 @@ or "A - B".</p>
 <div class="sect2">
 <h3 id="_protocol_field_references">Protocol field references</h3>
 <div class="paragraph">
-<p>A variable using a sigil with the form $some.proto.field or ${some.proto.field} is called a field
+<p>A variable using a sigil with the form ${some.proto.field} is called a field
 reference. A field reference is a field value read from the currently
 selected frame in the GUI. This is useful to build dynamic filters such as,
 frames since the last five minutes to the selected frame:</p>
@@ -903,14 +763,6 @@ frames since the last five minutes to the selected frame:</p>
 <div class="literalblock">
 <div class="content">
 <pre>frame.time_relative &gt;= ${frame.time_relative} - 300</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or more simply</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>frame.time_relative &gt;= $frame.time_relative - 300</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -930,7 +782,6 @@ highest to lowest precedence:</p>
 <div class="content">
 <pre>not, !    Logical NOT   (right-associative)
 and, &amp;&amp;   Logical AND   (left-associative)
-xor, ^^   Logical XOR   (left-associative)
 or,  ||   Logical OR    (left-associative)</pre>
 </div>
 </div>
@@ -968,7 +819,7 @@ The third filter expression includes the constraint that offset 199 in the
 frame exists, in other words the length of the frame is at least 200.</p>
 </div>
 <div class="paragraph">
-<p>Because each comparison has an implicit exists test for field values care must
+<p>Each comparison has an implicit exists test for any field value. Care must
 be taken when using the display filter to remove noise from
 the packet trace. If, for example, you want to filter out all IP
 multicast packets to address 224.1.2.3, then using:</p>
@@ -1001,7 +852,7 @@ not ip.dst eq 224.1.2.3</pre>
 <div class="paragraph">
 <p>The first filter uses "not ip.dst" to include all non-IP packets and then
 lets "ip.dst ne 224.1.2.3" filter out the unwanted IP packets. The
-second filter also negates the implicit existence test and so is
+second filter also negates the implicit existance test and so is
 a shorter way to write the first.</p>
 </div>
 </div>

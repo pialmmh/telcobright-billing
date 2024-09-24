@@ -56,6 +56,11 @@ namespace LibraryExtensions
             return new UpwordPathFinder<DirectoryInfo>("Portal").FindAndGetFullPath()
                    + Path.DirectorySeparatorChar + "bin";
         }
+        public string GetPortalIptspBinPath()
+        {
+            return new UpwordPathFinder<DirectoryInfo>("PortalIptsp").FindAndGetFullPath()
+                   + Path.DirectorySeparatorChar + "bin";
+        }
         public string GetPortalBtrcBinPath()
         {
             return new UpwordPathFinder<DirectoryInfo>("PortalBTRC").FindAndGetFullPath()
@@ -82,6 +87,11 @@ namespace LibraryExtensions
         {
             return GetPortalBinPath() + Path.DirectorySeparatorChar
                                + operatorShortName + ".conf";
+        }
+        public string GetTargetFileNameForPortalIptsp(string operatorShortName)
+        {
+            return GetPortalIptspBinPath() + Path.DirectorySeparatorChar
+                   + operatorShortName + ".conf";
         }
         public string GetUtilInstallConfigFullPath()
         {

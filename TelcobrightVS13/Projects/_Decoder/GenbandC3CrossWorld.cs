@@ -56,7 +56,7 @@ namespace Decoders
             string fileName = this.Input.FullPath;
 
             //List<string[]> lines = FileUtil.ParseCsvWithEnclosedAndUnenclosedFields(fileName, ',', 1, "\"", ";");
-            //return decodeLine(decoderInputData, out inconsistentCdrs, fileName, lines);
+            //return decodeFromPcap(decoderInputData, out inconsistentCdrs, fileName, lines);
             List<string> tempLines = File.ReadAllLines(fileName).ToList();
             int recordCount = tempLines.Last().StartsWith("RECORD_COUNT") ? Convert.ToInt32(tempLines.Last().Split('=')[1]) : -1;
             tempLines = tempLines.Where(l => IsMetaDataLine(l) == false).ToList();

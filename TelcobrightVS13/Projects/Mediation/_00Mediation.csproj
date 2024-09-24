@@ -218,12 +218,14 @@
     <Compile Include="Cdr\CdrMergedJobError.cs" />
     <Compile Include="Cdr\Collection\Collector\CdrRowCollector.cs" />
     <Compile Include="Cdr\Collection\Collector\DayWiseEventCollector.cs" />
+    <Compile Include="Cdr\Collection\Collector\MinuteWiseEventData.cs" />
     <Compile Include="Cdr\Collection\Collector\HourlyEventData.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrAndInConsistentWrapper.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrErrorPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\AbstractCdrReProcessingPreProcessor.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\CdrInconsistentValidator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\NewAndOldEventsWrapper.cs" />
+    <Compile Include="Cdr\Collection\PreProcessors\SmsHubStyleAggregator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\TelcobridgeStyleAggregator.cs" />
     <Compile Include="Cdr\Collection\PreProcessors\DuplicaterEventFilter.cs" />
     <Compile Include="Cdr\Collection\RowIdsCollectionForSingleDay.cs" />
@@ -233,6 +235,7 @@
     <Compile Include="Cdr\RateCacheCleaner.cs" />
     <Compile Include="Config\AbstractConfigGenerator.cs" />
     <Compile Include="Config\AutomationSetting.cs" />
+    <Compile Include="Config\JobInputData\CdrJobOutputData.cs" />
     <Compile Include="Config\JobInputData\NewCdrWrappedJobForMerge.cs" />
     <Compile Include="Config\NeAdditionalSetting.cs" />
     <Compile Include="Config\CdrSetting.cs" />
@@ -273,7 +276,7 @@
     <Compile Include="Config\TelcobrightConfig.cs" />
     <Compile Include="Config\TelecomOperatortype.cs" />
     <Compile Include="Config\TypeNameSerializationBinder.cs" />
-    <Compile Include="Enums\SmsType.cs" />
+    <Compile Include="Enums\MsuType.cs" />
     <Compile Include="FileOperations\RecursiveVaultFileMover.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
     <Compile Include="FileOperations\Unzipper.cs" />

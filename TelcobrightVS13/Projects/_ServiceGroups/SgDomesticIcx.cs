@@ -51,8 +51,8 @@ namespace TelcobrightMediation
             //sms processing
             if(cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useSmsHubProcessing)
             {
-                //thisCdr.ServiceGroup = 1; //Domestic in ICX
-                thisCdr.ServiceGroup = 0; //Domestic in ICX
+                thisCdr.ServiceGroup = 1; //Domestic in ICX
+                // thisCdr.ServiceGroup = 0; //Domestic in ICX
                 return;
             }
             //Domestic call direction/service group

@@ -28,7 +28,7 @@ namespace InstallConfig
             {
                 ServerName = "localhost",
                 DatabaseName = this.Tbc.Telcobrightpartner.databasename,
-                WritePasswordForApplication = "",
+                WritePasswordForApplication = "Takay1#$ane",
                 WriteUserNameForApplication = "root",
                 DatabaseEngine = "innodb",
                 StorageEngineForPartitionedTables = "innodb",

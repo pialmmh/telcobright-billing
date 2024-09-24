@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using MediationModel;
 using TelcobrightMediation.Config;
 using System.Diagnostics;
+using System.Threading;
 using LibraryExtensions;
 
 namespace Jobs
@@ -72,7 +73,16 @@ namespace Jobs
             string destinationFileNameOnly = syncSettingDst.GetDestinationFileNamebyExpression(sourceSyncInfo.FileNameOnly, syncPair.DstSettings, dstLocation.FileLocation);
             string dstVaultLocation = dstLocation.FileLocation.StartingPath +'/'+ destRecursiveFileName;
             string VaultDirectory = Path.GetDirectoryName(dstVaultLocation);
+            int winscpCleaningHour = -1;
+            if (syncSettingSrc.HourToScheduleCleaningWinScpInstances>=0)
+            {
+                winscpCleaningHour = syncSettingSrc.HourToScheduleCleaningWinScpInstances;
+            }
+            else if (syncSettingDst.HourToScheduleCleaningWinScpInstances>=0)
+            {
+                winscpCleaningHour = syncSettingDst.HourToScheduleCleaningWinScpInstances;
 
+            }
 
             string archiveDir = "";
             if (syncSettingDst != null && syncSettingDst.SubDirRule != null && syncSettingDst.SubDirRule.ExpDatePartInFileName != null && syncSettingDst.SubDirRule.ExpDatePartInFileName.Expression != "")//datewise archive part
@@ -220,7 +230,52 @@ namespace Jobs
                 //if destination location type local: REMOTE->LOCAL or REMOTE->VAULT
                 else
                 {
-                    SessionOptions sessionOptions = srcLocation.GetRemoteFileTransferSessionOptions(input.Tbc);
+
+                    int timeoutSeconds = syncSettingSrc.FtpOrSftpTimeoutSeconds;//winscp default=15
+                    SessionOptions sessionOptions = null;
+                    if (timeoutSeconds == 15)
+                    {
+                        sessionOptions = srcLocation.GetRemoteFileTransferSessionOptions(input.Tbc);
+                    }
+                    else
+                    {
+                        sessionOptions =
+                            srcLocation.GetRemoteFileTransferSessionOptions(input.Tbc, timeoutSeconds);
+                    }
+
+                    if (syncSettingSrc.SftpLibrary == SftpLibrary.RenciSsh)//renci sftp version
+                    {
+                        var localTmpFileName = destinationSyncInfo.FullPath + ".tmp";
+                        Sftp sftp = new Sftp(sessionOptions.HostName, 22, sessionOptions.UserName, sessionOptions.Password);
+                        var remoteFileName = sourceSyncInfo.FullPath;
+                        long fileSize = sftp.getFileSize(remoteFileName);
+                        sftp.getFile(remoteFileName,localTmpFileName);
+                        if (File.Exists(localTmpFileName) == false)
+                        {
+                            throw new Exception("File doesn't exist after downloading through Sftp.");
+                        }
+                        FileInfo fInfo = new FileInfo(localTmpFileName);
+                        if (fInfo.Length!=fileSize)
+                        {
+                            //try another time
+                            sftp.getFile(remoteFileName,localTmpFileName);
+                            if(File.Exists(localTmpFileName)==false)
+                                throw new Exception("File doesn't exist after downloading through Sftp.");
+                            fInfo = new FileInfo(localTmpFileName);
+                            if (fInfo.Length != fileSize)
+                            {
+                                throw new Exception($"Download failed. Filename:{remoteFileName}, downloaded filesize: {fInfo.Length}, expected size:" + fileSize + " bytes.");
+                            }
+                        }
+                        var finalFileName = fInfo.Directory.FullName + Path.DirectorySeparatorChar
+                            + fInfo.Name.Replace(".tmp", "");
+                        if (File.Exists(finalFileName))
+                            File.Delete(finalFileName);
+                        File.Move(localTmpFileName, finalFileName);
+                        sftp.disconnect();
+                        return JobCompletionStatus.Complete;
+                    }
+
                     var sessionLookupKey = new Tuple<string, string, string, string>
                         (srcLocation.Name, srcLocation.FileLocation.ServerIp, srcLocation.FileLocation.StartingPath, sessionOptions.Protocol.ToString());
                     int sessionReOpeningInterval = srcLocation.FileLocation.FtpSessionCloseAndReOpeningtervalByFleTransferCount;//tyring to save winscp from crashing by closign it in every 100 attempts
@@ -233,46 +288,111 @@ namespace Jobs
                     {
                         sessionCacheUsage.TryGetValue(sessionLookupKey, out sessionUsageCount);
 
-                        if (sessionUsageCount % sessionReOpeningInterval == 0)
+                        if ((sessionUsageCount % sessionReOpeningInterval == 0))
                         {
                             sessionUsageCount = 0;
-                            if (session.Opened) session.Abort();
-                            session.Dispose();
+                            try
+                            {
+                                if (session.Opened) session.Abort();
+                                session.Dispose();
+                            }
+                            catch (Exception e)
+                            {
+                                session = null;
+                            }
                             session = null;
                             sessionCache.Remove(sessionLookupKey);
                             sessionCacheUsage.Remove(sessionLookupKey);
+
+                            if (winscpCleaningHour>=0)
+                            {
+                                //if cleaning hour to release hanged instances is 12:00
+                                //cleaning should be performed in the window 12:00- 12:02 minute only
+                                // in that window the process should hit here at least once, if executed each 30 seconds
+                                DateTime currentTime = DateTime.Now;
+                                int currentHour = currentTime.Hour;
+                                int currentMinute = currentTime.Minute;
+                                if (currentHour==winscpCleaningHour && currentMinute<=2)
+                                {
+                                    foreach (var process in Process.GetProcesses().Where(p =>
+                                    {
+                                        var processName = p.ProcessName.ToLower();
+                                        return processName.Contains("winscp");//kill winscp crashed window or windows process that is reporting the fault
+                                    }))
+                                    {
+                                        ProcessKiller.ForceKill(process);
+                                        //process.Kill();
+                                    }
+                                }
+                            }
+
                             foreach (var process in Process.GetProcesses().Where(p =>
                             {
                                 var processName = p.ProcessName.ToLower();
-                                return processName.Contains("winscp") || processName.Contains("werfault");//kill winscp crashed window or windows process that is reporting the fault
+                                return processName.Contains("werfault");//kill winscp crashed window or windows process that is reporting the fault
                             }))
                             {
-                                process.Kill();
+                                ProcessKiller.ForceKill(process);
+                                //process.Kill();
                             }
+
+                           
                         }
-                        else
+                        else//session should be alive
                         {
+                            //double check if session is alive
+                            try
+                            {
+                                //session.ExecuteCommand("pwd");
+                                if (session.Opened==false)
+                                {
+                                    throw new Exception("Ftp Session closed already.");
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                try
+                                {
+                                    session.Dispose();
+                                }
+                                catch (Exception exception)
+                                {
+                                    session = null;
+                                }
+                            }
                             sessionCacheUsage.Remove(sessionLookupKey);
                             sessionCacheUsage.Add(sessionLookupKey, ++sessionUsageCount);
                         }
                     }
-                    if (session == null || session.Opened == false)
+                    if (session == null)
                     {
-                        if (session?.Opened == false)
+                        sessionCache.Remove(sessionLookupKey);
+                        sessionCacheUsage.Remove(sessionLookupKey);
+
+                        if (winscpCleaningHour >= 0)
                         {
-                            // session.Abort();
-                            session.Dispose();
-                            session = null;
-                            sessionCache.Remove(sessionLookupKey);
-                            sessionCacheUsage.Remove(sessionLookupKey);
-                            foreach (var process in Process.GetProcesses().Where(p => p.ProcessName.ToLower().Contains("winscp")))
+                            //if cleaning hour to release hanged instances is 12:00
+                            //cleaning should be performed in the window 12:00- 12:02 minute only
+                            // in that window the process should hit here at least once, if executed each 30 seconds
+                            DateTime currentTime = DateTime.Now;
+                            int currentHour = currentTime.Hour;
+                            int currentMinute = currentTime.Minute;
+                            if (currentHour == winscpCleaningHour && currentMinute <= 2)
                             {
-                                process.Kill();
+                                foreach (var process in Process.GetProcesses().Where(p =>
+                                {
+                                    var processName = p.ProcessName.ToLower();
+                                    return processName
+                                        .Contains(
+                                            "winscp"); //kill winscp crashed window or windows process that is reporting the fault
+                                }))
+                                {
+                                    ProcessKiller.ForceKill(process);
+                                    //process.Kill();
+                                }
                             }
                         }
-                        session = new Session();
-                        session.SessionLogPath = null;
-                        session.Open(sessionOptions);
+                        session = CreateNewSession(sessionOptions);
                         if (sessionCache.ContainsKey(sessionLookupKey))
                         {
                             sessionCache.Remove(sessionLookupKey);
@@ -284,11 +404,22 @@ namespace Jobs
 
                     if (compType == CompressionType.None)//REMOTE->LOCAL
                     {
-                        if (fs.CopyFileRemoteLocal(syncPair.DstSettings, session,
-                                sourceSyncInfo, destinationSyncInfo
-                                , true, false, syncSettingSrc) == false)
+                        try
                         {
-                            throw new Exception("Could not copy file from remote server!");
+                            fs.CopyFileRemoteLocal(syncPair.DstSettings, session,
+                                sourceSyncInfo, destinationSyncInfo
+                                , true, false, syncSettingSrc);
+                        }
+                        catch (Exception e)
+                        {
+                            if (e.Message.Contains("Element session@0 already read to the end") || e.Message.Contains("Session has unexpectedly closed"))
+                            {
+                                CreateNewSession(sessionOptions);
+                                fs.CopyFileRemoteLocal(syncPair.DstSettings, session,
+                                    sourceSyncInfo, destinationSyncInfo
+                                    , true, false, syncSettingSrc);
+                            }
+                            throw;
                         }
                         //sync if vault
                         if (dstLocation.FileLocation.LocationType == "vault")
@@ -429,12 +560,42 @@ namespace Jobs
             return JobCompletionStatus.Complete;
         }
 
+        private static Session CreateNewSession(SessionOptions sessionOptions)
+        {
+            Session session = new Session();
+            session.SessionLogPath = null;
+            try
+            {
+                session.Open(sessionOptions);
+            }
+            catch (Exception e)
+            {
+                Thread.Sleep(2000);
+                try
+                {
+                    session.Open(sessionOptions); // try again
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception);
+                    throw;
+                }
+            }
+
+            return session;
+        }
+
         public object PreprocessJob(object data)
         {
             throw new NotImplementedException();
         }
 
-        public object PostprocessJob(object data)
+        public object PostprocessJobBeforeCommit(object data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object PostprocessJobAfterCommit(object data)
         {
             throw new NotImplementedException();
         }

@@ -207,6 +207,46 @@ namespace LibraryExtensions
         New = 2
     }
 
+    public class DateAndHour : IEquatable<DateAndHour>
+    {
+        public DateTime Date { get; }
+        public int Hour { get; }
+
+        public DateAndHour(DateTime date, int hour)
+        {
+            this.Date = date;
+            this.Hour = hour;
+        }
+
+        // Override Equals to compare DateAndHour objects
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is DateAndHour))
+                return false;
+
+            return Equals((DateAndHour)obj);
+        }
+
+        // Implement IEquatable<DateAndHour>.Equals method
+        public bool Equals(DateAndHour other)
+        {
+            if (other == null)
+                return false;
+
+            return this.Date.Date == other.Date.Date && this.Hour == other.Hour;
+        }
+
+        // Override GetHashCode to provide a unique hash code for the object
+        public override int GetHashCode()
+        {
+            // Combine the hash codes of Date and Hour
+            int hashDate = this.Date.Date.GetHashCode();
+            int hashHour = this.Hour.GetHashCode();
+
+            return hashDate ^ hashHour;
+        }
+    }
+
     public class DateRange : IEquatable<DateRange>
     {
         public DateTime StartDate = new DateTime(1, 1, 1);
@@ -225,6 +265,25 @@ namespace LibraryExtensions
         public override string ToString()
         {
             return this.StartDate.ToString("yyyy-MM-dd HH:mm:ss") + " to " + this.EndDate.ToString("yyyy-MM-dd HH:mm:ss");
+        }
+
+        public List<DateTime> GetInvolvedHours()
+        {
+            var start = this.StartDate;
+            var end = this.EndDate;
+            List<DateTime> hours = new List<DateTime>();
+
+            // Round down the start time to the nearest hour
+            DateTime current = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
+
+            // Add hours to the list while within the range
+            while (current <= end)
+            {
+                hours.Add(current);
+                current = current.AddHours(1);
+            }
+
+            return hours;
         }
 
         public bool WithinRange(DateTime dateTime)

@@ -43,12 +43,15 @@ namespace Process
                 schedulerContext, operatorName);
             JobDataMap jobDataMap = schedulerContext.JobDetail.JobDataMap;
             SyncPair syncPair = tbc.DirectorySettings.SyncPairs[jobDataMap.GetString("syncPair")];
-            
-            List<FileInfo> fileInfos = new List<FileInfo>();
-            new DirectoryLister().ListLocalFileRecursive(syncPair.DstSyncLocation.FileLocation.StartingPath, fileInfos);
-            if (fileInfos.Count > syncPair.DstSettings.MaxDownloadedFromFtp)
+
+            if (syncPair.DstSettings.MaxDownloadFromFtp > 0)
             {
-                return ;
+                List<FileInfo> fileInfos = new List<FileInfo>();
+                new DirectoryLister().ListLocalFileRecursive(syncPair.DstSyncLocation.FileLocation.StartingPath, fileInfos);
+                if (fileInfos.Count > syncPair.DstSettings.MaxDownloadFromFtp)
+                {
+                    return;
+                }
             }
 
             if (syncPair.SkipCopyingToDestination == true) return;
@@ -64,10 +67,23 @@ namespace Process
                 //    context.jobs.Any(c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition)
                 //                            && c.JobParameter.StartsWith(syncPairNameAsJobNamePrefix));
 
-                bool incompleteExists= context.Database.SqlQuery<job>(
-                    $@"select * from job 
+                bool incompleteExists;
+                if(syncPair.SrcSettings.OnlyDownloadMarkedFile)
+                {
+                    incompleteExists = context.Database.SqlQuery<job>(
+                        $@"select * from job 
+                    where status=4 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
+                    and jobparameter like '{syncPairNameAsJobNamePrefix}%' order by Error limit 0,1;").ToList().Any();
+                }
+                else
+                {
+                    incompleteExists = context.Database.SqlQuery<job>(
+                        $@"select * from job 
                     where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
                     and jobparameter like '{syncPairNameAsJobNamePrefix}%' order by Error limit 0,1;").ToList().Any();
+
+                }
+
 
                 if (incompleteExists == false) return; //there is no job, just exit.
                 
@@ -75,17 +91,41 @@ namespace Process
                 //    .Where(c => c.Status != 1 && jobDefsForThisQueue.Contains(c.idjobdefinition)
                 //                && c.JobParameter.StartsWith(syncPairNameAsJobNamePrefix)).ToList();
 
-                List<job> lstIncomplete = context.Database.SqlQuery<job>(
-                    $@"select * from job 
+
+                List<job> lstIncomplete;
+
+                if (syncPair.SrcSettings.OnlyDownloadMarkedFile)
+                {
+                    lstIncomplete = context.Database.SqlQuery<job>(
+                        $@"select * from job 
+                    where status=4 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
+                    and jobparameter like '{syncPairNameAsJobNamePrefix}%';").ToList();
+                }
+                else
+                {
+                    lstIncomplete = context.Database.SqlQuery<job>(
+                        $@"select * from job 
                     where status!=1 and idjobdefinition in({string.Join(",", jobDefsForThisQueue)}) 
                     and jobparameter like '{syncPairNameAsJobNamePrefix}%';").ToList();
-
+                }
                 if (tbc.CdrSetting.DescendingOrderWhileListingFiles == true)
                 {
                     lstIncomplete = lstIncomplete.OrderBy(c => c.priority).ThenByDescending(c => c.JobName)
                         .ToList();
                 }
-                else lstIncomplete = lstIncomplete.OrderBy(c => c.priority).ToList();
+
+                int fileNameLengthFromRightWhileSorting = tbc.CdrSetting.FileNameLengthFromRightWhileSorting;
+                if (fileNameLengthFromRightWhileSorting > 0)//true for sms hub
+                {
+                    if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == true)
+                    {
+                        lstIncomplete = lstIncomplete.OrderByDescending(job => job.JobName.Right(fileNameLengthFromRightWhileSorting)).ToList();
+                    }
+                    else if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == false)
+                    {
+                        lstIncomplete = lstIncomplete.OrderBy(job => job.JobName.Right(fileNameLengthFromRightWhileSorting)).ToList();
+                    }
+                }
 
                 ////****end debug
                 MefJobContainer jobData = new MefJobContainer();
