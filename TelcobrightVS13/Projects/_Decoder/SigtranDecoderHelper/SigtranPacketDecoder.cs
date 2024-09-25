@@ -246,7 +246,7 @@ namespace Decoders
                     // throw new Exception("OpCode tree local can not be null");
                 }
                 // excluding reportSM-DeliveryStatus and mo-forwardSM 
-                if (smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && smsTypeIdentifier != "")
+                if (smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && !smsTypeIdentifier.IsNullOrEmptyOrWhiteSpace())
                     continue;
 
 
@@ -330,30 +330,29 @@ namespace Decoders
                     //record[Sn.SmsType] = "6";
                     continue;
                 }
-                // unkonwn instances
-                if ((record[Sn.SmsType] == null || record[Sn.SmsType] == "") && reqResIdentifier == "2")
-                {
-                    if ((bool)!componentTreeReturnResultLastElement?.Imsi.IsNullOrEmptyOrWhiteSpace())
-                    {
-                        continue;
-                        // sri response
-                        imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
-                        record[Sn.TerminatingCalledNumber] = calledNumber;
 
-                        // actual caller number
-                        callerNumber = componentTreeReturnResultLastElement?.LocationInfoWithLmsiElement?.SriResCallerTree?.Msisdn?.ToString();
+                if (record[Sn.SmsType] != "1" && record[Sn.SmsType] != "3" && packet.GsmMap.ComponentTree?.ReturnResultLastElement != null)
+                {
+                    if ((bool)!packet.GsmMap.ComponentTree?.ReturnResultLastElement.ResultretresElement.Imsi.IsNullOrEmptyOrWhiteSpace())
+                    {
+                        //ignore sri for now;
+
+                        //imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
+                        //record[Sn.TerminatingCalledNumber] = calledNumber;
+
+                        //// actual caller number
+                        //callerNumber = componentTreeReturnResultLastElement?.LocationInfoWithLmsiElement?.SriResCallerTree?.Msisdn?.ToString();
+                        //record[Sn.TerminatingCallingNumber] = callerNumber;
+                        //record[Sn.Imsi] = imsi;
+                        //record[Sn.SmsType] = "2";
+                        continue;
+                    }
+                    else
+                    {
                         record[Sn.TerminatingCallingNumber] = callerNumber;
                         record[Sn.Imsi] = imsi;
-                        record[Sn.SmsType] = "2";
+                        record[Sn.SmsType] = "4";
                     }
-                    // mt response 
-                    //else
-                    //{
-                    record[Sn.TerminatingCallingNumber] = callerNumber;
-                    record[Sn.Imsi] = imsi;
-                    record[Sn.SmsType] = "4";
-                    //}
-
                 }
 
                 string outPartnerId = getPartneridByGtPrefix(record[Sn.OriginatingCalledNumber]).ToString();
@@ -397,6 +396,19 @@ namespace Decoders
                 record[Sn.ChargingStatus] = "0";
                 record[Sn.ServiceGroup] = "1";
 
+                if (record[Sn.SmsType] == "3")
+                {
+                    ;
+                }
+
+                if (record[Sn.SmsType] == "4")
+                {
+                    ;
+                }
+                if (record[Sn.SmsType] != "3" && record[Sn.SmsType] != "4")
+                {
+                    ;
+                }
                 //records.Add(record);
                 records[index] = record;
             }
