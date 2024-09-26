@@ -205,7 +205,8 @@ namespace InstallConfig
                     {"teleexchange@telcobright.com", "teleexchange_cas"},
                     {"teleplusnewyork@telcobright.com", "teleplusnewyork_cas"},
                     {"voicetel@telcobright.com", "voicetel_cas"},
-                    {"getco@telcobright.com", "getco_cas"}
+                    {"getco@telcobright.com", "getco_cas"},
+                    {"mmcommunications@telcobright.com","mmcommunications_cas" }
                 },
                 instances = new List<InstanceConfig>
                 {
