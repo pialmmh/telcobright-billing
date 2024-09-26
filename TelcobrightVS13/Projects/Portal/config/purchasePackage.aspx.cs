@@ -32,7 +32,7 @@ using Newtonsoft.Json;
 using PortalApp._portalHelper;
 using Excel = Microsoft.Office.Interop.Excel;
 
-public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Page
+public partial class purchasePackage : System.Web.UI.Page
 {
     Dictionary<int, billingruleassignment> dicBillRules = new Dictionary<int, billingruleassignment>();
 
@@ -860,6 +860,8 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
     protected void Page_Load(object sender, EventArgs e)
     {
+
+
         //applicabel for postback and initial load
 
         Tbc = PageUtil.GetTelcobrightConfig();
@@ -988,6 +990,20 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             var dicRoutes = new Dictionary<int, string>();
             using (PartnerEntities Conmed = new PartnerEntities())
             {
+                List<rateplan> lstPlan = Conmed.rateplans.Where(c => c.field2 == 1).ToList();
+                DropDownList dropDownList = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
+                //dropDownList.DataSource = lstPlan;
+                dropDownList.Items.Insert(0, new ListItem("[Select]", "0"));
+                int id = 1;
+                foreach (var rateplan in lstPlan)
+                {
+                    dropDownList.Items.Insert(id++, new ListItem(rateplan.RatePlanName, rateplan.id.ToString()));
+                }
+                //dropDownList.DataBind();
+
+                //((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan")).DataSource = lstPlan;
+                //((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan")).DataBind();
+                
                 foreach (rateplanassignmenttuple ThisTuple in Context.rateplanassignmenttuples.ToList())
                 {
                     dicTuple.Add(ThisTuple.id, ThisTuple);
@@ -1188,9 +1204,11 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                     }
                 }
             }
+          
 
             myGridViewDataBind();
         } //!postback
+
     }
 
     //    protected void ModifySupplierGrid(int Action,int id,string Prefix,string Description,Single rateamount,
@@ -2601,6 +2619,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         string newResolution = ((TextBox)row.FindControl("txtPulse")).Text;//Assignment Order in ratetaskassign table
         Dictionary<long, rateplanassignmenttuple> dicTuple = (Dictionary<long, rateplanassignmenttuple>)Session["assign.sessdictuple"];
         Dictionary<long, enumservicefamily> dicservice = (Dictionary<long, enumservicefamily>)Session["assign.sessdicservice"];
+        string newSurchargeAmount = frmSupplierRatePlanInsert.FindControl("TextBoxForPrice").ToString();
         rateplanassignmenttuple ThisTuple = null;
         long TupleId = Convert.ToInt64(newPrefix);
         if (dicTuple.TryGetValue(TupleId, out ThisTuple))
@@ -2647,7 +2666,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
         string newStartTimeOfDay = "1";
         string newEndTimeOfDay = "1";
         string newSurchargeTime = "1";
-        string newSurchargeAmount = "1";
+        
         string newOtherAmount1 = "1";
         string newOtherAmount2 = "1";
         string newOtherAmount3 = "1";
@@ -2980,16 +2999,16 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
 
 
             //rating rule
-            string newServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice")).SelectedValue;
+            string newServiceType = "1";// ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice")).SelectedValue;
 
             //priority
-            string newResolution = ((TextBox)frmSupplierRatePlanInsert.FindControl("txtResolution")).Text;
+            string newResolution = "1";//((TextBox)frmSupplierRatePlanInsert.FindControl("txtResolution")).Text;
 
             //assigned direction
             string newSubServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection")).SelectedValue;
 
 
-
+            string newSurchargeAmount =frmSupplierRatePlanInsert.FindControl("TextBoxForPrice").ToString();
             DropDownList ServiceType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection");
             DropDownList ddlistSf = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
             DropDownList ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
@@ -3002,7 +3021,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             {
                 billingRule = ddlBillingRule.SelectedValue;
             }
-            
+            billingRule = "Prepaid";
             // BillingInformation bl = new BillingInformation(billingRule, paymentMode);
             // var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(bl);
             //Console.WriteLine(jsonString);
@@ -3012,18 +3031,18 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 StatusLabel.Text = "No Service Family Selected!";
                 return;
             }
-            if (ddlBillingRule.SelectedIndex == 0)
-            {
-                StatusLabel.ForeColor = Color.Red;
-                StatusLabel.Text = "No Billing Rule Selected!";
-                return;
-            }
+            //if (ddlBillingRule.SelectedIndex == 0)
+            //{
+            //    StatusLabel.ForeColor = Color.Red;
+            //    StatusLabel.Text = "No Billing Rule Selected!";
+            //    return;
+            //}
             Dictionary<string, enumservicefamily> dicServiceFamily = new Dictionary<string, enumservicefamily>();
             using (PartnerEntities Context = new PartnerEntities())
             {
                 dicServiceFamily = Context.enumservicefamilies.ToDictionary(c => c.id.ToString());
             }
-            enumservicefamily ThisSf = dicServiceFamily[ddlistSf.SelectedValue];
+            enumservicefamily ThisSf = dicServiceFamily["1"];
             if (ThisSf.PartnerAssignNotNeeded == 0)//partner assign required
             {
                 if (Convert.ToInt32(newCountry) <= 0)
@@ -3035,7 +3054,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 if (Convert.ToInt32(newSubServiceType) <= 0)
                 {
                     StatusLabel.ForeColor = Color.Red;
-                    StatusLabel.Text = "Rateplan Assignment Direction is not selected!";
+                    StatusLabel.Text = "Package Assignment Direction is not selected!";
                     return;
                 }
             }
@@ -3054,14 +3073,22 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
                 }
             }
             //id rate plan
-            string stridRatePlan = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan")).SelectedValue;
+            DropDownList packageList = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan"));
+            
             int tempint = -1;
-            if (int.TryParse(stridRatePlan, out tempint) == false)
+
+            if (packageList.SelectedIndex == 0)
             {
                 StatusLabel.ForeColor = Color.Red;
-                StatusLabel.Text = "No Rate Plan Selected!";
+                StatusLabel.Text = "No Package Selected!";
                 return;
             }
+            //if (int.TryParse(stridRatePlan, out tempint) == false)
+            //{
+            //    StatusLabel.ForeColor = Color.Red;
+            //    StatusLabel.Text = "No Package Selected!";
+            //    return;
+            //}
 
 
 
@@ -3107,7 +3134,7 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             string newStartTimeOfDay = "1";
             string newEndTimeOfDay = "1";
             string newSurchargeTime = "1";
-            string newSurchargeAmount = "1";
+            
             string newOtherAmount1 = "1";
             string newOtherAmount2 = "1";
             string newOtherAmount3 = "1";
@@ -3446,18 +3473,18 @@ public partial class config_SupplierRatePlanDetailRateAssign : System.Web.UI.Pag
             frmSupplierRatePlanInsert.Visible = false;
             CreateCustomerServiceAccounts();
             myGridViewDataBind();
-            Response.Redirect("rateassignment.aspx");
+            Response.Redirect("assignmentpackage.aspx");
             //var color = ColorTranslator.FromHtml("#B1B1B3");
             //StatusLabel.ForeColor = color;
             //StatusLabel.Text = "Changes are not committed to rate table until 'Save All Changes' clicked!";
             StatusLabel.ForeColor = Color.Green;
-            StatusLabel.Text = "Rateplan Successfully Assigned";
+            StatusLabel.Text = "Package Successfully Assigned";
         }
         catch (Exception e1)
         {
             //StatusLabel.ForeColor = Color.Red;
             myGridViewDataBind();
-            Response.Redirect("rateassignment.aspx");
+            Response.Redirect("assignmentpackage.aspx");
             //StatusLabel.Text = e1.Message + "<br/>" + (e1.InnerException != null ? e1.InnerException.ToString() : "");
         }
 

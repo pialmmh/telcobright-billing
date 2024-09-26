@@ -110,7 +110,7 @@ namespace InstallConfig
 
             serviceGroupConfigurations.Add(new ServiceGroupConfiguration(idServiceGroup: 1) //domestic
             {
-                AlternateServiceGroupId = 10,
+                //AlternateServiceGroupId = 10,
                 PartnerRules = new List<int>()
                 {
                     PartnerRuletype.InPartnerByIncomingRoute,

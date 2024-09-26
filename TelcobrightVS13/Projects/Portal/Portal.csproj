@@ -489,6 +489,7 @@
     <Content Include="bin\zh-Hant\Microsoft.Data.OData.resources.dll" />
     <Content Include="bin\zh-Hant\System.Spatial.resources.dll" />
     <Content Include="cal.png" />
+    <Content Include="config\purchasePackage.aspx" />
     <Content Include="config\BalanceAdjustment_old.aspx" />
     <Content Include="config\calendar.png" />
     <Content Include="config\BatchJob.aspx" />
@@ -496,7 +497,6 @@
     <Content Include="config\GeneratedInvoices.aspx" />
     <Content Include="config\BalanceAdjustment.aspx" />
     <Content Include="config\InvoiceGeneration.aspx" />
-    <Content Include="config\PackageAssignment.aspx" />
     <Content Include="config\AccountDetails.aspx" />
     <Content Include="config\PaymentHistory.aspx" />
     <Content Include="config\AddPayment.aspx" />
@@ -506,6 +506,9 @@
     <Content Include="config\PrepareReportAll.aspx" />
     <Content Include="config\PrepareReportForMultipleSections.aspx" />
     <Content Include="config\PrepareReport.aspx" />
+    <Content Include="config\assignmentpackage.aspx" />
+    <Content Include="config\package.aspx" />
+    <Content Include="config\packagetask.aspx" />
     <Content Include="config\ViewPDF.aspx" />
     <Content Include="config\ViewReport.aspx" />
     <Content Include="config\ViewRoutes.aspx" />
@@ -781,6 +784,13 @@
     <Compile Include="App_Start\Billing Reports\IOSWiseOutgoingSummary.aspx.designer.cs">
       <DependentUpon>IOSWiseOutgoingSummary.aspx</DependentUpon>
     </Compile>
+    <Compile Include="config\purchasePackage.aspx.cs">
+      <DependentUpon>purchasePackage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\purchasePackage.aspx.designer.cs">
+      <DependentUpon>purchasePackage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="config\BalanceAdjustment_old.aspx.cs">
       <DependentUpon>BalanceAdjustment_old.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -822,13 +832,6 @@
     </Compile>
     <Compile Include="config\InvoiceGeneration.aspx.designer.cs">
       <DependentUpon>InvoiceGeneration.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="config\PackageAssignment.aspx.cs">
-      <DependentUpon>PackageAssignment.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="config\PackageAssignment.aspx.designer.cs">
-      <DependentUpon>PackageAssignment.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\AccountDetails.aspx.cs">
       <DependentUpon>AccountDetails.aspx</DependentUpon>
@@ -892,6 +895,27 @@
     </Compile>
     <Compile Include="config\PrepareReport.aspx.designer.cs">
       <DependentUpon>PrepareReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\assignmentpackage.aspx.cs">
+      <DependentUpon>assignmentpackage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\assignmentpackage.aspx.designer.cs">
+      <DependentUpon>assignmentpackage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\package.aspx.cs">
+      <DependentUpon>package.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\package.aspx.designer.cs">
+      <DependentUpon>package.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\packagetask.aspx.cs">
+      <DependentUpon>packagetask.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\packagetask.aspx.designer.cs">
+      <DependentUpon>packagetask.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\ViewPDF.aspx.cs">
       <DependentUpon>ViewPDF.aspx</DependentUpon>
