@@ -552,11 +552,17 @@ public partial class ConfigSupplierPackage : Page
         PopulateCurrenciesInDropDownLists(ddlistCurrency);
         ddlistCurrency.SelectedValue = "USD";
     }
-
+    protected void Price_onTextChange(object sender, EventArgs e)
+    {
+        string newSurchargeAmount = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxForPrice")).Text;
+        Double vat = Convert.ToDouble(newSurchargeAmount) * 15 / (double)100;
+        string newMinDurationSec = vat.ToString();
+        TextBox vatBox = ((TextBox)this.frmSupplierRatePlanInsert.FindControl("TextBoxForVat"));
+        vatBox.Text = newMinDurationSec;
+    }
 
     protected void frmSupplierRatePlanInsert_ItemInserting(object sender, FormViewInsertEventArgs e)
     {
-
         int newType = int.Parse(((DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListType")).SelectedValue);
         string newName = ((TextBox)this.frmSupplierRatePlanInsert.FindControl("RatePlanNameTextBox")).Text;
         //int newPartner = int.Parse(((DropDownList)frmSupplierRatePlanInsert.FindControl("ddlistPartner")).SelectedValue);
@@ -577,9 +583,12 @@ public partial class ConfigSupplierPackage : Page
         string newServiceType = ((DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListServiceType")).SelectedValue;
         string newSubServiceType = ((DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListSubServiceType")).SelectedValue;
         string newSurchargeTime = ((TextBox)this.frmSupplierRatePlanInsert.FindControl("txtSurchargeTime")).Text;
-        string newSurchargeAmount = ((TextBox)this.frmSupplierRatePlanInsert.FindControl("txtSurchargeAmount")).Text;
+        string newSurchargeAmount = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxForPrice")).Text;
         string newResolution = ((TextBox)this.frmSupplierRatePlanInsert.FindControl("txtResolution")).Text;
-        string newMinDurationSec = ((TextBox)this.frmSupplierRatePlanInsert.FindControl("txtMinDurationSec")).Text;
+        Double vat = Convert.ToDouble(newSurchargeAmount)*15/(double) 100;
+        string newMinDurationSec = vat.ToString();
+        TextBox vatBox =  ((TextBox)this.frmSupplierRatePlanInsert.FindControl("TextBoxForVat"));
+        vatBox.Text = newMinDurationSec;
         string newRateAmountRoundupDecimal = ((TextBox)this.frmSupplierRatePlanInsert.FindControl("TextBoxRoundUp")).Text;
         if (StringExtensions.IsNumeric(newRateAmountRoundupDecimal) == false)
         {

@@ -147,6 +147,10 @@ union all
                 
 
                 <%--<span style="padding-left:53px;"></span>--%>
+                    <b>Price</b> <asp:TextBox ID="TextBoxForPrice" runat="server" OnTextChanged="Price_onTextChange">
+                    </asp:TextBox><br />
+                    <b>Vat</b> <asp:TextBox ID="TextBoxForVat" runat="server" ReadOnly="True">
+                    </asp:TextBox><br />
                 
                 <b>Description:</b>
                 <asp:TextBox ID="DescriptionTextBox" runat="server" Text="" />

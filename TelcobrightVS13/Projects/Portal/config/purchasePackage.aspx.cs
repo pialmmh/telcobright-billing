@@ -41,6 +41,61 @@ public partial class purchasePackage : System.Web.UI.Page
     static List<BillingRule> billingRules;
     private PartnerEntities Context = new PartnerEntities();
 
+    protected void MyButton_Click(object sender, EventArgs e)
+    {
+
+        Response.Write("Button clicked!");
+        DropDownList dropDownPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
+        DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
+        TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
+        TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
+        TextBox discountBox = (TextBox)frmSupplierRatePlanInsert.FindControl("discountTextBox");
+        int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
+        int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
+        Decimal vat = Convert.ToDecimal(vatBox.Text);
+        Decimal price = Convert.ToDecimal(priceBox.Text);
+        float discount;
+        float.TryParse(discountBox.Text, out discount);
+        using (PartnerEntities Comnd = new PartnerEntities())
+        {
+            int? id = Comnd.rateplanassignmenttuples.Where(x => x.idpartner == rateplaneAssignmentid)
+                .Select(x => x.id)
+                .SingleOrDefault();
+            rateplaneAssignmentid =(int) id;
+        }
+
+        string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+        using (MySqlConnection connection = new MySqlConnection(thisConectionString))
+        {
+            connection.Open();
+
+            string insertPackagePurchase = $@"
+                                            INSERT INTO packagepurchase 
+                                            (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
+                                            VALUES 
+                                            ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
+                                            SELECT LAST_INSERT_ID();"; 
+
+            MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, connection);
+            long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
+            string partnerName = null;
+            using (PartnerEntities Comnd = new PartnerEntities())
+            {
+                int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
+                partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
+                    .Select(x => x.PartnerName)
+                    .SingleOrDefault();
+            }
+            string insertPackageAccount = $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
+                                 VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', 'SampleCategory');";
+            MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, connection);
+            cmdAccount.ExecuteNonQuery();
+
+            connection.Close();
+        }
+
+    }
+
     public void populateDropDownForBillingRule()
     {
 
@@ -808,16 +863,58 @@ public partial class purchasePackage : System.Web.UI.Page
         //    }
     }
 
-    protected void FormviewPartnerSelectedIndexChanged(Object sender, EventArgs e)
+    protected void DropDownListPackage_OnSelectedIndexChanged(object sender, EventArgs e)
     {
-        DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
-        DropDownList dropRatePlan = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
-
-        dropRatePlan.Items.Clear();
+        DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
         using (PartnerEntities Conmed = new PartnerEntities())
         {
             using (PartnerEntities Context = new PartnerEntities())
             {
+                if (dropDownpackage.SelectedIndex > 0)
+                {
+                    TextBox priceBox = (TextBox) frmSupplierRatePlanInsert.FindControl("peiceTextBox");
+                    TextBox vatBox = (TextBox) frmSupplierRatePlanInsert.FindControl("vatTextBox");
+                    double? price = Conmed.rateplans
+                        .Where(x => x.RatePlanName == dropDownpackage.SelectedItem.Text)
+                        .Select(x => (double?)x.SurchargeAmount)
+                        .FirstOrDefault();
+                    priceBox.Text = price?.ToString();  
+
+                   
+                    double? vatAmmount = Conmed.rateplans
+                        .Where(x => x.RatePlanName == dropDownpackage.SelectedItem.Text)
+                        .Select(x => (double?)x.mindurationsec)
+                        .FirstOrDefault();
+                    vatBox.Text = vatAmmount?.ToString();
+
+
+                    double total = price.GetValueOrDefault() + vatAmmount.GetValueOrDefault();
+                    TextBox totalBox = (TextBox)frmSupplierRatePlanInsert.FindControl("totalCostTextBox");
+                    totalBox.Text= total.ToString();
+                }
+                
+            }
+        }
+    }
+
+   
+
+
+
+    protected void FormviewPartnerSelectedIndexChanged(Object sender, EventArgs e)
+    {
+        DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
+        DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
+        string item = dropDownpackage.SelectedItem.Text;
+
+
+
+        //dropRatePlan.Items.Clear();
+        using (PartnerEntities Conmed = new PartnerEntities())
+        {
+            using (PartnerEntities Context = new PartnerEntities())
+            {
+               
                 DropDownList dropPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
                 DropDownList dropRoute = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRoute");
                 List<rateplan> lstPlan = new List<rateplan>();
@@ -943,7 +1040,7 @@ public partial class purchasePackage : System.Web.UI.Page
 
             List<enumservicefamily> Lstrules = new List<enumservicefamily>();
             DropDownList dropPartner = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
-            DropDownList dropservice = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListservice");
+             DropDownList dropservice = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListservice");
             if (dropPartner != null)
             {
                 //foreach (rateassign ThisRate in Context.rateassigns.ToList())
@@ -992,6 +1089,7 @@ public partial class purchasePackage : System.Web.UI.Page
             {
                 List<rateplan> lstPlan = Conmed.rateplans.Where(c => c.field2 == 1).ToList();
                 DropDownList dropDownList = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
+                
                 //dropDownList.DataSource = lstPlan;
                 dropDownList.Items.Insert(0, new ListItem("[Select]", "0"));
                 int id = 1;
@@ -3095,7 +3193,9 @@ public partial class purchasePackage : System.Web.UI.Page
             string newInactive = tempint.ToString();
 
             string newMinDurationSec = "1";
-            string newStartDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDatePickerFrm")).Text;
+            //string newStartDate =((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDatePickerFrm")).Text;
+            DateTime startDate = DateTime.Now;
+            string newStartDate = startDate.ToString("yyyy-MM-dd");
             string newStartTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDateTimePickerFrm")).Text;
             string newStartDateAndTime = "";
             if (newStartDate != "")
@@ -3111,7 +3211,9 @@ public partial class purchasePackage : System.Web.UI.Page
                 return;
             }
 
-            string newEndDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDatePickerFrm")).Text;
+            //string newEndDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDatePickerFrm")).Text;
+            DateTime endDate = DateTime.Now;
+            string newEndDate = endDate.ToString("yyyy-MM-dd");
             string newEndTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDateTimePickerFrm")).Text;
             string newEndDateAndTime = "";
             if (newEndDate != "")
@@ -6340,4 +6442,19 @@ public partial class purchasePackage : System.Web.UI.Page
     }
 
 
+}
+public class PackagePurchase
+{
+    public long Id { get; set; }
+    public int? RatePlanId { get; set; }
+    public int? RateplanAssignmentTupleId { get; set; }
+    public long? PaymentId { get; set; }
+    public DateTime? PurchaseDate { get; set; }
+    public DateTime? ExpireDate { get; set; }
+    public string Status { get; set; }
+    public bool? AutoRenewalStatus { get; set; }
+    public string Currency { get; set; }
+    public decimal? Price { get; set; }
+    public decimal? Vat { get; set; }
+    public float? Ait { get; set; }
 }

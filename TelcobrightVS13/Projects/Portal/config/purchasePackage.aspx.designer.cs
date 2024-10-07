@@ -9,7 +9,7 @@
 
 
 
-public partial class purchasePackage{
+public partial class purchasePackage {
     
     /// <summary>
     /// hidvaluerowcolorchange control.

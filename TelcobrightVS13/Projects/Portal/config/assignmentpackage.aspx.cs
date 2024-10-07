@@ -813,7 +813,7 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
         DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
         DropDownList dropRatePlan = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
 
-        dropRatePlan.Items.Clear();
+        //dropRatePlan.Items.Clear();
         using (PartnerEntities Conmed = new PartnerEntities())
         {
             using (PartnerEntities Context = new PartnerEntities())
@@ -1769,15 +1769,15 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
                         ErrorString += "No or Invalid Prefix." + ", ";
                     }
 
-                    if (GetBitInteger(ErrorInt, 2) == true)//2=rate
-                    {
-                        ErrorString += "No or Invalid Rate or SurchargeAmount" + ", ";
+                    //if (GetBitInteger(ErrorInt, 2) == true)//2=rate
+                    //{
+                    //    ErrorString += "No or Invalid Rate or SurchargeAmount" + ", ";
 
-                        //even with invalid rate, rateamount field kept on showing 0
-                        //so, if rate error flag is found, then set the text to ""
-                        Label rateLabel = (Label)e.Row.FindControl("lblRateAmount");
-                        //rateLabel.Text = "";
-                    }
+                    //    //even with invalid rate, rateamount field kept on showing 0
+                    //    //so, if rate error flag is found, then set the text to ""
+                    //    Label rateLabel = (Label)e.Row.FindControl("lblRateAmount");
+                    //    //rateLabel.Text = "";
+                    //}
 
                     if (GetBitInteger(ErrorInt, 3) == true)//3=pulse
                     {
@@ -3008,7 +3008,7 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
             string newSubServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection")).SelectedValue;
 
 
-            string newSurchargeAmount =frmSupplierRatePlanInsert.FindControl("TextBoxForPrice").ToString();
+            string newSurchargeAmount = null;
             DropDownList ServiceType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection");
             DropDownList ddlistSf = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
             DropDownList ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
@@ -3074,8 +3074,21 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
             }
             //id rate plan
             DropDownList packageList = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan"));
-            
-            int tempint = -1;
+            using (PartnerEntities Conmed = new PartnerEntities())
+            {
+                using (PartnerEntities Context = new PartnerEntities())
+                {
+                    if (packageList.SelectedIndex > 0)
+                    {
+                        decimal? ans = Conmed.rateplans
+                            .Where(x => x.RatePlanName == packageList.SelectedItem.Text)
+                            .Select(x => x.SurchargeAmount)
+                            .FirstOrDefault();
+                        newSurchargeAmount = ans.ToString();
+                    }
+                }
+            }
+            string newInactive = packageList.SelectedValue;
 
             if (packageList.SelectedIndex == 0)
             {
@@ -3091,8 +3104,7 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
             //}
 
 
-
-            string newInactive = tempint.ToString();
+           
 
             string newMinDurationSec = "1";
             string newStartDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxStartDatePickerFrm")).Text;
@@ -3382,7 +3394,7 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
                     //insert billingRule
                     ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
                     DropDownList ddlserviceGroup = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup");
-                    int selectedBillingRule = Convert.ToInt32(ddlBillingRule.SelectedValue);
+                    int selectedBillingRule = 1;// Convert.ToInt32(ddlBillingRule.SelectedValue);
                     int selectedServiceGroup = Convert.ToInt32(ddlserviceGroup.SelectedValue);
                     billingruleassignment billingruleassignment = new billingruleassignment()
                     {
@@ -3444,7 +3456,6 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
                 //LCR Flag
                 var ddlExcludeLCR = frmSupplierRatePlanInsert.FindControl("ddlExcludeLCR") as DropDownList;
                 NewRate.field3 = ddlExcludeLCR.SelectedValue;
-
 
                 if (NewRate.CountryCode == 0) NewRate.CountryCode = null;//countryCode in ratetaskassign=idpartner,0=null=no partner
                 Context.ratetaskassigns.Add(NewRate);
@@ -4148,7 +4159,7 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
                 }
             }
         }
-        Response.Redirect("rateassignment.aspx");
+        Response.Redirect("assignmentpackage.aspx");
     }
 
 
@@ -6272,7 +6283,7 @@ public partial class config_SupplierPackageAssign : System.Web.UI.Page
                         StatusLabel.Text = "Updated Successfully";
                         GridViewSupplierRates.EditIndex = -1;
                         //myGridViewDataBind(); //row wasn't leaving edit mode
-                        Response.Redirect("rateassignment.aspx");
+                        Response.Redirect("assignmentpackage.aspx");
                     }
                 }
             }

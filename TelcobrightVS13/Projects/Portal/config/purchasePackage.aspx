@@ -247,50 +247,69 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                 
                             <div style="float:left;text-align:right; min-width:200px;margin-top:0px;">
                                 
-                                <%--<b>Partner:</b>--%>
-                                <asp:DropDownList ID="DropDownListPartner" runat="server" AutoPostBack="True" Visible="False" 
+                                
+                                <b>Partner:</b>
+                                <asp:DropDownList ID="DropDownListPartner" runat="server" AutoPostBack="True" 
                                                   DataTextField="PartnerName" DataValueField="idpartner" 
-                                                  Enabled="True" OnSelectedIndexChanged="FormviewPartnerSelectedIndexChanged"  >
+                                                  Enabled="True" OnSelectedIndexChanged="FormviewPartnerSelectedIndexChanged" >
                                 </asp:DropDownList>
                                 <br />
-                                
                                 <b>Package</b>
-                                <asp:DropDownList ID="DropDownListRatePlan" runat="server" AutoPostBack="false" 
-                                                  DataTextField="rateplanname" DataValueField="id" 
+                                <asp:DropDownList ID="DropDownListRatePlan" runat="server" AutoPostBack="True" 
+                                                  DataTextField="rateplanname" OnSelectedIndexChanged="DropDownListPackage_OnSelectedIndexChanged" DataValueField="id" 
                                                   Enabled="true" Visible="true" >
                                 </asp:DropDownList>
-                                
-                                <br/>
-                                <b> Assignment Order:</b>
-                                <asp:TextBox ID="txtResolution" Enabled="True" runat="server" Text=""></asp:TextBox>
                                 <br />
-                               <b>Price</b> <asp:TextBox ID="TextBoxForPrice" runat="server">
+                                <b>Price</b> <asp:TextBox ID="peiceTextBox" runat="server" ReadOnly="true">
+                                </asp:TextBox><br />
+                                <b>Vat</b> <asp:TextBox ID="vatTextBox" runat="server" ReadOnly="true">
+                                </asp:TextBox><br />
+                                <b>Discount</b> <asp:TextBox ID="discountTextBox" runat="server">
+                                </asp:TextBox><br />
+                                <asp:RegularExpressionValidator 
+                                    ID="regexDiscountValidator" 
+                                    ControlToValidate="discountTextBox" 
+                                    ErrorMessage="Please enter a valid number" 
+                                    ValidationExpression="^\d+$" 
+                                    ForeColor="Red" 
+                                    runat="server" 
+                                    Display="Dynamic">
+                                </asp:RegularExpressionValidator>
+                                <br/>
+                                <b>Total</b> <asp:TextBox ID="totalCostTextBox" runat="server" ReadOnly="true">
+                                </asp:TextBox><br />
+                                <asp:Button ID="MyButton" runat="server" Text="Purchase" OnClick="MyButton_Click" />
+                                <%--<b> Assignment Order:</b>--%>
+                                <asp:TextBox ID="txtResolution" Enabled="True" Visible="false" runat="server" Text=""></asp:TextBox>
+                                <br />
+                               <%--<b>Price</b>--%> <asp:TextBox ID="TextBoxForPrice" Visible="false" runat="server">
                                 </asp:TextBox>
                                 <br/>
-                                <b> Effective From:</b> <br />
-                                Date: <asp:TextBox ID="TextBoxStartDatePickerFrm" runat="server">
+                                <%--<b> Effective From:</b> <br />--%>
+                                <%--Date:--%> <asp:TextBox ID="TextBoxStartDatePickerFrm" runat="server" Visible="false">
                                 </asp:TextBox>
                                 <asp:CalendarExtender ID="CalendarStartDateFrm" runat="server" 
                                                       TargetControlID="TextBoxStartDatePickerFrm"  PopupButtonID="TextBoxStartDatePickerFrm" Format="yyyy-MM-dd">
                                 </asp:CalendarExtender>     
                                 <br />
-                                Time: <asp:TextBox ID="TextBoxStartDateTimePickerFrm" runat="server" Text="00:00:00">
+                                <%--Time:--%> <asp:TextBox ID="TextBoxStartDateTimePickerFrm" Visible="false" runat="server" Text="00:00:00">
                                 </asp:TextBox>
                                 <br />
 
                    
 
-                                <b>Valid Before:</b> <br />
-                                Date: <asp:TextBox ID="TextBoxEndDatePickerFrm" runat="server">
+                                <%--<b>Valid Before:</b> <br />--%>
+                                <%--Date:--%> <asp:TextBox ID="TextBoxEndDatePickerFrm" runat="server" Visible="false">
                                 </asp:TextBox>
                                 <asp:CalendarExtender ID="CalendarEndDateFrm" runat="server" 
                                                       TargetControlID="TextBoxEndDatePickerFrm"  PopupButtonID="TextBoxEndDatePickerFrm" Format="yyyy-MM-dd">
                                 </asp:CalendarExtender>
                                 <br />
-                                Time: <asp:TextBox ID="TextBoxEndDateTimePickerFrm" runat="server" Text="00:00:00">
+                               <%-- Time:--%> <asp:TextBox ID="TextBoxEndDateTimePickerFrm" Visible="false" runat="server" Text="00:00:00">
                                 </asp:TextBox>
                                 <br />
                               
+                                
                                 <%--<b>Service Group:</b>--%>
                                 <asp:DropDownList ID="DropDownListServiceGroup" runat="server" AutoPostBack="True" Visible="false" OnSelectedIndexChanged="DropDownListServiceGroup_SelectedIndexChanged"
                                                   >

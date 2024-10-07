@@ -257,9 +257,7 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                                 <b> Assignment Order:</b>
                                 <asp:TextBox ID="txtResolution" Enabled="True" runat="server" Text=""></asp:TextBox>
                                 <br />
-                               <b>Price</b> <asp:TextBox ID="TextBoxForPrice" runat="server">
-                                </asp:TextBox>
-                                <br/>
+                              
                                 <b> Effective From:</b> <br />
                                 Date: <asp:TextBox ID="TextBoxStartDatePickerFrm" runat="server">
                                 </asp:TextBox>
@@ -290,6 +288,9 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                                                   Enabled="true" Visible="true" >
                                 </asp:DropDownList>
                                 <br />
+                                <%--<b>Price</b> <asp:TextBox ID="TextBoxForPrice" runat="server">
+                                </asp:TextBox>
+                                <br/>--%>
                                 <%--<b>Service Group:</b>--%>
                                 <asp:DropDownList ID="DropDownListServiceGroup" runat="server" AutoPostBack="True" Visible="false" OnSelectedIndexChanged="DropDownListServiceGroup_SelectedIndexChanged"
                                                   >
