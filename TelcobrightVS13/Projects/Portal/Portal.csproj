@@ -509,6 +509,7 @@
     <Content Include="config\assignmentpackage.aspx" />
     <Content Include="config\package.aspx" />
     <Content Include="config\packagetask.aspx" />
+    <Content Include="config\topUp.aspx" />
     <Content Include="config\ViewPDF.aspx" />
     <Content Include="config\ViewReport.aspx" />
     <Content Include="config\ViewRoutes.aspx" />
@@ -916,6 +917,13 @@
     </Compile>
     <Compile Include="config\packagetask.aspx.designer.cs">
       <DependentUpon>packagetask.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="config\topUp.aspx.cs">
+      <DependentUpon>topUp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="config\topUp.aspx.designer.cs">
+      <DependentUpon>topUp.aspx</DependentUpon>
     </Compile>
     <Compile Include="config\ViewPDF.aspx.cs">
       <DependentUpon>ViewPDF.aspx</DependentUpon>

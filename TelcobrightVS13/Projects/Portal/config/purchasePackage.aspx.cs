@@ -41,60 +41,60 @@ public partial class purchasePackage : System.Web.UI.Page
     static List<BillingRule> billingRules;
     private PartnerEntities Context = new PartnerEntities();
 
-    protected void MyButton_Click(object sender, EventArgs e)
-    {
+    //protected void MyButton_Click(object sender, EventArgs e)
+    //{
 
-        Response.Write("Button clicked!");
-        DropDownList dropDownPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
-        DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
-        TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
-        TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
-        TextBox discountBox = (TextBox)frmSupplierRatePlanInsert.FindControl("discountTextBox");
-        int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
-        int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
-        Decimal vat = Convert.ToDecimal(vatBox.Text);
-        Decimal price = Convert.ToDecimal(priceBox.Text);
-        float discount;
-        float.TryParse(discountBox.Text, out discount);
-        using (PartnerEntities Comnd = new PartnerEntities())
-        {
-            int? id = Comnd.rateplanassignmenttuples.Where(x => x.idpartner == rateplaneAssignmentid)
-                .Select(x => x.id)
-                .SingleOrDefault();
-            rateplaneAssignmentid =(int) id;
-        }
+    //    Response.Write("Button clicked!");
+    //    DropDownList dropDownPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
+    //    DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
+    //    TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
+    //    TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
+    //    TextBox discountBox = (TextBox)frmSupplierRatePlanInsert.FindControl("discountTextBox");
+    //    int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
+    //    int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
+    //    Decimal vat = Convert.ToDecimal(vatBox.Text);
+    //    Decimal price = Convert.ToDecimal(priceBox.Text);
+    //    float discount;
+    //    float.TryParse(discountBox.Text, out discount);
+    //    using (PartnerEntities Comnd = new PartnerEntities())
+    //    {
+    //        int? id = Comnd.rateplanassignmenttuples.Where(x => x.idpartner == rateplaneAssignmentid)
+    //            .Select(x => x.id)
+    //            .SingleOrDefault();
+    //        rateplaneAssignmentid =(int) id;
+    //    }
 
-        string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
-        using (MySqlConnection connection = new MySqlConnection(thisConectionString))
-        {
-            connection.Open();
+    //    string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+    //    using (MySqlConnection connection = new MySqlConnection(thisConectionString))
+    //    {
+    //        connection.Open();
 
-            string insertPackagePurchase = $@"
-                                            INSERT INTO packagepurchase 
-                                            (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
-                                            VALUES 
-                                            ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
-                                            SELECT LAST_INSERT_ID();"; 
+    //        string insertPackagePurchase = $@"
+    //                                        INSERT INTO packagepurchase 
+    //                                        (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
+    //                                        VALUES 
+    //                                        ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
+    //                                        SELECT LAST_INSERT_ID();"; 
 
-            MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, connection);
-            long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
-            string partnerName = null;
-            using (PartnerEntities Comnd = new PartnerEntities())
-            {
-                int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
-                partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
-                    .Select(x => x.PartnerName)
-                    .SingleOrDefault();
-            }
-            string insertPackageAccount = $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
-                                 VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', 'SampleCategory');";
-            MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, connection);
-            cmdAccount.ExecuteNonQuery();
+    //        MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, connection);
+    //        long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
+    //        string partnerName = null;
+    //        using (PartnerEntities Comnd = new PartnerEntities())
+    //        {
+    //            int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
+    //            partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
+    //                .Select(x => x.PartnerName)
+    //                .SingleOrDefault();
+    //        }
+    //        string insertPackageAccount = $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
+    //                             VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', 'SampleCategory');";
+    //        MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, connection);
+    //        cmdAccount.ExecuteNonQuery();
 
-            connection.Close();
-        }
+    //        connection.Close();
+    //    }
 
-    }
+    //}
 
     public void populateDropDownForBillingRule()
     {
@@ -905,7 +905,6 @@ public partial class purchasePackage : System.Web.UI.Page
     {
         DropDownList dropservice = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
         DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
-        string item = dropDownpackage.SelectedItem.Text;
 
 
 
@@ -1867,15 +1866,15 @@ public partial class purchasePackage : System.Web.UI.Page
                         ErrorString += "No or Invalid Prefix." + ", ";
                     }
 
-                    if (GetBitInteger(ErrorInt, 2) == true)//2=rate
-                    {
-                        ErrorString += "No or Invalid Rate or SurchargeAmount" + ", ";
+                    //if (GetBitInteger(ErrorInt, 2) == true)//2=rate
+                    //{
+                    //    ErrorString += "No or Invalid Rate or SurchargeAmount" + ", ";
 
-                        //even with invalid rate, rateamount field kept on showing 0
-                        //so, if rate error flag is found, then set the text to ""
-                        Label rateLabel = (Label)e.Row.FindControl("lblRateAmount");
-                        //rateLabel.Text = "";
-                    }
+                    //    //even with invalid rate, rateamount field kept on showing 0
+                    //    //so, if rate error flag is found, then set the text to ""
+                    //    Label rateLabel = (Label)e.Row.FindControl("lblRateAmount");
+                    //    //rateLabel.Text = "";
+                    //}
 
                     if (GetBitInteger(ErrorInt, 3) == true)//3=pulse
                     {
@@ -3105,8 +3104,16 @@ public partial class purchasePackage : System.Web.UI.Page
             //assigned direction
             string newSubServiceType = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection")).SelectedValue;
 
-
-            string newSurchargeAmount =frmSupplierRatePlanInsert.FindControl("TextBoxForPrice").ToString();
+            DropDownList dropDownPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
+            DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
+            TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
+            TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
+            TextBox discountBox = (TextBox)frmSupplierRatePlanInsert.FindControl("discountTextBox");
+            int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
+            int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
+            Decimal vat = Convert.ToDecimal(vatBox.Text);
+            Decimal price = Convert.ToDecimal(priceBox.Text);
+            string newSurchargeAmount = priceBox.Text;
             DropDownList ServiceType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection");
             DropDownList ddlistSf = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
             DropDownList ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
@@ -3172,8 +3179,15 @@ public partial class purchasePackage : System.Web.UI.Page
             }
             //id rate plan
             DropDownList packageList = ((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan"));
-            
-            int tempint = -1;
+            int tempint = Convert.ToInt32(packageList.SelectedValue);
+            using (PartnerEntities Comnd = new PartnerEntities())
+            {
+                int? id = Comnd.rateplans.Where(x => x.id == tempint)
+                    .Select(x => x.id)
+                    .SingleOrDefault();
+                tempint = (int)id;
+            }
+           
 
             if (packageList.SelectedIndex == 0)
             {
@@ -3484,8 +3498,8 @@ public partial class purchasePackage : System.Web.UI.Page
                     //insert billingRule
                     ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
                     DropDownList ddlserviceGroup = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup");
-                    int selectedBillingRule = Convert.ToInt32(ddlBillingRule.SelectedValue);
-                    int selectedServiceGroup = Convert.ToInt32(ddlserviceGroup.SelectedValue);
+                    int selectedBillingRule = 2;//Convert.ToInt32(ddlBillingRule.SelectedValue);
+                    int selectedServiceGroup = 1;//Convert.ToInt32(ddlserviceGroup.SelectedValue);
                     billingruleassignment billingruleassignment = new billingruleassignment()
                     {
                         idRatePlanAssignmentTuple = newTuple.id,
@@ -3571,11 +3585,51 @@ public partial class purchasePackage : System.Web.UI.Page
                 //  throw;
                 //}
             }
+            
+            float discount;
+            float.TryParse(discountBox.Text, out discount);
+            using (PartnerEntities Comnd = new PartnerEntities())
+            {
+                int? id = Comnd.rateplanassignmenttuples.Where(x => x.idpartner == rateplaneAssignmentid)
+                    .Select(x => x.id)
+                    .SingleOrDefault();
+                rateplaneAssignmentid = (int)id;
+            }
 
+            string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+            using (MySqlConnection mySqlConnection = new MySqlConnection(thisConectionString))
+            {
+                mySqlConnection.Open();
+
+                string insertPackagePurchase = $@"
+                                            INSERT INTO packagepurchase 
+                                            (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
+                                            VALUES 
+                                            ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
+                                            SELECT LAST_INSERT_ID();";
+
+                MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, mySqlConnection);
+                cmd.ExecuteNonQuery();
+                long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
+                string partnerName = null;
+                using (PartnerEntities Comnd = new PartnerEntities())
+                {
+                    int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
+                    partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
+                        .Select(x => x.PartnerName)
+                        .SingleOrDefault();
+                }
+                string insertPackageAccount = $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
+                                 VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', 'SampleCategory');";
+                MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, mySqlConnection);
+                cmdAccount.ExecuteNonQuery();
+
+                mySqlConnection.Close();
+            }
             frmSupplierRatePlanInsert.Visible = false;
             CreateCustomerServiceAccounts();
             myGridViewDataBind();
-            Response.Redirect("assignmentpackage.aspx");
+            Response.Redirect("purchasePackage.aspx");
             //var color = ColorTranslator.FromHtml("#B1B1B3");
             //StatusLabel.ForeColor = color;
             //StatusLabel.Text = "Changes are not committed to rate table until 'Save All Changes' clicked!";
@@ -3586,7 +3640,7 @@ public partial class purchasePackage : System.Web.UI.Page
         {
             //StatusLabel.ForeColor = Color.Red;
             myGridViewDataBind();
-            Response.Redirect("assignmentpackage.aspx");
+            Response.Redirect("purchasePackage.aspx");
             //StatusLabel.Text = e1.Message + "<br/>" + (e1.InnerException != null ? e1.InnerException.ToString() : "");
         }
 
@@ -4250,7 +4304,7 @@ public partial class purchasePackage : System.Web.UI.Page
                 }
             }
         }
-        Response.Redirect("rateassignment.aspx");
+        Response.Redirect("purchasePackage.aspx");
     }
 
 
@@ -6374,7 +6428,7 @@ public partial class purchasePackage : System.Web.UI.Page
                         StatusLabel.Text = "Updated Successfully";
                         GridViewSupplierRates.EditIndex = -1;
                         //myGridViewDataBind(); //row wasn't leaving edit mode
-                        Response.Redirect("rateassignment.aspx");
+                        Response.Redirect("purchasePackage.aspx");
                     }
                 }
             }
@@ -6442,19 +6496,4 @@ public partial class purchasePackage : System.Web.UI.Page
     }
 
 
-}
-public class PackagePurchase
-{
-    public long Id { get; set; }
-    public int? RatePlanId { get; set; }
-    public int? RateplanAssignmentTupleId { get; set; }
-    public long? PaymentId { get; set; }
-    public DateTime? PurchaseDate { get; set; }
-    public DateTime? ExpireDate { get; set; }
-    public string Status { get; set; }
-    public bool? AutoRenewalStatus { get; set; }
-    public string Currency { get; set; }
-    public decimal? Price { get; set; }
-    public decimal? Vat { get; set; }
-    public float? Ait { get; set; }
 }

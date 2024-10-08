@@ -94,6 +94,7 @@ border-bottom-style:ridge;min-width:180px; padding-top: 10px;">
       <asp:TreeNode Value="Package" Text="Package"  NavigateUrl="~/config/package.aspx" />
       <asp:TreeNode Value="Package Assignment" Text="Package Assignment"  NavigateUrl="~/config/assignmentpackage.aspx" />
       <asp:TreeNode Value="Package Purchase" Text="Package Purchase"  NavigateUrl="~/config/purchasePackage.aspx" />
+        <asp:TreeNode Value="TopUp" Text="TopUp"  NavigateUrl="~/config/topUp.aspx" />
       <asp:TreeNode Value="Rates" Text="Rates"  NavigateUrl="~/config/rates.aspx" />
       <asp:TreeNode Value="Least Cost Routing (LCR)" Text="LCR"  NavigateUrl="~/config/lcr.aspx" />
       <asp:TreeNode Value="View Routes" Text="View Routes"  NavigateUrl="~/config/ViewRoutes.aspx" />

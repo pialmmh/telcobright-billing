@@ -278,7 +278,7 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                                 <br/>
                                 <b>Total</b> <asp:TextBox ID="totalCostTextBox" runat="server" ReadOnly="true">
                                 </asp:TextBox><br />
-                                <asp:Button ID="MyButton" runat="server" Text="Purchase" OnClick="MyButton_Click" />
+                                
                                 <%--<b> Assignment Order:</b>--%>
                                 <asp:TextBox ID="txtResolution" Enabled="True" Visible="false" runat="server" Text=""></asp:TextBox>
                                 <br />
