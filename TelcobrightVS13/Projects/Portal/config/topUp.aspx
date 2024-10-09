@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.master" 
-Theme="" AutoEventWireup="True" CodeBehind="purchasePackage.aspx.cs" Inherits="purchasePackage" %>
+Theme="" AutoEventWireup="True" CodeBehind="topUp.aspx" Inherits="topUp" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -87,7 +87,7 @@ select (select 1) as id,(select 'Yes') as Type "
     <asp:Label ID="lblTimeZone" runat="server" Visible="false" Text=""></asp:Label>           
     <div style="float:left;width:200px;padding-top:5px;padding-left:10px;">
         <asp:LinkButton ID="LinkButton1" runat="server" Text="Add New Rate" 
-                        onclick="LinkButton1_Click">New Package Purchase</asp:LinkButton>
+                        onclick="LinkButton1_Click">Recharge Amount</asp:LinkButton>
     </div>
 </div>
     
@@ -260,25 +260,19 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                                                   Enabled="true" Visible="true" >
                                 </asp:DropDownList>
                                 <br />
-                                <b>Price</b> <asp:TextBox ID="peiceTextBox" runat="server" ReadOnly="true">
-                                </asp:TextBox><br />
-                                <b>Vat</b> <asp:TextBox ID="vatTextBox" runat="server" ReadOnly="true">
-                                </asp:TextBox><br />
-                                <b>Discount</b> <asp:TextBox ID="discountTextBox" runat="server">
-                                </asp:TextBox><br />
-                                <asp:RegularExpressionValidator 
-                                    ID="regexDiscountValidator" 
-                                    ControlToValidate="discountTextBox" 
-                                    ErrorMessage="Please enter a valid number" 
-                                    ValidationExpression="^\d+$" 
-                                    ForeColor="Red" 
-                                    runat="server" 
-                                    Display="Dynamic">
-                                </asp:RegularExpressionValidator>
-                                <br/>
-                                <b>Total</b> <asp:TextBox ID="totalCostTextBox" runat="server" ReadOnly="true">
-                                </asp:TextBox><br />
+                                <asp:UpdatePanel ID="upGeneralLayoutData" runat="server">
+                                    <ContentTemplate>
+                                        <b>Amount</b> <asp:TextBox ID="peiceTextBox" runat="server" OnTextChanged="AmountTextBox_TextChanged" AutoPostBack="True">
+                                        </asp:TextBox><br />
+                                        <b>Vat</b> <asp:TextBox ID="vatTextBox" runat="server" ReadOnly="true">
+                                        </asp:TextBox><br />
                                 
+                                        <b>price</b> <asp:TextBox ID="totalCostTextBox" runat="server" ReadOnly="true">
+                                        </asp:TextBox><br />
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                                
+                                <asp:Button ID="MyButton" runat="server" Text="Purchase" OnClick="MyButton_Click" />
                                 <%--<b> Assignment Order:</b>--%>
                                 <asp:TextBox ID="txtResolution" Enabled="True" Visible="false" runat="server" Text=""></asp:TextBox>
                                 <br />
@@ -1079,7 +1073,7 @@ select (select 13) as status  ,(select 'Existing') as Description,count(*) as cn
     </EditItemTemplate>
 </asp:TemplateField>
 
-<asp:TemplateField HeaderText="Rate Plan" SortExpression="Category" ControlStyle-Width="150px" Visible="true">
+<asp:TemplateField HeaderText="Rate Plan" SortExpression="Category" ControlStyle-Width="150px" Visible="False">
                 
     <ItemTemplate>
         <asp:DropDownList ID="DropDownListRatePlan" runat="server" AutoPostBack="false" 

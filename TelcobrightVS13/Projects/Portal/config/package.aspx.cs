@@ -268,26 +268,27 @@ public partial class ConfigSupplierPackage : Page
 
         var allRatePlan = e.Query.Cast<rateplan>();
 
-        if (this.ddlistSupplierRatePlanType.SelectedIndex == 0 && this.TextBoxRatePlanName.Text == "")
-        {
-            e.Query = from c in allRatePlan
-                      select c;
-            return;
-        }
-        else if (this.ddlistSupplierRatePlanType.SelectedIndex == 0 && this.TextBoxRatePlanName.Text != "")
+        //if (this.ddlistSupplierRatePlanType.SelectedIndex == 0 && this.TextBoxRatePlanName.Text == "")
+        //{
+        //    e.Query = from c in allRatePlan
+        //              where c.field2==1
+        //              select c;
+        //    return;
+        //}
+        //else if (this.ddlistSupplierRatePlanType.SelectedIndex == 0 && this.TextBoxRatePlanName.Text != "")
+        //{
+        //    int type = int.Parse(this.ddlistSupplierRatePlanType.SelectedValue);
+        //    string searchStr = this.TextBoxRatePlanName.Text.ToLower();
+        //    e.Query = from c in allRatePlan
+        //              where c.RatePlanName.ToLower().Contains(searchStr)
+        //              select c;
+        //    return;
+        //}
+        if (this.ddlistSupplierRatePlanType.SelectedIndex > 0 && this.TextBoxRatePlanName.Text == "")
         {
             int type = int.Parse(this.ddlistSupplierRatePlanType.SelectedValue);
-            string searchStr = this.TextBoxRatePlanName.Text.ToLower();
             e.Query = from c in allRatePlan
-                      where c.RatePlanName.ToLower().Contains(searchStr)
-                      select c;
-            return;
-        }
-        else if (this.ddlistSupplierRatePlanType.SelectedIndex > 0 && this.TextBoxRatePlanName.Text == "")
-        {
-            int type = int.Parse(this.ddlistSupplierRatePlanType.SelectedValue);
-            e.Query = from c in allRatePlan
-                      where c.Type == type
+                      where c.field2 ==1
                       select c;
         }
         else if (this.ddlistSupplierRatePlanType.SelectedIndex > 0 && this.TextBoxRatePlanName.Text != "")
@@ -295,7 +296,7 @@ public partial class ConfigSupplierPackage : Page
             int type = int.Parse(this.ddlistSupplierRatePlanType.SelectedValue);
             string searchStr = this.TextBoxRatePlanName.Text.ToLower();
             e.Query = from c in allRatePlan
-                      where c.Type == type
+                      where c.field2 == 1
                       && c.RatePlanName.ToLower().Contains(searchStr)
                       select c;
             return;
