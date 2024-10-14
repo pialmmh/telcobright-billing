@@ -3226,7 +3226,7 @@ public partial class purchasePackage : System.Web.UI.Page
             }
 
             //string newEndDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDatePickerFrm")).Text;
-            DateTime endDate = DateTime.Now;
+            DateTime endDate = startDate.AddDays(7);
             string newEndDate = endDate.ToString("yyyy-MM-dd");
             string newEndTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDateTimePickerFrm")).Text;
             string newEndDateAndTime = "";

@@ -44,80 +44,80 @@ public partial class topUp : System.Web.UI.Page
     static List<BillingRule> billingRules;
     private PartnerEntities Context = new PartnerEntities();
 
-    protected void MyButton_Click(object sender, EventArgs e)
-    {
+    //protected void MyButton_Click(object sender, EventArgs e)
+    //{
 
         
-        DropDownList dropDownPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
-        DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
-        TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
-        TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
-        int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
-        int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
-        Decimal vat = Convert.ToDecimal(vatBox.Text);
-        Decimal price = Convert.ToDecimal(priceBox.Text)-vat;
+    //    DropDownList dropDownPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
+    //    DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
+    //    TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
+    //    TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
+    //    int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
+    //    int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
+    //    Decimal vat = Convert.ToDecimal(vatBox.Text);
+    //    Decimal price = Convert.ToDecimal(priceBox.Text)-vat;
 
-        float discount=0;
+    //    float discount=0;
        
 
-        using (PartnerEntities Comnd = new PartnerEntities())
-        {
-            int? id = Comnd.rateplanassignmenttuples.Where(x => x.idpartner == rateplaneAssignmentid)
-                .Select(x => x.id)
-                .SingleOrDefault();
-            rateplaneAssignmentid =(int) id;
-        }
+    //    using (PartnerEntities Comnd = new PartnerEntities())
+    //    {
+    //        int? id = Comnd.rateplanassignmenttuples.Where(x => x.idpartner == rateplaneAssignmentid)
+    //            .Select(x => x.id)
+    //            .SingleOrDefault();
+    //        rateplaneAssignmentid =(int) id;
+    //    }
 
-        string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
-        using (MySqlConnection connection = new MySqlConnection(thisConectionString))
-        {
-            connection.Open();
+    //    string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
+    //    using (MySqlConnection connection = new MySqlConnection(thisConectionString))
+    //    {
+    //        connection.Open();
 
-            string partnerName = null;
+    //        string partnerName = null;
 
-            using (PartnerEntities Comnd = new PartnerEntities())
-            {
-                int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
-                partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
-                    .Select(x => x.PartnerName)
-                    .SingleOrDefault();
-            }
-            string insertPackagePurchase = $@"
-                                            INSERT INTO packagepurchase 
-                                            (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
-                                            VALUES 
-                                            ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
-                                            SELECT LAST_INSERT_ID();";
+    //        using (PartnerEntities Comnd = new PartnerEntities())
+    //        {
+    //            int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
+    //            partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
+    //                .Select(x => x.PartnerName)
+    //                .SingleOrDefault();
+    //        }
+    //        string insertPackagePurchase = $@"
+    //                                        INSERT INTO packagepurchase 
+    //                                        (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
+    //                                        VALUES 
+    //                                        ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
+    //                                        SELECT LAST_INSERT_ID();";
 
-            MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, connection);
-            long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
-            int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
-            if (idpurchagePackage == -1)
-            {
+    //        MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, connection);
+    //        long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
+    //        int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
+    //        if (idpurchagePackage == -1)
+    //        {
 
                 
-                string insertPackageAccount =
-                    $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
-                                 VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', '1');";
-                MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, connection);
-                cmdAccount.ExecuteNonQuery();
-            }
-            else
-            {
-                string updatePackageAccount =
-                    $@"UPDATE packageaccount
-                    SET 
-                        lastAmount = balanceBefore,
-                        balanceBefore = balanceAfter, 
-                        balanceAfter = balanceAfter + {price+vat}
-                    WHERE idPurchasePackage = {idpurchagePackage};";
-                MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount, connection);
-                cmdAccount.ExecuteNonQuery();
-            }
-            connection.Close();
-        }
+    //            string insertPackageAccount =
+    //                $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
+    //                             VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', '1');";
+    //            MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, connection);
+    //            cmdAccount.ExecuteNonQuery();
+    //        }
+    //        else
+    //        {
+    //            string updatePackageAccount =
+    //                $@"UPDATE packageaccount
+    //                SET 
+    //                    lastAmount = balanceBefore,
+    //                    balanceBefore = balanceAfter, 
+    //                    balanceAfter = balanceAfter + {price+vat}
+    //                WHERE idPurchasePackage = {idpurchagePackage};";
+    //            MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount, connection);
+    //            cmdAccount.ExecuteNonQuery();
+    //        }
+    //        connection.Close();
+    //    }
 
-    }
+    //}
 
     private int IsPartnerPresent(string partnerName, int category)
     {
@@ -1172,19 +1172,23 @@ public partial class topUp : System.Web.UI.Page
             var dicRoutes = new Dictionary<int, string>();
             using (PartnerEntities Conmed = new PartnerEntities())
             {
-                rateplan ratePlan = Conmed.rateplans.Where(c => c.field2 == 1 && c.RatePlanName == "TopUp_BDT")
-                    .SingleOrDefault();
+                List<rateplan> lstPlan = Conmed.rateplans.Where(c => c.field2 == 1 && c.RatePlanName == "TopUp_BDT")
+                    .ToList();
 
                 DropDownList dropDownList = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
-                
+
                 //dropDownList.DataSource = lstPlan;
-                dropDownList.Items.Insert(0, new ListItem(ratePlan.RatePlanName, ratePlan.id.ToString()));
-               
+                dropDownList.Items.Insert(0, new ListItem("[Select]", "0"));
+                int id = 1;
+                foreach (var rateplan in lstPlan)
+                {
+                    dropDownList.Items.Insert(id++, new ListItem(rateplan.RatePlanName, rateplan.id.ToString()));
+                }
                 //dropDownList.DataBind();
 
                 //((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan")).DataSource = lstPlan;
                 //((DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan")).DataBind();
-                
+
                 foreach (rateplanassignmenttuple ThisTuple in Context.rateplanassignmenttuples.ToList())
                 {
                     dicTuple.Add(ThisTuple.id, ThisTuple);
@@ -3191,11 +3195,10 @@ public partial class topUp : System.Web.UI.Page
             DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
             TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
             TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
-            TextBox discountBox = (TextBox)frmSupplierRatePlanInsert.FindControl("discountTextBox");
             int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
             int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
             Decimal vat = Convert.ToDecimal(vatBox.Text);
-            Decimal price = Convert.ToDecimal(priceBox.Text);
+            Decimal price = Convert.ToDecimal(priceBox.Text) - vat;
             string newSurchargeAmount = priceBox.Text;
             DropDownList ServiceType = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListAssignedDirection");
             DropDownList ddlistSf = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListservice");
@@ -3309,7 +3312,7 @@ public partial class topUp : System.Web.UI.Page
             }
 
             //string newEndDate = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDatePickerFrm")).Text;
-            DateTime endDate = DateTime.Now;
+            DateTime endDate = startDate.AddDays(7);
             string newEndDate = endDate.ToString("yyyy-MM-dd");
             string newEndTime = ((TextBox)frmSupplierRatePlanInsert.FindControl("TextBoxEndDateTimePickerFrm")).Text;
             string newEndDateAndTime = "";
@@ -3669,8 +3672,6 @@ public partial class topUp : System.Web.UI.Page
                 //}
             }
 
-           
-
             float discount = 0;
 
 
@@ -3683,9 +3684,9 @@ public partial class topUp : System.Web.UI.Page
             }
 
             string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
-            using (MySqlConnection conn= new MySqlConnection(thisConectionString))
+            using (MySqlConnection con = new MySqlConnection(thisConectionString))
             {
-                conn.Open();
+                con.Open();
 
                 string partnerName = null;
 
@@ -3696,24 +3697,24 @@ public partial class topUp : System.Web.UI.Page
                         .Select(x => x.PartnerName)
                         .SingleOrDefault();
                 }
-                int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
-                if (idpurchagePackage == -1)
-                {
-
-                    string insertPackagePurchase = $@"
+                string insertPackagePurchase = $@"
                                             INSERT INTO packagepurchase 
                                             (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
                                             VALUES 
                                             ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
                                             SELECT LAST_INSERT_ID();";
 
-                    MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, conn);
-                    long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
+                MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, con);
+                long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
+                int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
+                if (idpurchagePackage == -1)
+                {
+
 
                     string insertPackageAccount =
                         $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
                                  VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', '1');";
-                    MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, conn);
+                    MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, con);
                     cmdAccount.ExecuteNonQuery();
                 }
                 else
@@ -3725,12 +3726,13 @@ public partial class topUp : System.Web.UI.Page
                         balanceBefore = balanceAfter, 
                         balanceAfter = balanceAfter + {price + vat}
                     WHERE idPurchasePackage = {idpurchagePackage};";
-                    MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount, conn);
+                    MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount, con);
                     cmdAccount.ExecuteNonQuery();
                 }
-                conn.Close();
-            
-        }
+                con.Close();
+            }
+
+
             frmSupplierRatePlanInsert.Visible = false;
             CreateCustomerServiceAccounts();
             myGridViewDataBind();

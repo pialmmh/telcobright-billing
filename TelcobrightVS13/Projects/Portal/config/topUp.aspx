@@ -272,7 +272,7 @@ idpartner,priority,service, goes to table rateplanassignmenttuple, id in the tab
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
                                 
-                                <asp:Button ID="MyButton" runat="server" Text="Purchase" OnClick="MyButton_Click" />
+                               <%-- <asp:Button ID="MyButton" runat="server" Text="Purchase" OnClick="MyButton_Click" />--%>
                                 <%--<b> Assignment Order:</b>--%>
                                 <asp:TextBox ID="txtResolution" Enabled="True" Visible="false" runat="server" Text=""></asp:TextBox>
                                 <br />
