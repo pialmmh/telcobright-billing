@@ -3322,7 +3322,7 @@ public partial class ConfigPackageTask : Page
         string newEndTimeOfDay = ((TextBox) this.frmSupplierRatePlanInsert.FindControl("txtEndTime")).Text;
         string newSurchargeTime = ((TextBox) this.frmSupplierRatePlanInsert.FindControl("txtSurchargeTime")).Text;
         string newSurchargeAmount = ((TextBox) this.frmSupplierRatePlanInsert.FindControl("txtSurchargeAmount")).Text;
-        string newOtherAmount1 = ((TextBox) this.frmSupplierRatePlanInsert.FindControl("txtOtherAmount1")).Text;
+        string newOtherAmount1 = ((TextBox) this.frmSupplierRatePlanInsert.FindControl("TextBox1")).Text;
         string newOtherAmount2 = null;
         string newOtherAmount3 = null;
         string newOtherAmount4 = null;
@@ -3332,7 +3332,11 @@ public partial class ConfigPackageTask : Page
         string newOtherAmount8 = null;
         string newOtherAmount9 = null;
         string newOtherAmount10 = null;
-        string newServiceType = ((DropDownList) this.frmSupplierRatePlanInsert.FindControl("DropDownListServiceType")).SelectedValue;
+        //string newServiceType = ((DropDownList) this.frmSupplierRatePlanInsert.FindControl("DropDownListServiceType")).SelectedValue;
+        DropDownList category = (DropDownList)this.frmSupplierRatePlanInsert.FindControl("DropDownListServiceType");
+        string newServiceType = category.SelectedItem.Text == "Call" ? "TF_min" :
+                                category.SelectedItem.Text == "Message" ? "OTH_ea" :
+                                category.SelectedItem.Text == "Data/Internet Without Metering" ? "DATA_GB" : "BDT";
         string newSubServiceType = ((DropDownList) this.frmSupplierRatePlanInsert.FindControl("DropDownListSubServiceType")).SelectedValue;
         string newRoundUp = ((TextBox) this.frmSupplierRatePlanInsert.FindControl("TextBoxRoundDigits")).Text;
 
@@ -5279,7 +5283,7 @@ public partial class ConfigPackageTask : Page
             }
             //myGridViewDataBind();
             //ResetFormViewCodeDelete(sender, e);
-            this.Response.Redirect("ratetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
+            this.Response.Redirect("packagetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
         }
         else if(superSedeExcept.Checked==true)
         {
@@ -5325,7 +5329,7 @@ public partial class ConfigPackageTask : Page
             }
             //myGridViewDataBind();
             //ResetFormViewCodeDelete(sender, e);
-            this.Response.Redirect("ratetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
+            this.Response.Redirect("packagetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
         }
         else if (countryWise.Checked == true || countryWiseMin.Checked == true)
         {
@@ -5373,7 +5377,7 @@ public partial class ConfigPackageTask : Page
             }
             //myGridViewDataBind();
             //ResetFormViewCodeDelete(sender, e);
-            this.Response.Redirect("ratetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
+            this.Response.Redirect("packagetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
         }
     }
 
@@ -5411,7 +5415,7 @@ public partial class ConfigPackageTask : Page
         {
             context.Database.ExecuteSqlCommand("delete from ratetask where id=" + id.ToString());
         }
-        this.Response.Redirect("ratetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
+        this.Response.Redirect("packagetask.aspx" + (string) this.ViewState["vsQueryString"]);//mygrid viewbind wasn't refreshig grid
     }
     protected void LinkButtonCodeDelete_Click(object sender, EventArgs e)
     {

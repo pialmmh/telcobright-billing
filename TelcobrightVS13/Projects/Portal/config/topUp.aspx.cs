@@ -44,80 +44,7 @@ public partial class topUp : System.Web.UI.Page
     static List<BillingRule> billingRules;
     private PartnerEntities Context = new PartnerEntities();
 
-    //protected void MyButton_Click(object sender, EventArgs e)
-    //{
-
-        
-    //    DropDownList dropDownPartner = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListPartner");
-    //    DropDownList dropDownpackage = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListRatePlan");
-    //    TextBox vatBox = (TextBox)frmSupplierRatePlanInsert.FindControl("vatTextBox");
-    //    TextBox priceBox = (TextBox)frmSupplierRatePlanInsert.FindControl("peiceTextBox");
-    //    int idRateplane = Convert.ToInt32(dropDownpackage.SelectedValue);
-    //    int rateplaneAssignmentid = Convert.ToInt32(dropDownPartner.SelectedValue);
-    //    Decimal vat = Convert.ToDecimal(vatBox.Text);
-    //    Decimal price = Convert.ToDecimal(priceBox.Text)-vat;
-
-    //    float discount=0;
-       
-
-    //    using (PartnerEntities Comnd = new PartnerEntities())
-    //    {
-    //        int? id = Comnd.rateplanassignmenttuples.Where(x => x.idpartner == rateplaneAssignmentid)
-    //            .Select(x => x.id)
-    //            .SingleOrDefault();
-    //        rateplaneAssignmentid =(int) id;
-    //    }
-
-    //    string thisConectionString = ConfigurationManager.ConnectionStrings["partner"].ConnectionString;
-    //    using (MySqlConnection connection = new MySqlConnection(thisConectionString))
-    //    {
-    //        connection.Open();
-
-    //        string partnerName = null;
-
-    //        using (PartnerEntities Comnd = new PartnerEntities())
-    //        {
-    //            int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
-    //            partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
-    //                .Select(x => x.PartnerName)
-    //                .SingleOrDefault();
-    //        }
-    //        string insertPackagePurchase = $@"
-    //                                        INSERT INTO packagepurchase 
-    //                                        (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
-    //                                        VALUES 
-    //                                        ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
-    //                                        SELECT LAST_INSERT_ID();";
-
-    //        MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, connection);
-    //        long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
-    //        int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
-    //        if (idpurchagePackage == -1)
-    //        {
-
-                
-    //            string insertPackageAccount =
-    //                $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
-    //                             VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', '1');";
-    //            MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, connection);
-    //            cmdAccount.ExecuteNonQuery();
-    //        }
-    //        else
-    //        {
-    //            string updatePackageAccount =
-    //                $@"UPDATE packageaccount
-    //                SET 
-    //                    lastAmount = balanceBefore,
-    //                    balanceBefore = balanceAfter, 
-    //                    balanceAfter = balanceAfter + {price+vat}
-    //                WHERE idPurchasePackage = {idpurchagePackage};";
-    //            MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount, connection);
-    //            cmdAccount.ExecuteNonQuery();
-    //        }
-    //        connection.Close();
-    //    }
-
-    //}
+    
 
     private int IsPartnerPresent(string partnerName, int category)
     {
@@ -3451,7 +3378,7 @@ public partial class topUp : System.Web.UI.Page
 
 
                 rateplanassignmenttuple ExistingTuple = null;
-                if (NewRoute == -1)//route not used
+                if (NewRoute == -1) //route not used
                 {
                     if (NewidPartner == 0)
                     {
@@ -3459,7 +3386,9 @@ public partial class topUp : System.Web.UI.Page
                                                                                     c.route == null &&
                                                                                     c.idService == NewserviceId &&
                                                                                     c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                                                                                    c.AssignDirection ==
+                                                                                    NewAssignDirection).ToList()
+                            .FirstOrDefault();
                     }
                     else
                     {
@@ -3467,10 +3396,12 @@ public partial class topUp : System.Web.UI.Page
                                                                                     c.route == null &&
                                                                                     c.idService == NewserviceId &&
                                                                                     c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                                                                                    c.AssignDirection ==
+                                                                                    NewAssignDirection).ToList()
+                            .FirstOrDefault();
                     }
                 }
-                else//route used
+                else //route used
                 {
                     if (NewidPartner == 0)
                     {
@@ -3478,7 +3409,9 @@ public partial class topUp : System.Web.UI.Page
                                                                                     c.route == NewRoute &&
                                                                                     c.idService == NewserviceId &&
                                                                                     c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                                                                                    c.AssignDirection ==
+                                                                                    NewAssignDirection).ToList()
+                            .FirstOrDefault();
                     }
                     else
                     {
@@ -3486,7 +3419,9 @@ public partial class topUp : System.Web.UI.Page
                                                                                     c.route == NewRoute &&
                                                                                     c.idService == NewserviceId &&
                                                                                     c.priority == NewPriority &&
-                                                                                    c.AssignDirection == NewAssignDirection).ToList().FirstOrDefault();
+                                                                                    c.AssignDirection ==
+                                                                                    NewAssignDirection).ToList()
+                            .FirstOrDefault();
                     }
                 }
                 //following is an extra validation to check overlap, if it is validated here
@@ -3496,180 +3431,191 @@ public partial class topUp : System.Web.UI.Page
                 {
                     DateRange dRange = new DateRange();
                     dRange.StartDate = EffectiveStartDate;
-                    dRange.EndDate = (EffectiveEndDate == null ? new DateTime(9999, 12, 31, 23, 59, 59) : Convert.ToDateTime(EffectiveEndDate));
+                    dRange.EndDate = (EffectiveEndDate == null
+                        ? new DateTime(9999, 12, 31, 23, 59, 59)
+                        : Convert.ToDateTime(EffectiveEndDate));
 
                     //load all the assigned rateplans for this tuple
-                    List<rateassign> lstAssignments = Context.rateassigns.Where(c => c.Prefix == ExistingTuple.id).ToList();
+                    List<rateassign> lstAssignments = Context.rateassigns.Where(c => c.Prefix == ExistingTuple.id)
+                        .ToList();
                     //there can be only one assignment with enddate=null
                     int ExistingAssignmentCount = lstAssignments.Count;
                     int OpenAssignmentsCount = lstAssignments.Where(c => c.enddate == null).Count();
                     if (ExistingAssignmentCount > 0)
                     {
-                        if (OpenAssignmentsCount > 1)
+
+                        //    if (OpenAssignmentsCount > 1)
+                        //    {
+                        //        StatusLabel.ForeColor = Color.Red;
+                        //        StatusLabel.Text = "There can be only one assigned rateplan open i.e. without end date!";
+                        //        return;
+                        //    }
+                        //    rateassign LatestAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
+                        //    rateassign FirstAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
+                        //    //if this assignemnt=the latest assignment
+                        //    if (LatestAssignment != null && dRange.StartDate == LatestAssignment.startdate)
+                        //    {
+                        //        StatusLabel.ForeColor = Color.Red;
+                        //        StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + LatestAssignment.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
+                        //                           " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
+                        //                           " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
+                        //        e.Cancel = true;
+                        //        return;
+                        //    }
+                        //    if (dRange.StartDate < FirstAssignment.startdate)//before all
+                        //    {
+                        //        EffectiveEndDate = FirstAssignment.startdate;
+                        //    }
+                        //    //check overlap with all assignment except latest one
+                        //    List<rateassign> AllExceptLatest = lstAssignments.Where(c => c.id != LatestAssignment.id).ToList();
+                        //    foreach (rateassign ra in AllExceptLatest)
+                        //    {
+                        //        DateRange CompareWith = new DateRange() { StartDate = ra.startdate, EndDate = Convert.ToDateTime(ra.enddate) };
+                        //        if (Util.DateIntersection(dRange, CompareWith) != null)
+                        //        {
+                        //            StatusLabel.ForeColor = Color.Red;
+                        //            StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + ra.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
+                        //                               " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
+                        //                               " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
+                        //            e.Cancel = true;
+                        //            return;
+                        //        }
+                        //    }
+                        //}
+                        ////else.....first assignment of this kind
+                       
+                        int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
+                       connection.Open();
+                        string updatePackageAccount =
+                               $@"UPDATE packageaccount
+                                SET 
+                                    lastAmount = {price + vat},
+                                    balanceBefore = balanceAfter, 
+                                    balanceAfter = balanceAfter + {price + vat}
+                                WHERE idPurchasePackage = {idpurchagePackage};";
+                        MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount,connection);
+                        cmdAccount.ExecuteNonQuery();
+                        connection.Close();
+                        return;
+
+                    }
+
+                    if (ExistingTuple == null) //tuple does not exist
+                    {
+                        //todo: fix autoincrement work around currently implemented for billingRuleassignment
+                        int maxIdRatePlanAssignmentTuple = 0;
+                        using (PartnerEntities context = new PartnerEntities())
                         {
-                            StatusLabel.ForeColor = Color.Red;
-                            StatusLabel.Text = "There can be only one assigned rateplan open i.e. without end date!";
-                            return;
-                        }
-                        rateassign LatestAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
-                        rateassign FirstAssignment = lstAssignments.OrderByDescending(c => c.startdate).First();
-                        //if this assignemnt=the latest assignment
-                        if (LatestAssignment != null && dRange.StartDate == LatestAssignment.startdate)
-                        {
-                            StatusLabel.ForeColor = Color.Red;
-                            StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + LatestAssignment.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
-                                               " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
-                                               " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
-                            e.Cancel = true;
-                            return;
-                        }
-                        if (dRange.StartDate < FirstAssignment.startdate)//before all
-                        {
-                            EffectiveEndDate = FirstAssignment.startdate;
-                        }
-                        //check overlap with all assignment except latest one
-                        List<rateassign> AllExceptLatest = lstAssignments.Where(c => c.id != LatestAssignment.id).ToList();
-                        foreach (rateassign ra in AllExceptLatest)
-                        {
-                            DateRange CompareWith = new DateRange() { StartDate = ra.startdate, EndDate = Convert.ToDateTime(ra.enddate) };
-                            if (Util.DateIntersection(dRange, CompareWith) != null)
+                            if (context.rateplanassignmenttuples.Any())
                             {
-                                StatusLabel.ForeColor = Color.Red;
-                                StatusLabel.Text = "Effective Datetime overlaps with existing assignment starting at " + ra.startdate.ToString("yyyy-MM-dd HH:mm:ss") + ". " +
-                                                   " To Assign multiple Rateplan for the same combination of [Service Family, Assigned Order, Assign Direction, Customer/Supplier/Route!],<br/>" +
-                                                   " Use a different value for Assigned Order or a different effective datetime which does not overlap any existing assignment.";
-                                e.Cancel = true;
-                                return;
+                                maxIdRatePlanAssignmentTuple = context.rateplanassignmenttuples.Max(c => c.id);
                             }
                         }
-                    }
-                    //else.....first assignment of this kind
-
-
-                }
-
-                if (ExistingTuple == null)//tuple does not exist
-                {
-                    //todo: fix autoincrement work around currently implemented for billingRuleassignment
-                    int maxIdRatePlanAssignmentTuple = 0;
-                    using (PartnerEntities context = new PartnerEntities())
-                    {
-                        if (context.rateplanassignmenttuples.Any())
+                        rateplanassignmenttuple newTuple =
+                            new rateplanassignmenttuple() {id = ++maxIdRatePlanAssignmentTuple};
+                        if (NewidPartner == 0) //has to be null in the database
                         {
-                            maxIdRatePlanAssignmentTuple = context.rateplanassignmenttuples.Max(c => c.id);
+                            newTuple.idpartner = null;
+                        }
+                        else
+                        {
+                            newTuple.idpartner = NewidPartner;
+                        }
+                        if (NewRoute == -1)
+                        {
+                            newTuple.route = null;
+                        }
+                        else
+                        {
+                            newTuple.route = NewRoute;
+                        }
+                        newTuple.idService = NewserviceId;
+                        newTuple.priority = NewPriority;
+                        newTuple.AssignDirection = NewAssignDirection;
+                        Context.rateplanassignmenttuples.Add(newTuple);
+                        //insert billingRule
+                        ddlBillingRule = (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
+                        DropDownList ddlserviceGroup =
+                            (DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup");
+                        int selectedBillingRule = 2; //Convert.ToInt32(ddlBillingRule.SelectedValue);
+                        int selectedServiceGroup = 1; //Convert.ToInt32(ddlserviceGroup.SelectedValue);
+                        billingruleassignment billingruleassignment = new billingruleassignment()
+                        {
+                            idRatePlanAssignmentTuple = newTuple.id,
+                            idServiceGroup = selectedServiceGroup,
+                            idBillingRule = selectedBillingRule
+                        };
+                        Context.billingruleassignments.Add(billingruleassignment);
+                        Context.SaveChanges();
+                    }
+
+                    //get the id of the tuple
+                    //surprise, setting nullable var=null then using it in linq doesn't work
+                    int tupleId = -1;
+
+                    if (NewRoute == -1) //route not used
+                    {
+                        if (NewidPartner == 0)
+                        {
+                            tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                                                                                  c.route == null &&
+                                                                                  c.idService == NewserviceId &&
+                                                                                  c.priority == NewPriority &&
+                                                                                  c.AssignDirection ==
+                                                                                  NewAssignDirection).FirstOrDefault()
+                                .id;
+                        }
+                        else
+                        {
+                            tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                                                                                  c.route == null &&
+                                                                                  c.idService == NewserviceId &&
+                                                                                  c.priority == NewPriority &&
+                                                                                  c.AssignDirection ==
+                                                                                  NewAssignDirection).FirstOrDefault()
+                                .id;
                         }
                     }
-                    rateplanassignmenttuple newTuple =
-                        new rateplanassignmenttuple() { id = ++maxIdRatePlanAssignmentTuple };
-                    if (NewidPartner == 0)//has to be null in the database
+                    else //route used
                     {
-                        newTuple.idpartner = null;
+                        if (NewidPartner == 0)
+                        {
+                            tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
+                                                                                  c.route == NewRoute &&
+                                                                                  c.idService == NewserviceId &&
+                                                                                  c.priority == NewPriority &&
+                                                                                  c.AssignDirection ==
+                                                                                  NewAssignDirection).FirstOrDefault()
+                                .id;
+                        }
+                        else
+                        {
+                            tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
+                                                                                  c.route == NewRoute &&
+                                                                                  c.idService == NewserviceId &&
+                                                                                  c.priority == NewPriority &&
+                                                                                  c.AssignDirection ==
+                                                                                  NewAssignDirection).FirstOrDefault()
+                                .id;
+                        }
                     }
-                    else
-                    {
-                        newTuple.idpartner = NewidPartner;
-                    }
-                    if (NewRoute == -1)
-                    {
-                        newTuple.route = null;
-                    }
-                    else
-                    {
-                        newTuple.route = NewRoute;
-                    }
-                    newTuple.idService = NewserviceId;
-                    newTuple.priority = NewPriority;
-                    newTuple.AssignDirection = NewAssignDirection;
-                    Context.rateplanassignmenttuples.Add(newTuple);
-                    //insert billingRule
-                    ddlBillingRule = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownBillingRule");
-                    DropDownList ddlserviceGroup = (DropDownList)frmSupplierRatePlanInsert.FindControl("DropDownListServiceGroup");
-                    int selectedBillingRule = 2;//Convert.ToInt32(ddlBillingRule.SelectedValue);
-                    int selectedServiceGroup = 1;//Convert.ToInt32(ddlserviceGroup.SelectedValue);
-                    billingruleassignment billingruleassignment = new billingruleassignment()
-                    {
-                        idRatePlanAssignmentTuple = newTuple.id,
-                        idServiceGroup = selectedServiceGroup,
-                        idBillingRule = selectedBillingRule
-                    };
-                    Context.billingruleassignments.Add(billingruleassignment);
-                    Context.SaveChanges();
+
+                    NewRate.Prefix = tupleId; //represents the tuple
+                    NewRate.RouteDisabled = newRouteDisabled;
+                    NewRate.Inactive = Convert.ToInt32(newInactive); //id rate plan
+
+                    //LCR Flag
+                    var ddlExcludeLCR = frmSupplierRatePlanInsert.FindControl("ddlExcludeLCR") as DropDownList;
+                    NewRate.field3 = ddlExcludeLCR.SelectedValue;
+
+
+                    if (NewRate.CountryCode == 0)
+                        NewRate.CountryCode = null; //countryCode in ratetaskassign=idpartner,0=null=no partner
+                    Context.ratetaskassigns.Add(NewRate);
+                    Context.SaveChanges(); //entry  has been added to ratetaskassign table
+                    CommitChanges();
+
                 }
-
-                //get the id of the tuple
-                //surprise, setting nullable var=null then using it in linq doesn't work
-                int tupleId = -1;
-
-                if (NewRoute == -1)//route not used
-                {
-                    if (NewidPartner == 0)
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
-                                                                              c.route == null &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                    else
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
-                                                                              c.route == null &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                }
-                else//route used
-                {
-                    if (NewidPartner == 0)
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == null &&
-                                                                              c.route == NewRoute &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                    else
-                    {
-                        tupleId = Context.rateplanassignmenttuples.Where(c => c.idpartner == NewidPartner &&
-                                                                              c.route == NewRoute &&
-                                                                              c.idService == NewserviceId &&
-                                                                              c.priority == NewPriority &&
-                                                                              c.AssignDirection == NewAssignDirection).FirstOrDefault().id;
-                    }
-                }
-
-                NewRate.Prefix = tupleId;//represents the tuple
-                NewRate.RouteDisabled = newRouteDisabled;
-                NewRate.Inactive = Convert.ToInt32(newInactive);//id rate plan
-
-                //LCR Flag
-                var ddlExcludeLCR = frmSupplierRatePlanInsert.FindControl("ddlExcludeLCR") as DropDownList;
-                NewRate.field3 = ddlExcludeLCR.SelectedValue;
-
-
-                if (NewRate.CountryCode == 0) NewRate.CountryCode = null;//countryCode in ratetaskassign=idpartner,0=null=no partner
-                Context.ratetaskassigns.Add(NewRate);
-                Context.SaveChanges();//entry  has been added to ratetaskassign table
-
-
-                //call commit changes to add them in the rateassign table
-                CommitChanges();
-                //bad code for now, not transaction support 
-                //find a way to fix it sometime
-                //  string billingRuleName = ((DropDownList) frmSupplierRatePlanInsert.FindControl("DropDownBillingRule")).SelectedItem.Value;
-                //genericparameterassignment g =
-                //GetAdditionalBillingParamsAsGenericAssignment(NewRate.Prefix, Context);
-                //try
-                //{
-                //  Context.genericparameterassignments.Add(additionalBillingParamsAsGenericAssignment);
-                // Context.SaveChanges();
-                //}
-                //catch (Exception exception)
-                //{
-
-                //  throw;
-                //}
             }
 
             float discount = 0;
@@ -3687,49 +3633,63 @@ public partial class topUp : System.Web.UI.Page
             using (MySqlConnection con = new MySqlConnection(thisConectionString))
             {
                 con.Open();
-
-                string partnerName = null;
-
-                using (PartnerEntities Comnd = new PartnerEntities())
+                using (MySqlTransaction transaction = con.BeginTransaction())
                 {
-                    int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
-                    partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
-                        .Select(x => x.PartnerName)
-                        .SingleOrDefault();
-                }
-                string insertPackagePurchase = $@"
+                    try
+                    {
+                        string partnerName = null;
+                        int partnerId = Convert.ToInt32(dropDownPartner.SelectedValue);
+                        using (PartnerEntities Comnd = new PartnerEntities())
+                        {
+
+                            partnerName = Comnd.partners.Where(x => x.idPartner == partnerId)
+                                .Select(x => x.PartnerName)
+                                .SingleOrDefault();
+                        }
+                        string insertPackagePurchase = $@"
                                             INSERT INTO packagepurchase 
-                                            (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`) 
+                                            (`ratePlanId`, `purchaseDate`, `expireDate`, `status`, `rateplanassignmenttupleid`, `paymentId`, `autoRenewalStatus`, `currency`, `price`, `vat`, `AIT`,`idPartner`,`priority`,`discount`) 
                                             VALUES 
-                                            ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat}, {discount});
+                                            ({idRateplane}, NOW(), '2025-10-06 12:00:00', 'active', {rateplaneAssignmentid}, 1, FALSE, 'USD', {price}, {vat},1,{partnerId},1,{discount});
                                             SELECT LAST_INSERT_ID();";
 
-                MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, con);
-                long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
-                int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
-                if (idpurchagePackage == -1)
-                {
+                        MySqlCommand cmd = new MySqlCommand(insertPackagePurchase, con,transaction);
+                        long lastInsertedId = Convert.ToInt64(cmd.ExecuteScalar());
+                        int idpurchagePackage = IsPartnerPresent(dropDownPartner.SelectedItem.Text, 1);
+                        if (idpurchagePackage == -1)
+                        {
 
 
-                    string insertPackageAccount =
-                        $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
-                                 VALUES ({lastInsertedId}, '{partnerName}', 1, 100.000000, 50.000000, 150.000000, 'PRFX', '1');";
-                    MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, con);
-                    cmdAccount.ExecuteNonQuery();
-                }
-                else
-                {
-                    string updatePackageAccount =
-                        $@"UPDATE packageaccount
+                            string insertPackageAccount =
+                                $@"INSERT INTO `packageaccount` (`idPurchasePackage`, `name`, `uom`, `lastAmount`, `balanceBefore`, `balanceAfter`, `prefix`, `category`)
+                                 VALUES ({lastInsertedId}, '{partnerName}', 'USD', 100.000000, 0.000000, 150.000000, 'PRFX', '1');";
+                            MySqlCommand cmdAccount = new MySqlCommand(insertPackageAccount, con,transaction);
+                            cmdAccount.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            string updatePackageAccount =
+                                $@"UPDATE packageaccount
                     SET 
-                        lastAmount = balanceBefore,
+                        lastAmount = {price + vat},
                         balanceBefore = balanceAfter, 
                         balanceAfter = balanceAfter + {price + vat}
                     WHERE idPurchasePackage = {idpurchagePackage};";
-                    MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount, con);
-                    cmdAccount.ExecuteNonQuery();
+                            MySqlCommand cmdAccount = new MySqlCommand(updatePackageAccount, con,transaction);
+                            cmdAccount.ExecuteNonQuery();
+                        }
+                        transaction.Commit();
+                    }
+                    catch (Exception exception)
+                    {
+                        transaction.Rollback();
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
                 }
-                con.Close();
+
             }
 
 

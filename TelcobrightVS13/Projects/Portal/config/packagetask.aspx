@@ -226,12 +226,27 @@ select (select 1) as id,(select 'Yes') as Type "
                 
                <div style="text-align:right; width:350px;margin-top:0px;">
                     <span style="padding-left:5px;"></span>
-                   <b>Category</b> 
-                   <asp:DropDownList ID="DropDownList2" runat="server" AutoPostBack="false" 
-                                     DataSourceID="SqlDataServiceType" DataTextField="Type" DataValueField="id" 
-                                     Enabled="true" >
-                   </asp:DropDownList>
-                   <br />
+                   <b>Category:</b>
+                   <asp:TemplateField HeaderText="Category" SortExpression="Category">
+                
+                       <ItemTemplate>
+                           <asp:DropDownList ID="DropDownListServiceType" runat="server" AutoPostBack="false" 
+                                             DataSourceID="SqlDataServiceType" DataTextField="Type" DataValueField="id" SelectedValue='<%# Bind("Category") %>'
+                                             Enabled="True" >
+                           </asp:DropDownList>
+                    
+                       </ItemTemplate>
+                
+<%--                       <EditItemTemplate>
+                           <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="false" 
+                                             DataSourceID="SqlDataServiceType" DataTextField="Type" DataValueField="id" SelectedValue='<%# Bind("Category") %>'
+                                             Enabled="True" >
+                           </asp:DropDownList>
+                    
+                    
+                       </EditItemTemplate>--%>
+                   </asp:TemplateField>
+                   <br/>
                     <b> Prefix:</b> <asp:TextBox ID="txtPrefix" Enabled="True" runat="server" Text=""></asp:TextBox>
                     <br />
                    <asp:Label ID="Label8" runat="server" Text="Volume"  Font-Bold="true"></asp:Label>
@@ -380,12 +395,7 @@ select (select 1) as id,(select 'Yes') as Type "
            
            <div style="padding-left:100px;visibility: hidden">
             <div style="float:left;text-align:right;visibility: hidden ">
-                <b>Category</b> 
-                      <asp:DropDownList ID="DropDownListServiceType" runat="server" AutoPostBack="false" 
-                            DataSourceID="SqlDataServiceType" DataTextField="Type" DataValueField="id" 
-                            Enabled="true" >
-                        </asp:DropDownList>
-                        <br />
+           
                       <%--<b>Sub Category</b> --%>  
                         <asp:DropDownList ID="DropDownListSubServiceType" runat="server" AutoPostBack="false" Visible="False" 
                             DataSourceID="SqlDataSubServiceType" DataTextField="Type" DataValueField="id" 
@@ -838,12 +848,12 @@ select (select 10) as status  ,(select 'Overlap Adjusted') as Description,count(
 
          
             </asp:TemplateField>
-        <asp:TemplateField HeaderText="Category" SortExpression="Category">
+        <%--<asp:TemplateField HeaderText="Category" SortExpression="Category" Visible="True">
                 
             <ItemTemplate>
                 <asp:DropDownList ID="DropDownListServiceType" runat="server" AutoPostBack="false" 
                                   DataSourceID="SqlDataServiceType" DataTextField="Type" DataValueField="id" SelectedValue='<%# Bind("Category") %>'
-                                  Enabled="false" >
+                                  Enabled="True" >
                 </asp:DropDownList>
                     
             </ItemTemplate>
@@ -851,12 +861,12 @@ select (select 10) as status  ,(select 'Overlap Adjusted') as Description,count(
             <EditItemTemplate>
                 <asp:DropDownList ID="DropDownListServiceType" runat="server" AutoPostBack="false" 
                                   DataSourceID="SqlDataServiceType" DataTextField="Type" DataValueField="id" SelectedValue='<%# Bind("Category") %>'
-                                  Enabled="True" >
+                                  Enabled="false" >
                 </asp:DropDownList>
                     
                     
             </EditItemTemplate>
-        </asp:TemplateField>
+        </asp:TemplateField>--%>
 
             <asp:TemplateField HeaderText="Prefix" SortExpression="Prefix" ItemStyle-Wrap="false">
                 <ItemTemplate>
