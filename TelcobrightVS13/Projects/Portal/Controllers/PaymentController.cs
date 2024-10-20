@@ -47,7 +47,7 @@ namespace WebApiController.Controllers
                                 ) AS ac_t
                                LEFT JOIN account ac ON ac_t.glAccountId = ac.id
                                LEFT JOIN partner p ON ac.idPartner = p.idPartner
-                               {getWhereClauseForIdPartner}
+                               {getWhereClauseForIdPartner()}
                            GROUP BY 
                                balanceDate, p.idPartner";
 
@@ -110,7 +110,7 @@ namespace WebApiController.Controllers
                             decimal? balanceBefore = tempinfo.BalanceAfter;
                             decimal? balanceAfter = tempinfo.BalanceAfter - tempinfo.PaymentAmount;
                             decimal? paymentAmount = tempinfo.PaymentAmount;
-                            // First update the account balances for the specific partner and service group
+
                             string updateQuery = @"UPDATE account 
                                            SET balanceAfter =@BalanceAfter, balanceBefore = @BalanceBefore, lastAmount = @PaymentAmount, lastUpdated = @Date 
                                            WHERE id = @Id";
@@ -126,7 +126,6 @@ namespace WebApiController.Controllers
                                 updateCommand.ExecuteNonQuery();
                             }
 
-                            // Then insert the payment details into the payment_history table
                             string insertQuery = @"SET FOREIGN_KEY_CHECKS=0;
                                            INSERT INTO payment_history (AccountId, PartnerId, PartnerName, Service, paymentDate, PaymentAmount, paymentType, BalanceBefore, BalanceAfter, TransactionDetails, Reference)
                                            VALUES (@AccountId, @PartnerId, @PartnerName, @Service, @Date, @PaymentAmount, @Type, @BalanceBefore, @BalanceAfter, @TransactionDetails, @Reference)";
@@ -172,12 +171,9 @@ namespace WebApiController.Controllers
         public string ApplicationName { get; set; }
         public decimal InitialBalance { get; set; }
         public decimal PaymentAmount { get; set; }
-        //public decimal TotalMin { get; set; }
-        //public decimal TotalCost { get; set; }
         public decimal CurrentBalance { get; set; }
     }
 
-    // Model class for Payment
     public class Payment
     {
         public long Id { get; set; }
