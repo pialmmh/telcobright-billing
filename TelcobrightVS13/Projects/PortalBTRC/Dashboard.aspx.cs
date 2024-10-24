@@ -361,6 +361,15 @@ select 'Voicetel Ltd' as icx, '10000000' as 'tentativeDuration', ifnull((SUM(dur
         double IPPersent = totalIP / (totalIP + totalTDM);
         double TDMPersent = totalTDM / (totalIP + totalTDM);
 
+	if (double.IsNaN(IPPersent))
+        {
+            IPPersent = 0.00000;
+        }
+
+        if (double.IsNaN(TDMPersent))
+        {
+            TDMPersent = 0.00000;
+        }
 
         var dataPoint1 = PieChartIpTdm.Series["Series1"].Points[0];
         var dataPoint2 = PieChartIpTdm.Series["Series1"].Points[1];
