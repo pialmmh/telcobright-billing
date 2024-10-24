@@ -575,6 +575,8 @@
     <Content Include="Mediation\MediationBatch.aspx" />
     <Content Include="Mediation\MediationError.aspx" />
     <Content Include="reports\IOFReport.aspx" />
+    <Content Include="reports\iptsp\DomesticIn.aspx" />
+    <Content Include="reports\iptsp\DomesticOut.aspx" />
     <Content Include="reports\OutgoingCallAnalysis.aspx" />
     <Content Include="reports\PasswordRecovery.aspx" />
     <Content Include="reports\PaymentHistory.aspx" />
@@ -1131,6 +1133,20 @@
     </Compile>
     <Compile Include="reports\IOFReport.aspx.designer.cs">
       <DependentUpon>IOFReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\iptsp\DomesticIn.aspx.cs">
+      <DependentUpon>DomesticIn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\iptsp\DomesticIn.aspx.designer.cs">
+      <DependentUpon>DomesticIn.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="reports\iptsp\DomesticOut.aspx.cs">
+      <DependentUpon>DomesticOut.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="reports\iptsp\DomesticOut.aspx.designer.cs">
+      <DependentUpon>DomesticOut.aspx</DependentUpon>
     </Compile>
     <Compile Include="reports\OutgoingCallAnalysis.aspx.cs">
       <DependentUpon>OutgoingCallAnalysis.aspx</DependentUpon>

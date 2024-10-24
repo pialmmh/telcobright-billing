@@ -198,6 +198,10 @@ border-bottom-style:ridge;min-width:180px; padding-top: 10px;">
 
         </asp:TreeNode>
 
+       <asp:TreeNode Value="Iptsp Reports" Expanded="True" Text="Iptsp Reports" SelectAction="None">
+                    <asp:TreeNode Value="DomesticOut" Text="DomesticOut" SelectAction="Select" NavigateUrl="~/reports/iptsp/DomesticOut.aspx"> </asp:TreeNode>
+                    <asp:TreeNode Value="DomesticIn" Text="DomesticIn" NavigateUrl="~/reports/iptsp/DomesticIn.aspx" > </asp:TreeNode>
+                </asp:TreeNode>
 
       <asp:TreeNode Value="Billing Reports" Expanded="True" Text="Billing Reports" SelectAction="None">
       
