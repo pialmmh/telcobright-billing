@@ -49,7 +49,7 @@ namespace TelcobrightMediation
         public void Execute(cdr thisCdr, CdrProcessor cdrProcessor)
         {
             //sms processing
-            if(cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useSmsHubProcessing)
+            if (cdrProcessor.CdrJobContext.CdrjobInputData.CdrSetting.useSmsHubProcessing)
             {
                 thisCdr.ServiceGroup = 1; //Domestic in ICX
                 // thisCdr.ServiceGroup = 0; //Domestic in ICX
@@ -57,6 +57,7 @@ namespace TelcobrightMediation
             }
             //Domestic call direction/service group
             var dicRoutes = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.SwitchWiseRoutes;
+            var partners = cdrProcessor.CdrJobContext.MediationContext.MefServiceGroupContainer.Partners;
             var key = new ValueTuple<int, string>(thisCdr.SwitchId, thisCdr.IncomingRoute);
             route incomingRoute = null;
             dicRoutes.TryGetValue(key, out incomingRoute);
@@ -99,6 +100,22 @@ namespace TelcobrightMediation
                     decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
                     thisCdr.Duration1 = roundedDuration;
                     return;
+                }
+                if (thisCdr.ServiceGroup <= 0 && thisCdr.InPartnerId > 0 && thisCdr.OutPartnerId>0)
+                {
+                    partner inPartner;
+                    partner outPartner;
+                    partners.TryGetValue(thisCdr.InPartnerId.ToString(), out inPartner);
+                    partners.TryGetValue(thisCdr.OutPartnerId.ToString(), out outPartner);
+                    if (inPartner?.PartnerType == IcxPartnerType.ANS &&
+                          outPartner?.PartnerType == IcxPartnerType.ANS) //ANS and route=national
+                    {
+                        thisCdr.ServiceGroup = 1; //Domestic call
+                        decimal roundedDuration = CasDurationHelper.getDomesticDur(thisCdr.DurationSec);
+                        thisCdr.Duration1 = roundedDuration;
+                        return;
+                    }
+
                 }
 
             }

@@ -43,6 +43,16 @@ namespace PartnerRules
                     return idPartner;
                 }
             }
+            else if (cdrSetting.useCasStyleProcessing == true && thisCdr.OutPartnerId <= 0)
+            {
+                ANSOutByPrefix ansOutByPrefix = new ANSOutByPrefix();
+                int idPartner = ansOutByPrefix.Execute(thisCdr, data);
+                if (idPartner > 0)
+                {
+                    thisCdr.OutPartnerId = idPartner;
+                    return idPartner;
+                }
+            }
             thisCdr.OutPartnerId = 0;
             return 0;
         }

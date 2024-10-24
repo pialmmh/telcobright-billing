@@ -45,6 +45,16 @@ namespace PartnerRules
                         return idPartner;
                     }
                 }
+                else if (cdrSetting.useCasStyleProcessing == true && thisCdr.InPartnerId <= 0)
+                {
+                    ANSInByPrefix ansInByPrefix = new ANSInByPrefix();
+                    int idPartner = ansInByPrefix.Execute(thisCdr, data);
+                    if (idPartner > 0)
+                    {
+                        thisCdr.InPartnerId = idPartner;
+                        return idPartner;
+                    }
+                }
             }
 
             thisCdr.InPartnerId = 0;
