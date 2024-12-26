@@ -71,18 +71,16 @@ namespace Decoders
 
 
 
-
+                    double duretionSec = Convert.ToDouble(lineAsArr[60].Trim());
+                    if (duretionSec <= 0) continue;
 
                     string[] textCdr = new string[input.MefDecodersData.Totalfieldtelcobright];
-
-                    string tempTerminatingCalledNumber = "";
-                    string tempTerminatingCallingNumber = "";
                     var terminatingCallingNumber = lineAsArr[8].Trim();
                     var terminatingCalledNumber = lineAsArr[27].Trim();
-                    
-
-                    double duretionSec = Convert.ToDouble(lineAsArr[60].Trim());
-                    if (duretionSec<=0) continue;
+                    var OriginatingCallingNumber = lineAsArr[8].Trim(); ;
+                    var OriginatingCalledNumber = lineAsArr[27].Trim();
+                    var tempTerminatingCalledNumber = "01777000000";
+                    var tempTerminatingCallingNumber = "01771000001";
 
                     //if (string.IsNullOrEmpty(terminatingCalledNumber) && string.IsNullOrEmpty(terminatingCalledNumber))
                     //{
@@ -94,25 +92,28 @@ namespace Decoders
                     //    continue;
                     //}
 
-                    if (string.IsNullOrEmpty(terminatingCalledNumber) && duretionSec > 0)
+                    if (string.IsNullOrEmpty(terminatingCalledNumber) && string.IsNullOrEmpty(OriginatingCalledNumber) && duretionSec > 0)
                     {
-                        tempTerminatingCalledNumber = "01777000000";
-                        textCdr[Fn.TerminatingCallingNumber] = tempTerminatingCalledNumber;
+
+                        textCdr[Fn.TerminatingCalledNumber] = tempTerminatingCalledNumber;
+                        textCdr[Fn.OriginatingCalledNumber] = tempTerminatingCalledNumber;
                     }
                     else
                     {
                         textCdr[Fn.TerminatingCalledNumber] = terminatingCalledNumber;
+                        textCdr[Fn.OriginatingCalledNumber] = OriginatingCalledNumber;
                     }
 
 
-                    if (string.IsNullOrEmpty(terminatingCallingNumber) && duretionSec > 0)
+                    if (string.IsNullOrEmpty(terminatingCallingNumber) && string.IsNullOrEmpty(OriginatingCallingNumber) && duretionSec > 0)
                     {
-                        tempTerminatingCallingNumber = "01771000000";
                         textCdr[Fn.TerminatingCallingNumber] = tempTerminatingCallingNumber;
+                        textCdr[Fn.OriginatingCallingNumber] = tempTerminatingCallingNumber;
                     }
                     else
                     {
                         textCdr[Fn.TerminatingCallingNumber] = terminatingCallingNumber;
+                        textCdr[Fn.OriginatingCallingNumber] = OriginatingCallingNumber;
                     }
 
 
