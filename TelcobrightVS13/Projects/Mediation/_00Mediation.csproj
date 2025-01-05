@@ -277,6 +277,7 @@
     <Compile Include="Config\TelecomOperatortype.cs" />
     <Compile Include="Config\TypeNameSerializationBinder.cs" />
     <Compile Include="Enums\MsuType.cs" />
+    <Compile Include="Enums\ExeRestartType.cs" />
     <Compile Include="FileOperations\RecursiveVaultFileMover.cs" />
     <Compile Include="FileOperations\SyncPair.cs" />
     <Compile Include="FileOperations\Unzipper.cs" />
