@@ -25,6 +25,8 @@ using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 using System.IO;
+using WebSocketSharp;
+
 namespace Process
 {
     public class PreFetcherInput
@@ -196,7 +198,8 @@ namespace Process
                                     throw new Exception("JobRule not found in MEF collection.");
                                 Console.WriteLine("Processing CdrJob for Switch:" + ne.SwitchName + ", JobName:" +
                                                   job.JobName);
-                                
+                                LogToFile($"Start processing CDR job for Switch: {ne.SwitchName}, JobName: {job.JobName}, JobID: {job.id}");
+
                                 var prefetchPredecoderBatchSize = neAdditionalSetting.PrefetchPredecoderBatchSize;
                                 if (prefetchPredecoderBatchSize>0)
                                 {
@@ -524,6 +527,32 @@ namespace Process
             return context.jobs.Any(c => c.CompletionTime == null && idJobDefs.Contains(c.idjobdefinition));
         }
 
+
+
+        private static void LogToFile(string message)
+        {
+            string logFilePath = @"C:\Logs\CdrProcessLog.txt";
+
+            string logDirectory = Path.GetDirectoryName(logFilePath);
+
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+            }
+
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(logFilePath, true))
+                {
+                    sw.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine("Error writing to log: " + ex.Message);
+            }
+        }
         bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext, ne ne)
         {
             List<int> idJobDefs = context.enumjobdefinitions.Where(c => c.JobQueue == this.ProcessId).Select(c => c.id)
