@@ -19,10 +19,12 @@ namespace TelcobrightMediation
         public int DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection { get; set; } = 1;
         public int SecondsBeforeForOldEventScan { get; set; } = 300;//this will be used if >0
         public int SecondsAfterForOldEventScan { get; set; } = 300;//this will be used if >0
+        public int HoursToAddBeforeForSafePartialCollection { get; set; } = 1;
+        public int HoursToAddAfterForSafePartialCollection { get; set; } = 1;
         public bool DescendingOrderWhileProcessingListedFiles { get; set; }
         public new bool DescendingOrderWhileListingFiles { get; set; }
         public new bool DescendingOrderWhileListingFilesByFileNameOnly { get; set; }
-        public new int FileNameLengthFromRightWhileSorting { get; set; }
+        public new int FileNameLengthFromRightWhileSorting{ get; set; }
         public List<string> IllegalStrToRemoveFromFields { get; set; }
         public DateTime NotAllowedCallDateTimeBefore { get; set; } = new DateTime(2008, 1, 1);
         public List<IValidationRule<string[]>> ValidationRulesForInconsistentCdrs { get; set; }
@@ -52,12 +54,11 @@ namespace TelcobrightMediation
         public bool ProcessNewCdrJobsBeforeReProcess { get; set; }
         public bool WriteFailedCallsToDb { get; set; }
         public bool WriteCdrDiscarded { get; set; }
-        public DateTime ExcludeBefore { get; set; }
+        public DateTime ExcludeBefore { get; set; } 
         public bool isTableDelete { get; set; }
         public bool AllowNegativeInvoiceGeneration { get; set; } = false;
-        public string MoveCdrToDriveAfterProcessing { get; set; } = "";
+        public string MoveCdrToDriveAfterProcessing { get; set; }
         public ExeRestartType WatchDogRestartRule { get; set; } = ExeRestartType.None;//this will be used if >0
-
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

@@ -10,6 +10,11 @@ namespace TelcobrightFileOperations
 {
     public class DirectoryLister
     {
+        public SftpLibrary SftpLibrary { get; }
+        public DirectoryLister(SftpLibrary sftpLib=SftpLibrary.Winscp)
+        {
+            this.SftpLibrary = sftpLib;
+        }
         List<RemoteFileInfo> GetFilesOnlyWithoutFolders(RemoteDirectoryInfo directoryInfo)
         {
             List<RemoteFileInfo> filesOnly = new List<RemoteFileInfo>();

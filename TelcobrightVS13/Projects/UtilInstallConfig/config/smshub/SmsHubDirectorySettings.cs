@@ -136,7 +136,7 @@ namespace InstallConfig
                 {
                     SftpLibrary=SftpLibrary.RenciSsh,
                     HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
-                    FtpOrSftpTimeoutSeconds = 600,
+                    FtpOrSftpTimeoutSeconds = 1500,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -145,7 +145,7 @@ namespace InstallConfig
                                                                 and
                                                                 (Name.EndsWith('.gz'))
                                                                 and Length>0
-                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-09-30 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -155,7 +155,7 @@ namespace InstallConfig
                     RecursiveFileStore=true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 50
+                    MaxDownloadFromFtp = 150
                 }
             };
 
@@ -189,7 +189,7 @@ namespace InstallConfig
                 {
                     SftpLibrary = SftpLibrary.RenciSsh,
                     HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
-                    FtpOrSftpTimeoutSeconds = 600,
+                    FtpOrSftpTimeoutSeconds = 1500,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -198,7 +198,7 @@ namespace InstallConfig
                                                                 and
                                                                 (Name.EndsWith('.gz'))
                                                                 and Length>0
-                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-09-30 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -208,7 +208,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 50
+                    MaxDownloadFromFtp = 150
                 }
             };
 
@@ -241,7 +241,7 @@ namespace InstallConfig
                 {
                     SftpLibrary = SftpLibrary.RenciSsh,
                     HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
-                    FtpOrSftpTimeoutSeconds = 600,
+                    FtpOrSftpTimeoutSeconds = 1500,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -250,7 +250,7 @@ namespace InstallConfig
                                                                 and
                                                                 (Name.EndsWith('.gz'))
                                                                 and Length>0
-                                                               and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
+                                                               and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-09-30 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -260,7 +260,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 50
+                    MaxDownloadFromFtp = 150
                 }
             };
 
@@ -293,7 +293,7 @@ namespace InstallConfig
                 {
                     SftpLibrary = SftpLibrary.RenciSsh,
                     HourToScheduleCleaningWinScpInstances = 4, //clean at 4 am everyday
-                    FtpOrSftpTimeoutSeconds = 600,
+                    FtpOrSftpTimeoutSeconds = 1500,
                     SecondaryDirectory = "",
                     OnlyDownloadMarkedFile = true,
                     MoveFilesToSecondaryAfterCopy = false,
@@ -302,7 +302,7 @@ namespace InstallConfig
                                                                 and
                                                                 (Name.EndsWith('.gz'))
                                                                 and Length>0
-                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-07-31 23:59:59')")
+                                                                and date(Name.Substring(4,8), 'yyyyMMdd') > date('2024-09-30 23:59:59')")
                 },
                 DstSettings = new SyncSettingsDest()
                 {
@@ -312,7 +312,7 @@ namespace InstallConfig
                     RecursiveFileStore = true,
                     ExpDestFileName = new SpringExpression(@"Name.Insert(0,'')"),
                     CompressionType = CompressionType.None,
-                    MaxDownloadFromFtp = 50
+                    MaxDownloadFromFtp = 150
                 }
             };
 

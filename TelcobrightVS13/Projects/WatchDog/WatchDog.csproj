@@ -105,7 +105,7 @@
       <Name>mefCdrValidationRules</Name>
     </ProjectReference>
     <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
-      <Project>{D4C2F34D-4D3D-43AE-84F0-E80CFEDB1B48}</Project>
+      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
       <Name>LibraryExtensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\LogPreprocessingRules\mefLogPreprocessingRules.csproj">

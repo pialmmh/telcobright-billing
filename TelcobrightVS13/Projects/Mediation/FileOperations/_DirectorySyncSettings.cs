@@ -56,7 +56,7 @@ namespace TelcobrightFileOperations
             {
                 using (Session session = GetRemoteFileTransferSession(tbc))
                 {
-                    DirectoryLister dirlister = new DirectoryLister();
+                    DirectoryLister dirlister = new DirectoryLister(srcSettings.SftpLibrary);
                     return dirlister.ListRemoteDirectoryRecursive(session, this.FileLocation.StartingPath);
                 }
             }
@@ -64,7 +64,7 @@ namespace TelcobrightFileOperations
             {
                 using (Session session = GetRemoteFileTransferSession(tbc, timeoutSeconds))
                 {
-                    DirectoryLister dirlister = new DirectoryLister();
+                    DirectoryLister dirlister = new DirectoryLister(srcSettings.SftpLibrary);
                     return dirlister.ListRemoteDirectoryRecursive(session, this.FileLocation.StartingPath);
                 }
             }
@@ -207,7 +207,7 @@ namespace TelcobrightFileOperations
             
             return fileNames;
         }
-        public Session GetRemoteFileTransferSession(TelcobrightConfig tbc,int ftpTimeoutInSeconds=15)//deprecated, use GetRemoteFileTransferSessionOptions, below
+        public Session GetRemoteFileTransferSession(TelcobrightConfig tbc,int ftpTimeoutInSeconds=300)//deprecated, use GetRemoteFileTransferSessionOptions, below
         {
             SessionOptions sessionOptions = new SessionOptions
             {
@@ -216,7 +216,8 @@ namespace TelcobrightFileOperations
                 UserName = this.FileLocation.User,
                 Password = this.FileLocation.Pass,
                 FtpMode= this.FileLocation.UseActiveModeForFTP==true? FtpMode.Active:FtpMode.Passive,
-                TimeoutInMilliseconds = ftpTimeoutInSeconds * 1000
+                TimeoutInMilliseconds = ftpTimeoutInSeconds * 1000,
+                
             };
             switch (this.FileLocation.LocationType)
             {
@@ -238,7 +239,8 @@ namespace TelcobrightFileOperations
             }
             Session session = new Session();
             session.SessionLogPath = null;
-            //session.DebugLogPath=
+            session.AddRawConfiguration("PingType", "2");
+
             session.Open(sessionOptions);
             this.FileTransferSession = session;
             //add this session to diccache
@@ -246,7 +248,7 @@ namespace TelcobrightFileOperations
             //tbc.resourcePool.winscpSessionPool.Add(sessionKey, fileTransferSession);
             return session;
         }
-        public SessionOptions GetRemoteFileTransferSessionOptions(TelcobrightConfig tbc, int ftpTimeoutInSeconds=15)
+        public SessionOptions GetRemoteFileTransferSessionOptions(TelcobrightConfig tbc, int ftpTimeoutInSeconds=300)
         {
             SessionOptions sessionOptions = new SessionOptions
             {

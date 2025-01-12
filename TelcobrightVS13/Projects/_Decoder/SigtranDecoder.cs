@@ -175,9 +175,13 @@ namespace Decoders
                 .ToList();
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Sn.StartTime]).ToList();
-            //if (allUnaggregatedInstances.Where(r => r[Sn.UniqueBillId] == "2024-07-07/28-23/3c0022bc").ToList().Count > 1)
+            //if (allUnaggregatedInstances.Where(r => r[Sn.UniqueBillId] == "2024-09-22/28-23/3b00e3d2").ToList().Count > 1)
             //{
             //    Console.WriteLine("my test again");
+            //}
+            //if (allUnaggregatedInstances.Any(row => row[Sn.UniqueBillId] == "2024-09-22/28-23/3b00e3d2"))
+            //{
+            //    ;
             //}
             List<string[]> mtReqs = allUnaggregatedInstances.Where(r => r[Sn.SmsType] == "3")
                 .ToList();
@@ -243,11 +247,16 @@ namespace Decoders
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
                 .OrderBy(row => row[Sn.StartTime]).ToList();
             //tmp code
-            if (allUnaggregatedInstances.Where(row => row[Sn.UniqueBillId] == "2024-07-07/28-23/3b00b66c").ToList()
-                    .Count > 1)
-            {
-                ;
-            }
+            //if (allUnaggregatedInstances.Where(row => row[Sn.UniqueBillId] == "2024-09-22/28-23/3b00e3d2").ToList()
+            //        .Count > 1)
+            //{
+            //    ;
+            //}
+
+            //if (allUnaggregatedInstances.Any(row => row[Sn.UniqueBillId] == "2024-09-22/28-23/3b00e3d2"))
+            //{
+            //    ;
+            //}
             // temp code 
             //if (newUnAggInstances.Any() && oldUnAggInstances.Any())
             //{
@@ -370,7 +379,7 @@ namespace Decoders
                     if (resp[Sn.UniqueBillId].Contains('_')) continue;
                     DateTime reqDateTime = Convert.ToDateTime(req[Sn.StartTime]);
                     DateTime respDateTime = Convert.ToDateTime(resp[Sn.StartTime]);
-                    if (respDateTime > reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
+                    if (respDateTime >= reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
                     {
                         string newBillId = new StringBuilder(req[Sn.UniqueBillId]).Append("_").Append(reqIndex.ToString())
                             .ToString();
@@ -434,12 +443,12 @@ namespace Decoders
 
                 foreach (string[] resp in responses)
                 {
-                    if (resp[Sn.UniqueBillId].Contains("_2")) continue;
+                    if (resp[Sn.UniqueBillId].Contains("_222")) continue;
                     DateTime reqDateTime = Convert.ToDateTime(req[Sn.StartTime]);
                     DateTime respDateTime = Convert.ToDateTime(resp[Sn.StartTime]);
-                    if (respDateTime > reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
+                    if (respDateTime >= reqDateTime && (respDateTime - reqDateTime).TotalSeconds <= 30)
                     {
-                        string newBillId = new StringBuilder(req[Sn.UniqueBillId]).Append("_2").Append(reqIndex.ToString())
+                        string newBillId = new StringBuilder(req[Sn.UniqueBillId]).Append("_222").Append(reqIndex.ToString())
                             .ToString();
                         req[Sn.UniqueBillId] = newBillId;
                         resp[Sn.UniqueBillId] = newBillId;
@@ -456,7 +465,7 @@ namespace Decoders
 
             foreach (var request in requests)
             {
-                if (!request[Sn.UniqueBillId].Contains("_2"))
+                if (!request[Sn.UniqueBillId].Contains("_222"))
                 {
                     NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
                     {
@@ -469,7 +478,7 @@ namespace Decoders
 
             foreach (var response in responses)
             {
-                if (!response[Sn.UniqueBillId].Contains("_2"))
+                if (!response[Sn.UniqueBillId].Contains("_222"))
                 {
                     NewAndOldEventsWrapper<string[]> tmpNonAggCandidate = new NewAndOldEventsWrapper<string[]>
                     {
@@ -490,112 +499,113 @@ namespace Decoders
         public override string getCreateTableSqlForPartialEvent(object data)
         {
             return $@"CREATE TABLE if not exists <{this.PartialTablePrefix}> (
-                  SwitchId varchar(100)  NOT NULL,
-                  IdCall bigint(20) NOT NULL,
-                  SequenceNumber varchar(100)  DEFAULT NULL,
-                  FileName varchar(100)  NOT NULL,
-                  ServiceGroup varchar(100)  DEFAULT NULL,
-                  IncomingRoute varchar(100)  DEFAULT NULL,
-                  originatingip varchar(100)  DEFAULT NULL,
-                  OPC varchar(100)  DEFAULT NULL,
-                  OriginatingCIC varchar(100)  DEFAULT NULL,
-                  OriginatingCalledNumber varchar(100)  DEFAULT NULL,
-                  TerminatingCalledNumber varchar(100)  DEFAULT NULL,
-                  OriginatingCallingNumber varchar(100)  DEFAULT NULL,
-                  TerminatingCallingNumber varchar(100)  DEFAULT NULL,
-                  PrePaid varchar(100)  DEFAULT NULL,
-                  DurationSec varchar(100)  DEFAULT NULL,
-                  EndTime varchar(100)  DEFAULT NULL,
-                  ConnectTime varchar(100)  DEFAULT NULL,
-                  AnswerTime varchar(100)  DEFAULT NULL,
-                  ChargingStatus varchar(100)  DEFAULT NULL,
-                  PDD varchar(100)  DEFAULT NULL,
-                  CountryCode varchar(100)  DEFAULT NULL,
-                  AreaCodeOrLata varchar(100)  DEFAULT NULL,
-                  ReleaseDirection varchar(100)  DEFAULT NULL,
-                  ReleaseCauseSystem varchar(100)  DEFAULT NULL,
-                  ReleaseCauseEgress varchar(100)  DEFAULT NULL,
-                  OutgoingRoute varchar(100)  DEFAULT NULL,
-                  terminatingip varchar(100)  DEFAULT NULL,
-                  DPC varchar(100)  DEFAULT NULL,
-                  TerminatingCIC varchar(100)  DEFAULT NULL,
-                  StartTime datetime DEFAULT NULL,
-                  InPartnerId varchar(100)  DEFAULT '0',
-                  CustomerRate varchar(100)  DEFAULT NULL,
-                  OutPartnerId varchar(100)  DEFAULT '0',
-                  SupplierRate varchar(100)  DEFAULT NULL,
-                  MatchedPrefixY varchar(100)  DEFAULT NULL,
-                  UsdRateY varchar(100)  DEFAULT NULL,
-                  MatchedPrefixCustomer varchar(100)  DEFAULT NULL,
-                  MatchedPrefixSupplier varchar(100)  DEFAULT NULL,
-                  InPartnerCost varchar(100)  DEFAULT NULL,
-                  OutPartnerCost varchar(100)  DEFAULT NULL,
-                  CostAnsIn varchar(100)  DEFAULT NULL,
-                  CostIcxIn varchar(100)  DEFAULT NULL,
-                  Tax1 varchar(100)  DEFAULT '0.00000000',
-                  IgwRevenueIn varchar(100)  DEFAULT NULL,
-                  RevenueAnsOut varchar(100)  DEFAULT NULL,
-                  RevenueIgwOut varchar(100)  DEFAULT NULL,
-                  RevenueIcxOut varchar(100)  DEFAULT NULL,
-                  Tax2 varchar(100)  DEFAULT '0.00000000',
-                  XAmount varchar(100)  DEFAULT NULL,
-                  YAmount varchar(100)  DEFAULT NULL,
-                  AnsPrefixOrig varchar(100)  DEFAULT NULL,
-                  AnsIdOrig varchar(100)  DEFAULT NULL,
-                  AnsPrefixTerm varchar(100)  DEFAULT NULL,
-                  AnsIdTerm varchar(100)  DEFAULT NULL,
-                  ValidFlag varchar(100)  DEFAULT NULL,
-                  PartialFlag varchar(100)  DEFAULT NULL,
-                  ReleaseCauseIngress varchar(100)  DEFAULT NULL,
-                  InRoamingOpId varchar(100)  DEFAULT NULL,
-                  OutRoamingOpId varchar(100)  DEFAULT NULL,
-                  CalledPartyNOA varchar(100)  DEFAULT NULL,
-                  CallingPartyNOA varchar(100)  DEFAULT NULL,
-                  AdditionalSystemCodes varchar(100)  DEFAULT NULL,
-                  AdditionalPartyNumber varchar(100)  DEFAULT NULL,
-                  ResellerIds varchar(100)  DEFAULT NULL,
-                  ZAmount varchar(100)  DEFAULT NULL,
-                  PreviousRoutes varchar(100)  DEFAULT NULL,
-                  E1Id varchar(100)  DEFAULT NULL,
-                  MediaIp1 varchar(100)  DEFAULT NULL,
-                  MediaIp2 varchar(100)  DEFAULT NULL,
-                  MediaIp3 varchar(100)  DEFAULT NULL,
-                  MediaIp4 varchar(100)  DEFAULT NULL,
-                  CallReleaseDuration varchar(100)  DEFAULT NULL,
-                  E1IdOut varchar(100)  DEFAULT NULL,
-                  InTrunkAdditionalInfo varchar(100)  DEFAULT NULL,
-                  OutTrunkAdditionalInfo varchar(100)  DEFAULT NULL,
-                  InMgwId varchar(100)  DEFAULT NULL,
-                  OutMgwId varchar(100)  DEFAULT NULL,
-                  MediationComplete varchar(100)  DEFAULT '0',
-                  Codec varchar(100)  DEFAULT NULL,
-                  ConnectedNumberType varchar(100)  DEFAULT NULL,
-                  RedirectingNumber varchar(100)  DEFAULT NULL,
-                  CallForwardOrRoamingType varchar(100)  DEFAULT NULL,
-                  OtherDate varchar(100)  DEFAULT NULL,
-                  SummaryMetaTotal varchar(100)  DEFAULT NULL,
-                  TransactionMetaTotal varchar(100)  DEFAULT NULL,
-                  ChargeableMetaTotal varchar(100)  DEFAULT NULL,
-                  ErrorCode varchar(100)  DEFAULT NULL,
-                  NERSuccess varchar(100)  DEFAULT NULL,
-                  RoundedDuration varchar(100)  DEFAULT NULL,
-                  PartialDuration varchar(100)  DEFAULT NULL,
-                  PartialAnswerTime varchar(100)  DEFAULT NULL,
-                  PartialEndTime varchar(100)  DEFAULT NULL,
-                  FinalRecord varchar(100)  DEFAULT NULL,
-                  Duration1 varchar(100)  DEFAULT NULL,
-                  Duration2 varchar(100)  DEFAULT NULL,
-                  Duration3 varchar(100)  DEFAULT NULL,
-                  Duration4 varchar(100)  DEFAULT NULL,
-                  PreviousPeriodCdr varchar(100)  DEFAULT NULL,
-                  UniqueBillId varchar(100)  DEFAULT NULL,
-                  AdditionalMetaData varchar(500)  DEFAULT NULL,
-                  Category varchar(100)  DEFAULT NULL,
-                  SubCategory varchar(100)  DEFAULT NULL,
-                  ChangedByJobId varchar(100)  DEFAULT NULL,
-                  SignalingStartTime varchar(100)  DEFAULT NULL,
-                  KEY ind_Unique_Bill (UniqueBillId)
-                  ) ENGINE=InnoDB ";
+                          SwitchId  int(11) NOT NULL,
+                          IdCall  bigint(20) NOT NULL,
+                          SequenceNumber  bigint(20) DEFAULT NULL,
+                          FileName  varchar(100) COLLATE utf8mb4_bin NOT NULL,
+                          ServiceGroup  int(11) DEFAULT NULL,
+                          IncomingRoute  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          originatingip  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          OPC  int(11) DEFAULT NULL,
+                          OriginatingCIC  int(11) DEFAULT NULL,
+                          OriginatingCalledNumber  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          TerminatingCalledNumber  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          OriginatingCallingNumber  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          TerminatingCallingNumber  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          PrePaid  int(11) DEFAULT NULL,
+                          DurationSec  decimal(20,8) DEFAULT NULL,
+                          EndTime  datetime DEFAULT NULL,
+                          ConnectTime  datetime DEFAULT NULL,
+                          AnswerTime  datetime DEFAULT NULL,
+                          ChargingStatus  int(11) DEFAULT NULL,
+                          PDD  float DEFAULT NULL,
+                          CountryCode  varchar(15) COLLATE utf8mb4_bin DEFAULT NULL,
+                          AreaCodeOrLata  varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+                          ReleaseDirection  int(11) DEFAULT NULL,
+                          ReleaseCauseSystem  int(11) DEFAULT NULL,
+                          ReleaseCauseEgress  int(11) DEFAULT NULL,
+                          OutgoingRoute  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          terminatingip  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          DPC  int(11) DEFAULT NULL,
+                          TerminatingCIC  int(11) DEFAULT NULL,
+                          StartTime  datetime DEFAULT NULL,
+                          InPartnerId  int(11) DEFAULT '0',
+                          CustomerRate  tinyint(1) unsigned DEFAULT NULL,
+                          OutPartnerId  int(11) DEFAULT '0',
+                          SupplierRate  decimal(20,8) DEFAULT NULL,
+                          MatchedPrefixY  varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+                          UsdRateY  tinyint(1) unsigned DEFAULT NULL,
+                          MatchedPrefixCustomer  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          MatchedPrefixSupplier  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          InPartnerCost  tinyint(1) unsigned DEFAULT NULL,
+                          OutPartnerCost  tinyint(1) unsigned DEFAULT NULL,
+                          CostAnsIn  tinyint(1) unsigned DEFAULT NULL,
+                          CostIcxIn  tinyint(1) unsigned DEFAULT NULL,
+                          Tax1  tinyint(1) unsigned DEFAULT NULL,
+                          IgwRevenueIn  tinyint(1) unsigned DEFAULT NULL,
+                          RevenueAnsOut  tinyint(1) unsigned DEFAULT NULL,
+                          RevenueIgwOut  tinyint(1) unsigned DEFAULT NULL,
+                          RevenueIcxOut  tinyint(1) unsigned DEFAULT NULL,
+                          Tax2  tinyint(1) unsigned DEFAULT NULL,
+                          XAmount  tinyint(1) unsigned DEFAULT NULL,
+                          YAmount  tinyint(1) unsigned DEFAULT NULL,
+                          AnsPrefixOrig  varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+                          AnsIdOrig  int(11) DEFAULT NULL,
+                          AnsPrefixTerm  varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+                          AnsIdTerm  int(11) DEFAULT NULL,
+                          ValidFlag  int(11) DEFAULT NULL,
+                          PartialFlag  int(11) DEFAULT NULL,
+                          ReleaseCauseIngress  int(11) DEFAULT NULL,
+                          InRoamingOpId  int(11) DEFAULT NULL,
+                          OutRoamingOpId  int(11) DEFAULT NULL,
+                          CalledPartyNOA  int(11) DEFAULT NULL,
+                          CallingPartyNOA  int(11) DEFAULT NULL,
+                          AdditionalSystemCodes  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          AdditionalPartyNumber  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          ResellerIds  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          ZAmount  tinyint(1) unsigned DEFAULT NULL,
+                          PreviousRoutes  varchar(500) COLLATE utf8mb4_bin DEFAULT NULL,
+                          E1Id  int(11) DEFAULT NULL,
+                          MediaIp1  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          MediaIp2  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          MediaIp3  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          MediaIp4  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          CallReleaseDuration  float DEFAULT NULL,
+                          E1IdOut  int(11) DEFAULT NULL,
+                          InTrunkAdditionalInfo  varchar(30) COLLATE utf8mb4_bin DEFAULT NULL,
+                          OutTrunkAdditionalInfo  varchar(30) COLLATE utf8mb4_bin DEFAULT NULL,
+                          InMgwId  varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+                          OutMgwId  varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+                          MediationComplete  int(11) DEFAULT '0',
+                          Codec  varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+                          ConnectedNumberType  int(11) DEFAULT NULL,
+                          RedirectingNumber  varchar(30) COLLATE utf8mb4_bin DEFAULT NULL,
+                          CallForwardOrRoamingType  int(11) DEFAULT NULL,
+                          OtherDate  datetime DEFAULT NULL,
+                          SummaryMetaTotal  tinyint(1) unsigned DEFAULT NULL,
+                          TransactionMetaTotal  tinyint(1) unsigned DEFAULT NULL,
+                          ChargeableMetaTotal  tinyint(1) unsigned DEFAULT NULL,
+                          ErrorCode  varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
+                          NERSuccess  int(11) DEFAULT NULL,
+                          RoundedDuration  tinyint(1) unsigned DEFAULT NULL,
+                          PartialDuration  tinyint(1) unsigned DEFAULT NULL,
+                          PartialAnswerTime  datetime DEFAULT NULL,
+                          PartialEndTime  datetime DEFAULT NULL,
+                          FinalRecord  bigint(20) DEFAULT NULL,
+                          Duration1  tinyint(1) unsigned DEFAULT NULL,
+                          Duration2  tinyint(1) unsigned DEFAULT NULL,
+                          Duration3  tinyint(1) unsigned DEFAULT NULL,
+                          Duration4  tinyint(1) unsigned DEFAULT NULL,
+                          PreviousPeriodCdr  int(11) DEFAULT NULL,
+                          UniqueBillId  varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+                          AdditionalMetaData  varchar(500) COLLATE utf8mb4_bin DEFAULT NULL,
+                          Category  int(11) DEFAULT NULL,
+                          SubCategory  int(11) DEFAULT NULL,
+                          ChangedByJobId  bigint(20) DEFAULT NULL,
+                          SignalingStartTime  datetime DEFAULT NULL,
+                          KEY  ind_Unique_Bill  ( UniqueBillId ),
+                          KEY ind_Start_Time (StartTime)
+                        ) ENGINE=InnoDB ";
         }
         //public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
         //{

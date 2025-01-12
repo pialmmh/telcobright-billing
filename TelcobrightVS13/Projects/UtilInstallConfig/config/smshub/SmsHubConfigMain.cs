@@ -71,6 +71,7 @@ namespace InstallConfig
                 new InconsistentMdrValRulesGen(tempCdrSetting.NotAllowedCallDateTimeBefore);
             this.Tbc.CdrSetting = new CdrSetting
             {
+                WatchDogRestartRule = ExeRestartType.EveryMorning,
                 EmptyFileAllowed = true,
                 SummaryTimeField = SummaryTimeFieldEnum.AnswerTime,
                 PartialCdrEnabledNeIds = new List<int>() { },//7, was set to non-partial processing mode due to duplicate billid problem.
@@ -100,9 +101,9 @@ namespace InstallConfig
                     { 1, new NeAdditionalSetting {//dialogic
                         ProcessMultipleCdrFilesInBatch = true,
                         PreDecodeAsTextFile = true,
-                        MaxConcurrentFilesForParallelPreDecoding = 10,
-                        MinRowCountToStartBatchCdrProcessing = 1000000,
-                        MaxNumberOfFilesInPreDecodedDirectory = 10,
+                        MaxConcurrentFilesForParallelPreDecoding = 8,
+                        MinRowCountToStartBatchCdrProcessing = 1800000,
+                        MaxNumberOfFilesInPreDecodedDirectory = 140,
                         PrefetchPredecoderBatchSize = 0,
                         CreateJobRecursively = true,
                         AggregationStyle = "telcobridge",

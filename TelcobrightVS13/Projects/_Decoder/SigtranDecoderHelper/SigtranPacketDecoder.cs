@@ -43,6 +43,8 @@ namespace Decoders
         {
             {"1:44",MsuType.Mt},
             {"2:44",MsuType.MtResp},
+            {"1:46",MsuType.Mt},
+            {"2:46",MsuType.MtResp},
             {"1:45",MsuType.Sri},
             {"2:45",MsuType.SriResp},
             {"1:63",MsuType.InformServiceCenter}
@@ -245,8 +247,12 @@ namespace Decoders
                 {
                     // throw new Exception("OpCode tree local can not be null");
                 }
-                // excluding reportSM-DeliveryStatus and mo-forwardSM 
-                if (smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && !smsTypeIdentifier.IsNullOrEmptyOrWhiteSpace())
+                //if (smsTypeIdentifier == "46")
+                //{
+                //    ;
+                //}
+                // excluding reportSM-DeliveryStatus
+                if (smsTypeIdentifier != "46" && smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && !smsTypeIdentifier.IsNullOrEmptyOrWhiteSpace())
                     continue;
 
 
@@ -330,10 +336,13 @@ namespace Decoders
                     //record[Sn.SmsType] = "6";
                     continue;
                 }
-
+                if((imsi.IsNullOrEmptyOrWhiteSpace() == false && reqResIdentifier == "2") || reqResIdentifier=="3")
+                {
+                    ;
+                }
                 if (record[Sn.SmsType] != "1" && record[Sn.SmsType] != "3" && packet.GsmMap.ComponentTree?.ReturnResultLastElement != null)
                 {
-                    if ((bool)!packet.GsmMap.ComponentTree?.ReturnResultLastElement.ResultretresElement.Imsi.IsNullOrEmptyOrWhiteSpace())
+                    if (packet.GsmMap.ComponentTree?.ReturnResultLastElement.ResultretresElement.Imsi.IsNullOrEmptyOrWhiteSpace() == false)
                     {
                         //ignore sri for now;
 
@@ -395,20 +404,20 @@ namespace Decoders
                 record[Sn.Subcategory] = "1";
                 record[Sn.ChargingStatus] = "0";
                 record[Sn.ServiceGroup] = "1";
+                
+                //if (record[Sn.SmsType] == "3")
+                //{
+                //    ;
+                //}
 
-                if (record[Sn.SmsType] == "3")
-                {
-                    ;
-                }
-
-                if (record[Sn.SmsType] == "4")
-                {
-                    ;
-                }
-                if (record[Sn.SmsType] != "3" && record[Sn.SmsType] != "4")
-                {
-                    ;
-                }
+                //if (record[Sn.SmsType] == "4")
+                //{
+                //    ;
+                //}
+                //if (record[Sn.SmsType] != "3" && record[Sn.SmsType] != "4")
+                //{
+                //    ;
+                //}
                 //records.Add(record);
                 records[index] = record;
             }

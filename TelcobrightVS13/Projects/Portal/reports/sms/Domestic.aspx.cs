@@ -157,24 +157,24 @@ public partial class DefaultRptDomesticSms : System.Web.UI.Page
         GridView1.Columns[GetColumnIndexByName(GridView1, "tup_outgoingroute")].Visible = CheckBoxViewOutgoingRoute.Checked;
         if (CheckBoxShowCost.Checked == true)
         {
-            GridView1.Columns[14].Visible = true;
-            GridView1.Columns[15].Visible = true;
+            //GridView1.Columns[14].Visible = true;
+            //GridView1.Columns[15].Visible = true;
         }
         else
         {
-            GridView1.Columns[14].Visible = false;
-            GridView1.Columns[15].Visible = false;
+            //GridView1.Columns[14].Visible = false;
+            //GridView1.Columns[15].Visible = false;
         }
         if (CheckBoxShowPerformance.Checked == true)
         {
-            GridView1.Columns[19].Visible = true;
+            //GridView1.Columns[19].Visible = true;
         }
         else
         {
-            GridView1.Columns[19].Visible = false;
+            //GridView1.Columns[19].Visible = false;
         }
         //make profit invisible, it's useless
-        GridView1.Columns[17].Visible = false;
+        //GridView1.Columns[17].Visible = false;
         //GridView1.Columns[9].Visible = true;//carrier's duration
         
         using (MySqlConnection connection = new MySqlConnection())
@@ -351,7 +351,7 @@ public partial class DefaultRptDomesticSms : System.Web.UI.Page
         {
             TrafficReportDatasetBased tr = (TrafficReportDatasetBased)Session["IntlIn"];
             DataSetWithGridView dsG = new DataSetWithGridView(tr, GridView1);//invisible baseColumns are removed in constructor
-            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "IntlIncoming_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            CreateExcelFileAspNet.CreateExcelDocumentAsStreamEpPlusPackageLastRowSummary(tr.Ds, "Domestic_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     + ".xlsx", Response);
         }
     }
@@ -623,18 +623,18 @@ public partial class DefaultRptDomesticSms : System.Web.UI.Page
         }//if checkbox ans
         
         //0 ASR highlighting
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            double asr = 1;
-            double.TryParse(e.Row.Cells[16].Text, out asr);
-            Color redColor2 = ColorTranslator.FromHtml("#FF0000");
-            if (asr <= 0)
-            {
-                e.Row.Cells[16].ForeColor = Color.White;
-                e.Row.Cells[16].BackColor = redColor2;
-                e.Row.Cells[16].Font.Bold = true;
-            }
-        }
+        //if (e.Row.RowType == DataControlRowType.DataRow)
+        //{
+        //    double asr = 1;
+        //    double.TryParse(e.Row.Cells[16].Text, out asr);
+        //    Color redColor2 = ColorTranslator.FromHtml("#FF0000");
+        //    if (asr <= 0)
+        //    {
+        //        e.Row.Cells[16].ForeColor = Color.White;
+        //        e.Row.Cells[16].BackColor = redColor2;
+        //        e.Row.Cells[16].Font.Bold = true;
+        //    }
+        //}
 
     }
 
