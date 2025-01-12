@@ -176,6 +176,10 @@ namespace Decoders.SigtranDecoderHelper
                                 BeginElement = new Element
                                 {
                                     Tid = l.Tid != null && l.Tid.Length > 0 ? l.Tid[0] : null
+                                },
+                                EndElement = new Element
+                                {
+                                    Tid = l.Dtid != null && l.Dtid.Length > 0 ? l.Dtid[0] : null
                                 }
                             }
                         };

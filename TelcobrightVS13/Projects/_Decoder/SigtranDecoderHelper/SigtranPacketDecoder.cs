@@ -63,7 +63,7 @@ namespace Decoders
                 FileName = $"{TSharkExe}",
                 Arguments = $"-r {PcapFileName} -Tjson -eframe.time " +
                             "-esccp.return_cause -emtp3.opc -emtp3.dpc -esccp.called.digits " +
-                            "-esccp.calling.digits -etcap.tid -egsm_map.old.Component -ee212.imsi " +
+                            "-esccp.calling.digits -etcap.tid -etcap.dtid -egsm_map.old.Component -ee212.imsi " +
                             "-egsm_old.localValue -ee164.msisdn -egsm_sms.sms_text -egsm_map.sm.serviceCentreAddress " +
                             "-egsm_map.sm.msisdn -Y((gsm_map)&&(mtp3.opc==4699||mtp3.opc==4700||mtp3.opc==4701||mtp3.opc==4702))",
                 RedirectStandardOutput = true,
@@ -218,22 +218,15 @@ namespace Decoders
                 // tcap layer
                 Tcap tcapLayer = packet.Tcap;
 
-                var transid = tcapLayer.BeginElement?.Tid == null ? tcapLayer.EndElement?.Tid : tcapLayer.BeginElement.Tid;
-                if (transid == null)
-                {
-                    transid = tcapLayer.ContinueElement?.Tid;
-                }
-                record[Sn.Codec] = transid?.ToString();
+                //transid = tcapLayer.BeginElement?.Otid == null
+                //    ? tcapLayer.EndElement?.Otid
+                //    : tcapLayer.BeginElement.Otid;
+                //record[Sn.InMgwId] = transid?.ToString();
 
-                transid = tcapLayer.BeginElement?.Otid == null
-                    ? tcapLayer.EndElement?.Otid
-                    : tcapLayer.BeginElement.Otid;
-                record[Sn.InMgwId] = transid?.ToString();
-
-                transid = tcapLayer.BeginElement?.SourceTransactionId?.Dtid == null
-                    ? tcapLayer.EndElement?.DestinationTransactionId?.Dtid
-                    : tcapLayer.BeginElement.Otid;
-                record[Sn.OutMgwId] = transid?.ToString();
+                //transid = tcapLayer.BeginElement?.SourceTransactionId?.Dtid == null
+                //    ? tcapLayer.EndElement?.DestinationTransactionId?.Dtid
+                //    : tcapLayer.BeginElement.Otid;
+                //record[Sn.OutMgwId] = transid?.ToString();
 
                 // gsm sms
                 GsmSms gsmSmsLayer = packet.GsmSms;
@@ -314,12 +307,16 @@ namespace Decoders
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "2";
                 }
+
+                string transid;
                 if (systemCodes == MsuType.Mt)
                 {
                     // e164.msisdn => terminating caller number	,imsi => redirectnumber
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "3";
+                    transid = tcapLayer.BeginElement.Tid.ToString();
+                    record[Sn.Codec] = transid?.ToString();
                 }
                 if (systemCodes == MsuType.MtResp)
                 {
@@ -327,6 +324,8 @@ namespace Decoders
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "4";
+                    transid = tcapLayer.EndElement.Tid.ToString();
+                    record[Sn.Codec] = transid?.ToString();
                 }
                 if (systemCodes == MsuType.InformServiceCenter)
                 {
@@ -361,6 +360,8 @@ namespace Decoders
                         record[Sn.TerminatingCallingNumber] = callerNumber;
                         record[Sn.Imsi] = imsi;
                         record[Sn.SmsType] = "4";
+                        transid = tcapLayer.EndElement.Tid.ToString();
+                        record[Sn.Codec] = transid?.ToString();
                     }
                 }
 

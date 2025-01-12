@@ -44,6 +44,9 @@ namespace Decoders
         [JsonProperty("tcap.tid")]
         public string[] Tid { get; set; }
 
+        [JsonProperty("tcap.dtid")]
+        public string[] Dtid { get; set; }
+
         [JsonProperty("gsm_map.old.Component")]
         public string[] OldComponent { get; set; }
 
