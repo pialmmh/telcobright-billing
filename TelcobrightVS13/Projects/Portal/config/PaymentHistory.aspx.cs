@@ -44,7 +44,7 @@ namespace PortalApp.config
             if (value != null||value=="0")
             {
 
-                GridView1.DataSource = pylist.Where(p => p.PartnerID == Int32.Parse(value));
+                //GridView1.DataSource = pylist.Where(p => p.PartnerID == Int32.Parse(value));
 
             }
             else

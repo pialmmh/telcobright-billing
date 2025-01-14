@@ -23,6 +23,7 @@ namespace InstallConfig
         private SyncPair Huawei_Vault;
         private SyncPair ipCAS;
         private SyncPair tdmCAS;
+        private SyncPair cataleyaBackup;
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
             { "vaultName","vault"},
@@ -90,6 +91,18 @@ namespace InstallConfig
                 Pass = @"G5_(XnTV[DK++_\k",
                 IgnoreZeroLenghFile = 1
             };
+            FileLocation cataleya_backup = new FileLocation()//raw cdr archive
+            {
+                Name = "cataleya_backup_loc",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/",
+                ServerIp = "192.168.10.243",
+                User = "PTLICXCDR",
+                Pass = @"!12345!",
+                IgnoreZeroLenghFile = 1
+            };
 
 
             this.ipCAS = new SyncPair("ip:cas")
@@ -117,6 +130,30 @@ namespace InstallConfig
                 }
             };
 
+            this.cataleyaBackup = new SyncPair("cataleya:backup")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultCataleya
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = cataleya_backup
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
 
             this.tdmCAS = new SyncPair("tdm:cas")
             {
@@ -149,6 +186,7 @@ namespace InstallConfig
             //directorySetting.SyncPairs.Add(vaultS3FileArchive1.Name, vaultS3FileArchive1);
             directorySetting.SyncPairs.Add(ipCAS.Name, ipCAS);
             directorySetting.SyncPairs.Add(tdmCAS.Name, tdmCAS);
+            directorySetting.SyncPairs.Add(cataleyaBackup.Name, cataleyaBackup);
 
 
             //add archive locations to CdrSettings
@@ -156,6 +194,7 @@ namespace InstallConfig
             {
                 ipCAS.Name,
                 tdmCAS.Name,
+                cataleyaBackup.Name,
             };
         }
     }

@@ -87,6 +87,19 @@ namespace InstallConfig
                 new QuartzTbDaemonConfig
                 (
                     operatorName: operatorName,
+                    identity: "FileCopier [cataleya:backup]" + " [" + operatorName+"]",
+                    group: operatorName,
+                    cronExpression: "/5 * * ? * *",
+                    fireOnceIfMissFired: false,
+                    jobDataMap: new Dictionary<string, string>()
+                    {
+                        {"telcobrightProcessId", "104"},
+                        {"operatorName", operatorName},
+                        {"syncPair", this.cataleyaBackup.Name}
+                    }),
+                new QuartzTbDaemonConfig
+                (
+                    operatorName: operatorName,
                     identity: "FileCopier [tdm:CAS]" + " [" + operatorName+"]",
                     group: operatorName,
                     cronExpression: "/5 * * ? * *",

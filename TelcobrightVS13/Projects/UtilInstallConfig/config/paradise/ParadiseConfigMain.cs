@@ -170,7 +170,7 @@ namespace InstallConfig
                     FileExtension= ".txt",
                     Description= null,
                     SourceFileLocations= this.vaultCataleya.Name,
-                    BackupFileLocations= this.ipCAS.Name,
+                    BackupFileLocations= this.ipCAS.Name + "," + this.cataleyaBackup.Name,
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,
