@@ -20,6 +20,7 @@ namespace InstallConfig
     {
         private FileLocation vaultHuwaei;
         private FileLocation vaultReve;
+        private FileLocation vaultCataleya;
         private SyncPair huawei_Vault;
         private SyncPair zteCAS;
 
@@ -61,17 +62,29 @@ namespace InstallConfig
                 Pass = "",
             };
 
-           
+            this.vaultCataleya = new FileLocation()
+            {
+                Name = "vault.Cataleya",//this is refered in ne table, name MUST start with "Vault"
+                LocationType = "vault",//locationtype always lowercase
+                OsType = "windows",
+                PathSeparator = @"\",
+                ServerIp = "",
+                StartingPath = "D:/telcobright/vault/resources/cdr/voiceTel/ip1",
+                User = "",
+                Pass = "",
+            };
 
-            
-           
+
+
+
 
             //add locations to directory settings
             tbc.DirectorySettings.FileLocations.Add(vaultHuwaei.Name, vaultHuwaei);
             tbc.DirectorySettings.FileLocations.Add(vaultReve.Name, vaultReve);
-           
+            tbc.DirectorySettings.FileLocations.Add(vaultCataleya.Name, vaultCataleya);
 
-            
+
+
         }
     }
 }

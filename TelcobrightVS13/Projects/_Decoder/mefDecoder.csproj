@@ -107,6 +107,7 @@
     <Compile Include="CataleyaCsvDecoderSRNoFailedGzipCataleyaNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderTeleexchangeNoFailed.cs" />
     <Compile Include="CataleyaCsvDecoderJslNoFailedGzip.cs" />
+    <Compile Include="CataleyaCsvDecoderVoicetelTEST.cs" />
     <Compile Include="DialogicBorderNetMirIgwNoFailed.cs" />
     <Compile Include="DialogicBorderNetMirIgwNoFailedGzip.cs" />
     <Compile Include="DialogicBorderNetSummitWithFailed.cs" />
