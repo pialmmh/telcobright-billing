@@ -137,7 +137,7 @@ namespace InstallConfig
                     FileExtension= ".dat",
                     Description= null,
                     SourceFileLocations= vaultPrimary.Name,
-                    BackupFileLocations= this.tdmCAS.Name,//vaultCAS
+                    BackupFileLocations= this.tdmCAS.Name + "," + this.huaweiBackup.Name,//vaultCAS
                     LoadingStopFlag= null,
                     LoadingSpanCount= 100,
                     TransactionSizeForCDRLoading= 1500,

@@ -24,6 +24,7 @@ namespace InstallConfig
         private SyncPair ipCAS;
         private SyncPair tdmCAS;
         private SyncPair cataleyaBackup;
+        private SyncPair huaweiBackup;
         public static Dictionary<string, string> SrtConfigHelperMap = new Dictionary<string, string>()
         {
             { "vaultName","vault"},
@@ -103,6 +104,18 @@ namespace InstallConfig
                 Pass = @"!12345!",
                 IgnoreZeroLenghFile = 1
             };
+            FileLocation huawei_backup = new FileLocation()//raw cdr archive
+            {
+                Name = "huawei_backup_loc",
+                LocationType = "ftp",
+                OsType = "windows",
+                PathSeparator = @"/",//backslash didn't work with winscp
+                StartingPath = @"/tdm",
+                ServerIp = "192.168.10.243",
+                User = "PTLICXCDR",
+                Pass = @"!12345!",
+                IgnoreZeroLenghFile = 1
+            };
 
 
             this.ipCAS = new SyncPair("ip:cas")
@@ -155,6 +168,31 @@ namespace InstallConfig
                 }
             };
 
+            this.huaweiBackup = new SyncPair("huawei:backup")
+            {
+                SkipCopyingToDestination = false,
+                SkipSourceFileListing = true,
+                SrcSyncLocation = new SyncLocation()
+                {
+                    FileLocation = vaultPrimary
+                },
+                DstSyncLocation = new SyncLocation()
+                {
+                    FileLocation = huawei_backup
+                },
+                SrcSettings = new SyncSettingsSource()
+                {
+                    SecondaryDirectory = "downloaded",
+                    ExpFileNameFilter = null,
+                },
+                DstSettings = new SyncSettingsDest()
+                {
+                    FileExtensionForSafeCopyWithTempFile = ".tmp",
+                    Overwrite = true,
+                    CompressionType = CompressionType.None,
+                }
+            };
+
             this.tdmCAS = new SyncPair("tdm:cas")
             {
                 SkipCopyingToDestination = false,
@@ -187,6 +225,7 @@ namespace InstallConfig
             directorySetting.SyncPairs.Add(ipCAS.Name, ipCAS);
             directorySetting.SyncPairs.Add(tdmCAS.Name, tdmCAS);
             directorySetting.SyncPairs.Add(cataleyaBackup.Name, cataleyaBackup);
+            directorySetting.SyncPairs.Add(huaweiBackup.Name, huaweiBackup);
 
 
             //add archive locations to CdrSettings
@@ -195,6 +234,7 @@ namespace InstallConfig
                 ipCAS.Name,
                 tdmCAS.Name,
                 cataleyaBackup.Name,
+                huaweiBackup.Name
             };
         }
     }
