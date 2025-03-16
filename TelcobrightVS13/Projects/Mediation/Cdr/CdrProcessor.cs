@@ -608,6 +608,7 @@ namespace TelcobrightMediation
 
             if (this.CdrReProcessingType == CdrReProcessingType.NoneOrNew) //newCdrFile
             {
+                int newSriCount = this.CollectionResult.NewSriRows.Count;
                 int rawCount = this.CdrJobContext.CdrjobInputData.MergedJobsDic.Any() == false
                     ? this.CollectionResult.RawCount 
                     : this.CdrJobContext.CdrjobInputData.MergedJobsDic.Values.Sum(wrappedJobs => wrappedJobs.NewAndInconsistentCount);
@@ -617,7 +618,7 @@ namespace TelcobrightMediation
                     + newRowsCouldNotBeAggreagatedCount
                     +this.CollectionResult.OldRowsToBeDiscardedAfterAggregation.Count
                     +this.CollectionResult.OldRowsCouldNotBeAggreagated.Count
-                    +cdrDiscardedCount)
+                    +cdrDiscardedCount + newSriCount)
                     throw new Exception(
                         "RawCount in collection result must equal (nonPartialCount+ newRawPartialInstances+inconsistentCount.");
 

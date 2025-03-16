@@ -52,7 +52,7 @@ namespace Process
                     if (!CheckIfRamDiskDirExists(vaultPath))
                     {
                         char[] mountingPoint = vaultPath.Split(':')[0].ToCharArray();
-                        RamDiskHelper ramdisk = new RamDiskHelper(10576, mountingPoint[0]);
+                        RamDiskHelper ramdisk = new RamDiskHelper(6144, mountingPoint[0]);
                         ramdisk.Create();
                         foreach (KeyValuePair<string, FileLocation> fileloc in tbc.DirectorySettings.FileLocations.Where(f => f.Key != vaultName))
                         {

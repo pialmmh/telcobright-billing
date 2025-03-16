@@ -99,6 +99,24 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CdrValidationRules\mefCdrValidationRules.csproj">
+      <Project>{1cb7107d-88c4-4759-8158-243c5273ec3e}</Project>
+      <Name>mefCdrValidationRules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LibraryExtensions\LibraryExtensions.csproj">
+      <Project>{d4c2f34d-4d3d-43ae-84f0-e80cfedb1b48}</Project>
+      <Name>LibraryExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogPreprocessingRules\mefLogPreprocessingRules.csproj">
+      <Project>{ab1b2f2c-0b5d-49d2-b65e-1229470eda02}</Project>
+      <Name>mefLogPreprocessingRules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mediation\_00Mediation.csproj">
+      <Project>{1a64e6f9-903c-416c-b322-1b5c5d997001}</Project>
+      <Name>_00Mediation</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

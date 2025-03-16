@@ -17,6 +17,8 @@ namespace TelcobrightMediation
         public int BatchSizeWhenPreparingLargeSqlJob { get; set; }
         public SummaryTimeFieldEnum SummaryTimeField { get; set; }
         public int DaysToAddBeforeAndAfterUniqueDaysForSafePartialCollection { get; set; } = 1;
+        public int SecondsBeforeForOldEventScan { get; set; } = 300;//this will be used if >0
+        public int SecondsAfterForOldEventScan { get; set; } = 300;//this will be used if >0
         public int HoursToAddBeforeForSafePartialCollection { get; set; } = 1;
         public int HoursToAddAfterForSafePartialCollection { get; set; } = 1;
         public bool DescendingOrderWhileProcessingListedFiles { get; set; }
@@ -56,6 +58,7 @@ namespace TelcobrightMediation
         public bool isTableDelete { get; set; }
         public bool AllowNegativeInvoiceGeneration { get; set; } = false;
         public string MoveCdrToDriveAfterProcessing { get; set; }
+        public ExeRestartType WatchDogRestartRule { get; set; } = ExeRestartType.None;//this will be used if >0
         public CdrSetting()
         {
             this.NerCalculationRule = "NerByCauseCode";

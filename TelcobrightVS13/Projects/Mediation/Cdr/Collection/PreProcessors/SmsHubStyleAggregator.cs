@@ -83,10 +83,6 @@ namespace TelcobrightMediation.Cdr.Collection.PreProcessors
             foreach (var kv in billIdWiseOldInstances)
             {
                 var billId = kv.Key;
-                if (billId == "2024-07-07/28-23/3b00b66c")
-                {
-                    ;
-                }
                 List<T> oldUnAggInstances = kv.Value;
                 NewAndOldEventsWrapper<T> targetWrapper = null;
                 newAndOldInstanceWrappers.TryGetValue(billId, out targetWrapper);

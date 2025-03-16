@@ -12,6 +12,7 @@ using MediationModel;
 using MySql.Data.MySqlClient;
 using TelcobrightInfra;
 using TelcobrightMediation.Config;
+using System.IO;
 
 namespace TelcobrightMediation
 {
@@ -72,6 +73,7 @@ namespace TelcobrightMediation
                         return hoursInvolved.Select(hi => new
                         {
                             DateAndHour = new DateAndHour(hi.Date, hi.Hour),
+                            //DateAndHour = new DateAndHour(hi.Date, hi.Hour, hi.Minute),
                             Row = row
                         });
                     }).GroupBy(a => a.DateAndHour).ToDictionary(g => g.Key, g => g.Select(a=>a.Row).ToList());
@@ -169,6 +171,7 @@ namespace TelcobrightMediation
                     {
                         DateTime date = kv.Key.Date;
                         int hour = kv.Key.Hour;
+                        //int minute = kv.Key.Minute;
                         List<T> singleHourRows = kv.Value;
 
                         string tableName = this.SourceTablePrefix + "_" + date.ToMySqlFormatDateOnlyWithoutTimeAndQuote().Replace("-", "") +
@@ -187,7 +190,12 @@ namespace TelcobrightMediation
                         {
                             sqlForThisHour = sqlForThisHour.Replace("tuple in", "uniquebillid in").Replace("tuple =", "uniquebillid =");
                         }
-                        List<T> existingEvents = fetchOldEventsByHour(decoder, cmd, sqlForThisHour, whereClausesByBillId);
+                        //string filePath = @"C:\Users\telcobright\Desktop\Debug.txt";
+                        //using (StreamWriter writer = new StreamWriter(filePath))
+                        //{
+                        //    writer.WriteLine(sqlForThisHour);
+                        //}
+                        List<T> existingEvents = fetchOldEventsByHour(decoder, cmd, sqlForThisHour, whereClausesByBillId); //select *  from zz_zz_partialevent_20250112 partition (p19) 
                         this.ExistingEventsInDb.AddRange(existingEvents);
                         if (this.UniqueEventsOnly == true)
                         {
@@ -284,8 +292,9 @@ namespace TelcobrightMediation
             using (MySqlConnection con = new MySqlConnection(this.ConStr))
             {
                 con.Open();
-                List<string> existingTables =
-                    DaywiseTableManager.getExistingTableNames(this.DatabaseName, requiredTableNamesPerDay.Keys, con);
+                List<string> existingTables = requiredTableNamesPerDay.Any()?
+                    DaywiseTableManager.getExistingTableNames(this.DatabaseName, requiredTableNamesPerDay.Keys, con)
+                    :new List<string>();
                 List<string> newTablesToBeCreated = requiredTableNamesPerDay.Keys
                     .Where(t => existingTables.Contains(t) == false)
                     .ToList();

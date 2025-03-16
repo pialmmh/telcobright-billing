@@ -19,6 +19,7 @@ using LibraryExtensions;
 using QuartzTelcobright;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
+using System.IO;
 
 namespace Process
 {
@@ -35,6 +36,7 @@ namespace Process
         public override int ProcessId => 120;
         public override void Execute(IJobExecutionContext schedulerContext)
         {
+            //File.AppendAllText("debug.log", $"Started In : {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}, {this.GetType().ToString()} " + Environment.NewLine);
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                 schedulerContext, operatorName);
@@ -108,6 +110,7 @@ namespace Process
                 Console.WriteLine(e1);
                 ErrorWriter.WriteError(e1, "EventPreProcessor", null, "", operatorName, context);
             }
+            //File.AppendAllText("debug.log", $"End In : {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}, {this.GetType().ToString()} " + Environment.NewLine);
         }
 
         bool CheckIncompleteExists(PartnerEntities context, MediationContext mediationContext, ne ne)

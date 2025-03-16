@@ -292,13 +292,13 @@ namespace LogPreProcessor
             //can't write to db in parallel, reader busy error occurs
             //no worries about failed jobs, they will be retried again or decoded again in decoder if .predecoded file doesn't exist
             //no need for commit or rollback too.
-            //if (cmd.Connection.State != ConnectionState.Open)
-            //    cmd.Connection.Open();
-            cmd.CommandText = $" set autocommit=0;";
-            if (cmd.Connection.State == ConnectionState.Open)
-                cmd.Connection.Close();
-            cmd.Connection.Open();
-            cmd.ExecuteNonQuery();
+            if (cmd.Connection.State != ConnectionState.Open)
+                cmd.Connection.Open();
+            //cmd.CommandText = $" set autocommit=0;";
+            //if (cmd.Connection.State == ConnectionState.Open)
+            //    cmd.Connection.Close();
+            //cmd.Connection.Open();
+            //cmd.ExecuteNonQuery();
             foreach (var result in successfullPreDecodedJobs)
             {
                 try

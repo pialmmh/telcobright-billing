@@ -44,6 +44,9 @@ namespace Decoders
         [JsonProperty("tcap.tid")]
         public string[] Tid { get; set; }
 
+        [JsonProperty("tcap.dtid")]
+        public string[] Dtid { get; set; }
+
         [JsonProperty("gsm_map.old.Component")]
         public string[] OldComponent { get; set; }
 
@@ -56,6 +59,9 @@ namespace Decoders
         [JsonProperty("e164.msisdn")]
         public string[] CallerNumber { get; set; }
 
+        [JsonProperty("gsm_sms.tp-oa")]
+        public string[] CallerNumberMt { get; set; }
+
         [JsonProperty("gsm_sms.sms_text")]
         public string[] SmsText { get; set; }
 
@@ -65,9 +71,11 @@ namespace Decoders
         [JsonProperty("gsm_map.sm.msisdn")]
         public string[] msisdn { get; set; }
 
-        
+        [JsonProperty("gsm_old.msisdn")]
+        public string[] msisdnOld { get; set; }
 
-
+        [JsonProperty("gsm_old.invokeID")]
+        public string[] InvokeId { get; set; }
     }
 
 

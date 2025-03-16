@@ -115,7 +115,7 @@ namespace InstallConfig
                     {
                         {"telcobrightProcessId", "114"},
                         {"operatorName", operatorName},
-                        { "maxMarkingForDownlaod","100"}
+                        { "maxMarkingForDownlaod","500"}
                     }),
 
             };

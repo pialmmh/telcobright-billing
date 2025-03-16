@@ -56,11 +56,22 @@ namespace WS_Telcobright_Topshelf
                                          dir.Name + ".conf";
                     operatorNameVsConfigFile.Add(operatorName, cnfFileName);
                 }
-                Menu menu = new Menu(operatorNameVsConfigFile.Keys.ToList(),
-                    "Select an Operatorname to debug.", "");
-                string selectedOpName = menu.getSingleChoice();
-                string configFileName = operatorNameVsConfigFile[selectedOpName];
-                instanceName = Path.GetFileNameWithoutExtension(configFileName);
+                //Menu menu = new Menu(operatorNameVsConfigFile.Keys.ToList(),
+                //    "Select an Operatorname to debug.", "");
+                //string selectedOpName = menu.getSingleChoice();
+                //string configFileName = operatorNameVsConfigFile[selectedOpName];
+                //instanceName = Path.GetFileNameWithoutExtension(configFileName);
+                if (operatorNameVsConfigFile.Any())
+                {
+                    string selectedOpName = operatorNameVsConfigFile.Keys.First(); // Automatically select the first operator
+                    string configFileName = operatorNameVsConfigFile[selectedOpName];
+                    instanceName = Path.GetFileNameWithoutExtension(configFileName);
+                    Console.WriteLine($"Automatically selected operator: {selectedOpName}");
+                }
+                else
+                {
+                    throw new Exception("No operators found in the deployed instances.");
+                }
             }
             if (instanceName != null)
             {

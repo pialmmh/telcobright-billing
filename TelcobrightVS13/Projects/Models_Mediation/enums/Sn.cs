@@ -68,7 +68,7 @@ namespace MediationModel
         public const int ResellerIds = 63;
         public const int ZAmount = 64;
         public const int AggregationInfo = Fn.PreviousRoutes;
-        public const int E1Id = 66;
+        public const int InvokeId = Fn.E1Id;
         public const int Mediaip1 = 67;
         public const int Mediaip2 = 68;
         public const int Mediaip3 = 69;

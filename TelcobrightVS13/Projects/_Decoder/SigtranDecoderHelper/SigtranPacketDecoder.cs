@@ -43,6 +43,8 @@ namespace Decoders
         {
             {"1:44",MsuType.Mt},
             {"2:44",MsuType.MtResp},
+            {"1:46",MsuType.Mt},
+            {"2:46",MsuType.MtResp},
             {"1:45",MsuType.Sri},
             {"2:45",MsuType.SriResp},
             {"1:63",MsuType.InformServiceCenter}
@@ -61,9 +63,9 @@ namespace Decoders
                 FileName = $"{TSharkExe}",
                 Arguments = $"-r {PcapFileName} -Tjson -eframe.time " +
                             "-esccp.return_cause -emtp3.opc -emtp3.dpc -esccp.called.digits " +
-                            "-esccp.calling.digits -etcap.tid -egsm_map.old.Component -ee212.imsi " +
-                            "-egsm_old.localValue -ee164.msisdn -egsm_sms.sms_text -egsm_map.sm.serviceCentreAddress " +
-                            "-egsm_map.sm.msisdn -Y((gsm_map)&&(mtp3.opc==4699||mtp3.opc==4700||mtp3.opc==4701||mtp3.opc==4702))",
+                            "-esccp.calling.digits -etcap.tid -etcap.dtid -egsm_map.old.Component -ee212.imsi " +
+                            "-egsm_old.localValue -ee164.msisdn -egsm_sms.sms_text -egsm_map.sm.serviceCentreAddress -egsm_old.msisdn " +
+                            "-egsm_sms.tp-oa -egsm_map.sm.msisdn -egsm_old.invokeID -Y\"((gsm_map)&&(mtp3.opc==4699||mtp3.opc==4700||mtp3.opc==4701||mtp3.opc==4702)&& !((gsm_map.old.Component == 2) && (gsm_old.localValue == 44 || !gsm_old.localValue)&& (tcap.application_context_name == 0.4.0.0.1.0.20.3 || tcap.application_context_name == 0.4.0.0.1.0.20.2|| tcap.application_context_name == 0.4.0.0.1.0.23.3 || tcap.application_context_name == 0.4.0.0.1.0.23.2)))\"",
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -199,7 +201,7 @@ namespace Decoders
 
                 //if (!isOpcContained)
                 //    return;
-
+                
                 record[Sn.Opc] = opc;
                 record[Sn.Dpc] = mtp3Equ?.Dpc.ToString();
                 //record[Sn.ReleaseDirection] = m3UaLayer?.RoutingContext?.RoutingContextValue.ToString();
@@ -210,28 +212,22 @@ namespace Decoders
 
                 Sccp sccpLayer = packet.Sccp;
                 record[Sn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CallingDigits?.ToString();
+                record[Sn.InvokeId] = sccpLayer?.CalledPartyAddress?.Ssn?.ToString();
                 record[Sn.OriginatingCalledNumber] = sccpLayer?.CalledPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
                 //record[Sn.Duration2] = sccpLayer?.CalledPartyAddress.Ssn.ToString();
 
                 // tcap layer
                 Tcap tcapLayer = packet.Tcap;
 
-                var transid = tcapLayer.BeginElement?.Tid == null ? tcapLayer.EndElement?.Tid : tcapLayer.BeginElement.Tid;
-                if (transid == null)
-                {
-                    transid = tcapLayer.ContinueElement?.Tid;
-                }
-                record[Sn.Codec] = transid?.ToString();
+                //transid = tcapLayer.BeginElement?.Otid == null
+                //    ? tcapLayer.EndElement?.Otid
+                //    : tcapLayer.BeginElement.Otid;
+                //record[Sn.InMgwId] = transid?.ToString();
 
-                transid = tcapLayer.BeginElement?.Otid == null
-                    ? tcapLayer.EndElement?.Otid
-                    : tcapLayer.BeginElement.Otid;
-                record[Sn.InMgwId] = transid?.ToString();
-
-                transid = tcapLayer.BeginElement?.SourceTransactionId?.Dtid == null
-                    ? tcapLayer.EndElement?.DestinationTransactionId?.Dtid
-                    : tcapLayer.BeginElement.Otid;
-                record[Sn.OutMgwId] = transid?.ToString();
+                //transid = tcapLayer.BeginElement?.SourceTransactionId?.Dtid == null
+                //    ? tcapLayer.EndElement?.DestinationTransactionId?.Dtid
+                //    : tcapLayer.BeginElement.Otid;
+                //record[Sn.OutMgwId] = transid?.ToString();
 
                 // gsm sms
                 GsmSms gsmSmsLayer = packet.GsmSms;
@@ -245,13 +241,17 @@ namespace Decoders
                 {
                     // throw new Exception("OpCode tree local can not be null");
                 }
-                // excluding reportSM-DeliveryStatus and mo-forwardSM 
-                if (smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && smsTypeIdentifier != "")
+                //if (smsTypeIdentifier == "46")
+                //{
+                //    ;
+                //}
+                // excluding reportSM-DeliveryStatus
+                if (smsTypeIdentifier != "46" && smsTypeIdentifier != "44" && smsTypeIdentifier != "45" && !smsTypeIdentifier.IsNullOrEmptyOrWhiteSpace())
                     continue;
 
 
-                if (smsTypeIdentifier == "45")
-                    continue;
+                //if (smsTypeIdentifier == "45")
+                //    continue;
                 // exluding Udts
                 if (sccpLayer?.ReturnCause != null)
                     continue;
@@ -282,22 +282,26 @@ namespace Decoders
                 string serviceCentreAddress = componentTreeInvokeElement?.ServiceCenterAddress?.ToString();
                 string calledNumber = componentTreeInvokeElement?.MsisdnTree?.Msisdn?.ToString();
                 string callerNumber = gsmSmsLayer?.CallerNumber?.Msisdn?.ToString();
+                string callerNumberMt = gsmSmsLayer?.CallerNumber?.CallerNumberMt?.ToString();
 
                 string imsi = componentTreeInvokeElement?.ImsiTree?.Imsi?.ToString();
+                string transid;
 
                 // imsi, A Party,B Party
                 if (systemCodes == MsuType.Sri)
                 {
-                    continue;
+                    //continue;
                     // e164.msisdn => terminating called number ,gsm_map.sm.serviceCentreAddress => redirectnumber
-                    record[Sn.TerminatingCalledNumber] = calledNumber;
-                    record[Sn.Imsi] = serviceCentreAddress;
+                    record[Sn.TerminatingCalledNumber] = callerNumber;
+                    //record[Sn.Imsi] = serviceCentreAddress;
                     record[Sn.SmsType] = "1";
+                    transid = tcapLayer.BeginElement.Tid.ToString();
+                    record[Sn.Codec] = transid?.ToString() + "$";
 
                 }
                 if (systemCodes == MsuType.SriResp)
                 {
-                    continue;
+                    //continue;
                     //	e164.msisdn => terminating called number,imsi => redirect number
                     imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
                     record[Sn.TerminatingCalledNumber] = calledNumber;
@@ -307,13 +311,18 @@ namespace Decoders
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "2";
+                    transid = tcapLayer.BeginElement.Tid.ToString();
+                    record[Sn.Codec] = transid?.ToString() + "$";
                 }
+
                 if (systemCodes == MsuType.Mt)
                 {
                     // e164.msisdn => terminating caller number	,imsi => redirectnumber
-                    record[Sn.TerminatingCallingNumber] = callerNumber;
+                    record[Sn.TerminatingCallingNumber] = callerNumberMt.IsNullOrEmptyOrWhiteSpace()? callerNumber : callerNumberMt;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "3";
+                    transid = tcapLayer.BeginElement.Tid.ToString();
+                    record[Sn.Codec] = transid?.ToString();
                 }
                 if (systemCodes == MsuType.MtResp)
                 {
@@ -321,6 +330,8 @@ namespace Decoders
                     record[Sn.TerminatingCallingNumber] = callerNumber;
                     record[Sn.Imsi] = imsi;
                     record[Sn.SmsType] = "4";
+                    transid = tcapLayer.EndElement.Tid.ToString();
+                    record[Sn.Codec] = transid?.ToString();
                 }
                 if (systemCodes == MsuType.InformServiceCenter)
                 {
@@ -330,30 +341,20 @@ namespace Decoders
                     //record[Sn.SmsType] = "6";
                     continue;
                 }
-                // unkonwn instances
-                if ((record[Sn.SmsType] == null || record[Sn.SmsType] == "") && reqResIdentifier == "2")
+                if((imsi.IsNullOrEmptyOrWhiteSpace() == false && reqResIdentifier == "2") || reqResIdentifier=="3")
                 {
-                    if ((bool)!componentTreeReturnResultLastElement?.Imsi.IsNullOrEmptyOrWhiteSpace())
+                    ;
+                }
+                if (record[Sn.SmsType] != "1" && record[Sn.SmsType] != "3" && packet.GsmMap.ComponentTree?.ReturnResultLastElement != null)
+                {
+                    if (packet.GsmMap.ComponentTree?.ReturnResultLastElement.ResultretresElement.Imsi.IsNullOrEmptyOrWhiteSpace() == true)
                     {
-                        continue;
-                        // sri response
-                        imsi = componentTreeReturnResultLastElement?.Imsi?.ToString();
-                        record[Sn.TerminatingCalledNumber] = calledNumber;
-
-                        // actual caller number
-                        callerNumber = componentTreeReturnResultLastElement?.LocationInfoWithLmsiElement?.SriResCallerTree?.Msisdn?.ToString();
                         record[Sn.TerminatingCallingNumber] = callerNumber;
                         record[Sn.Imsi] = imsi;
-                        record[Sn.SmsType] = "2";
+                        record[Sn.SmsType] = "4";
+                        transid = tcapLayer.EndElement.Tid.ToString();
+                        record[Sn.Codec] = transid?.ToString();
                     }
-                    // mt response 
-                    //else
-                    //{
-                    record[Sn.TerminatingCallingNumber] = callerNumber;
-                    record[Sn.Imsi] = imsi;
-                    record[Sn.SmsType] = "4";
-                    //}
-
                 }
 
                 string outPartnerId = getPartneridByGtPrefix(record[Sn.OriginatingCalledNumber]).ToString();
@@ -396,7 +397,24 @@ namespace Decoders
                 record[Sn.Subcategory] = "1";
                 record[Sn.ChargingStatus] = "0";
                 record[Sn.ServiceGroup] = "1";
+                if (record[Sn.SmsType] == "1")
+                {
+                    continue;
+                }
+                if (record[Sn.SmsType] == "2")
+                {
+                    continue;
+                }
+                if (record[Sn.SmsType] == "3")
+                {
+                    ;
+                }
 
+                if (record[Sn.SmsType] == "4")
+                {
+                    ;
+                }
+                
                 //records.Add(record);
                 records[index] = record;
             }

@@ -16,6 +16,7 @@ namespace TelcobrightMediation
 {
     public class NewCdrPreProcessor : AbstractCdrJobPreProcessor
     {
+        public List<string[]> NewSriRows { get; set; } = new List<string[]>();
         public AbstractCdrDecoder Decoder { get; set; }
         private bool PartialCdrEnabled { get; }
         public List<string[]> TxtCdrRows { get; set; }= new List<string[]>();
@@ -239,6 +240,7 @@ namespace TelcobrightMediation
         {
             var cdrExtsForNonPartials = newCdrExts.Where(c => c.Cdr.PartialFlag == 0).ToList();
             var cdrExtsForPartials = newCdrExts.Where(c => c.Cdr.PartialFlag != 0).ToList();
+            //var r =  newCdrExts.GroupBy(c => c.UniqueBillId).Where(g => g.Count() > 1).ToDictionary(g => g.Key, g => g.ToList());
             if (newCdrExts.GroupBy(c => c.UniqueBillId).Any(g => g.Count() > 1))
                 throw new Exception("Duplicate billId for CdrExts in CdrJob");
 
@@ -251,6 +253,7 @@ namespace TelcobrightMediation
             {
                 throw new Exception("Duplicate idcalls for CdrExts in CdrJob");
             }
+            var newSriRowsCount = this.NewSriRows.Count();
             var rawPartialCount = this.PartialCdrContainers.SelectMany(p => p.NewRawInstances).Count();
             var cdrJobInputData = this.CdrCollectorInputData.CdrJobInputData;
             int originalRawCount = cdrJobInputData.MergedJobsDic.Any()==false?this.RawCount
@@ -259,7 +262,7 @@ namespace TelcobrightMediation
                 cdrExtsForNonPartials.Count + cdrExtsForPartials.Count + errorCdrExts.Count 
                 +NewRowsCouldNotBeAggregated.Count+ OldRowsCouldNotBeAggregated.Count +
                 NewRowsToBeDiscardedAfterAggregation.Count + OldRowsToBeDiscardedAfterAggregation.Count + this.NewDuplicateEvents.Count +
-                rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count)
+                rawPartialCount - this.PartialCdrContainers.Count + base.InconsistentCdrs.Count + newSriRowsCount)
                 throw new Exception(
                     "Count of nonPartial and partial cdrs do not match expected with expected rawCount for this job.");
         }

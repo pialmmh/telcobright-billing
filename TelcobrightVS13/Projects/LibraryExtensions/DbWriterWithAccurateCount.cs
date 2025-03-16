@@ -16,7 +16,7 @@ namespace LibraryExtensions
         {
                 dbCmd.CommandText = DefaultSpForSingleStatement;
                 dbCmd.CommandType = CommandType.StoredProcedure;
-
+                dbCmd.CommandTimeout = 3600;
                 DbParameter param1 = dbCmd.CreateParameter();
                 param1.ParameterName = "@command";
                 param1.Value = command.EndsWith(";") ? command : new StringBuilder(command).Append(";").ToString();
@@ -37,6 +37,7 @@ namespace LibraryExtensions
         {
             dbCmd.CommandType = CommandType.Text;
             dbCmd.CommandText = $@"delete from temp_sql_statement;";
+            dbCmd.CommandTimeout = 3600;
             dbCmd.ExecuteNonQuery();
             commands = commands.Select(c => c.Replace("\r", "")
                                         .Replace("\n", "")

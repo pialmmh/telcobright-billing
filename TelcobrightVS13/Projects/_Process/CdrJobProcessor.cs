@@ -94,6 +94,7 @@ namespace Process
         }
         public override void Execute(IJobExecutionContext schedulerContext)
         {
+            File.AppendAllText("debug.log", $"Started In : {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}, {this.GetType().ToString()} " + Environment.NewLine);
             string operatorName = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
             TelcobrightConfig tbc = ConfigFactory.GetConfigFromSchedulerExecutionContext(
                 schedulerContext, operatorName);
@@ -449,6 +450,7 @@ namespace Process
                 Console.WriteLine(e1);
                 ErrorWriter.WriteError(e1, "ProcessCdr", null, "", operatorName, context);
             }
+            File.AppendAllText("debug.log", $"Ended In : {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}, {this.GetType().ToString()} " + Environment.NewLine);
         }
 
         private static void checkIfProcessingIntendedForThisServer(TelcobrightConfig tbc, ne ne)

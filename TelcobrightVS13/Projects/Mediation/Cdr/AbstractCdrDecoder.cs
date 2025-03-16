@@ -30,7 +30,14 @@ namespace TelcobrightMediation
         {
             Dictionary<string, object> dataAsDic = (Dictionary<string, object>) data;
             List<string[]> rows = (List<string[]>)dataAsDic["singleHourRows"];
-            var whereClause = new StringBuilder("tuple in (")
+            List<DateTime> dates = rows.AsParallel()
+                                       .Select(r => r[Sn.StartTime].ConvertToDateTimeFromMySqlFormat())
+                                       .ToList();
+            DateTime minDateTime = dates.Min().AddMinutes(-1); 
+            DateTime maxDateTime = dates.Max().AddMinutes(1);
+            
+            var whereClause = new StringBuilder($"StartTime BETWEEN {minDateTime.ToMySqlFormatWithQuote()} AND {maxDateTime.ToMySqlFormatWithQuote()} AND ")
+                .Append("tuple in (")
                 .Append(string.Join(",", rows.Select(row => new StringBuilder("'").Append(row[Fn.UniqueBillId]).Append("'")))).Append(")").ToString();
             return whereClause;
         }

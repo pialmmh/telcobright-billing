@@ -10,6 +10,7 @@ using QuartzTelcobright;
 using TelcobrightFileOperations;
 using TelcobrightMediation;
 using TelcobrightMediation.Config;
+using System.IO;
 
 //not system namespace, telcobright's namespace
 
@@ -39,6 +40,21 @@ namespace Process
 
         public override void Execute(IJobExecutionContext schedulerContext)
         {
+            //string operatorName1 = schedulerContext.JobDetail.JobDataMap.GetString("operatorName");
+            //TelcobrightConfig tbc1 = ConfigFactory.GetConfigFromSchedulerExecutionContext(
+            //    schedulerContext, operatorName1);
+            //JobDataMap jobDataMap1 = schedulerContext.JobDetail.JobDataMap;
+            //string syncPairName1 = jobDataMap1.GetString("syncPair");
+            //SyncPair syncPair1 = tbc1.DirectorySettings.SyncPairs[syncPairName1];
+            //if (syncPair1.SkipSourceFileListing == true) return;
+            //SyncLocation srcLocation1 = syncPair1.SrcSyncLocation;
+            //var binPath1 = System.IO.Path.GetDirectoryName(
+            //System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+            //binPath1 = binPath1.Substring(6);
+            //var LogFileName1 = binPath1 + Path.DirectorySeparatorChar + "telcobright1.log";
+            //StreamWriter writer = new StreamWriter(LogFileName1, true); // 'true' appends to the file
+            //writer.WriteLine("FileLister start on - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " from " + srcLocation1);
+            
             var processes = System.Diagnostics.Process.GetProcesses().ToList();
             foreach (var process in processes.Where(p => p.ProcessName.ToLower().Contains("werfault")))
             {
@@ -61,6 +77,7 @@ namespace Process
             {
                 string syncPairName = jobDataMap.GetString("syncPair");
                 SyncPair syncPair = tbc.DirectorySettings.SyncPairs[syncPairName];
+                //File.AppendAllText("debug.log", $"Started In : {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}, {this.GetType().ToString()} : {syncPair.Name.ToString()} " + Environment.NewLine);
                 if (syncPair.SkipSourceFileListing == true) return;
                 SyncLocation srcLocation = syncPair.SrcSyncLocation;
                 SyncLocation dstLocation = syncPair.DstSyncLocation;
@@ -126,6 +143,8 @@ namespace Process
                         heartbeat2.end();
                     }
                 }
+                //writer.WriteLine("FileLister end on - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " from " + srcLocation1);
+                //File.AppendAllText("debug.log", $"Ended In : {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}, {this.GetType().ToString()} : {syncPair.Name.ToString()} " + Environment.NewLine);
             }
             catch (Exception e1)
             {

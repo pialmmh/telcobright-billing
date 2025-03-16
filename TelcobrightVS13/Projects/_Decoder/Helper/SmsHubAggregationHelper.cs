@@ -21,7 +21,9 @@ namespace Decoders
             List<string[]> oldUnAggInstances = newAndOldEventsWrapper.OldUnAggInstances;
 
             List<string[]> allUnaggregatedInstances = newUnAggInstances.Concat(oldUnAggInstances)
-                .OrderBy(row => row[Sn.StartTime]).ToList();
+                                                      .OrderBy(row => row[Sn.StartTime])
+                                                      .ThenBy(row => row[Sn.SmsType]) 
+                                                      .ToList();
             //if (newUnAggInstances.Count > 2 || oldUnAggInstances.Count > 1 || allUnaggregatedInstances.Count > 2)
             //    throw new Exception("allUnaggregatedInstances > 2 rows  cannot be aggregated.");
 
@@ -32,7 +34,10 @@ namespace Decoders
             if (groupedByBillId.Count > 1)
                 throw new Exception("Rows with multiple bill ids cannot be aggregated.");
             string uniqueBillId = groupedByBillId.Keys.First();
-
+            //if (allUnaggregatedInstances.Any(row => row[Sn.UniqueBillId] == "2024-09-22/28-23/3b00e3d2_21"))
+            //{
+            //    ;
+            //}
             List<string[]> newRowsToBeDiscardedAfterAggregation = new List<string[]>();
             List<string[]> oldRowsToBeDiscardedAfterAggregation = new List<string[]>();
             var aggregationComplete = false;

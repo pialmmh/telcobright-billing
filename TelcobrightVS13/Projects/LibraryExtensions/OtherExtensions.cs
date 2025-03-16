@@ -211,11 +211,19 @@ namespace LibraryExtensions
     {
         public DateTime Date { get; }
         public int Hour { get; }
+        public int Minute { get; }
 
         public DateAndHour(DateTime date, int hour)
         {
             this.Date = date;
             this.Hour = hour;
+        }
+
+        public DateAndHour(DateTime date, int hour, int minute)
+        {
+            this.Date = date;
+            this.Hour = hour;
+            this.Minute = minute;
         }
 
         // Override Equals to compare DateAndHour objects
@@ -274,6 +282,7 @@ namespace LibraryExtensions
             List<DateTime> hours = new List<DateTime>();
 
             // Round down the start time to the nearest hour
+            // DateTime current = new DateTime(start.Year, start.Month, start.Day, start.Hour, start.Minute, start.Second);
             DateTime current = new DateTime(start.Year, start.Month, start.Day, start.Hour, 0, 0);
 
             // Add hours to the list while within the range

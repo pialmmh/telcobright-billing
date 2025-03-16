@@ -8,7 +8,7 @@ namespace Imsi
         static void Main(string[] args)
         {
 
-            string mySqlProps = "Server=localhost;Uid=root;Pwd=;Database=smshub";
+            string mySqlProps = "Server=localhost;Uid=root;Pwd=Takay1#$ane;Database=smshub" ;
             string redisConnectionString = "localhost:6379";
 
             Console.WriteLine("Hello world");

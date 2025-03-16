@@ -230,6 +230,9 @@ namespace Decoders
     {
         [JsonProperty("e164.msisdn")]
         public string Msisdn { get; set; }
+
+        [JsonProperty("gsm_sms.tp-oa")]
+        public string CallerNumberMt { get; set; }
     }
     public class ImsiTree
     {

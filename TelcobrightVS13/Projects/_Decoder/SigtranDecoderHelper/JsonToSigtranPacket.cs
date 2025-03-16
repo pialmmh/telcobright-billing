@@ -56,7 +56,7 @@ namespace Decoders.SigtranDecoderHelper
                             serviceCentreAddress[0] = ConvertToNumber(serviceCentreAddress[0]);
                         }
 
-                        string[] msisdn = p.source.layers.msisdn;
+                        string[] msisdn = p.source.layers.msisdn == null? p.source.layers.msisdnOld : p.source.layers.msisdn;
                         if (msisdn != null)
                         {
                             msisdn[0] = ConvertToNumber(msisdn[0]);
@@ -98,7 +98,7 @@ namespace Decoders.SigtranDecoderHelper
                         {
                             Frame = new Frame
                             {
-                                FrameTime =  l.FrameTime != null && l.FrameTime.Length > 0 ? l.FrameTime[0] : null,
+                                FrameTime = l.FrameTime != null && l.FrameTime.Length > 0 ? l.FrameTime[0] : null,
                             },
                             M3Ua = new M3ua
                             {
@@ -136,7 +136,7 @@ namespace Decoders.SigtranDecoderHelper
                                     {
                                         ResultretresElement = new ResultretresElement
                                         {
-                                             Imsi = l.Imsi != null && l.Imsi.Length > 0 ? l.Imsi[0] : null
+                                            Imsi = l.Imsi != null && l.Imsi.Length > 0 ? l.Imsi[0] : null
                                         }
                                     }
                                 }
@@ -149,8 +149,9 @@ namespace Decoders.SigtranDecoderHelper
                                 },
                                 CallerNumber = new MsisdnTree
                                 {
-                                    Msisdn = l.CallerNumber != null && l.CallerNumber.Length > 1 ? l.CallerNumber[1] : null
-                                }
+                                    Msisdn = l.CallerNumber != null && l.CallerNumber.Length > 0 ? l.CallerNumber[0] : null,
+                                    CallerNumberMt = l.CallerNumberMt != null && l.CallerNumberMt.Length > 0 ? l.CallerNumberMt[0] : null,
+                                },
                             },
                             Sccp = new Sccp
                             {
@@ -159,7 +160,8 @@ namespace Decoders.SigtranDecoderHelper
                                     GlobalTitle = new GlobalTitle
                                     {
                                         CalledDigits = l.CalledDigits != null && l.CalledDigits.Length > 0 ? l.CalledDigits[0] : null
-                                    }
+                                    },
+                                    Ssn = l.InvokeId != null && l.InvokeId.Length > 0 ? l.InvokeId[0] : null
                                 },
                                 CallingPartyAddress = new PartyAddress
                                 {
@@ -168,7 +170,8 @@ namespace Decoders.SigtranDecoderHelper
                                         CallingDigits = l.CallingDigits != null && l.CallingDigits.Length > 0 ? l.CallingDigits[0] : null
                                     }
                                 },
-                                ReturnCause = l.ReturnCause != null && l.ReturnCause.Length > 0 ? l.ReturnCause[0] : null
+                                ReturnCause = l.ReturnCause != null && l.ReturnCause.Length > 0 ? l.ReturnCause[0] : null,
+                                
                             },
                             Sctp = null, // Assuming Sctp is always null
                             Tcap = new Tcap
@@ -176,6 +179,10 @@ namespace Decoders.SigtranDecoderHelper
                                 BeginElement = new Element
                                 {
                                     Tid = l.Tid != null && l.Tid.Length > 0 ? l.Tid[0] : null
+                                },
+                                EndElement = new Element
+                                {
+                                    Tid = l.Dtid != null && l.Dtid.Length > 0 ? l.Dtid[0] : null
                                 }
                             }
                         };

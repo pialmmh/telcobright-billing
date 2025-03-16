@@ -129,8 +129,6 @@
     <Compile Include="SigtranDecoderHelper\JsonToSigtranPacket.cs" />
     <Compile Include="SigtranDecoderHelper\Packet.cs" />
     <Compile Include="SigtranDecoderHelper\SigtranPacket.cs" />
-    <Compile Include="SigtranDecoderHelper\CustomJObjectParser.cs" />
-    <Compile Include="SigtranDecoderHelper\JsonStringReader.cs" />
     <Compile Include="SigtranDecoderHelper\SigtranPacketDecoder.cs" />
     <Compile Include="TelcobridgeDecoderTelexchange.cs" />
     <Compile Include="TelcobridgeDecoderGazi.cs" />

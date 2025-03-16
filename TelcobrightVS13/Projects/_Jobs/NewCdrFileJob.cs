@@ -21,6 +21,9 @@ using TelcobrightMediation.Accounting;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Cdr.Collection.PreProcessors;
 using TelcobrightMediation.Config;
+using MemCache;
+using System.Security.Cryptography;
+using System.Globalization;
 
 namespace Jobs
 {
@@ -32,8 +35,8 @@ namespace Jobs
         public virtual string HelpText => "New Cdr Job, processes a new CDR file";
         public override string ToString() => this.RuleName;
         public virtual int Id => 1;
-        private List<FileInfo> FilesToDeleteAfterJobCompletion= new List<FileInfo>();
-        private CdrJobOutput HandledJobsOutput= new CdrJobOutput();//required for deleting pre-decoded files in post processing, list when merged jobs.
+        private List<FileInfo> FilesToDeleteAfterJobCompletion = new List<FileInfo>();
+        private CdrJobOutput HandledJobsOutput = new CdrJobOutput();//required for deleting pre-decoded files in post processing, list when merged jobs.
         public bool PreDecodingStageOnly { get; private set; }
         protected int RawCount, NonPartialCount, UniquePartialCount, RawPartialCount, DistinctPartialCount = 0;
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
@@ -71,15 +74,16 @@ namespace Jobs
 
         public virtual Object Execute(ITelcobrightJobInput jobInputData)
         {
+            List<string[]> newSriRows = new List<string[]>();
             NewCdrPreProcessor preProcessor = null; //preprecessor.txtrows contains decoded raw cdrs in string[] format
             this.Input = (CdrJobInputData)jobInputData;
             CdrSetting cdrSetting = this.Input.CdrSetting;
             if (this.Input.IsBatchJob == false) //not batch job
             {
-                //if (this.HandledJobsOutput.Jobs == null)
-                //{
-                //    this.HandledJobsOutput.Jobs = new List<job>();
-                //}
+                if (this.HandledJobsOutput.Jobs == null)
+                {
+                    this.HandledJobsOutput.Jobs = new List<job>();
+                }
                 this.HandledJobsOutput.Jobs.Add(this.Input.Job);
                 preProcessor = DecodeNewCdrFile(preDecodingStage: false);
                 initAndFormatTxtRowsBeforeCdrConversion(preProcessor);
@@ -102,23 +106,108 @@ namespace Jobs
             var neAdditionalSetting = CollectorInput.CdrJobInputData.NeAdditionalSetting;
 
             List<NewAndOldEventsWrapper<string[]>> allPreAggWrappers = new List<NewAndOldEventsWrapper<string[]>>();
-            List<EventAggregationResult> aggregationResults = new List<EventAggregationResult>();
+            List<EventAggregationResult> mtAggregationResults = new List<EventAggregationResult>();
+            List<EventAggregationResult> sriAggregationResults = new List<EventAggregationResult>();
             if (neAdditionalSetting.PerformPreaggregation)
             {
                 if (cdrSetting.DescendingOrderWhileListingFiles)
                 {
-                    throw  new Exception("DescendingOrder not supported while perform predecoding");
+                    throw new Exception("DescendingOrder not supported while perform predecoding");
                 }
                 Console.WriteLine("Performing InMemory Aggregation ....");
+
+                foreach (var row in preProcessor.TxtCdrRows) //change needed (this section only for sri )
+                {
+                    if (!(row[Sn.SmsType] == "1" || row[Sn.SmsType] == "2")) continue;
+                    string packetFrameTime = row[Sn.PacketFrameTime];
+                    string redirectingNumber = row[Sn.Imsi];
+                    string codec = row[Sn.Codec];
+                    long newIdCall = GenerateIdCall(packetFrameTime, codec, redirectingNumber);
+                    row[Sn.IdCall] = newIdCall.ToString();
+                }
+                SriHelper sriHelper = new SriHelper(this.Input.Tbc, preProcessor, preProcessor.TxtCdrRows);
+                var oldSriRows = sriHelper.FetchRows();
+                foreach (var row in oldSriRows)
+                {
+                    if (row[Sn.Codec].IsNullOrEmptyOrWhiteSpace())
+                    {
+                        ;
+                    }
+                }
+
+                var oldSriRowsByIdCall = oldSriRows.ToDictionary(row => row[Sn.IdCall]);
+                newSriRows = preProcessor.TxtCdrRows
+                .Where(row => row[Sn.SmsType] == "1" || row[Sn.SmsType] == "2")
+                .ToList();
+                preProcessor.NewSriRows = newSriRows;
+                preProcessor.TxtCdrRows.AddRange(oldSriRows);
                 AbstractCdrDecoder decoder = preProcessor.Decoder;
+
                 List<string[]> l1FailedRows;
                 List<NewAndOldEventsWrapper<string[]>> l1AggResults =
                     decoder.PreAggregateL1(preProcessor, out l1FailedRows);
-                //var tmps = l1FailedRows.Where(lf => lf[Sn.UniqueBillId] == "2024-07-07/28-23/3b00b66c").ToList();
-                if (preProcessor.TxtCdrRows.Count != l1FailedRows.Count + l1AggResults.Count * 2)
+
+                var failedSriRows = l1FailedRows.Where(asrii => asrii[Sn.SmsType] == "1" || asrii[Sn.SmsType] == "2")
+                                                .ToList();
+                failedSriRows = consistantSriRows(failedSriRows);
+                List<NewAndOldEventsWrapper<string[]>> sriAggCandidates = new List<NewAndOldEventsWrapper<string[]>>();
+                List<string> sriAggById = new List<string>();
+                l1AggResults.ForEach(nao =>
                 {
-                    throw new Exception("");
+                    if (nao.NewUnAggInstances.Any(s => s[Sn.SmsType] == "1" || s[Sn.SmsType] == "2"))
+                    {
+                        sriAggById.Add(nao.UniqueBillId);
+                        sriAggCandidates.Add(new NewAndOldEventsWrapper<string[]>()
+                        {
+                            UniqueBillId = nao.UniqueBillId,
+                            NewUnAggInstances = nao.NewUnAggInstances,
+                            OldUnAggInstances = nao.OldUnAggInstances
+
+                        });
+                    }
                 }
+                );
+
+                //l1AggResults.RemoveAll(r => sriAggById.Contains(r.UniqueBillId));
+                //l1AggResults.RemoveAll(r => r.NewUnAggInstances.Any(s => s[Sn.SmsType] == "1" || s[Sn.SmsType] == "2"));
+                newSriRows.ForEach(row =>
+                {
+                    if (row[Sn.SmsType] == "1" && row[Sn.TerminatingCalledNumber].IsNullOrEmptyOrWhiteSpace())
+                    {
+                        ;
+                    }
+                });
+                sriAggCandidates.ForEach(sac => sriAggregationResults.Add(decoder.Aggregate(sac)));
+                var successfulSriAggregationResults = sriAggregationResults.Where(ar => ar.AggregatedInstance != null)
+                    .ToList();
+                sriAggregationResults.ForEach(ar =>
+                {
+                    if(ar.AggregatedInstance[Sn.TerminatingCalledNumber].IsNullOrEmptyOrWhiteSpace())
+                    {
+                        ;
+                    }
+                });
+                // need to be inserted to sri partial table
+                var newFailedSriRows = failedSriRows
+                .Where(failedRow => !oldSriRowsByIdCall.ContainsKey(failedRow[Sn.IdCall]))
+                .ToList();
+
+
+                foreach (string[] row in successfulSriAggregationResults
+                    .SelectMany(ar => ar.NewInstancesToBeDiscardedAfterAggregation))
+                {
+                    //need to be deleted from sri partial table
+                    if (oldSriRowsByIdCall.ContainsKey(row[Sn.IdCall]))
+                        sriHelper.OldRowsToBeDiscardedAfterAggregation.Add(row); 
+                }
+                
+                
+
+                //sri should be cleared from mt after DB operations.
+                preProcessor.TxtCdrRows.RemoveAll(row => row[Sn.SmsType] == "1" || row[Sn.SmsType] == "2");
+                l1FailedRows.RemoveAll(row => row[Sn.SmsType] == "1" || row[Sn.SmsType] == "2");
+                l1AggResults.RemoveAll(nao=>nao.NewUnAggInstances.Any(s=>s[Sn.SmsType] == "1" || s[Sn.SmsType] == "2"));
+
                 Console.WriteLine("Performing L2 Aggregation ....");
 
                 DayWiseEventCollector<string[]> dayWiseEventCollector = getEventCollector(decoder, l1FailedRows);
@@ -139,17 +228,35 @@ namespace Jobs
                 //        new[]{"1","3"}.Contains(wr.OldUnAggInstances.First()[Sn.SmsType])
                 //        && new[] { "2", "4" }.Contains(wr.NewUnAggInstances.First()[Sn.SmsType])))
                 //    throw new Exception("New instances must be ReturnResult and Old instances must be SRI/MT FWD");
-                if (!l2FailedWrappers.TrueForAll(wr=>wr.NewUnAggInstances.Count+wr.OldUnAggInstances.Count==1))
+                if (!l2FailedWrappers.TrueForAll(wr => wr.NewUnAggInstances.Count + wr.OldUnAggInstances.Count == 1))
                     throw new Exception("Failed aggregation wrappers must contain either 1 success or failed response.");
                 allPreAggWrappers =
                     l1AggResults.Concat(l2AggResults).Concat(l2FailedWrappers).ToList();
-                allPreAggWrappers.ForEach(paw => aggregationResults.Add(decoder.Aggregate(paw)));
-                var c = l1AggResults.SelectMany(ar => ar.NewUnAggInstances).Where(r => r[Sn.Partialflag] == "-1");
-                var successfulAggregationResults = aggregationResults.Where(ar => ar.AggregatedInstance != null)
+                allPreAggWrappers.ForEach(paw => mtAggregationResults.Add(decoder.Aggregate(paw)));
+
+                var successfulAggregationResults = mtAggregationResults.Where(ar => ar.AggregatedInstance != null)
                     .ToList();
-                var failedAggregationResults = aggregationResults.Where(ar => ar.AggregatedInstance == null)
+                var failedAggregationResults = mtAggregationResults.Where(ar => ar.AggregatedInstance == null)
                     .ToList();
                 preProcessor.FinalAggregatedInstances = successfulAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
+
+                // Redis
+                //var aggins = successfulAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
+                //List<string[]> newAggSriToBeDiscarded;
+                //var aggMt = aggregateMtWithSri(aggins, out newAggSriToBeDiscarded);
+                //// Remove aggregated sri, not to be inserted in db
+                //preProcessor.NewRowsToBeDiscardedAfterAggregation.AddRange(newAggSriToBeDiscarded);
+                //// Final result of aggregated  mt
+                //preProcessor.FinalAggregatedInstances = aggMt;
+                //Redis
+
+                //DB Memory Engine For Aggregated SRI
+                var aggSri = successfulSriAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
+                sriHelper.InsertRow(newFailedSriRows);
+                sriHelper.DeleteRow();
+                insertAggregatedSri(aggSri);
+                //DB Memory Engine For Aggregated SRI
+
                 preProcessor.NewRowsCouldNotBeAggregated = failedAggregationResults
                     .SelectMany(ar => ar.NewInstancesCouldNotBeAggregated).ToList();
                 preProcessor.OldRowsCouldNotBeAggregated = failedAggregationResults
@@ -167,8 +274,8 @@ namespace Jobs
                 preProcessor.OldPartialInstancesFromDB = successfulAggregationResults
                     .SelectMany(ar => ar.OldPartialInstancesFromDB)
                     .Concat(failedAggregationResults.SelectMany(ar => ar.OldPartialInstancesFromDB)).ToList();
-                
-                var inputCount = dayWiseEventCollector.InputEvents.Count + l1AggResults.Count*2;
+
+                var inputCount = dayWiseEventCollector.InputEvents.Count + l1AggResults.Count * 2;
                 var existingRows = dayWiseEventCollector.ExistingEventsInDb;
                 preProcessor.TxtCdrRows = preProcessor.FinalAggregatedInstances;
 
@@ -252,6 +359,7 @@ namespace Jobs
 
             CdrCollectionResult newCollectionResult = null, oldCollectionResult = null;
             preProcessor.GetCollectionResults(out newCollectionResult, out oldCollectionResult);
+            newCollectionResult.NewSriRows = newSriRows;
             //dup cdr related
             newCollectionResult.FinalNonDuplicateEvents = preProcessor.FinalNonDuplicateEvents;
             newCollectionResult.NewDuplicateEvents = preProcessor.NewDuplicateEvents;
@@ -292,6 +400,69 @@ namespace Jobs
             return this.HandledJobsOutput;
         }
 
+        private List<string[]> consistantSriRows(List<string[]> sriRows)
+        {
+            foreach (var row in sriRows)
+            {
+                string startTime = row[Sn.StartTime];
+
+                // Convert the StartTime to MySQL format using the ConvertToMySqlFormat function
+                try
+                {
+                    row[Sn.StartTime] = ConvertToMySqlFormat(startTime);
+                    row[Sn.ChargingStatus] = (row[Sn.ChargingStatus] == "False" || row[Sn.ChargingStatus] == "0") ? "0" : "1";
+                    row[Sn.Partialflag] = (row[Sn.ChargingStatus] == "False" || row[Sn.ChargingStatus] == "0") ? "0" : "1";
+                }
+                catch (FormatException ex)
+                {
+                    // Handle the case where the date format is invalid (optional)
+                    Console.WriteLine($"Error parsing StartTime: {ex.Message}");
+                }
+            }
+            return sriRows;
+        }
+        private void insertAggregatedSri(List<string[]> aggSri)
+        {
+            aggSri = consistantSriRows(aggSri);
+            ImsiHelper imsiHelper = new ImsiHelper(this.Input.Tbc);
+            imsiHelper.InsertRow(aggSri);
+        }
+        private long GenerateIdCall(string packetFrameTime, string codec, string redirectingNumber)
+        {
+            // Combine the fields into a single string
+            string combinedString = packetFrameTime + codec + redirectingNumber;
+
+            // Compute SHA256 hash from the combined string
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(combinedString));
+
+                // Convert the first 8 bytes of the hash to a long value
+                long uniqueId = BitConverter.ToInt64(hashBytes, 0);
+
+                // Ensure the ID is positive
+                return Math.Abs(uniqueId);
+            }
+        }
+        private string ConvertToMySqlFormat(string dateStr)
+        {
+            // Define the input date formats explicitly.
+            var formats = new[] { "M/d/yyyy h:mm:ss tt", "yyyy-MM-dd HH:mm:ss" };  // Using "h" for single-digit hours in 12-hour format
+
+            DateTime parsedDate;
+            foreach (var format in formats)
+            {
+                // Try to parse the input date string with the defined formats and invariant culture
+                if (DateTime.TryParseExact(dateStr, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
+                {
+                    // Return the date in MySQL compatible format (yyyy-MM-dd HH:mm:ss)
+                    return parsedDate.ToString("yyyy-MM-dd HH:mm:ss");
+                }
+            }
+
+            // If the date could not be parsed, throw an exception
+            throw new FormatException($"Invalid date format: {dateStr}");
+        }
         private DayWiseEventCollector<string[]> getEventCollector(AbstractCdrDecoder decoder, List<string[]> failedPreAggCandidates)
         {
             List<string[]> rowsToConsiderForAggregation = failedPreAggCandidates;
@@ -452,7 +623,7 @@ namespace Jobs
                 CreateNewCdrPostProcessingJobs(this.Input.Context, this.Input.MediationContext.Tbc, cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
                 DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc,
                     cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
-                if (this.Input.MediationContext.Tbc.CdrSetting.MoveCdrToDriveAfterProcessing.Trim()!="")
+                if (this.Input.MediationContext.Tbc.CdrSetting.MoveCdrToDriveAfterProcessing.Trim() != "")
                 {
                     MoveCdrAfterProcessing(this.Input.Context, this.Input.MediationContext.Tbc,
                         cdrJob.CdrProcessor.CdrJobContext.TelcobrightJob);
@@ -549,13 +720,13 @@ namespace Jobs
 
         public object PostprocessJobBeforeCommit(object data)
         {
-            List<job> handledJobs = ((CdrJobOutput) data).Jobs;
+            List<job> handledJobs = ((CdrJobOutput)data).Jobs;
             foreach (var job in handledJobs)
             {
                 DeletePreDecodedFile(this.Input.Context, this.Input.MediationContext.Tbc, job);
                 if (this.Input.MediationContext.Tbc.CdrSetting.MoveCdrToDriveAfterProcessing.Trim() != "")
                 {
-                    MoveCdrAfterProcessing(this.Input.Context, this.Input.MediationContext.Tbc,job);
+                    MoveCdrAfterProcessing(this.Input.Context, this.Input.MediationContext.Tbc, job);
                 }
             }
             return handledJobs;
@@ -820,7 +991,7 @@ namespace Jobs
                 cmd.ExecuteNonQuery();
             }
         }
-        
+
 
         protected void WriteJobCompletionIfCollectionIsEmpty(int rawCount, job telcobrightJob, PartnerEntities context)
         {
@@ -876,7 +1047,7 @@ namespace Jobs
             //string preDecodedFileName = predecodedDirName + Path.DirectorySeparatorChar + newCdrFileInfo.Name + ".predecoded";
             string targetFileName = driveToMove + newCdrFileInfo.FullName.Split(':')[1];
             string targetDirPath = driveToMove + newCdrFileInfo.DirectoryName.Split(':')[1];
-            if (Directory.Exists(targetDirPath)==false)
+            if (Directory.Exists(targetDirPath) == false)
             {
                 Directory.CreateDirectory(targetDirPath);
             }
@@ -884,8 +1055,8 @@ namespace Jobs
             {
                 File.Delete(targetFileName);
             }
-            File.Copy(newCdrFileInfo.FullName,targetFileName);
-            FileInfo copiedFileInfo= new FileInfo(targetFileName);
+            File.Copy(newCdrFileInfo.FullName, targetFileName);
+            FileInfo copiedFileInfo = new FileInfo(targetFileName);
             if (newCdrFileInfo.Length == copiedFileInfo.Length)
             {
                 this.FilesToDeleteAfterJobCompletion.Add(newCdrFileInfo);
@@ -1152,5 +1323,76 @@ namespace Jobs
             }
             return preprocessor;
         }
+        public List<string[]> aggregateMtWithSri(List<string[]> aggins, out List<string[]> newAggSriToBeDiscarded)
+        {
+            var redisConnectionString = "localhost:6379";
+            // Filter collections based on SmsType values
+            var aggSri = aggins.Where(asrii => asrii[Sn.SmsType] == "1").ToList();
+            var aggMt = aggins.Where(amti => amti[Sn.SmsType] == "3").ToList();
+
+            List<DateTime> dates = aggMt.AsParallel()
+                                       .Select(r => r[Sn.StartTime].ConvertToDateTimeFromMySqlFormat())
+                                       .ToList();
+            DateTime minDateTime = dates.Min().AddMinutes(-1);
+            DateTime maxDateTime = dates.Max().AddMinutes(1);
+
+            var imsiCache = new RedCache(redisConnectionString);
+            var aggSriFromCache = imsiCache.GetRecordsInTimeRange(minDateTime, maxDateTime);
+            var newAggSri = new List<string[]>(aggSri); // Copy original Sri list
+            aggSri.AddRange(aggSriFromCache);
+
+            // Create a dictionary for fast lookup of aggSri by Imsi
+            var sriDictionary = aggSri
+                .GroupBy(sri => sri[Sn.Imsi])
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // List to track items to remove from aggins
+            var itemsToRemove = new HashSet<string>();
+
+            // Process each element in aggMt
+            foreach (var mt in aggMt)
+            {
+                var sriMatches = new List<string[]>();
+                if (sriDictionary.TryGetValue(mt[Sn.Imsi], out sriMatches))
+                {
+                    foreach (var sri in sriMatches)
+                    {
+                        DateTime mtTime = Convert.ToDateTime(mt[Sn.StartTime]);
+                        DateTime sriTime = Convert.ToDateTime(sri[Sn.StartTime]);
+
+                        if ((mtTime - sriTime).TotalSeconds >= 60)
+                        {
+                            mt[Sn.TerminatingCalledNumber] = sri[Sn.TerminatingCalledNumber];
+                            sri[Sn.Imsi] = "done";
+                            itemsToRemove.Add(sri[Sn.UniqueBillId]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            newAggSriToBeDiscarded = new List<string[]>(newAggSri); // Copy newAggSri before filtering
+
+            // Select the discarded items (those whose UniqueBillId was in itemsToRemove)
+            var discardedItems = aggSriFromCache.Where(ai => itemsToRemove.Contains(ai[Sn.UniqueBillId])).ToList();
+            newAggSri = newAggSri.Where(ai => !itemsToRemove.Contains(ai[Sn.UniqueBillId])).ToList();
+
+            // Remove matched records from cache
+            foreach (var discardedItem in discardedItems)
+            {
+                imsiCache.Remove(discardedItem[Sn.Imsi], DateTime.Parse(discardedItem[Sn.StartTime]));
+            }
+
+            // Store unmatched Sri records back in cache
+            foreach (var sri in newAggSri)
+            {
+                imsiCache.Add(sri[Sn.Imsi], DateTime.Parse(sri[Sn.StartTime]), sri[Sn.TerminatingCalledNumber]);
+            }
+
+            imsiCache.RemoveRecordsBeforeTime(minDateTime);
+
+            return aggMt;
+        }
+
     }
 }

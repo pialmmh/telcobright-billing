@@ -21,6 +21,7 @@ namespace TelcobrightMediation
 
     public class CdrCollectionResult
     {
+        public List<string[]> NewSriRows { get; set; } = new List<string[]>();
         public List<string[]> OriginalRowsBeforeMerge { get; }
         public Dictionary<string, string[]> FinalNonDuplicateEvents { get; set; } = new Dictionary<string, string[]>();
 
