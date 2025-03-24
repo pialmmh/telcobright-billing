@@ -111,7 +111,7 @@ namespace Decoders
     public class PartyAddress
     {
         [JsonProperty("sccp.ssn")]
-        public string Ssn { get; set; }
+        public string InvokeId { get; set; } //for storing InvokeId
 
         [JsonProperty("Global Title 0x4")]
         public GlobalTitle GlobalTitle { get; set; }

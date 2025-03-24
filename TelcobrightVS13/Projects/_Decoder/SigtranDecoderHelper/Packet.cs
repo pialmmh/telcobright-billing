@@ -100,6 +100,7 @@ namespace Decoders
                     SmsText = l.SmsText,
                     serviceCentreAddress = l.serviceCentreAddress,
                     msisdn = l.msisdn,
+                    InvokeId = l.InvokeId
                 });
             }
             return newLayers;

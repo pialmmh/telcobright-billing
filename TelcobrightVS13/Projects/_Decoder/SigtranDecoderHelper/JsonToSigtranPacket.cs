@@ -161,7 +161,7 @@ namespace Decoders.SigtranDecoderHelper
                                     {
                                         CalledDigits = l.CalledDigits != null && l.CalledDigits.Length > 0 ? l.CalledDigits[0] : null
                                     },
-                                    Ssn = l.InvokeId != null && l.InvokeId.Length > 0 ? l.InvokeId[0] : null
+                                    InvokeId = l.InvokeId != null && l.InvokeId.Length > 0 ? l.InvokeId[0] : null
                                 },
                                 CallingPartyAddress = new PartyAddress
                                 {

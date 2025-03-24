@@ -212,7 +212,7 @@ namespace Decoders
 
                 Sccp sccpLayer = packet.Sccp;
                 record[Sn.OriginatingCallingNumber] = sccpLayer?.CallingPartyAddress?.GlobalTitle?.CallingDigits?.ToString();
-                record[Sn.InvokeId] = sccpLayer?.CalledPartyAddress?.Ssn?.ToString();
+                record[Sn.InvokeId] = sccpLayer?.CalledPartyAddress?.InvokeId?.ToString();
                 record[Sn.OriginatingCalledNumber] = sccpLayer?.CalledPartyAddress?.GlobalTitle?.CalledDigits?.ToString();
                 //record[Sn.Duration2] = sccpLayer?.CalledPartyAddress.Ssn.ToString();
 

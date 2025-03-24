@@ -42,6 +42,7 @@ namespace Jobs
         protected decimal RawDurationTotalOfConsistentCdrs = 0;
         protected CdrJobInputData Input { get; set; }
         protected CdrCollectorInputData CollectorInput { get; set; }
+        private SriHelper SriHelper { get; set; }
         protected bool PartialCollectionEnabled => this.Input.MediationContext.Tbc.CdrSetting
             .PartialCdrEnabledNeIds.Contains(this.Input.Ne.idSwitch);
         private static readonly Random rndSuffixForDupCorrection = new Random();
@@ -126,15 +127,8 @@ namespace Jobs
                     row[Sn.IdCall] = newIdCall.ToString();
                 }
                 SriHelper sriHelper = new SriHelper(this.Input.Tbc, preProcessor, preProcessor.TxtCdrRows);
-                var oldSriRows = sriHelper.FetchRows();
-                foreach (var row in oldSriRows)
-                {
-                    if (row[Sn.Codec].IsNullOrEmptyOrWhiteSpace())
-                    {
-                        ;
-                    }
-                }
-
+                var oldSriRows = sriHelper.FetchFailedRows();
+                consistantSriRows(oldSriRows);
                 var oldSriRowsByIdCall = oldSriRows.ToDictionary(row => row[Sn.IdCall]);
                 newSriRows = preProcessor.TxtCdrRows
                 .Where(row => row[Sn.SmsType] == "1" || row[Sn.SmsType] == "2")
@@ -168,25 +162,10 @@ namespace Jobs
                 }
                 );
 
-                //l1AggResults.RemoveAll(r => sriAggById.Contains(r.UniqueBillId));
-                //l1AggResults.RemoveAll(r => r.NewUnAggInstances.Any(s => s[Sn.SmsType] == "1" || s[Sn.SmsType] == "2"));
-                newSriRows.ForEach(row =>
-                {
-                    if (row[Sn.SmsType] == "1" && row[Sn.TerminatingCalledNumber].IsNullOrEmptyOrWhiteSpace())
-                    {
-                        ;
-                    }
-                });
                 sriAggCandidates.ForEach(sac => sriAggregationResults.Add(decoder.Aggregate(sac)));
                 var successfulSriAggregationResults = sriAggregationResults.Where(ar => ar.AggregatedInstance != null)
                     .ToList();
-                sriAggregationResults.ForEach(ar =>
-                {
-                    if(ar.AggregatedInstance[Sn.TerminatingCalledNumber].IsNullOrEmptyOrWhiteSpace())
-                    {
-                        ;
-                    }
-                });
+
                 // need to be inserted to sri partial table
                 var newFailedSriRows = failedSriRows
                 .Where(failedRow => !oldSriRowsByIdCall.ContainsKey(failedRow[Sn.IdCall]))
@@ -240,22 +219,13 @@ namespace Jobs
                     .ToList();
                 preProcessor.FinalAggregatedInstances = successfulAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
 
-                // Redis
-                //var aggins = successfulAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
-                //List<string[]> newAggSriToBeDiscarded;
-                //var aggMt = aggregateMtWithSri(aggins, out newAggSriToBeDiscarded);
-                //// Remove aggregated sri, not to be inserted in db
-                //preProcessor.NewRowsToBeDiscardedAfterAggregation.AddRange(newAggSriToBeDiscarded);
-                //// Final result of aggregated  mt
-                //preProcessor.FinalAggregatedInstances = aggMt;
-                //Redis
-
-                //DB Memory Engine For Aggregated SRI
+                //DB Operation For SRI
                 var aggSri = successfulSriAggregationResults.Select(ar => ar.AggregatedInstance).ToList();
-                sriHelper.InsertRow(newFailedSriRows);
-                sriHelper.DeleteRow();
-                insertAggregatedSri(aggSri);
-                //DB Memory Engine For Aggregated SRI
+                aggSri = consistantSriRows(aggSri);
+                sriHelper.NewRowsCouldNotBeAggregated = newFailedSriRows;
+                sriHelper.AggregatedSriRows = aggSri;
+                this.SriHelper = sriHelper;
+                //DB Operation For SRI
 
                 preProcessor.NewRowsCouldNotBeAggregated = failedAggregationResults
                     .SelectMany(ar => ar.NewInstancesCouldNotBeAggregated).ToList();
@@ -421,12 +391,27 @@ namespace Jobs
             }
             return sriRows;
         }
-        private void insertAggregatedSri(List<string[]> aggSri)
+
+        private void ExecuteSriTransaction(DbCommand cmd)
         {
-            aggSri = consistantSriRows(aggSri);
-            ImsiHelper imsiHelper = new ImsiHelper(this.Input.Tbc);
-            imsiHelper.InsertRow(aggSri);
+            try
+            {
+                MySqlConnection connection = (MySqlConnection)cmd.Connection;
+
+                // Perform operations with the connection
+                this.SriHelper.InitializeDbConnection(connection);
+                this.SriHelper.InsertFailedRows();
+                this.SriHelper.DeleteFailedRows();
+                this.SriHelper.InsertSuccessfulRows();
+
+                Console.WriteLine("Operations completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
+
         private long GenerateIdCall(string packetFrameTime, string codec, string redirectingNumber)
         {
             // Combine the fields into a single string
@@ -558,6 +543,7 @@ namespace Jobs
             cmd.Connection.Open();
             this.Input.MediationContext.CreateTemporaryTables();
             cmd.ExecuteCommandText("set autocommit=0;");
+            ExecuteSriTransaction(cmd);
         }
 
         private Dictionary<long, NewCdrWrappedJobForMerge> getMergedJobs()
@@ -1323,76 +1309,5 @@ namespace Jobs
             }
             return preprocessor;
         }
-        public List<string[]> aggregateMtWithSri(List<string[]> aggins, out List<string[]> newAggSriToBeDiscarded)
-        {
-            var redisConnectionString = "localhost:6379";
-            // Filter collections based on SmsType values
-            var aggSri = aggins.Where(asrii => asrii[Sn.SmsType] == "1").ToList();
-            var aggMt = aggins.Where(amti => amti[Sn.SmsType] == "3").ToList();
-
-            List<DateTime> dates = aggMt.AsParallel()
-                                       .Select(r => r[Sn.StartTime].ConvertToDateTimeFromMySqlFormat())
-                                       .ToList();
-            DateTime minDateTime = dates.Min().AddMinutes(-1);
-            DateTime maxDateTime = dates.Max().AddMinutes(1);
-
-            var imsiCache = new RedCache(redisConnectionString);
-            var aggSriFromCache = imsiCache.GetRecordsInTimeRange(minDateTime, maxDateTime);
-            var newAggSri = new List<string[]>(aggSri); // Copy original Sri list
-            aggSri.AddRange(aggSriFromCache);
-
-            // Create a dictionary for fast lookup of aggSri by Imsi
-            var sriDictionary = aggSri
-                .GroupBy(sri => sri[Sn.Imsi])
-                .ToDictionary(g => g.Key, g => g.ToList());
-
-            // List to track items to remove from aggins
-            var itemsToRemove = new HashSet<string>();
-
-            // Process each element in aggMt
-            foreach (var mt in aggMt)
-            {
-                var sriMatches = new List<string[]>();
-                if (sriDictionary.TryGetValue(mt[Sn.Imsi], out sriMatches))
-                {
-                    foreach (var sri in sriMatches)
-                    {
-                        DateTime mtTime = Convert.ToDateTime(mt[Sn.StartTime]);
-                        DateTime sriTime = Convert.ToDateTime(sri[Sn.StartTime]);
-
-                        if ((mtTime - sriTime).TotalSeconds >= 60)
-                        {
-                            mt[Sn.TerminatingCalledNumber] = sri[Sn.TerminatingCalledNumber];
-                            sri[Sn.Imsi] = "done";
-                            itemsToRemove.Add(sri[Sn.UniqueBillId]);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            newAggSriToBeDiscarded = new List<string[]>(newAggSri); // Copy newAggSri before filtering
-
-            // Select the discarded items (those whose UniqueBillId was in itemsToRemove)
-            var discardedItems = aggSriFromCache.Where(ai => itemsToRemove.Contains(ai[Sn.UniqueBillId])).ToList();
-            newAggSri = newAggSri.Where(ai => !itemsToRemove.Contains(ai[Sn.UniqueBillId])).ToList();
-
-            // Remove matched records from cache
-            foreach (var discardedItem in discardedItems)
-            {
-                imsiCache.Remove(discardedItem[Sn.Imsi], DateTime.Parse(discardedItem[Sn.StartTime]));
-            }
-
-            // Store unmatched Sri records back in cache
-            foreach (var sri in newAggSri)
-            {
-                imsiCache.Add(sri[Sn.Imsi], DateTime.Parse(sri[Sn.StartTime]), sri[Sn.TerminatingCalledNumber]);
-            }
-
-            imsiCache.RemoveRecordsBeforeTime(minDateTime);
-
-            return aggMt;
-        }
-
     }
 }

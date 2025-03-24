@@ -133,7 +133,6 @@
     <Compile Include="Accounting\TempTransactionPosting.cs" />
     <Compile Include="FileCopy.cs" />
     <Compile Include="FileDelete.cs" />
-    <Compile Include="ImsiHelper\ImsiHelper.cs" />
     <Compile Include="LcrGeneration.cs" />
     <Compile Include="NewCdrFileJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
