@@ -145,7 +145,6 @@ namespace Jobs
         public List<string[]> FetchFailedRows()
         {
             List<string[]> rows = new List<string[]>();
-            int batchSize = this.Tbc.CdrSetting.SegmentSizeForDbWrite;
 
             // Return an empty list if there are no rows to fetch
             if (this.TxtCdrRows.Count == 0) return rows;
@@ -153,30 +152,16 @@ namespace Jobs
             string tableName = this.PartialTableName;
             DateTime adjustedStartTime = this.StartTime.AddMinutes(-1);
             DateTime adjustedEndTime = this.EndTime.AddMinutes(1);
-            int offset = 0;
-            bool hasMoreRows = true;
 
-            while (hasMoreRows)
-            {
-                // Build the query to fetch rows within the given time range
-                string query = $@"
-            SELECT * FROM {tableName}
-            WHERE StartTime >= '{adjustedStartTime.ToString("yyyy-MM-dd HH:mm:ss")}'
-            AND StartTime <= '{adjustedEndTime.ToString("yyyy-MM-dd HH:mm:ss")}'
-            LIMIT {batchSize} OFFSET {offset};";
+            // Fetch all rows at once, ordered by IdCall for consistency
+            string query = $@"
+        SELECT * FROM {tableName}
+        WHERE StartTime >= '{adjustedStartTime:yyyy-MM-dd HH:mm:ss}'
+        AND StartTime <= '{adjustedEndTime:yyyy-MM-dd HH:mm:ss}';";
+        //ORDER BY IdCall;";  // Ordering ensures stable fetching
 
-                // Execute the query and fetch results using ExecuteReader
-                var batchRows = ExecuteReader(query);
-                if (batchRows.Any())
-                {
-                    rows.AddRange(batchRows);  // Add fetched rows to the main list
-                    offset += batchSize;  // Update offset for the next batch
-                }
-                else
-                {
-                    hasMoreRows = false;  // Exit loop if no more rows are found
-                }
-            }
+            // Execute the query and fetch results using ExecuteReader
+            rows = ExecuteReader(query);
 
             return rows;
         }
@@ -186,6 +171,7 @@ namespace Jobs
             var idCallsToDelete = this.OldRowsToBeDiscardedAfterAggregation
                                 .Select(s => long.Parse(s[Sn.IdCall]))  // Assuming you're extracting IdCall from the rows
                                 .ToList();
+            if (idCallsToDelete.Count == 0) return;
             string tableName = this.PartialTableName;
             int delCount = 0;
             int batchSize = this.Tbc.CdrSetting.SegmentSizeForDbWrite;
