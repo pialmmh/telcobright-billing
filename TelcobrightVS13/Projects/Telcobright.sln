@@ -119,6 +119,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mefCdrValidationRules", "Cd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImsiResolver", "_ImsiResolver\ImsiResolver.csproj", "{01073E9D-A776-462E-8B6D-118B3A3C2B41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchMtSri", "MatchMtSri\MatchMtSri\MatchMtSri.csproj", "{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -690,6 +692,18 @@ Global
 		{01073E9D-A776-462E-8B6D-118B3A3C2B41}.Release|x64.Build.0 = Release|Any CPU
 		{01073E9D-A776-462E-8B6D-118B3A3C2B41}.Release|x86.ActiveCfg = Release|Any CPU
 		{01073E9D-A776-462E-8B6D-118B3A3C2B41}.Release|x86.Build.0 = Release|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Debug|x86.Build.0 = Debug|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Release|x64.Build.0 = Release|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Release|x86.ActiveCfg = Release|Any CPU
+		{C5C2B676-93A0-46C8-B8B5-7F75CA13C9C9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
