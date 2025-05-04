@@ -605,7 +605,8 @@ namespace Decoders
                           SignalingStartTime  datetime DEFAULT NULL,
                           KEY  ind_Unique_Bill  ( UniqueBillId ),
                           KEY ind_Start_Time (StartTime)
-                        ) ENGINE=InnoDB ";
+                        ) ENGINE=InnoDB 
+                        DATA DIRECTORY = 'C:/mysql/data'";
         }
         //public string getCreateTableSqlForUniqueEvent(CdrCollectorInputData decoderInputData)
         //{

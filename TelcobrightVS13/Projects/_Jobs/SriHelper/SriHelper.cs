@@ -69,7 +69,8 @@ namespace Jobs
                             PRIMARY KEY (IdCall),
                             KEY  ind_Unique_Bill  ( UniqueBillId ),
                             KEY ind_Start_Time (StartTime)
-                        ) ENGINE=InnoDB";
+                        ) ENGINE=InnoDB
+                        DATA DIRECTORY = 'C:/mysql/data'";
 
             ExecuteNonQuery(query);
 

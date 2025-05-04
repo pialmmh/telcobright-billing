@@ -397,13 +397,17 @@ namespace Decoders
                 record[Sn.Subcategory] = "1";
                 record[Sn.ChargingStatus] = "0";
                 record[Sn.ServiceGroup] = "1";
-                if (record[Sn.SmsType] == "1")
+                if (record[Sn.SmsType] != "1" && record[Sn.SmsType] != "2" && record[Sn.SmsType] != "3" && record[Sn.SmsType] != "4")
                 {
                     continue;
                 }
+                if (record[Sn.SmsType] == "1")
+                {
+                    ;
+                }
                 if (record[Sn.SmsType] == "2")
                 {
-                    continue;
+                    ;
                 }
                 if (record[Sn.SmsType] == "3")
                 {
