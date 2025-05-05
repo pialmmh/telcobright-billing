@@ -27,46 +27,68 @@ namespace Process
             return tableOptimizer;
         }
 
-        public  void deleteTables(PartnerEntities context)
+        private DateTime GetMaxDate(List<string> tableNames)
+        {
+            List<DateTime> dates = new List<DateTime>();
+
+            foreach (string name in tableNames)
+            {
+                if (IsValidTable(name))
+                {
+                    string dateTime = name.Substring(name.Length - 8);
+                    DateTime date;
+                    if (DateTime.TryParseExact(dateTime, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out date))
+                    {
+                        dates.Add(date);
+                    }
+                }
+            }
+
+            return dates.Any() ? dates.Max() : DateTime.MinValue;
+        }
+
+
+        public void deleteTables(PartnerEntities context)
         {
             DbConnection connection = context.Database.Connection;
-            string query = "";
             List<string> tableNames = new List<string>();
 
             if (connection.State != ConnectionState.Open)
             {
                 connection.Open();
-                tableNames = context.Database
+            }
+            tableNames = context.Database
                         .SqlQuery<string>($@"SHOW TABLES;").ToList();
-                int cnt = 0;
-                foreach (string tableName in tableNames)
+            int cnt = 0;
+            var maxDate = GetMaxDate(tableNames);
+            foreach (string tableName in tableNames)
+            {
+                if (tableName.Length > 8 && IsValidTable(tableName) && isDateOver(tableName, maxDate))
                 {
-                    if (tableName.Length > 8 && IsValidTable(tableName) && isDateOver(tableName))
+
+                    using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
                     {
-
-                        using (DbCommand cmd = ConnectionManager.CreateCommandFromDbContext(context))
+                        try
                         {
-                            try
-                            {
-                                String sql = $"drop table {tableName};";
-                                cmd.CommandText = sql;
-                                cmd.ExecuteNonQuery();
-                                Console.WriteLine($" {tableName} Table deleted successfully");
-                                cnt++;
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"An error occurred: {ex.Message}");
-                            }
-
+                            String sql = $"drop table {tableName};";
+                            cmd.CommandText = sql;
+                            cmd.ExecuteNonQuery();
+                            Console.WriteLine($" {tableName} Table deleted successfully");
+                            cnt++;
                         }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred: {ex.Message}");
+                        }
+
                     }
                 }
-                Console.WriteLine("{0} Tables deleted", cnt);
             }
+            Console.WriteLine("{0} Tables deleted", cnt);
         }
         private bool IsValidTable(string name)
         {
+            if (name.Length < 8) return false;
             string dateTime =  name.Substring(name.Length - 8); 
             if (name[0] == 'z' && name[1] == 'z' && isDatetimeFormate(dateTime)) return true;
             return false;
@@ -79,10 +101,10 @@ namespace Process
             return flag;
         }
 
-        private bool isDateOver (string name)
+        private bool isDateOver (string name, DateTime maxDate)
         {
             string dateTime = name.Substring(name.Length - 8);
-            DateTime today = DateTime.Now;
+            DateTime today = maxDate;
             DateTime strDate;
             bool flag = DateTime.TryParseExact(dateTime, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out strDate);
             TimeSpan dateDifference = today - strDate;

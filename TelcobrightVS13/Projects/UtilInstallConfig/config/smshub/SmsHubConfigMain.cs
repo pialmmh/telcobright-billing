@@ -125,7 +125,8 @@ namespace InstallConfig
                     }}
                 },
                 WriteFailedCallsToDb = false,
-                MoveCdrToDriveAfterProcessing = "F:"
+                MoveCdrToDriveAfterProcessing = "F:",
+                isTableDelete = true
             };
             this.PrepareDirectorySettings(this.Tbc);
             this.Tbc.Nes = new List<ne>()
