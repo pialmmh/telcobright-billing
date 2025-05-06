@@ -117,7 +117,7 @@ namespace Jobs
                 }
                 Console.WriteLine("Performing InMemory Aggregation ....");
 
-                foreach (var row in preProcessor.TxtCdrRows) //change needed (this section only for sri )
+                foreach (var row in preProcessor.TxtCdrRows)
                 {
                     if (!(row[Sn.SmsType] == "1" || row[Sn.SmsType] == "2")) continue;
                     string packetFrameTime = row[Sn.PacketFrameTime];
@@ -404,7 +404,7 @@ namespace Jobs
                 this.SriHelper.DeleteFailedRows();
                 this.SriHelper.InsertSuccessfulRows();
 
-                Console.WriteLine("Operations completed successfully.");
+                // Console.WriteLine("Operations completed successfully.");
             }
             catch (Exception ex)
             {

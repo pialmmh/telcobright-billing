@@ -74,7 +74,7 @@ namespace Jobs
 
             ExecuteNonQuery(query);
 
-            Console.WriteLine("Table 'PartialEvent' created (if not exists).");
+            // Console.WriteLine("Table 'PartialEvent' created (if not exists).");
         }
 
         public void InsertFailedRows()
@@ -107,7 +107,7 @@ namespace Jobs
                 throw new Exception("Inserted number of SRIs do not match raw count in collection result.");
             }
 
-            Console.WriteLine("Rows inserted successfully in batches.");
+            // Console.WriteLine("Rows inserted successfully in batches.");
         }
 
         public void InsertSuccessfulRows()
@@ -140,7 +140,7 @@ namespace Jobs
                 throw new Exception("Inserted number of SRIs do not match raw count in collection result.");
             }
 
-            Console.WriteLine("Rows inserted successfully in batches.");
+            // Console.WriteLine("Rows inserted successfully in batches.");
         }
 
         public List<string[]> FetchFailedRows()

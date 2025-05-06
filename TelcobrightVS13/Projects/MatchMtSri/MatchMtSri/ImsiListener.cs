@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using LibraryExtensions;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TelcobrightMediation;
+using TelcobrightMediation.Config;
 
 namespace MatchMtSri
 {
@@ -14,10 +17,16 @@ namespace MatchMtSri
         private readonly string connectionString;
         private DateTime StartTime = new DateTime();
         private DateTime NewStartTime = new DateTime();
+        static readonly string topshelfDir = new UpwordPathFinder<DirectoryInfo>("WS_Topshelf_Quartz").FindAndGetFullPath();
+        private readonly TelcobrightConfig tbc;
+
 
         public ImsiListener()
         {
-            this.connectionString = $"Server=localhost;Database=smshub;User ID=root;Password=Takay1#$ane;SslMode=none;";
+            string configFilePath = Path.Combine(topshelfDir, "deployedInstances");
+            string configFileName = Directory.GetFiles(configFilePath, "*.conf", SearchOption.AllDirectories).First();
+            this.tbc = ConfigFactory.GetConfigFromFile(configFileName);
+            this.connectionString = $"Server={this.tbc.DatabaseSetting.ServerName};Database=smshub;User ID={this.tbc.DatabaseSetting.WriteUserNameForApplication};Password={this.tbc.DatabaseSetting.WritePasswordForApplication};SslMode=none;";
         }
 
         public void SetStartTime(DateTime startTime)
