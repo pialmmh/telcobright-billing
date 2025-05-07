@@ -14,7 +14,8 @@ namespace MatchMtSri
 {
     class ImsiListener
     {
-        private readonly string connectionString;
+        private readonly string connectionStringSri;
+        private readonly string connectionStringMt;
         private DateTime StartTime = new DateTime();
         private DateTime NewStartTime = new DateTime();
         static readonly string topshelfDir = new UpwordPathFinder<DirectoryInfo>("WS_Topshelf_Quartz").FindAndGetFullPath();
@@ -26,7 +27,8 @@ namespace MatchMtSri
             string configFilePath = Path.Combine(topshelfDir, "deployedInstances");
             string configFileName = Directory.GetFiles(configFilePath, "*.conf", SearchOption.AllDirectories).First();
             this.tbc = ConfigFactory.GetConfigFromFile(configFileName);
-            this.connectionString = $"Server={this.tbc.DatabaseSetting.ServerName};Database=smshub;User ID={this.tbc.DatabaseSetting.WriteUserNameForApplication};Password={this.tbc.DatabaseSetting.WritePasswordForApplication};SslMode=none;";
+            this.connectionStringSri = $"Server={this.tbc.DatabaseSetting.ServerName};Database={this.tbc.DatabaseSetting.DatabaseName};User ID={this.tbc.DatabaseSetting.WriteUserNameForApplication};Password={this.tbc.DatabaseSetting.WritePasswordForApplication};SslMode=none;";
+            this.connectionStringMt = $"Server=172.20.23.105;Database=smshub;User ID={this.tbc.DatabaseSetting.WriteUserNameForApplication};Password={this.tbc.DatabaseSetting.WritePasswordForApplication};SslMode=none;";
         }
 
         public void SetStartTime(DateTime startTime)
@@ -53,7 +55,7 @@ namespace MatchMtSri
 
             try
             {
-                using (MySqlConnection conn = new MySqlConnection(this.connectionString))
+                using (MySqlConnection conn = new MySqlConnection(this.connectionStringMt))
                 {
                     conn.Open();
 
@@ -111,7 +113,7 @@ namespace MatchMtSri
 
             try
             {
-                using (MySqlConnection conn = new MySqlConnection(this.connectionString))
+                using (MySqlConnection conn = new MySqlConnection(this.connectionStringSri))
                 {
                     conn.Open();
 
@@ -148,7 +150,7 @@ namespace MatchMtSri
         {
             string query = $"UPDATE b_party_sync_time SET startTime = '{this.NewStartTime.ToString("yyyy-MM-dd HH:mm:ss")}'";
 
-            using (MySqlConnection conn = new MySqlConnection(this.connectionString))
+            using (MySqlConnection conn = new MySqlConnection(this.connectionStringSri))
             {
                 conn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
@@ -217,7 +219,7 @@ namespace MatchMtSri
         public DateTime GetBPartySyncTime()
         {
             string query = "SELECT StartTime FROM b_party_sync_time LIMIT 1";
-            using (MySqlConnection conn = new MySqlConnection(this.connectionString))
+            using (MySqlConnection conn = new MySqlConnection(this.connectionStringSri))
             {
                 conn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
@@ -243,7 +245,7 @@ namespace MatchMtSri
             if (aggMt == null || aggMt.Count == 0)
                 return;
 
-            using (MySqlConnection conn = new MySqlConnection(this.connectionString))
+            using (MySqlConnection conn = new MySqlConnection(this.connectionStringMt))
             {
                 conn.Open();
 
@@ -343,7 +345,7 @@ namespace MatchMtSri
 
             try
             {
-                using (MySqlConnection conn = new MySqlConnection(this.connectionString))
+                using (MySqlConnection conn = new MySqlConnection(this.connectionStringSri))
                 {
                     conn.Open();
 
@@ -368,9 +370,9 @@ namespace MatchMtSri
             }
         }
 
-        public bool IsFullBatchAvailable()
+        public bool IsMtFullBatchAvailable()
         {
-            using (var conn = new MySqlConnection(this.connectionString))
+            using (var conn = new MySqlConnection(this.connectionStringMt))
             {
                 conn.Open();
 
@@ -390,6 +392,30 @@ namespace MatchMtSri
                 }
             }
         }
+
+        public bool IsSriFullBatchAvailable()
+        {
+            using (var conn = new MySqlConnection(this.connectionStringSri))
+            {
+                conn.Open();
+
+                string endTime = this.StartTime.AddSeconds(600).ToString("yyyy-MM-dd HH:mm:ss");
+
+                string query = $@"
+            SELECT EXISTS(
+                SELECT 1 
+                FROM sri 
+                WHERE StartTime > '{endTime}'
+            ) AS DataExists";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    var result = Convert.ToInt32(cmd.ExecuteScalar());
+                    return result == 1;
+                }
+            }
+        }
+
 
         private List<string[]> consistantRows(List<string[]> sriRows)
         {

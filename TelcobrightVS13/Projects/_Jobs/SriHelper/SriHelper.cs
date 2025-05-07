@@ -34,7 +34,7 @@ namespace Jobs
         {
             this.DatabaseSetting = tbc.DatabaseSetting;
             this.Tbc = tbc;
-            this.connectionString = $"Server={this.DatabaseSetting.ServerName};Database=smshub;User ID={this.DatabaseSetting.WriteUserNameForApplication};Password={this.DatabaseSetting.WritePasswordForApplication};SslMode=none;";
+            this.connectionString = $"Server={this.DatabaseSetting.ServerName};Database={this.DatabaseSetting.DatabaseName};User ID={this.DatabaseSetting.WriteUserNameForApplication};Password={this.DatabaseSetting.WritePasswordForApplication};SslMode=none;";
             this.TxtCdrRows = txtRows.Where(txt => txt[Sn.SmsType] == "1" || txt[Sn.SmsType] == "2").ToList();
             if (TxtCdrRows.Count == 0) return;
             this.StartTime = TxtCdrRows

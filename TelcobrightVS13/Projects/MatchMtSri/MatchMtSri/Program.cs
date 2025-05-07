@@ -17,7 +17,7 @@ namespace MatchMtSri
             {
                 var startTime = imsiListener.GetBPartySyncTime();
                 imsiListener.SetStartTime(startTime);
-                if (imsiListener.IsFullBatchAvailable())
+                if (imsiListener.IsMtFullBatchAvailable() && imsiListener.IsSriFullBatchAvailable())
                 {
                     Console.WriteLine($"\n[BPartyListener] New CDR records found to update B Party.");
                     Console.WriteLine($"[BPartyListener] Process started...");

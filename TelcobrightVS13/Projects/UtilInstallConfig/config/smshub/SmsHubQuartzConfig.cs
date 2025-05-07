@@ -21,15 +21,15 @@ namespace InstallConfig
         public override List<QuartzTbDaemonConfig> GetSchedulerDaemonConfigs()
         {
             this.DaemonConfigurations = new List<QuartzTbDaemonConfig>();
-            this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetDownloadMarkerInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetCdrPreProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.Telcobrightpartner.databasename));
-            this.DaemonConfigurations.AddRange(GetRamDiskMounterInstances(this.Tbc.Telcobrightpartner.databasename));
+            this.DaemonConfigurations.AddRange(GetFileListerInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetDownloadMarkerInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetCdrPreProcessorInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetLogFileJobCreatorInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetFileCopierInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetCdrJobProcessorInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetOptimizerInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetInvoiceGeneratorInstances(this.Tbc.DatabaseSetting.DatabaseName));
+            this.DaemonConfigurations.AddRange(GetRamDiskMounterInstances(this.Tbc.DatabaseSetting.DatabaseName));
             return this.DaemonConfigurations;
         }
 
