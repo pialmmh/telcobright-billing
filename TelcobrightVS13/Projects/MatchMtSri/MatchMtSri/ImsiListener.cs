@@ -315,6 +315,87 @@ namespace MatchMtSri
             }
         }
 
+        public void UpdateTerminatingCalledNumberInCdrTableConcurrently(List<string[]> aggMt, int batchSize)
+        {
+            var tableName = "cdr";
+            if (aggMt == null || aggMt.Count == 0)
+                return;
+
+            int totalRows = aggMt.Count;
+            int batchCount = (totalRows + batchSize - 1) / batchSize;
+            var tasks = new List<Task<bool>>(); // true = success, false = failure
+            object lockObj = new object();
+
+            for (int batchIndex = 0; batchIndex < batchCount; batchIndex++)
+            {
+                var batchRows = aggMt.Skip(batchIndex * batchSize).Take(batchSize).ToList();
+
+                tasks.Add(Task.Run(() =>
+                {
+                    try
+                    {
+                        using (var conn = new MySqlConnection(this.connectionStringMt))
+                        {
+                            conn.Open();
+                            using (var tx = conn.BeginTransaction())
+                            using (var cmd = conn.CreateCommand())
+                            {
+                                cmd.Transaction = tx;
+
+                                var updates = new List<string>();
+                                var idCalls = new List<string>();
+
+                                foreach (var row in batchRows)
+                                {
+                                    string idCall = row[Fn.IdCall].Replace("'", "''");
+                                    string terminatingCalledNumber = row[Fn.TerminatingCalledNumber].Replace("'", "''");
+
+                                    updates.Add($"WHEN {idCall} THEN '{terminatingCalledNumber}'");
+                                    idCalls.Add(idCall);
+                                }
+
+                                if (updates.Count > 0)
+                                {
+                                    cmd.CommandText = $@"
+                                UPDATE {tableName}
+                                SET TerminatingCalledNumber = CASE idCall
+                                    {string.Join(" ", updates)}
+                                END
+                                WHERE idCall IN ({string.Join(",", idCalls)});";
+
+                                    cmd.CommandTimeout = 3600;
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                tx.Commit();
+                                return true; // success
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Batch {batchIndex}] Failed: {ex.Message}");
+                        return false; // failure
+                    }
+                }));
+            }
+
+            Task.WaitAll(tasks.ToArray());
+
+            bool allSucceeded = tasks.All(t => t.Result);
+
+            if (allSucceeded)
+            {
+                UpdateBPartySyncTime();
+                Console.WriteLine("[BPartyListener] All batches updated successfully.");
+            }
+            else
+            {
+                Console.WriteLine("[BPartyListener] One or more batches failed. Sync time not updated.");
+            }
+        }
+
+
         private string ConvertToMySqlFormat(string dateStr)
         {
             // Define the input date formats explicitly.

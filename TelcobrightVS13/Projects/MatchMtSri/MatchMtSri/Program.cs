@@ -15,34 +15,41 @@ namespace MatchMtSri
 
             while (true)
             {
-                var startTime = imsiListener.GetBPartySyncTime();
-                imsiListener.SetStartTime(startTime);
-                if (imsiListener.IsMtFullBatchAvailable() && imsiListener.IsSriFullBatchAvailable())
+                try
                 {
-                    Console.WriteLine($"\n[BPartyListener] New CDR records found to update B Party.");
-                    Console.WriteLine($"[BPartyListener] Process started...");
-                    Console.WriteLine($"[BPartyListener] Fetching CDR rows...");
+                    var startTime = imsiListener.GetBPartySyncTime();
+                    imsiListener.SetStartTime(startTime);
+                    if (imsiListener.IsMtFullBatchAvailable() && imsiListener.IsSriFullBatchAvailable())
+                    {
+                        Console.WriteLine($"\n[BPartyListener] New CDR records found to update B Party.");
+                        Console.WriteLine($"[BPartyListener] Process started...");
+                        Console.WriteLine($"[BPartyListener] Fetching CDR rows...");
 
-                    var aggMt = imsiListener.FetchCdrRows();
-                    var redirectingNumbers = aggMt.Select(row => row[Fn.Redirectingnumber]).Distinct().ToList();
+                        var aggMt = imsiListener.FetchCdrRows();
+                        var redirectingNumbers = aggMt.Select(row => row[Fn.Redirectingnumber]).Distinct().ToList();
 
-                    Console.WriteLine($"[BPartyListener] Fetching SRI rows...");
-                    var aggSri = imsiListener.FetchSriRows(redirectingNumbers);
+                        Console.WriteLine($"[BPartyListener] Fetching SRI rows...");
+                        var aggSri = imsiListener.FetchSriRows(redirectingNumbers);
 
-                    Console.WriteLine($"[BPartyListener] Aggregating SRI data with CDR...");
-                    aggMt = imsiListener.aggregateMtWithSri(aggSri, aggMt);
-                    aggMt = aggMt.Where(row => !string.IsNullOrEmpty(row[Fn.TerminatingCalledNumber])).ToList();
+                        Console.WriteLine($"[BPartyListener] Aggregating SRI data with CDR...");
+                        aggMt = imsiListener.aggregateMtWithSri(aggSri, aggMt);
+                        aggMt = aggMt.Where(row => !string.IsNullOrEmpty(row[Fn.TerminatingCalledNumber])).ToList();
 
-                    Console.WriteLine($"[BPartyListener] Updating B Party in CDR table...");
-                    imsiListener.updateTerminatingCalledNumberInCdrTable(aggMt, 30000);
+                        Console.WriteLine($"[BPartyListener] Updating B Party in CDR table...");
+                        imsiListener.UpdateTerminatingCalledNumberInCdrTableConcurrently(aggMt, 30000);
 
-                    Console.WriteLine($"[BPartyListener] Deleting old SRI data as part of cleanup process...");
-                    imsiListener.DeleteOldData();
+                        Console.WriteLine($"[BPartyListener] Deleting old SRI data as part of cleanup process...");
+                        imsiListener.DeleteOldData();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n[BPartyListener] Waiting for new CDR records to add B Party...");
+                        Thread.Sleep(60000);
+                    }
                 }
-                else
+               catch(Exception e)
                 {
-                    Console.WriteLine($"\n[BPartyListener] Waiting for new CDR records to add B Party...");
-                    Thread.Sleep(60000);
+                    Console.WriteLine("Exception: " + e);
                 }
 
             }
