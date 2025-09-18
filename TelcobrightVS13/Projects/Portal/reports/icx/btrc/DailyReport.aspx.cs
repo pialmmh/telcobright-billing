@@ -139,8 +139,8 @@ public partial class DefaultRptBtrcDailyIcx : System.Web.UI.Page
                     record.partnerName = partnerName;
                     record.inNoOfCalls = row.Field<Decimal>("innoofcalls");
                     record.incomingMinutes = row.Field<Decimal>("incomingMinutes");
-                    //record.outNoOfCalls = row.Field<Decimal?>("outnoofcalls");
-                    //record.outgoingMinutes = row.Field<Decimal?>("outgoingMinutes");
+                    record.outNoOfCalls = row.Field<Decimal?>("outnoofcalls");
+                    record.outgoingMinutes = row.Field<Decimal?>("outgoingMinutes");
                     records.Add(record);
                 }
             }

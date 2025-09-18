@@ -25,18 +25,16 @@ using TelcobrightInfra.PerformanceAndOptimization;
 using TelcobrightMediation.Cdr;
 using TelcobrightMediation.Config;
 using System.IO;
-using WebSocketSharp;
-
 namespace Process
 {
     public class PreFetcherInput
     {
-        public int StartAt { get;}
-        public ITelcobrightJob TelcobrightJob {get;}
+        public int StartAt { get; }
+        public ITelcobrightJob TelcobrightJob { get; }
         public List<job> IncompleteJobs { get; }
         public int BatchSize { get; }
-        public MediationContext MediationContext {get;}
-        public PartnerEntities Context {get;}
+        public MediationContext MediationContext { get; }
+        public PartnerEntities Context { get; }
         public ne Ne { get; }
 
         public PreFetcherInput(int startAt, ITelcobrightJob telcobrightJob, List<job> incompleteJobs, int batchSize, MediationContext mediationContext, PartnerEntities partnerEntities, ne ne)
@@ -64,7 +62,7 @@ namespace Process
         public override int ProcessId => 103;
 
 
-        ConcurrentDictionary<long, NewCdrPreProcessor> prefetchJobsInBatch (PreFetcherInput input)
+        ConcurrentDictionary<long, NewCdrPreProcessor> prefetchJobsInBatch(PreFetcherInput input)
         {
             var prefetchedCache = new ConcurrentDictionary<long, NewCdrPreProcessor>();
             var incompleteJobs = input.IncompleteJobs;
@@ -80,7 +78,7 @@ namespace Process
                     return preFetchedProcessor;
                 };
             Parallel.ForEach(jobsToBePreFetchedInThisBatch, j =>
-            //jobsToBePreFetchedInThisBatch.ForEach( j =>
+                //jobsToBePreFetchedInThisBatch.ForEach( j =>
             {
                 Console.WriteLine($"Pre-fetching job:{j.JobName}");
                 var jobInput =
@@ -183,7 +181,7 @@ namespace Process
                         //jobs with error to be processed as single job and add them to the first of the list, adding them to the last is a bit difficult to manage merge processing
                         CdrJobInputData cdrJobInputData = null;
                         ITelcobrightJob telcobrightJob = null;
-                        
+
                         using (DbCommand cmd = context.Database.Connection.CreateCommand())
                         {
                             int jobCount = 0;
@@ -201,9 +199,9 @@ namespace Process
                                 LogToFile($"Start processing CDR job for Switch: {ne.SwitchName}, JobName: {job.JobName}, JobID: {job.id}");
 
                                 var prefetchPredecoderBatchSize = neAdditionalSetting.PrefetchPredecoderBatchSize;
-                                if (prefetchPredecoderBatchSize>0)
+                                if (prefetchPredecoderBatchSize > 0)
                                 {
-                                    if ( jobCount==0 || (jobCount+1)% prefetchPredecoderBatchSize==0)
+                                    if (jobCount == 0 || (jobCount + 1) % prefetchPredecoderBatchSize == 0)
                                     {
                                         prefetchedCache =
                                             prefetchJobsInBatch(new PreFetcherInput(jobCount, telcobrightJob, incompleteJobs,
@@ -216,7 +214,7 @@ namespace Process
                                 {
                                     closeDbConnection(
                                         cmd); //connection will be opened inside newcdr file job after creating daywise tables as table creation ddl asks for transaction restart
-                                    
+
                                     cdrJobInputData =
                                         new CdrJobInputData(mediationContext, context, ne, job);
                                     if (job.idjobdefinition != 1
@@ -267,7 +265,7 @@ namespace Process
                                         NewCdrPreProcessor preProcessor = null;
                                         if (prefetchPredecoderBatchSize > 0)
                                         {
-                                            if(prefetchedCache.TryGetValue(job.id, out preProcessor) == false)
+                                            if (prefetchedCache.TryGetValue(job.id, out preProcessor) == false)
                                                 throw new Exception("preprocessor not found in cache.");
                                         }
                                         else
@@ -275,7 +273,7 @@ namespace Process
                                             preProcessor = (NewCdrPreProcessor)telcobrightJob.PreprocessJob(inputForPreprocess); //execute pre-processing
                                         }
 
-                                        
+
                                         if (headJobForMerge == null &&
                                             preProcessor.NewAndInconsistentCount >=
                                             minRowCountForBatchProcessing) //already large job, process as single
@@ -333,12 +331,36 @@ namespace Process
                                         List<CdrMergedJobError> mergedJobErrors = new List<CdrMergedJobError>();
                                         foreach (var customError in e.Data.Values)
                                         {
-                                            if(customError.GetType()==typeof(CdrMergedJobError))
+                                            if (customError.GetType() == typeof(CdrMergedJobError))
                                                 mergedJobErrors.Add((CdrMergedJobError)customError);
                                         }
                                         resetMergeJobStatus();
                                         if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
                                         cmd.ExecuteCommandText(" rollback; ");
+                                        if (e.Message.ToLower().Contains("table has no partition"))
+                                        {
+                                            try
+                                            {
+                                                string conStr =
+                                                    ConnectionManager.GetConnectionStringByOperator(operatorName, tbc)
+                                                    + "; default command timeout=600";
+                                                using (MySqlConnection con = new MySqlConnection(conStr))
+                                                {
+                                                    con.Open();
+                                                    PartitionUtil partitionUtil =
+                                                        new PartitionUtil(con, con.Database, 10);
+                                                    partitionUtil.GetPartitionInfo();
+                                                    partitionUtil.GeneratePartitionMaintenanceSql();
+                                                    partitionUtil.ExecutePartitionSqls();
+                                                }
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                Console.WriteLine("Exception during partition maintenance...");
+                                                Console.WriteLine(exception);
+                                                throw;
+                                            }
+                                        }
                                         bool cacheLimitExceeded =
                                             RateCacheCleaner.CheckAndClearRateCache(mediationContext, e);
                                         if (cacheLimitExceeded) continue;
@@ -481,20 +503,20 @@ namespace Process
             List<CdrMergedJobError> mergedJobErrors = new List<CdrMergedJobError>();
             foreach (var jobError in e.Data.Values)
             {
-                if(jobError.GetType()!= typeof(CdrMergedJobError))
+                if (jobError.GetType() != typeof(CdrMergedJobError))
                     continue;
                 var errorWithoutJob = (CdrMergedJobError)jobError;
                 errorWithoutJob.Job = null;//to avoid some circult reference during serialization
                 mergedJobErrors.Add(errorWithoutJob);
             }
             string errorDetailAsTxt = JsonConvert.SerializeObject(mergedJobErrors).Replace("'", "");
-            string customError="";
+            string customError = "";
             if (e.Data.Contains("customError"))
                 customError = (string)e.Data["customError"];
             long jobid = -1;
             if (e.Data.Contains("jobId"))
             {
-                jobid= (long) e.Data["jobId"];
+                jobid = (long)e.Data["jobId"];
             }
             else
             {
@@ -515,7 +537,7 @@ namespace Process
             string fileCopyJobname = telcobrightJob.JobName.Replace(node, syncPairName);
 
             cmd.CommandText = $" update job set status=6,CompletionTime=null where idjobdefinition=6 and status=1 and jobname='" +
-            fileCopyJobname +"';commit;";
+                              fileCopyJobname + "';commit;";
             cmd.ExecuteNonQuery();
 
         }
@@ -620,7 +642,7 @@ namespace Process
                 }
                 else if (tbc.CdrSetting.DescendingOrderWhileListingFilesByFileNameOnly == false)
                 {
-                    jobs= contextTb.jobs
+                    jobs = contextTb.jobs
                         .Where(c => c.CompletionTime == null
                                     && c.idNE == thisSwitch.idSwitch
                                     && c.Status == jobStatusToFetch && c.idjobdefinition == 1) //downloaded & new cdr

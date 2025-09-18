@@ -9,8 +9,9 @@
 
 
 
-public partial class ConfigRateTask {
-    
+public partial class ConfigRateTask
+{
+
     /// <summary>
     /// SqlDataCountry control.
     /// </summary>
@@ -19,7 +20,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataCountry;
-    
+
     /// <summary>
     /// SqlDataYesNo control.
     /// </summary>
@@ -28,7 +29,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataYesNo;
-    
+
     /// <summary>
     /// lblRateGlobal control.
     /// </summary>
@@ -37,7 +38,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblRateGlobal;
-    
+
     /// <summary>
     /// lblEditPrefix control.
     /// </summary>
@@ -46,7 +47,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblEditPrefix;
-    
+
     /// <summary>
     /// SqlDataServiceType control.
     /// </summary>
@@ -55,7 +56,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataServiceType;
-    
+
     /// <summary>
     /// SqlDataSubServiceType control.
     /// </summary>
@@ -64,7 +65,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSubServiceType;
-    
+
     /// <summary>
     /// EntityDataRateTask control.
     /// </summary>
@@ -73,7 +74,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.EntityDataSource EntityDataRateTask;
-    
+
     /// <summary>
     /// ToolkitScriptManager1 control.
     /// </summary>
@@ -82,7 +83,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
-    
+
     /// <summary>
     /// lblRatePlan control.
     /// </summary>
@@ -91,7 +92,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblRatePlan;
-    
+
     /// <summary>
     /// LinkButtonRate control.
     /// </summary>
@@ -100,7 +101,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton LinkButtonRate;
-    
+
     /// <summary>
     /// lblTimeZone control.
     /// </summary>
@@ -109,7 +110,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label lblTimeZone;
-    
+
     /// <summary>
     /// DropDownListTaskRef control.
     /// </summary>
@@ -118,7 +119,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListTaskRef;
-    
+
     /// <summary>
     /// EditTaskRefName control.
     /// </summary>
@@ -127,7 +128,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton EditTaskRefName;
-    
+
     /// <summary>
     /// NewTaskRefName control.
     /// </summary>
@@ -136,7 +137,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton NewTaskRefName;
-    
+
     /// <summary>
     /// hidValueRefName control.
     /// </summary>
@@ -145,7 +146,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidValueRefName;
-    
+
     /// <summary>
     /// hidValueCommit control.
     /// </summary>
@@ -154,7 +155,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HiddenField hidValueCommit;
-    
+
     /// <summary>
     /// CheckBoxAutoConvertTZ control.
     /// </summary>
@@ -163,7 +164,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxAutoConvertTZ;
-    
+
     /// <summary>
     /// CheckBoxAutoDetectCountry control.
     /// </summary>
@@ -172,7 +173,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxAutoDetectCountry;
-    
+
     /// <summary>
     /// CheckBoxDefaultDate control.
     /// </summary>
@@ -181,7 +182,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxDefaultDate;
-    
+
     /// <summary>
     /// TextBoxDefaultDate control.
     /// </summary>
@@ -190,7 +191,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox TextBoxDefaultDate;
-    
+
     /// <summary>
     /// CalendarStartDate control.
     /// </summary>
@@ -199,7 +200,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::AjaxControlToolkit.CalendarExtender CalendarStartDate;
-    
+
     /// <summary>
     /// TextBoxDefaultTime control.
     /// </summary>
@@ -208,7 +209,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox TextBoxDefaultTime;
-    
+
     /// <summary>
     /// Label4 control.
     /// </summary>
@@ -217,7 +218,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label4;
-    
+
     /// <summary>
     /// LinkButton1 control.
     /// </summary>
@@ -226,7 +227,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
-    
+
     /// <summary>
     /// LinkButtonCodeDelete control.
     /// </summary>
@@ -235,7 +236,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton LinkButtonCodeDelete;
-    
+
     /// <summary>
     /// UploadButton control.
     /// </summary>
@@ -244,7 +245,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton UploadButton;
-    
+
     /// <summary>
     /// FileUploadControl control.
     /// </summary>
@@ -253,7 +254,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.FileUpload FileUploadControl;
-    
+
     /// <summary>
     /// DropDownListFormat control.
     /// </summary>
@@ -262,7 +263,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListFormat;
-    
+
     /// <summary>
     /// HiddenFieldSelect control.
     /// </summary>
@@ -271,7 +272,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HiddenField HiddenFieldSelect;
-    
+
     /// <summary>
     /// ValidatorSummary control.
     /// </summary>
@@ -280,7 +281,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.ValidationSummary ValidatorSummary;
-    
+
     /// <summary>
     /// frmSupplierRatePlanInsert control.
     /// </summary>
@@ -289,7 +290,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.FormView frmSupplierRatePlanInsert;
-    
+
     /// <summary>
     /// UpdatePanel1 control.
     /// </summary>
@@ -298,7 +299,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.UpdatePanel UpdatePanel1;
-    
+
     /// <summary>
     /// FormViewCodeDelete control.
     /// </summary>
@@ -307,7 +308,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.FormView FormViewCodeDelete;
-    
+
     /// <summary>
     /// Label1 control.
     /// </summary>
@@ -316,7 +317,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label1;
-    
+
     /// <summary>
     /// TextBoxFindByPrefix control.
     /// </summary>
@@ -325,7 +326,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox TextBoxFindByPrefix;
-    
+
     /// <summary>
     /// Label2 control.
     /// </summary>
@@ -334,7 +335,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label2;
-    
+
     /// <summary>
     /// Label3 control.
     /// </summary>
@@ -343,7 +344,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label Label3;
-    
+
     /// <summary>
     /// TextBoxFindByDescription control.
     /// </summary>
@@ -352,7 +353,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.TextBox TextBoxFindByDescription;
-    
+
     /// <summary>
     /// DropDownListMoreFilters control.
     /// </summary>
@@ -361,7 +362,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.DropDownList DropDownListMoreFilters;
-    
+
     /// <summary>
     /// ButtonFindPrefix control.
     /// </summary>
@@ -370,7 +371,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Button ButtonFindPrefix;
-    
+
     /// <summary>
     /// ButtonFindPrefixSelect control.
     /// </summary>
@@ -379,7 +380,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Button ButtonFindPrefixSelect;
-    
+
     /// <summary>
     /// ButtonExport control.
     /// </summary>
@@ -388,7 +389,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Button ButtonExport;
-    
+
     /// <summary>
     /// ListView1 control.
     /// </summary>
@@ -397,7 +398,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.ListView ListView1;
-    
+
     /// <summary>
     /// SqlDataTaskStatus control.
     /// </summary>
@@ -406,7 +407,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.SqlDataSource SqlDataTaskStatus;
-    
+
     /// <summary>
     /// CheckBoxContinueOnError control.
     /// </summary>
@@ -415,7 +416,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxContinueOnError;
-    
+
     /// <summary>
     /// CheckBoxContinueOnOverlap control.
     /// </summary>
@@ -424,7 +425,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxContinueOnOverlap;
-    
+
     /// <summary>
     /// CheckBoxAutoAdjust control.
     /// </summary>
@@ -433,7 +434,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.CheckBox CheckBoxAutoAdjust;
-    
+
     /// <summary>
     /// hidvalueCodeDelete control.
     /// </summary>
@@ -442,7 +443,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.HiddenField hidvalueCodeDelete;
-    
+
     /// <summary>
     /// LinkButtonSaveAll control.
     /// </summary>
@@ -451,7 +452,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton LinkButtonSaveAll;
-    
+
     /// <summary>
     /// LinkButtonTaskOnly control.
     /// </summary>
@@ -460,7 +461,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton LinkButtonTaskOnly;
-    
+
     /// <summary>
     /// LinkButtonDelCommitted control.
     /// </summary>
@@ -469,7 +470,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton LinkButtonDelCommitted;
-    
+
     /// <summary>
     /// LinkButtonDeleteSelected control.
     /// </summary>
@@ -478,7 +479,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.LinkButton LinkButtonDeleteSelected;
-    
+
     /// <summary>
     /// StatusLabel control.
     /// </summary>
@@ -487,7 +488,7 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.Label StatusLabel;
-    
+
     /// <summary>
     /// GridViewSupplierRates control.
     /// </summary>
@@ -496,4 +497,18 @@ public partial class ConfigRateTask {
     /// To modify move field declaration from designer file to code-behind file.
     /// </remarks>
     protected global::System.Web.UI.WebControls.GridView GridViewSupplierRates;
+
+    /// <summary>
+    /// Master property.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated property.
+    /// </remarks>
+    public new SiteMaster Master
+    {
+        get
+        {
+            return ((SiteMaster)(base.Master));
+        }
+    }
 }

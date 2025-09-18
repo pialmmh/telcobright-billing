@@ -192,8 +192,8 @@ on i.partnerid=o.partnerid;";
 
             Decimal sumOfincomingMinutes;
             Decimal sumOfInNoOfCalls;
-            Decimal sumOfOutgoingMinutes;
-            Decimal sumOfOutNoOfCalls;
+            Decimal? sumOfOutgoingMinutes;
+            Decimal? sumOfOutNoOfCalls;
 
             DataSet internationalDs = getInternatinonalReport(connection);
 

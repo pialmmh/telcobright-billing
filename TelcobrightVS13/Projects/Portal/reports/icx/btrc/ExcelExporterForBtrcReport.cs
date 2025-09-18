@@ -48,8 +48,8 @@ namespace PortalApp.ReportHelper
             int rowCount = data.Count;
             decimal sumOfincomingMinutes = data.Sum(r => r.incomingMinutes);
             decimal sumOfInNoOfCalls = data.Sum(r => r.inNoOfCalls);
-            decimal sumOfOutgoingMinutes = data.Sum(r => r.outgoingMinutes);
-            decimal sumOfOutNoOfCalls = data.Sum(r => r.outNoOfCalls);
+            decimal? sumOfOutgoingMinutes = data.Sum(r => r.outgoingMinutes);
+            decimal? sumOfOutNoOfCalls = data.Sum(r => r.outNoOfCalls);
             string reportStartCol = cell;
             int reportStartRow = cellNo;
             int totalStartRow = reportStartRow + rowCount + 1;
@@ -827,15 +827,15 @@ namespace PortalApp.ReportHelper
 
                     createBtrcReportInExcel(ws, intInComing_2_Records, "D", 8, "Name of IOS");
 
-                    createBtrcHeader(ws, "A19:E19", 20, "International Outgoing Calls");
+                    createBtrcHeader(ws, "A32:E32", 33, "International Outgoing Calls");
 
-                    createBtrcReportInExcel(ws, intOutComing_1_Records, "A", 20, "Name of ANS");
+                    createBtrcReportInExcel(ws, intOutComing_1_Records, "A", 33, "Name of ANS");
 
-                    createBtrcReportInExcel(ws, intOutComing_2_Records, "D", 20, "Name of IOS");
+                    createBtrcReportInExcel(ws, intOutComing_2_Records, "D", 33, "Name of IOS");
 
-                    createBtrcHeader(ws, "A29:B29", 30, "Domestic Calls");
+                    createBtrcHeader(ws, "A58:B58", 59, "Domestic Calls");
 
-                    createBtrcReportInExcel(ws, domesticRecords, "A", 30, "Name of ANS");
+                    createBtrcReportInExcel(ws, domesticRecords, "A", 59, "Name of ANS");
 
                     // Set baseColumns to auto-fit
                     for (int i = 1; i <= ws.Dimension.Columns; i++)
@@ -883,6 +883,7 @@ namespace PortalApp.ReportHelper
 
 
                     createInternationalReportInExcel(ws2, international_Daily_Records, "A", 8, "Name of IOS");
+
 
 
                     // Set baseColumns to auto-fit

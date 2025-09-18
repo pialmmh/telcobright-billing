@@ -159,7 +159,7 @@ namespace InstallConfig
                     FileExtension = ".gz",
                     Description = null,
                     SourceFileLocations = this.vaultDialogic.Name,
-                    BackupFileLocations = this.SummitFtpForIp.Name,
+                    BackupFileLocations = this.ipCAS.Name+","+this.SummitFtpForIp.Name,
                     LoadingStopFlag = null,
                     LoadingSpanCount = 100,
                     TransactionSizeForCDRLoading = 1500,

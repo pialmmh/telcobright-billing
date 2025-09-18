@@ -47,14 +47,62 @@ namespace TelcobrightMediation
             cdr thisCdr = cdrExt.Cdr;
             long finalDuration = 0; //xyz is rounded always
             decimal tempDuration = thisCdr.DurationSec;
-            finalDuration =
-                Convert.ToInt64(this.PrefixMatcher.GetA2ZDuration(tempDuration, matchedRateWithAssignmentTupleId));
-            decimal xAmountBdt = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
-                rateFieldNumber: 0, //rate amount
-                cdrProcessor: serviceContext.CdrProcessor);
-            decimal yAmountUsd = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
-                rateFieldNumber: 1, //other amount1
-                cdrProcessor: serviceContext.CdrProcessor);
+
+            decimal xAmountBdt = 0;
+            decimal yAmountUsd = 0;
+            if (matchedRateWithAssignmentTupleId.SurchargeTime == 0)
+            {
+                finalDuration =
+                    Convert.ToInt64(this.PrefixMatcher.GetA2ZDuration(tempDuration, matchedRateWithAssignmentTupleId));
+                xAmountBdt = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
+                    rateFieldNumber: 0, //rate amount
+                    cdrProcessor: serviceContext.CdrProcessor);
+                yAmountUsd = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
+                    rateFieldNumber: 1, //other amount1
+                    cdrProcessor: serviceContext.CdrProcessor);
+            }
+
+            else // pulse = 30/6 ,duration = 12.071 , initialperiodcharge=30, resulation=6
+            {
+                if (thisCdr.DurationSec <= matchedRateWithAssignmentTupleId.SurchargeTime && thisCdr.DurationSec >= 0.1M)
+                {
+                    finalDuration = matchedRateWithAssignmentTupleId.SurchargeTime;
+                    xAmountBdt = this.PrefixMatcher.GetA2ZAmountWithSurCharge(finalDuration,
+                        matchedRateWithAssignmentTupleId,
+                        rateFieldNumber: 0, //rate amount
+                        cdrProcessor: serviceContext.CdrProcessor);
+                    yAmountUsd = this.PrefixMatcher.GetA2ZAmountWithSurCharge(finalDuration,
+                        matchedRateWithAssignmentTupleId,
+                        rateFieldNumber: 1, //other amount1
+                        cdrProcessor: serviceContext.CdrProcessor);
+                }
+                else // this.cdr.duration > rateExt.Surchargetime
+                {
+                    decimal surchargeDuration = matchedRateWithAssignmentTupleId.SurchargeTime;
+                    decimal durationAfterInitialPeriod = thisCdr.DurationSec - surchargeDuration;
+                    decimal roundedDurationAfterInitialPeriod =
+                        this.PrefixMatcher.GetA2ZDuration(durationAfterInitialPeriod, matchedRateWithAssignmentTupleId);
+                    finalDuration = Convert.ToInt64(surchargeDuration + roundedDurationAfterInitialPeriod);
+                    xAmountBdt = this.PrefixMatcher.GetA2ZAmountWithSurCharge(finalDuration,
+                        matchedRateWithAssignmentTupleId,
+                        rateFieldNumber: 0, //rate amount
+                        cdrProcessor: serviceContext.CdrProcessor);
+                    yAmountUsd = this.PrefixMatcher.GetA2ZAmountWithSurCharge(finalDuration,
+                        matchedRateWithAssignmentTupleId,
+                        rateFieldNumber: 1, //other amount1
+                        cdrProcessor: serviceContext.CdrProcessor);
+                }
+            }
+
+            //finalDuration =
+            //    Convert.ToInt64(this.PrefixMatcher.GetA2ZDuration(tempDuration, matchedRateWithAssignmentTupleId));
+            //decimal xAmountBdt = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
+            //    rateFieldNumber: 0, //rate amount
+            //    cdrProcessor: serviceContext.CdrProcessor);
+            //decimal yAmountUsd = this.PrefixMatcher.GetA2ZAmountWithOutSurCharge(finalDuration, matchedRateWithAssignmentTupleId,
+            //    rateFieldNumber: 1, //other amount1
+            //    cdrProcessor: serviceContext.CdrProcessor);
+
             thisCdr.RoundedDuration = finalDuration;
             thisCdr.XAmount = xAmountBdt.RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);
             thisCdr.YAmount = yAmountUsd.RoundFractionsUpTo(serviceContext.MaxDecimalPrecision);

@@ -126,6 +126,7 @@
     <Compile Include="EventPreProcessor.cs" />
     <Compile Include="helper\CompressedFileHelperForVault.cs" />
     <Compile Include="helper\FilebasedDuplicateJobNameChecker.cs" />
+    <Compile Include="PartitionUtil.cs" />
     <Compile Include="RamDiskMounter.cs" />
     <Compile Include="SmsSender.cs" />
     <Compile Include="ServiceProcessor.cs" />

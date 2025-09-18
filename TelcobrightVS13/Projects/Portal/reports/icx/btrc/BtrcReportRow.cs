@@ -43,8 +43,8 @@ namespace PortalApp.ReportHelper
 
         public Decimal inNoOfCalls { get; set; }
         public Decimal incomingMinutes { get; set; }
-        public Decimal outNoOfCalls { get; set; }
-        public Decimal outgoingMinutes { get; set; }
+        public Decimal? outNoOfCalls { get; set; }
+        public Decimal? outgoingMinutes { get; set; }
 
     }
 
